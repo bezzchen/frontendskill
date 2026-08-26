@@ -1,0 +1,77 @@
+{
+  "purpose": "Activation-boundary tests for a future SKILL.md description.",
+  "rule": "Run only after the first description exists. Positive and negative examples intentionally include near-miss frontend tasks.",
+  "queries": [
+    {
+      "query": "Help me make this React portfolio feel distinctive and decide what animation or graphics architecture I should use.",
+      "should_trigger": true,
+      "kind": "core_positive"
+    },
+    {
+      "query": "I want a cinematic scroll case study with pinned sections, coordinated media, and reduced-motion behavior.",
+      "should_trigger": true,
+      "kind": "core_positive"
+    },
+    {
+      "query": "Should this project-image distortion be Three.js, a shader overlay, or something lighter that preserves the DOM?",
+      "should_trigger": true,
+      "kind": "core_positive"
+    },
+    {
+      "query": "Our site already uses Anime.js; help me design a draggable responsive project constellation without stacking unnecessary libraries.",
+      "should_trigger": true,
+      "kind": "core_positive"
+    },
+    {
+      "query": "Make this landing page feel more premium; I don't know whether animation, layout, typography, or art direction is the real problem.",
+      "should_trigger": true,
+      "kind": "core_positive"
+    },
+    {
+      "query": "Make my settings page more polished and accessible; decide whether any motion library is actually needed.",
+      "should_trigger": true,
+      "kind": "boundary_positive"
+    },
+    {
+      "query": "Fix this bug in my existing GSAP ScrollTrigger timeline. The design and architecture are already decided.",
+      "should_trigger": false,
+      "kind": "near_miss_negative"
+    },
+    {
+      "query": "Add a loading spinner to this submit button and keep the existing design.",
+      "should_trigger": false,
+      "kind": "near_miss_negative"
+    },
+    {
+      "query": "Animate this existing bar chart when its data updates; do not redesign the surrounding page.",
+      "should_trigger": false,
+      "kind": "near_miss_negative"
+    },
+    {
+      "query": "Implement this provided Figma page exactly as specified; do not change the design direction.",
+      "should_trigger": false,
+      "kind": "near_miss_negative"
+    },
+    {
+      "query": "Update these Tailwind classes after our design-token rename; no redesign.",
+      "should_trigger": false,
+      "kind": "near_miss_negative"
+    },
+    {
+      "query": "Build a marketing landing page from scratch and decide the art direction, interaction style, and frontend visual stack.",
+      "should_trigger": true,
+      "kind": "boundary_positive"
+    },
+    {
+      "query": "Fix this TypeScript type error in the component.",
+      "should_trigger": false,
+      "kind": "easy_negative"
+    },
+    {
+      "query": "Optimize this SQL query.",
+      "should_trigger": false,
+      "kind": "easy_negative"
+    }
+  ],
+  "evaluation_layer": "A-activation"
+}

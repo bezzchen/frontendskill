@@ -1,0 +1,700 @@
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..b971323 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -20,6 +20,10 @@
+ }
+ 
+ * { box-sizing: border-box; }
++
++/* Hide the scrollbar of the mobile card shelf without disabling scroll. */
++.no-scrollbar { scrollbar-width: none; }
++.no-scrollbar::-webkit-scrollbar { display: none; }
+ html { background: var(--background); color: var(--foreground); }
+ body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
+ a { color: inherit; }
+diff --git a/components/ExperienceSystem.jsx b/components/ExperienceSystem.jsx
+index 0b2e08c..58cd31e 100644
+--- a/components/ExperienceSystem.jsx
++++ b/components/ExperienceSystem.jsx
+@@ -1,34 +1,656 @@
+ "use client";
+ 
+-const items = [
+-  { id: "exp-1", label: "Company A", type: "experience" },
+-  { id: "exp-2", label: "Company B", type: "experience" },
+-  { id: "exp-3", label: "Research Lab", type: "experience" },
+-  { id: "project-1", label: "Project Atlas", type: "project" },
+-  { id: "project-2", label: "Project Vector", type: "project" },
+-  { id: "project-3", label: "Project Field", type: "project" },
++import { useEffect, useMemo, useRef, useState } from "react";
++import { flushSync } from "react-dom";
++import {
++  animate,
++  createDraggable,
++  createLayout,
++  createScope,
++  createTimer,
++  stagger,
++} from "animejs";
++
++/* ------------------------------------------------------------------ */
++/* Data — same six semantic items as the fixture, plus a meta line.    */
++/* ------------------------------------------------------------------ */
++
++const TAU = Math.PI * 2;
++const frac = (n) => n - Math.floor(n);
++
++const RAW_ITEMS = [
++  { id: "exp-1", label: "Company A", type: "experience", meta: "Senior engineer · 2022 – now" },
++  { id: "exp-2", label: "Company B", type: "experience", meta: "Product engineer · 2019 – 2022" },
++  { id: "exp-3", label: "Research Lab", type: "experience", meta: "Resident · 2017 – 2019" },
++  { id: "project-1", label: "Project Atlas", type: "project", meta: "Mapping infrastructure" },
++  { id: "project-2", label: "Project Vector", type: "project", meta: "Realtime graphics toolkit" },
++  { id: "project-3", label: "Project Field", type: "project", meta: "Generative installation" },
++];
++
++/* Deterministic per-item orbit parameters (no Math.random → stable SSR). */
++const ITEMS = RAW_ITEMS.map((item, i) => {
++  const inGroup = i % 3; // index within its group of three
++  return {
++    ...item,
++    orbit: {
++      // base angle spread over the full ring, with a loose jitter
++      a0: (i / RAW_ITEMS.length) * TAU + (frac(i * 0.618) - 0.5) * 0.55,
++      // inward-only radius jitter so the clamped radius never overflows
++      kr: 0.86 + frac(i * 0.377) * 0.14,
++      // one revolution every ~80–120s, all drifting the same way
++      w: (TAU / 96000) * (0.8 + frac(i * 0.23) * 0.5),
++      bw: TAU / (5200 + 900 * i),
++      bp: frac(i * 0.71) * TAU,
++      rw: TAU / (7400 + 700 * i),
++      rp: frac(i * 0.31) * TAU,
++      dockA0: inGroup * (TAU / 3) + 0.7,
++    },
++  };
++});
++
++const VIEWS = [
++  { id: "all", label: "Overview" },
++  { id: "experience", label: "Experience" },
++  { id: "projects", label: "Projects" },
+ ];
+ 
++const GROUP_OF = { experience: "experience", project: "projects" };
++
++/* ------------------------------------------------------------------ */
++/* Geometry                                                            */
++/* ------------------------------------------------------------------ */
++
++const CARD_W = 208; // md orbit card width  (w-52)
++const CARD_H = 112; // md orbit card height (h-28)
++const DOCK_W = 176; // md docked card width (w-44)
++const DISC = 144; // md core disc size    (w-36)
++
++const clamp = (v, min, max) => Math.max(min, Math.min(v, max));
++
++function derive(w, h) {
++  const listW = Math.min(432, w * 0.46); // mirrors md:w-[min(27rem,46%)]
++  const availStart = listW + 16;
++  const avail = Math.max(0, w - availStart);
++  return {
++    w,
++    h,
++    cx: w / 2,
++    cy: h / 2,
++    rx: clamp(w * 0.335, 150, Math.max(150, w / 2 - CARD_W / 2 - 18)),
++    ry: clamp(h * 0.35, 120, Math.max(120, h / 2 - CARD_H / 2 - 18)),
++    dockCx: availStart + avail / 2,
++    dockCy: h * 0.47,
++    dockRx: clamp(avail / 2 - DOCK_W / 2 - 12, 56, 118),
++    dockRy: clamp(h / 2 - CARD_H / 2 - 26, 80, 148),
++  };
++}
++
++const roleFor = (item, view) =>
++  view === "all" ? "orbit" : GROUP_OF[item.type] === view ? "flow" : "dock";
++
++/* Ambient drift — the single writer for wrapper (li / core) transforms. */
++function transformFor(item, role, D, t) {
++  const o = item.orbit;
++  if (role === "orbit") {
++    const a = o.a0 + t * o.w;
++    const x = Math.cos(a) * D.rx * o.kr + Math.sin(t * o.bw + o.bp) * 7;
++    const y = Math.sin(a) * D.ry * o.kr + Math.cos(t * o.bw * 1.17 + o.bp) * 6;
++    const r = Math.sin(t * o.rw + o.rp) * 1.5;
++    return `translate(${x.toFixed(2)}px, ${y.toFixed(2)}px) rotate(${r.toFixed(3)}deg)`;
++  }
++  if (role === "dock") {
++    const a = o.dockA0 + t * o.w * 1.6;
++    const x = Math.cos(a) * D.dockRx + Math.sin(t * o.bw + o.bp) * 4;
++    const y = Math.sin(a) * D.dockRy + Math.cos(t * o.bw * 1.17 + o.bp) * 4;
++    const r = Math.sin(t * o.rw + o.rp) * 1.1;
++    return `translate(${x.toFixed(2)}px, ${y.toFixed(2)}px) rotate(${r.toFixed(3)}deg)`;
++  }
++  return ""; // flow rows sit still — that is the "clean structured state"
++}
++
++const coreTransform = (t) =>
++  `translate(${(Math.sin(t * 0.00042) * 5).toFixed(2)}px, ${(Math.cos(t * 0.00058) * 5).toFixed(2)}px)`;
++
++function anchorFor(role, D) {
++  if (!D) return undefined;
++  if (role === "orbit") return { left: D.cx - CARD_W / 2, top: D.cy - CARD_H / 2 };
++  if (role === "dock") return { left: D.dockCx - DOCK_W / 2, top: D.dockCy - CARD_H / 2 };
++  return undefined;
++}
++
++function coreAnchor(view, D) {
++  if (!D) return undefined;
++  const cx = view === "all" ? D.cx : D.dockCx;
++  const cy = view === "all" ? D.cy : D.dockCy;
++  return { left: cx - DISC / 2, top: cy - DISC / 2 };
++}
++
++/* ------------------------------------------------------------------ */
++/* Class builders (mobile shelf always; desktop depends on view)       */
++/* ------------------------------------------------------------------ */
++
++function liClass(role, primary, mounted) {
++  const cls = [
++    "snap-start shrink-0 list-none",
++    primary ? "w-[17rem] opacity-100" : "w-60 opacity-80",
++  ];
++  if (!mounted) {
++    cls.push("md:w-auto");
++  } else if (role === "orbit") {
++    cls.push("md:absolute md:z-10 md:h-28 md:w-52");
++  } else if (role === "dock") {
++    cls.push("md:absolute md:z-10 md:h-28 md:w-44");
++  } else {
++    cls.push("md:static md:z-10 md:mb-3 md:h-auto md:w-[min(27rem,46%)]");
++  }
++  return cls.join(" ");
++}
++
++function ulClass(mounted) {
++  return [
++    "no-scrollbar -mx-6 m-0 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-6 p-0 px-6 pb-3",
++    mounted
++      ? "md:mx-0 md:block md:overflow-visible md:px-0 md:pb-0"
++      : "md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0 md:pb-0",
++  ].join(" ");
++}
++
++/* ------------------------------------------------------------------ */
++/* Component                                                           */
++/* ------------------------------------------------------------------ */
++
+ export function ExperienceSystem() {
++  const [view, setView] = useState("all");
++  const [mounted, setMounted] = useState(false);
++  const [geom, setGeom] = useState(null);
++
++  const sectionRef = useRef(null);
++  const stageRef = useRef(null);
++  const listRef = useRef(null);
++  const coreRef = useRef(null);
++  const dashRingRef = useRef(null);
++  const liRefs = useRef({});
++  const btnRefs = useRef({});
++
++  const scopeRef = useRef(null);
++  const layoutRef = useRef(null);
++  const tickerRef = useRef(null);
++  const timelineRef = useRef(null);
++  const syncRef = useRef(null);
++
++  const viewRef = useRef("all");
++  const mountedRef = useRef(false);
++  const geomRef = useRef(null);
++  const mdRef = useRef(false);
++  const prmRef = useRef(false);
++  const intersectingRef = useRef(false);
++  const transitioningRef = useRef(false);
++  const baseClockRef = useRef(0);
++  const suppressClickRef = useRef(false);
++
++  const ordered = useMemo(
++    () =>
++      view === "projects"
++        ? [...ITEMS.filter((i) => i.type === "project"), ...ITEMS.filter((i) => i.type === "experience")]
++        : ITEMS,
++    [view]
++  );
++
++  useEffect(() => {
++    const scope = createScope({
++      root: sectionRef,
++      mediaQueries: {
++        md: "(min-width: 768px)",
++        reduced: "(prefers-reduced-motion: reduce)",
++      },
++    });
++    scopeRef.current = scope;
++
++    scope.add((self) => {
++      const md = self.matches.md;
++      const reduced = self.matches.reduced;
++      mdRef.current = md;
++      prmRef.current = reduced;
++
++      const stage = stageRef.current;
++      if (!stage) return;
++
++      const clockNow = () =>
++        baseClockRef.current + (tickerRef.current ? tickerRef.current.currentTime : 0);
++
++      const eachItem = (fn) =>
++        ITEMS.forEach((item) => {
++          const el = liRefs.current[item.id];
++          if (el) fn(item, el);
++        });
++
++      /* Endpoint transforms for a given view at the frozen orbit clock.
++         Called inside layout.update() callbacks so the FLIP lands exactly
++         where the drift will resume. */
++      const setEndpointTransforms = (nextView) => {
++        const D = geomRef.current;
++        const t = clockNow();
++        eachItem((item, el) => {
++          const role = roleFor(item, nextView);
++          const value = md && D ? transformFor(item, role, D, t) : "";
++          if (value) el.style.transform = value;
++          else el.style.removeProperty("transform");
++        });
++        if (coreRef.current) coreRef.current.style.removeProperty("transform");
++      };
++      const applyStatic = () => setEndpointTransforms(viewRef.current);
++      const clearTransforms = () => {
++        eachItem((_, el) => {
++          el.style.removeProperty("transform");
++          el.style.removeProperty("z-index");
++        });
++        coreRef.current?.style.removeProperty("transform");
++      };
++
++      /* --- measurement -------------------------------------------------- */
++      const measure = () => {
++        const next = derive(stage.clientWidth, Math.max(stage.clientHeight, md ? 560 : 0));
++        geomRef.current = next;
++        setGeom(next);
++      };
++      measure();
++      const ro = new ResizeObserver(() => {
++        measure();
++        if (md && !transitioningRef.current && (reduced || !tickerRef.current)) applyStatic();
++      });
++      ro.observe(stage);
++
++      /* --- FLIP layout system ------------------------------------------- */
++      const layout = createLayout(stage, { children: "[data-fx]" });
++      layoutRef.current = layout;
++
++      let rafId = 0;
++      let io = null;
++      const onVisibility = () => syncRef.current && syncRef.current();
++
++      if (md) {
++        /* Draggables — Anime v4's own drag physics. snap:[0] makes every
++           release resolve back to the card's home position with the
++           release spring; under reduced motion the return is instant. */
++        eachItem((item, li) => {
++          const btn = btnRefs.current[item.id];
++          if (!btn) return;
++          let grabX = 0;
++          let grabY = 0;
++          const d = createDraggable(btn, {
++            snap: [0],
++            ...(reduced
++              ? { releaseEase: "linear" }
++              : { releaseStiffness: 140, releaseDamping: 16 }),
++            onGrab: () => {
++              grabX = d.x;
++              grabY = d.y;
++              li.style.zIndex = 60;
++            },
++            onRelease: () => {
++              if (Math.abs(d.x - grabX) + Math.abs(d.y - grabY) > 8) {
++                suppressClickRef.current = true;
++                setTimeout(() => (suppressClickRef.current = false), 150);
++              }
++              if (reduced) {
++                d.stop();
++                d.setX(0, true);
++                d.setY(0, true);
++              }
++            },
++            onSettle: () => {
++              li.style.removeProperty("z-index");
++            },
++          });
++        });
++      }
++
++      if (md && !reduced) {
++        /* Ambient drift ticker — a single Timer drives every wrapper.
++           It pauses when the stage is fully offscreen, when the document
++           is hidden, and while a FLIP transition owns the elements.
++           (anime's engine also pauses itself on document hidden.) */
++        const ticker = createTimer({
++          autoplay: false,
++          onUpdate: (t) => {
++            const D = geomRef.current;
++            if (!D) return;
++            const now = baseClockRef.current + t.currentTime;
++            eachItem((item, el) => {
++              const role = roleFor(item, viewRef.current);
++              if (role === "flow") return;
++              el.style.transform = transformFor(item, role, D, now);
++            });
++            if (coreRef.current) coreRef.current.style.transform = coreTransform(now);
++            if (dashRingRef.current)
++              dashRingRef.current.setAttribute("stroke-dashoffset", String(-(now * 0.012) % 1000));
++          },
++        });
++        tickerRef.current = ticker;
++
++        const sync = () => {
++          const run =
++            intersectingRef.current && !document.hidden && !transitioningRef.current;
++          if (run) ticker.resume();
++          else ticker.pause();
++          stage.dataset.drift = run ? "running" : "paused";
++        };
++        syncRef.current = sync;
++        document.addEventListener("visibilitychange", onVisibility);
++        io = new IntersectionObserver(
++          (entries) => {
++            intersectingRef.current = entries[0].isIntersecting;
++            sync();
++          },
++          { threshold: 0 }
++        );
++        io.observe(stage);
++        sync();
++
++        if (!mountedRef.current) {
++          /* Entrance: SSR shows the fixture's static grid; once mounted we
++             FLIP the same elements from the grid into the orbit field. */
++          rafId = requestAnimationFrame(() => {
++            transitioningRef.current = true;
++            sync();
++            timelineRef.current = layout.update(
++              () => {
++                mountedRef.current = true;
++                flushSync(() => setMounted(true));
++                setEndpointTransforms(viewRef.current);
++              },
++              {
++                duration: 850,
++                ease: "out(3)",
++                delay: stagger(34),
++                onComplete: () => {
++                  transitioningRef.current = false;
++                  syncRef.current && syncRef.current();
++                },
++              }
++            );
++          });
++        } else {
++          applyStatic();
++        }
++      } else {
++        stage.dataset.drift = "off";
++        if (md && reduced) {
++          /* Reduced motion on desktop: same composition, zero ambient
++             motion. Everything is positioned instantly. */
++          if (!mountedRef.current) {
++            mountedRef.current = true;
++            setMounted(true);
++          }
++          applyStatic();
++        } else {
++          /* Mobile: cards live in a snap-scroll shelf; no orbit transforms. */
++          clearTransforms();
++          const firstMount = !mountedRef.current;
++          if (firstMount) {
++            mountedRef.current = true;
++            setMounted(true);
++          }
++          if (firstMount && !reduced) {
++            /* Animate the buttons, not the li wrappers — the li carries the
++               class-driven dimming of inactive-group cards. */
++            const cards = Object.values(btnRefs.current).filter(Boolean);
++            animate(cards, {
++              opacity: { from: 0, to: 1 },
++              translateY: { from: 10, to: 0 },
++              delay: stagger(45),
++              duration: 420,
++              ease: "outQuad",
++            });
++          }
++        }
++      }
++
++      return () => {
++        if (rafId) cancelAnimationFrame(rafId);
++        ro.disconnect();
++        if (io) io.disconnect();
++        document.removeEventListener("visibilitychange", onVisibility);
++        if (tickerRef.current) {
++          baseClockRef.current += tickerRef.current.currentTime;
++          tickerRef.current = null;
++        }
++        if (timelineRef.current) {
++          timelineRef.current.cancel();
++          timelineRef.current = null;
++        }
++        syncRef.current = null;
++        layoutRef.current = null;
++        clearTransforms();
++      };
++    });
++
++    return () => {
++      scopeRef.current = null;
++      scope.revert();
++    };
++    // eslint-disable-next-line react-hooks/exhaustive-deps
++  }, []);
++
++  /* --- view switching -------------------------------------------------- */
++  const switchView = (next) => {
++    if (viewRef.current === next) return;
++    const list = listRef.current;
++    const scrollHome = (smooth) =>
++      list && list.scrollTo({ left: 0, behavior: smooth && !prmRef.current ? "smooth" : "auto" });
++
++    const apply = () => {
++      viewRef.current = next;
++      flushSync(() => setView(next));
++    };
++
++    const setEndpoints = () => {
++      const D = geomRef.current;
++      const t =
++        baseClockRef.current + (tickerRef.current ? tickerRef.current.currentTime : 0);
++      ITEMS.forEach((item) => {
++        const el = liRefs.current[item.id];
++        if (!el) return;
++        const role = roleFor(item, next);
++        const v = mdRef.current && D ? transformFor(item, role, D, t) : "";
++        if (v) el.style.transform = v;
++        else el.style.removeProperty("transform");
++      });
++      coreRef.current?.style.removeProperty("transform");
++    };
++
++    const layout = layoutRef.current;
++    const scope = scopeRef.current;
++
++    if (!layout || !scope || prmRef.current || !mountedRef.current) {
++      /* Reduced motion (or pre-mount): reorganize instantly — same
++         content, same controls, no animation. */
++      apply();
++      setEndpoints();
++      scrollHome(false);
++      return;
++    }
++
++    if (mdRef.current) {
++      /* Desktop: FLIP the same DOM nodes between orbit and structured
++         states with anime's layout system. */
++      transitioningRef.current = true;
++      syncRef.current && syncRef.current();
++      if (timelineRef.current) timelineRef.current.cancel();
++      scope.execute(() => {
++        timelineRef.current = layout.update(
++          () => {
++            apply();
++            setEndpoints();
++          },
++          {
++            duration: 640,
++            ease: "out(3)",
++            delay: stagger(26),
++            onComplete: () => {
++              transitioningRef.current = false;
++              syncRef.current && syncRef.current();
++            },
++          }
++        );
++      });
++    } else {
++      /* Mobile: reorder instantly, then a light staggered rise — calmer
++         for a scroll shelf than a full FLIP. */
++      apply();
++      scrollHome(true);
++      scope.execute(() => {
++        const cards = ITEMS.map((i) => btnRefs.current[i.id]).filter(Boolean);
++        animate(cards, {
++          opacity: { from: 0, to: 1 },
++          translateY: { from: 10, to: 0 },
++          delay: stagger(40),
++          duration: 380,
++          ease: "outQuad",
++        });
++      });
++    }
++  };
++
++  const onCardClick = (item) => {
++    if (suppressClickRef.current) return;
++    const group = GROUP_OF[item.type];
++    switchView(viewRef.current === group ? "all" : group);
++  };
++
++  /* --- render ----------------------------------------------------------- */
++  const D = geom;
++  const ringW = D ? 2 * (D.rx + 20) : 0;
++  const ringH = D ? 2 * (D.ry + 20) : 0;
++
+   return (
+-    <section className="space-y-6" aria-labelledby="experience-title">
+-      <div>
+-        <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted)]">Experience system</p>
+-        <h2 id="experience-title" className="text-4xl font-semibold tracking-tight">
+-          Work and projects
+-        </h2>
++    <section ref={sectionRef} className="space-y-6" aria-labelledby="experience-title">
++      <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
++        <div>
++          <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted)]">
++            Experience system
++          </p>
++          <h2 id="experience-title" className="text-4xl font-semibold tracking-tight">
++            Work and projects
++          </h2>
++        </div>
++        <div className="space-y-2 md:text-right">
++          <div role="group" aria-label="Arrange items" className="flex gap-2 md:justify-end">
++            {VIEWS.map((v) => (
++              <button
++                key={v.id}
++                type="button"
++                aria-pressed={view === v.id}
++                onClick={() => switchView(v.id)}
++                className={
++                  "rounded-full border px-4 py-1.5 text-sm transition-colors " +
++                  (view === v.id
++                    ? "border-[var(--foreground)] bg-[var(--foreground)] text-[var(--background)]"
++                    : "border-[var(--line)] text-[var(--muted)] hover:border-[var(--muted)]")
++                }
++              >
++                {v.label}
++              </button>
++            ))}
++          </div>
++          <p className="hidden text-xs text-[var(--muted)] md:block">
++            Drag any card — release and it snaps home. Click one to regroup.
++          </p>
++          <p className="text-xs text-[var(--muted)] md:hidden">
++            Swipe the shelf. Tap a card to focus its group.
++          </p>
++        </div>
+       </div>
+-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3" data-experience-system>
+-        {items.map((item) => (
+-          <button
+-            className="min-h-28 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4 text-left"
+-            data-kind={item.type}
+-            key={item.id}
+-          >
+-            <span className="text-sm text-[var(--muted)]">{item.type}</span>
+-            <strong className="mt-2 block">{item.label}</strong>
+-          </button>
+-        ))}
++
++      <div
++        ref={stageRef}
++        data-experience-system
++        data-drift="off"
++        className="relative md:min-h-[560px]"
++      >
++        {/* Central project object — hub of the composition */}
++        <div
++          ref={coreRef}
++          data-fx
++          aria-hidden="true"
++          style={mounted && D ? coreAnchor(view, D) : undefined}
++          className={
++            "mb-4 flex items-center gap-3 " +
++            (mounted ? "md:absolute md:mb-0 md:block md:w-36" : "md:hidden")
++          }
++        >
++          <div className="relative">
++            <svg
++              width={ringW}
++              height={ringH}
++              className="pointer-events-none absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 md:block"
++              aria-hidden="true"
++            >
++              <ellipse
++                cx={ringW / 2}
++                cy={ringH / 2}
++                rx={D ? D.rx : 0}
++                ry={D ? D.ry : 0}
++                fill="none"
++                stroke="var(--line)"
++                strokeWidth="1"
++                className="motion-safe:transition-opacity motion-safe:duration-700"
++                style={{ opacity: view === "all" ? 1 : 0 }}
++              />
++              <ellipse
++                ref={dashRingRef}
++                cx={ringW / 2}
++                cy={ringH / 2}
++                rx={D ? D.dockRx + 34 : 0}
++                ry={D ? D.dockRy + 26 : 0}
++                fill="none"
++                stroke="var(--line)"
++                strokeWidth="1"
++                strokeDasharray="3 8"
++                className="motion-safe:transition-opacity motion-safe:duration-700"
++                style={{ opacity: view === "all" ? 0 : 1 }}
++              />
++            </svg>
++            <div className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full border border-[var(--line)] bg-[var(--surface)] text-sm font-semibold tracking-tight md:h-36 md:w-36 md:text-3xl">
++              JL
++            </div>
++          </div>
++          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted)] md:mt-3 md:text-center">
++            Core work
++          </p>
++        </div>
++
++        <ul ref={listRef} role="list" className={ulClass(mounted)}>
++          {ordered.map((item) => {
++            const role = roleFor(item, view);
++            const primary = view === "all" || role === "flow";
++            const anchor = mounted && D ? anchorFor(role, D) : undefined;
++            return (
++              <li
++                key={item.id}
++                ref={(el) => (liRefs.current[item.id] = el)}
++                data-fx
++                data-kind={item.type}
++                style={anchor}
++                className={liClass(role, primary, mounted)}
++              >
++                <button
++                  ref={(el) => (btnRefs.current[item.id] = el)}
++                  type="button"
++                  onClick={() => onCardClick(item)}
++                  data-kind={item.type}
++                  className="block h-full min-h-28 w-full select-none rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4 text-left transition-colors hover:border-[var(--muted)] focus-visible:outline-2 focus-visible:outline-offset-2"
++                >
++                  <span className="text-sm text-[var(--muted)]">{item.type}</span>
++                  <strong className="mt-2 block leading-snug">{item.label}</strong>
++                  <span className="mt-1 block truncate text-xs text-[var(--muted)]">
++                    {item.meta}
++                  </span>
++                </button>
++              </li>
++            );
++          })}
++        </ul>
+       </div>
+     </section>
+   );

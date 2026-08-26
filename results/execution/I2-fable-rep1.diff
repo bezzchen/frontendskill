@@ -1,0 +1,746 @@
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..990dc61 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -24,3 +24,163 @@ html { background: var(--background); color: var(--foreground); }
+ body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
+ a { color: inherit; }
+ button, input { font: inherit; }
++
++/* ---------------------------------------------------------------------------
++   Experience system
++   Layout states are declared here per [data-view]; Anime.js only ever animates
++   transforms (and transient width/height/section-height during FLIP moves).
++--------------------------------------------------------------------------- */
++
++.es-tabs { display: inline-flex; gap: 0.375rem; }
++
++.es-tab {
++  border: 1px solid var(--line);
++  background: var(--surface);
++  color: var(--muted);
++  border-radius: 9999px;
++  padding: 0.375rem 0.875rem;
++  font-size: 0.875rem;
++  line-height: 1.25rem;
++  cursor: pointer;
++  transition: color 0.2s ease, border-color 0.2s ease;
++}
++.es-tab[aria-pressed="true"] { color: var(--foreground); border-color: var(--foreground); }
++.es-tab:focus-visible,
++.es-card:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
++.es-tab--orbit { display: none; }
++
++.es-shell { position: relative; }
++.es-stage { position: relative; }
++
++/* Base structured layout: the original card grid. */
++.es-track {
++  position: relative;
++  display: grid;
++  grid-template-columns: repeat(2, minmax(0, 1fr));
++  gap: 0.75rem;
++}
++
++.es-item { position: relative; }
++
++.es-card {
++  display: block;
++  width: 100%;
++  height: 100%;
++  transition: opacity 0.3s ease, border-color 0.3s ease;
++}
++.es-item.is-held .es-card { border-color: var(--muted); }
++
++/* Selected group leads; the other group recedes but stays present. */
++[data-view="experience"] .es-item[data-kind="project"],
++[data-view="projects"] .es-item[data-kind="experience"] { order: 1; }
++[data-view="experience"] .es-item[data-kind="project"] .es-card,
++[data-view="projects"] .es-item[data-kind="experience"] .es-card {
++  opacity: 0.66;
++  min-height: 5rem;
++}
++
++/* Central object and orbit guides: only visible in the orbit view. */
++.es-hub,
++.es-ring {
++  position: absolute;
++  left: 50%;
++  top: 50%;
++  transform: translate(-50%, -50%);
++  opacity: 0;
++  visibility: hidden;
++  pointer-events: none;
++  transition: opacity 0.45s ease, visibility 0s linear 0.45s;
++}
++.es-hub {
++  display: grid;
++  place-content: center;
++  text-align: center;
++  gap: 0.2rem;
++  width: 9.5rem;
++  height: 9.5rem;
++  border-radius: 9999px;
++  border: 1px solid var(--line);
++  background: var(--surface);
++}
++.es-hub-eyebrow,
++.es-hub-note {
++  font-size: 0.6875rem;
++  text-transform: uppercase;
++  letter-spacing: 0.16em;
++  color: var(--muted);
++}
++.es-hub-name { font-size: 1rem; letter-spacing: -0.01em; }
++.es-ring { border: 1px solid var(--line); border-radius: 9999px; }
++.es-ring--outer { width: 72%; height: 79%; }
++.es-ring--inner { width: 44%; height: 49%; }
++
++.es-hint {
++  display: none;
++  margin: 0.75rem 0 0;
++  font-size: 0.8125rem;
++  color: var(--muted);
++}
++
++/* --- Small screens: a flickable, snapping deck instead of the orbit. --- */
++@media (max-width: 767.98px) {
++  .es-shell { --es-bleed: 1.5rem; }
++  .es-stage {
++    overflow-x: auto;
++    margin-inline: calc(var(--es-bleed) * -1);
++    padding-inline: var(--es-bleed);
++    overscroll-behavior-x: contain;
++  }
++  /* Once the draggable deck is mounted it takes over from native scrolling. */
++  .es-ready .es-stage { overflow: hidden; }
++  .es-track {
++    display: flex;
++    align-items: stretch;
++    gap: 0.75rem;
++    touch-action: pan-y;
++  }
++  .es-item { flex: 0 0 clamp(13rem, 66vw, 18rem); }
++  [data-view="experience"] .es-item[data-kind="project"],
++  [data-view="projects"] .es-item[data-kind="experience"] {
++    flex-basis: clamp(11rem, 52vw, 14rem);
++  }
++}
++
++/* --- Larger screens: three-column grid, plus the orbit stage. --- */
++@media (min-width: 768px) {
++  .es-tab--orbit { display: inline-flex; }
++  .es-track { grid-template-columns: repeat(3, minmax(0, 1fr)); }
++
++  [data-view="orbit"] .es-stage {
++    height: min(34rem, 74vh);
++    user-select: none;
++    -webkit-user-select: none;
++  }
++  [data-view="orbit"] .es-track {
++    display: block;
++    position: absolute;
++    inset: 0;
++  }
++  [data-view="orbit"] .es-item {
++    position: absolute;
++    left: 0;
++    top: 0;
++    width: 11rem;
++    will-change: transform;
++  }
++  [data-view="orbit"] .es-card { cursor: grab; }
++  [data-view="orbit"] .es-hub,
++  [data-view="orbit"] .es-ring {
++    visibility: visible;
++    transition: opacity 0.45s ease 0.1s, visibility 0s;
++  }
++  [data-view="orbit"] .es-hub { opacity: 1; }
++  [data-view="orbit"] .es-ring { opacity: 0.6; }
++  [data-view="orbit"] .es-hint { display: block; }
++}
++
++@media (prefers-reduced-motion: reduce) {
++  .es-tab,
++  .es-card,
++  .es-hub,
++  .es-ring { transition: none; }
++}
+diff --git a/components/ExperienceSystem.jsx b/components/ExperienceSystem.jsx
+index 0b2e08c..c3eede4 100644
+--- a/components/ExperienceSystem.jsx
++++ b/components/ExperienceSystem.jsx
+@@ -1,5 +1,15 @@
+ "use client";
+ 
++import { useEffect, useRef, useState } from "react";
++import {
++  animate,
++  createAnimatable,
++  createDraggable,
++  createScope,
++  createTimer,
++  spring,
++} from "animejs";
++
+ const items = [
+   { id: "exp-1", label: "Company A", type: "experience" },
+   { id: "exp-2", label: "Company B", type: "experience" },
+@@ -9,26 +19,540 @@ const items = [
+   { id: "project-3", label: "Project Field", type: "project" },
+ ];
+ 
++const VIEWS = [
++  { id: "orbit", label: "Orbit" },
++  { id: "experience", label: "Experience" },
++  { id: "projects", label: "Projects" },
++];
++
++const TAU = Math.PI * 2;
++const STAGE_PADDING = 16;
++
++const mix = (a, b, k) => a + (b - a) * k;
++
++/** Deterministic pseudo-random in [0, 1) so every render agrees on the composition. */
++function jitter(i, salt) {
++  const x = Math.sin((i + 1) * 12.9898 + salt * 78.233) * 43758.5453;
++  return x - Math.floor(x);
++}
++
++/** Per-item orbital character: base angle, angular speed, radius scale, wobble. */
++function makeOrbitConfig(i, count) {
++  const j1 = jitter(i, 1);
++  const j2 = jitter(i, 2);
++  const j3 = jitter(i, 3);
++  const j4 = jitter(i, 4);
++  return {
++    theta0: (i / count) * TAU - TAU / 4 + (j1 - 0.5) * 0.55,
++    omega: (TAU / 140000) * (0.75 + j2 * 0.5), // one lap every ~2-3 minutes
++    rScale: 0.86 + j3 * 0.26,
++    wobAmp: 7 + j4 * 7,
++    wf1: TAU / (6800 + j1 * 2600),
++    wp1: j2 * TAU,
++    wf2: TAU / (7600 + j3 * 2600),
++    wp2: j4 * TAU,
++    rf: TAU / (9200 + j2 * 3200),
++    rp: j3 * TAU,
++    rotAmp: 1 + j1 * 0.9,
++  };
++}
++
+ export function ExperienceSystem() {
++  const rootRef = useRef(null);
++  const shellRef = useRef(null);
++  const stageRef = useRef(null);
++  const trackRef = useRef(null);
++  const nodeElsRef = useRef(new Map());
++  const controllerRef = useRef(null);
++  const viewRef = useRef("experience"); // survives media-query rebuilds
++  const enteredOrbitRef = useRef(false);
++  const onViewChangeRef = useRef(null);
++
++  const [view, setViewState] = useState("experience");
++  onViewChangeRef.current = setViewState;
++
++  useEffect(() => {
++    const rootEl = rootRef.current;
++    const shellEl = shellRef.current;
++    const stageEl = stageRef.current;
++    const trackEl = trackRef.current;
++    if (!rootEl || !shellEl || !stageEl || !trackEl) return undefined;
++
++    const scope = createScope({
++      root: rootEl,
++      mediaQueries: {
++        isDesktop: "(min-width: 768px)",
++        reduceMotion: "(prefers-reduced-motion: reduce)",
++      },
++    });
++
++    // The constructor re-runs whenever a media query flips (desktop <-> mobile,
++    // reduced motion on/off). Everything created inside is auto-reverted by the
++    // scope before the next run and on unmount.
++    scope.add((self) => {
++      const { isDesktop, reduceMotion } = self.matches;
++      shellEl.classList.add("es-ready");
++
++      const nodes = items.map((item, i) => {
++        const el = nodeElsRef.current.get(item.id);
++        // In the orbit view items are positioned through left/top (layout), so
++        // the drag translate of the card stays a pure offset from its anchor —
++        // exactly the space Anime's Draggable computes its bounds and snap in.
++        el.style.left = "0px";
++        el.style.top = "0px";
++        return {
++          id: item.id,
++          i,
++          el,
++          card: el.firstElementChild,
++          // Instant setters (duration 0); the only writer of wrapper styles.
++          anim: createAnimatable(el, { left: 0, top: 0, x: 0, y: 0, scale: 0, rotate: 0 }),
++          conf: makeOrbitConfig(i, items.length),
++          hw: 0,
++          hh: 0,
++          rx: 0,
++          ry: 0,
++          live: false, // parked on its orbit and driven by the ticker
++          held: false, // currently grabbed
++          tr: null, // in-flight reorganize/catch-up transition
++        };
++      });
++
++      const transients = new Set();
++      const geom = { cx: 0, cy: 0 };
++      let current = null;
++
++      const trackTransient = (a) => transients.add(a);
++
++      const measureNodeSizes = () => {
++        for (const n of nodes) {
++          n.hw = n.el.offsetWidth / 2;
++          n.hh = n.el.offsetHeight / 2;
++        }
++      };
++
++      const measureGeometry = () => {
++        const w = stageEl.clientWidth;
++        const h = stageEl.clientHeight;
++        geom.cx = w / 2;
++        geom.cy = h / 2;
++        for (const n of nodes) {
++          // Margin accounts for the wobble amplitude plus the depth scale and
++          // slight rotation, so a card never pokes past the stage edge.
++          const mx = STAGE_PADDING + n.conf.wobAmp + n.hw * 0.06 + n.hh * 0.05;
++          const my = STAGE_PADDING + n.conf.wobAmp + n.hh * 0.06 + n.hw * 0.05;
++          n.rx = Math.max(110, Math.min(w * 0.345 * n.conf.rScale, geom.cx - n.hw - mx));
++          n.ry = Math.max(88, Math.min(h * 0.37 * n.conf.rScale, geom.cy - n.hh - my));
++        }
++      };
++
++      /** Where an item wants to rest while orbiting, at ticker time t (ms). */
++      const orbitPos = (n, t) => {
++        const c = n.conf;
++        const a = c.theta0 + t * c.omega;
++        const wobble = reduceMotion ? 0 : 1;
++        const left =
++          geom.cx - n.hw + Math.cos(a) * n.rx + Math.cos(t * c.wf1 + c.wp1) * c.wobAmp * wobble;
++        const top =
++          geom.cy - n.hh + Math.sin(a) * n.ry + Math.sin(t * c.wf2 + c.wp2) * c.wobAmp * wobble;
++        const depth = Math.sin(a); // lower half of the ellipse reads as "closer"
++        return {
++          left,
++          top,
++          scale: 1 + depth * 0.05,
++          rotate: reduceMotion ? 0 : Math.sin(t * c.rf + c.rp) * c.rotAmp,
++          z: 10 + Math.round(depth * 6),
++        };
++      };
++
++      const GRID_TARGET = () => ({});
++
++      /**
++       * Single writer for wrapper presentation. left/top position the item in
++       * the orbit (layout space, so drag offsets stay relative to the anchor);
++       * x/y are only used to slide items during grid reorganizations.
++       */
++      const applyState = (n, p) => {
++        n.anim.left(p.left ?? 0);
++        n.anim.top(p.top ?? 0);
++        n.anim.x(p.x ?? 0);
++        n.anim.y(p.y ?? 0);
++        n.anim.scale(p.scale ?? 1);
++        n.anim.rotate(p.rotate ?? 0);
++        if (!n.held) n.el.style.zIndex = p.z == null ? "" : String(p.z);
++      };
++
++      const currentState = (n) => ({
++        left: n.anim.left(),
++        top: n.anim.top(),
++        x: n.anim.x(),
++        y: n.anim.y(),
++        scale: n.anim.scale(),
++        rotate: n.anim.rotate(),
++      });
++
++      const cancelTransition = (n) => {
++        if (!n.tr) return;
++        transients.delete(n.tr);
++        n.tr.cancel(); // keeps current values, stops driving
++        n.tr = null;
++        n.el.style.removeProperty("width");
++        n.el.style.removeProperty("height");
++      };
++
++      // Continuous "living" drive. Only touches items settled in the orbit.
++      const orbitTimer = isDesktop
++        ? createTimer({
++            autoplay: false,
++            onUpdate: (t) => {
++              const now = t.currentTime;
++              for (const n of nodes) {
++                if (n.live && !n.held && !n.tr) applyState(n, orbitPos(n, now));
++              }
++            },
++          })
++        : null;
++
++      const orbitNow = () => (orbitTimer ? orbitTimer.currentTime : 0);
++
++      /**
++       * Drive one item from an explicit start state toward a (possibly moving)
++       * target. A plain {k: 0->1} object is animated and the eased progress
++       * blends every channel, so an item can join the moving orbit without a
++       * visible seam, and reorganizations can be staggered.
++       */
++      const transitionNode = (n, from, getTarget, { duration, delay = 0, ease = "inOutQuint", size = null, onDone } = {}) => {
++        cancelTransition(n);
++        n.live = false;
++        applyState(n, from);
++        if (size) {
++          n.el.style.width = `${size.w1}px`;
++          n.el.style.height = `${size.h1}px`;
++        }
++        const obj = { k: 0 };
++        const anim = animate(obj, {
++          k: 1,
++          duration: reduceMotion ? 0 : duration,
++          delay: reduceMotion ? 0 : delay,
++          ease,
++          onUpdate: () => {
++            const t = getTarget();
++            const k = obj.k;
++            applyState(n, {
++              left: mix(from.left ?? 0, t.left ?? 0, k),
++              top: mix(from.top ?? 0, t.top ?? 0, k),
++              x: mix(from.x ?? 0, t.x ?? 0, k),
++              y: mix(from.y ?? 0, t.y ?? 0, k),
++              scale: mix(from.scale ?? 1, t.scale ?? 1, k),
++              rotate: mix(from.rotate ?? 0, t.rotate ?? 0, k),
++              z: t.z,
++            });
++            if (size) {
++              n.el.style.width = `${mix(size.w1, size.w2, k)}px`;
++              n.el.style.height = `${mix(size.h1, size.h2, k)}px`;
++            }
++          },
++          onComplete: (a) => {
++            transients.delete(a);
++            n.tr = null;
++            if (size) {
++              n.el.style.removeProperty("width");
++              n.el.style.removeProperty("height");
++            }
++            applyState(n, { ...getTarget() });
++            if (onDone) onDone(n);
++          },
++        });
++        n.tr = anim;
++        trackTransient(anim);
++      };
++
++      // After a dragged card settles back onto its anchor, glide the anchor
++      // itself back into the moving orbit.
++      const catchUp = (n) => {
++        transitionNode(n, currentState(n), () => orbitPos(n, orbitNow()), {
++          duration: 520,
++          ease: "outQuint",
++          onDone: (nn) => {
++            nn.live = true;
++          },
++        });
++      };
++
++      // --- Desktop: each card is draggable and springs home on release. ---
++      // The card's own translate is the drag offset, so snap: [0] makes the
++      // anchor the only release destination and the spring release ease
++      // carries the pointer velocity into the return.
++      const releaseSpring = spring(
++        reduceMotion ? { stiffness: 140, damping: 26 } : { stiffness: 150, damping: 13 }
++      );
++      const cardDrags = isDesktop
++        ? nodes.map((n) =>
++            createDraggable(n.card, {
++              container: stageEl,
++              containerPadding: 10,
++              containerFriction: 0.45,
++              snap: [0],
++              releaseEase: releaseSpring,
++              velocityMultiplier: reduceMotion ? 0 : 1,
++              onGrab: () => {
++                n.held = true;
++                cancelTransition(n);
++                n.el.classList.add("is-held");
++                n.el.style.zIndex = "60";
++              },
++              onSettle: () => {
++                n.held = false;
++                n.el.classList.remove("is-held");
++                if (current === "orbit") catchUp(n);
++              },
++            })
++          )
++        : [];
++
++      // --- Mobile: one draggable deck (horizontal flick with per-card snap). ---
++      const deckDrag = !isDesktop
++        ? createDraggable(trackEl, {
++            y: false,
++            container: () => [0, 0, 0, Math.min(0, trackEl.clientWidth - trackEl.scrollWidth)],
++            x: {
++              snap: () => {
++                const minX = Math.min(0, trackEl.clientWidth - trackEl.scrollWidth);
++                return nodes.map((n) => Math.max(minX, -n.el.offsetLeft));
++              },
++            },
++            containerFriction: 0.55,
++            velocityMultiplier: reduceMotion ? 0 : 1,
++          })
++        : null;
++
++      /**
++       * Reorganize the same DOM nodes into the requested view.
++       * FLIP: measure -> flip the layout state via data-view (CSS grid / deck /
++       * absolute stage) -> measure again -> blend each item from where it
++       * visually was to where the new state wants it.
++       */
++      const applyView = (next, animated) => {
++        current = next;
++        viewRef.current = next;
++
++        const first = animated ? nodes.map((n) => n.card.getBoundingClientRect()) : null;
++        const h1 = animated ? shellEl.offsetHeight : 0;
++        const preState = nodes.map((n) => ({
++          scale: n.anim.scale(),
++          rotate: n.anim.rotate(),
++        }));
++
++        // Neutralize dynamic state (drag offsets fold into the FLIP because the
++        // first measurement above happened before the reset).
++        for (const n of nodes) {
++          cancelTransition(n);
++          n.live = false;
++          n.held = false;
++          n.el.classList.remove("is-held");
++        }
++        cardDrags.forEach((d) => d.reset());
++        if (deckDrag) deckDrag.reset();
++        if (orbitTimer && next !== "orbit") orbitTimer.pause();
++
++        // Flip the layout state, with wrapper styles zeroed for a clean measure.
++        shellEl.dataset.view = next;
++        for (const n of nodes) {
++          applyState(n, {});
++          n.el.style.removeProperty("width");
++          n.el.style.removeProperty("height");
++        }
++
++        const last = animated ? nodes.map((n) => n.card.getBoundingClientRect()) : null;
++        const h2 = animated ? shellEl.offsetHeight : 0;
++        measureNodeSizes();
++        if (next === "orbit") measureGeometry();
++
++        if (orbitTimer && next === "orbit" && !reduceMotion) orbitTimer.resume();
++        cardDrags.forEach((d) => (next === "orbit" ? d.enable() : d.disable()));
++
++        nodes.forEach((n, idx) => {
++          const getTarget = next === "orbit" ? () => orbitPos(n, orbitNow()) : GRID_TARGET;
++          if (!animated) {
++            applyState(n, getTarget());
++            n.live = next === "orbit";
++            return;
++          }
++          const f = first[idx];
++          const l = last[idx];
++          const preScale = preState[idx].scale || 1;
++          const dx = f.left + f.width / 2 - (l.left + l.width / 2);
++          const dy = f.top + f.height / 2 - (l.top + l.height / 2);
++          // Start from the item's current visual spot, expressed in the new
++          // view's coordinate channel: layout offsets for the orbit stage,
++          // translate for the structured grid/deck.
++          const from =
++            next === "orbit"
++              ? { left: dx, top: dy, scale: preScale, rotate: preState[idx].rotate }
++              : { x: dx, y: dy, scale: preScale, rotate: preState[idx].rotate };
++          const w1 = f.width / preScale;
++          const h1c = f.height / preScale;
++          const size =
++            Math.abs(w1 - l.width) > 1 || Math.abs(h1c - l.height) > 1
++              ? { w1, h1: h1c, w2: l.width, h2: l.height }
++              : null;
++          transitionNode(n, from, getTarget, {
++            duration: next === "orbit" ? 760 : 620,
++            delay: idx * 45,
++            ease: "inOutQuint",
++            size,
++            onDone:
++              next === "orbit"
++                ? (nn) => {
++                    nn.live = true;
++                  }
++                : undefined,
++          });
++        });
++
++        // Ease the section height between the fixed stage and the auto grid.
++        if (animated && !reduceMotion && Math.abs(h1 - h2) > 1) {
++          shellEl.style.height = `${h1}px`;
++          const heightAnim = animate(shellEl, {
++            height: h2,
++            duration: 620,
++            ease: "inOutQuint",
++            onComplete: (a) => {
++              transients.delete(a);
++              shellEl.style.removeProperty("height");
++            },
++          });
++          trackTransient(heightAnim);
++        } else {
++          shellEl.style.removeProperty("height");
++        }
++
++        if (deckDrag) deckDrag.refresh();
++      };
++
++      // Keep the orbit legible when the stage resizes.
++      const resizeObserver = new ResizeObserver(() => {
++        if (current === "orbit") {
++          measureNodeSizes();
++          measureGeometry();
++          if (reduceMotion) {
++            for (const n of nodes) if (n.live) applyState(n, orbitPos(n, orbitNow()));
++          }
++        }
++      });
++      resizeObserver.observe(stageEl);
++
++      // Initial view for this environment. The orbit is the default the first
++      // time the system finds itself on a large screen; a phone never gets the
++      // orbit forced on it, and later desktop<->mobile flips keep the user's
++      // chosen view instead of yanking them back into orbit.
++      let initialView = viewRef.current;
++      if (!isDesktop && initialView === "orbit") initialView = "experience";
++      let animateInitial = false;
++      if (isDesktop && !enteredOrbitRef.current) {
++        enteredOrbitRef.current = true;
++        initialView = "orbit";
++        animateInitial = !reduceMotion;
++      }
++      applyView(initialView, animateInitial);
++      if (onViewChangeRef.current) onViewChangeRef.current(initialView);
++
++      controllerRef.current = {
++        setView: (v) => {
++          if (v === current) return;
++          if (v === "orbit" && !isDesktop) return;
++          applyView(v, true);
++          if (onViewChangeRef.current) onViewChangeRef.current(v);
++        },
++      };
++
++      return () => {
++        controllerRef.current = null;
++        resizeObserver.disconnect();
++        transients.forEach((a) => a.cancel());
++        transients.clear();
++        shellEl.classList.remove("es-ready");
++        shellEl.style.removeProperty("height");
++        for (const n of nodes) {
++          n.el.classList.remove("is-held");
++          for (const prop of ["width", "height", "z-index", "left", "top"]) {
++            n.el.style.removeProperty(prop);
++          }
++        }
++        // Draggables, the ticker, animatables and scoped animations are
++        // reverted by the scope itself.
++      };
++    });
++
++    return () => {
++      controllerRef.current = null;
++      scope.revert();
++    };
++  }, []);
++
++  const selectView = (v) => {
++    if (controllerRef.current) controllerRef.current.setView(v);
++    else setViewState(v === "orbit" ? "experience" : v);
++  };
++
+   return (
+-    <section className="space-y-6" aria-labelledby="experience-title">
+-      <div>
+-        <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted)]">Experience system</p>
+-        <h2 id="experience-title" className="text-4xl font-semibold tracking-tight">
+-          Work and projects
+-        </h2>
++    <section ref={rootRef} className="space-y-6" aria-labelledby="experience-title">
++      <div className="flex flex-wrap items-end justify-between gap-4">
++        <div>
++          <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted)]">Experience system</p>
++          <h2 id="experience-title" className="text-4xl font-semibold tracking-tight">
++            Work and projects
++          </h2>
++        </div>
++        <div className="es-tabs" role="group" aria-label="Layout view">
++          {VIEWS.map((v) => (
++            <button
++              key={v.id}
++              type="button"
++              className={`es-tab${v.id === "orbit" ? " es-tab--orbit" : ""}`}
++              aria-pressed={view === v.id}
++              onClick={() => selectView(v.id)}
++            >
++              {v.label}
++            </button>
++          ))}
++        </div>
+       </div>
+-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3" data-experience-system>
+-        {items.map((item) => (
+-          <button
+-            className="min-h-28 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4 text-left"
+-            data-kind={item.type}
+-            key={item.id}
+-          >
+-            <span className="text-sm text-[var(--muted)]">{item.type}</span>
+-            <strong className="mt-2 block">{item.label}</strong>
+-          </button>
+-        ))}
++
++      <div className="es-shell" data-experience-system data-view={view} ref={shellRef}>
++        <div className="es-stage" ref={stageRef}>
++          <div className="es-ring es-ring--outer" aria-hidden="true" />
++          <div className="es-ring es-ring--inner" aria-hidden="true" />
++          <div className="es-hub" aria-hidden="true">
++            <span className="es-hub-eyebrow">core</span>
++            <strong className="es-hub-name">Jordan Lee</strong>
++            <span className="es-hub-note">work &amp; projects</span>
++          </div>
++          <div className="es-track" ref={trackRef}>
++            {items.map((item) => (
++              <div
++                key={item.id}
++                className="es-item"
++                data-kind={item.type}
++                ref={(el) => {
++                  if (el) {
++                    nodeElsRef.current.set(item.id, el);
++                  }
++                }}
++              >
++                <button
++                  type="button"
++                  className="es-card min-h-28 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4 text-left"
++                  data-kind={item.type}
++                >
++                  <span className="text-sm text-[var(--muted)]">{item.type}</span>
++                  <strong className="mt-2 block">{item.label}</strong>
++                </button>
++              </div>
++            ))}
++          </div>
++        </div>
++        <p className="es-hint">Drag a card — it springs back into orbit.</p>
+       </div>
+     </section>
+   );

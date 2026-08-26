@@ -1,0 +1,1480 @@
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..7687c0b 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -24,3 +24,30 @@ html { background: var(--background); color: var(--foreground); }
+ body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
+ a { color: inherit; }
+ button, input { font: inherit; }
++
++/* Experience index (kept as shared CSS so the 500 server-rendered rows stay
++   byte-light instead of repeating utility classes on every row). */
++.c-index { list-style: none; margin: 0; }
++.c-index li + li { margin-top: 1px; }
++.c-index button {
++  display: flex;
++  align-items: baseline;
++  justify-content: space-between;
++  gap: 12px;
++  width: 100%;
++  padding: 6px 10px;
++  border: 0;
++  border-radius: 6px;
++  background: transparent;
++  color: inherit;
++  text-align: left;
++  font-size: 0.85rem;
++  cursor: pointer;
++}
++.c-index button:hover { background: color-mix(in srgb, var(--foreground) 7%, transparent); }
++.c-index button[aria-pressed="true"] {
++  background: color-mix(in srgb, var(--foreground) 12%, transparent);
++  outline: 1px solid var(--line);
++}
++.c-index button b { font-weight: 500; }
++.c-index button span { color: var(--muted); font-size: 0.75rem; white-space: nowrap; }
+diff --git a/app/page.jsx b/app/page.jsx
+index 52f37fd..d735443 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -1,5 +1,6 @@
+ import { SettingsPanel } from "@/components/SettingsPanel";
+ import { ProjectGrid } from "@/components/ProjectGrid";
++import { Constellation } from "@/components/constellation/Constellation";
+ 
+ export default function Home() {
+   return (
+@@ -12,6 +13,8 @@ export default function Home() {
+         </p>
+       </header>
+ 
++      <Constellation />
++
+       <ProjectGrid />
+ 
+       <section className="max-w-2xl space-y-6" aria-labelledby="settings-title">
+diff --git a/components/ConstellationData.js b/components/ConstellationData.js
+index 7304001..70c7052 100644
+--- a/components/ConstellationData.js
++++ b/components/ConstellationData.js
+@@ -1,5 +1,93 @@
+-export const constellationItems = Array.from({ length: 500 }, (_, index) => ({
+-  id: index,
+-  label: `Node ${index + 1}`,
+-  category: ["engineering", "research", "design", "math"][index % 4],
+-}));
++// Shared, deterministic dataset for the experience constellation.
++// Imported by both the server-rendered semantic list and the client-side
++// Pixi engine, so everything here must be pure and stable across runs
++// (no Date.now, no Math.random).
++
++export const CATEGORIES = {
++  engineering: {
++    label: "Engineering",
++    // Hue used for canvas tiles; css used for DOM accents (chips, legend, list dots).
++    hue: 215,
++    css: "#5b8def",
++  },
++  research: {
++    label: "Research",
++    hue: 36,
++    css: "#e0a43c",
++  },
++  design: {
++    label: "Design",
++    hue: 330,
++    css: "#e06ca8",
++  },
++  math: {
++    label: "Math",
++    hue: 160,
++    css: "#3fbf9a",
++  },
++};
++
++export const CATEGORY_IDS = Object.keys(CATEGORIES);
++
++const NAME_POOLS = {
++  engineering: {
++    a: ["Raft", "Anvil", "Socket", "Beacon", "Ledger", "Foundry", "Gantry", "Piston", "Quill", "Crank"],
++    b: ["Compiler", "Scheduler", "Cache", "Pipeline", "Runtime", "Allocator", "Router", "Debugger", "Emulator", "Cluster", "Daemon", "Kernel", "Queue"],
++  },
++  research: {
++    a: ["Spectral", "Latent", "Neural", "Bayesian", "Markov", "Sparse", "Convex", "Stochastic", "Causal", "Quantized"],
++    b: ["Fields", "Priors", "Embeddings", "Dynamics", "Inference", "Sampling", "Attention", "Manifolds", "Kernels", "Gradients", "Bandits", "Encoders", "Entropy"],
++  },
++  design: {
++    a: ["Grain", "Umbra", "Facet", "Cadence", "Vellum", "Prism", "Contour", "Halftone", "Marrow", "Gossamer"],
++    b: ["Grid", "Type", "Poster", "Palette", "Motion", "Layout", "Glyphs", "Icons", "Slides", "Textures", "Frames", "System", "Study"],
++  },
++  math: {
++    a: ["Euler", "Gauss", "Fermat", "Noether", "Hilbert", "Riemann", "Poincare", "Galois", "Ramanujan", "Erdos"],
++    b: ["Orbits", "Lattices", "Primes", "Knots", "Graphs", "Tilings", "Series", "Groups", "Curves", "Flows", "Proofs", "Sets", "Forms"],
++  },
++};
++
++const KINDS = ["project", "prototype", "paper", "talk", "tool", "study"];
++
++// mulberry32: tiny deterministic PRNG (integer math via Math.imul, so it is
++// stable between Node SSR and every browser engine).
++function mulberry32(seed) {
++  let t = seed >>> 0;
++  return function () {
++    t = (t + 0x6d2b79f5) >>> 0;
++    let r = Math.imul(t ^ (t >>> 15), 1 | t);
++    r = (r + Math.imul(r ^ (r >>> 7), 61 | r)) ^ r;
++    return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
++  };
++}
++
++const rand = mulberry32(0x5eed);
++
++export const constellationItems = Array.from({ length: 500 }, (_, index) => {
++  // Preserve the original id -> category mapping from the seed dataset.
++  const category = CATEGORY_IDS[index % 4];
++  const ordinal = Math.floor(index / 4); // 0..124 within the category
++  const pool = NAME_POOLS[category];
++  const label = `${pool.a[ordinal % pool.a.length]} ${pool.b[Math.floor(ordinal / pool.a.length) % pool.b.length]}`;
++  const r1 = rand();
++  const r2 = rand();
++  const r3 = rand();
++  const r4 = rand();
++  return {
++    id: index,
++    label,
++    category,
++    monogram: label.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase(),
++    kind: KINDS[Math.floor(r1 * KINDS.length)],
++    year: 2014 + Math.floor(r2 * 13),
++    // Seeds consumed by the canvas tile painter and the drift simulation.
++    seed: r3,
++    phase: r4 * Math.PI * 2,
++  };
++});
++
++export const itemsByCategory = CATEGORY_IDS.reduce((acc, cat) => {
++  acc[cat] = constellationItems.filter((item) => item.category === cat);
++  return acc;
++}, {});
+diff --git a/components/constellation/Constellation.jsx b/components/constellation/Constellation.jsx
+new file mode 100644
+index 0000000..dfa001f
+--- /dev/null
++++ b/components/constellation/Constellation.jsx
+@@ -0,0 +1,368 @@
++"use client";
++
++import { memo, useEffect, useMemo, useRef, useState } from "react";
++import {
++  CATEGORIES,
++  CATEGORY_IDS,
++  constellationItems,
++  itemsByCategory,
++} from "@/components/ConstellationData";
++
++const LAYOUTS = [
++  { id: "clusters", label: "Category clusters" },
++  { id: "rings", label: "Orbits" },
++  { id: "grid", label: "Grid" },
++  { id: "field", label: "Open field" },
++];
++
++const itemById = new Map(constellationItems.map((item) => [item.id, item]));
++
++// Memoized per-category list group so a selection change re-renders at most
++// two groups instead of all 500 rows.
++const CategoryGroup = memo(function CategoryGroup({ cat, active, selectedId, onPick }) {
++  const meta = CATEGORIES[cat];
++  const items = itemsByCategory[cat];
++  return (
++    <details className="rounded-lg border border-[var(--line)] bg-[var(--surface)]">
++      <summary className="flex cursor-pointer items-center gap-2 px-4 py-3 text-sm font-semibold">
++        <span
++          aria-hidden="true"
++          className="inline-block h-2.5 w-2.5 rounded-full"
++          style={{ background: meta.css }}
++        />
++        {meta.label}
++        <span className="font-normal text-[var(--muted)]">({items.length})</span>
++        {!active && (
++          <span className="ml-auto rounded-full border border-[var(--line)] px-2 py-0.5 text-xs font-normal text-[var(--muted)]">
++            dimmed by filter
++          </span>
++        )}
++      </summary>
++      <ul
++        className="c-index max-h-72 overflow-y-auto px-2 pb-2"
++        onClick={(event) => {
++          const button = event.target.closest("button[data-id]");
++          if (button) onPick(Number(button.dataset.id));
++        }}
++      >
++        {items.map((item) => (
++          <li key={item.id}>
++            <button type="button" data-id={item.id} aria-pressed={selectedId === item.id}>
++              <b>{item.label}</b>
++              <span>
++                {item.kind} · {item.year}
++              </span>
++            </button>
++          </li>
++        ))}
++      </ul>
++    </details>
++  );
++});
++
++export function Constellation() {
++  const hostRef = useRef(null);
++  const tooltipRef = useRef(null);
++  const engineRef = useRef(null);
++
++  const [layout, setLayout] = useState("clusters");
++  const [activeCats, setActiveCats] = useState(() => [...CATEGORY_IDS]);
++  const [selectedId, setSelectedId] = useState(null);
++  const [engineFailed, setEngineFailed] = useState(false);
++  const [renderedCount, setRenderedCount] = useState(null);
++  const [staticMode, setStaticMode] = useState(false);
++
++  const selected = selectedId != null ? itemById.get(selectedId) : null;
++  const shownCount = useMemo(
++    () => activeCats.reduce((sum, cat) => sum + itemsByCategory[cat].length, 0),
++    [activeCats]
++  );
++
++  // ---- engine lifecycle -----------------------------------------------------
++  useEffect(() => {
++    const host = hostRef.current;
++    if (!host) return undefined;
++
++    let disposed = false;
++    let engine = null;
++    let io = null;
++    let ro = null;
++    let resizeTimer = 0;
++    let ioVisible = false;
++    const rmQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
++    const coarse = window.matchMedia("(pointer: coarse)").matches;
++    const lite = coarse || window.innerWidth < 700;
++
++    const updateActive = () => {
++      engine?.setActive(ioVisible && !document.hidden);
++    };
++    const onVisibility = () => updateActive();
++    const onRmChange = () => {
++      engine?.setReducedMotion(rmQuery.matches);
++      setStaticMode(rmQuery.matches);
++    };
++
++    setStaticMode(rmQuery.matches);
++
++    (async () => {
++      try {
++        const { createConstellation } = await import("./engine");
++        if (disposed) return;
++        engine = await createConstellation({
++          host,
++          items: constellationItems,
++          lite,
++          nodeCap: lite && window.innerWidth < 560 ? 250 : Infinity,
++          reducedMotion: rmQuery.matches,
++          onSelect: (item) => {
++            // canvas-originated picks only
++            if (!disposed) setSelectedId(item ? item.id : null);
++          },
++          onHover: (item, x, y) => {
++            const tip = tooltipRef.current;
++            if (!tip) return;
++            if (!item) {
++              tip.dataset.show = "false";
++              return;
++            }
++            tip.dataset.show = "true";
++            tip.style.transform = `translate(-50%, -100%) translate(${Math.round(x)}px, ${Math.round(y - 6)}px)`;
++            tip.textContent = `${item.label} — ${CATEGORIES[item.category].label}`;
++          },
++        });
++        if (disposed) {
++          engine.destroy();
++          engine = null;
++          return;
++        }
++        engineRef.current = engine;
++        setRenderedCount(engine.renderedCount);
++
++        io = new IntersectionObserver(
++          ([entry]) => {
++            ioVisible = entry.isIntersecting;
++            updateActive();
++          },
++          { rootMargin: "64px", threshold: 0 }
++        );
++        io.observe(host);
++
++        ro = new ResizeObserver(() => {
++          window.clearTimeout(resizeTimer);
++          resizeTimer = window.setTimeout(() => {
++            if (!disposed && engine) engine.resize(host.clientWidth, host.clientHeight);
++          }, 120);
++        });
++        ro.observe(host);
++
++        document.addEventListener("visibilitychange", onVisibility);
++        rmQuery.addEventListener("change", onRmChange);
++      } catch (error) {
++        console.error("[constellation] WebGL init failed; DOM index remains available.", error);
++        if (!disposed) setEngineFailed(true);
++      }
++    })();
++
++    return () => {
++      disposed = true;
++      window.clearTimeout(resizeTimer);
++      io?.disconnect();
++      ro?.disconnect();
++      document.removeEventListener("visibilitychange", onVisibility);
++      rmQuery.removeEventListener("change", onRmChange);
++      engineRef.current = null;
++      engine?.destroy();
++      engine = null;
++    };
++  }, []);
++
++  // ---- state -> engine ------------------------------------------------------
++  useEffect(() => {
++    engineRef.current?.setLayout(layout);
++  }, [layout]);
++  useEffect(() => {
++    engineRef.current?.setFilter(activeCats);
++  }, [activeCats]);
++
++  const pick = (id) => {
++    const next = id === selectedId ? null : id;
++    setSelectedId(next);
++    engineRef.current?.select(next);
++  };
++
++  const toggleCat = (cat) => {
++    setActiveCats((prev) => {
++      const set = new Set(prev);
++      set.has(cat) ? set.delete(cat) : set.add(cat);
++      return CATEGORY_IDS.filter((c) => set.has(c));
++    });
++  };
++
++  const statusText = [
++    `${shownCount} of ${constellationItems.length} experiences in focus`,
++    LAYOUTS.find((l) => l.id === layout)?.label,
++    selected
++      ? `selected: ${selected.label} (${CATEGORIES[selected.category].label} ${selected.kind}, ${selected.year})`
++      : null,
++    renderedCount != null && renderedCount < constellationItems.length
++      ? `${renderedCount} drawn in the low-power field; the full index is listed below`
++      : null,
++    staticMode ? "motion minimized per your system setting" : null,
++  ]
++    .filter(Boolean)
++    .join(" · ");
++
++  return (
++    <section aria-labelledby="constellation-title" className="space-y-6">
++      <header className="max-w-3xl space-y-3">
++        <h2 id="constellation-title" className="text-3xl font-semibold">
++          Experience constellation
++        </h2>
++        <p className="text-[var(--muted)]">
++          Twelve years of projects, papers, tools, and studies — all {constellationItems.length} of
++          them — drawn as one field. Filter by discipline, regroup the sky, or pick any point to
++          inspect it. The same index is available as a plain list below the field.
++        </p>
++      </header>
++
++      {/* Controls: real DOM, fully keyboard operable */}
++      <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
++        <div role="group" aria-label="Filter by discipline" className="flex flex-wrap gap-2">
++          {CATEGORY_IDS.map((cat) => {
++            const on = activeCats.includes(cat);
++            return (
++              <button
++                key={cat}
++                type="button"
++                aria-pressed={on}
++                onClick={() => toggleCat(cat)}
++                className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors ${
++                  on
++                    ? "border-transparent bg-[var(--foreground)] text-[var(--background)]"
++                    : "border-[var(--line)] bg-[var(--surface)] text-[var(--muted)]"
++                }`}
++              >
++                <span
++                  aria-hidden="true"
++                  className="inline-block h-2 w-2 rounded-full"
++                  style={{ background: CATEGORIES[cat].css, opacity: on ? 1 : 0.45 }}
++                />
++                {CATEGORIES[cat].label}
++              </button>
++            );
++          })}
++        </div>
++
++        <fieldset className="flex flex-wrap items-center gap-2 border-0 p-0">
++          <legend className="sr-only">Arrange the constellation</legend>
++          {LAYOUTS.map((l) => (
++            <label
++              key={l.id}
++              className={`cursor-pointer rounded-md border px-3 py-1.5 text-sm ${
++                layout === l.id
++                  ? "border-[var(--foreground)] bg-[var(--surface)] font-medium"
++                  : "border-[var(--line)] bg-[var(--surface)] text-[var(--muted)]"
++              }`}
++            >
++              <input
++                type="radio"
++                name="constellation-layout"
++                value={l.id}
++                checked={layout === l.id}
++                onChange={() => setLayout(l.id)}
++                className="sr-only"
++              />
++              {l.label}
++            </label>
++          ))}
++        </fieldset>
++      </div>
++
++      {/* Live status: one polite announcer for filter/layout/selection changes */}
++      <p aria-live="polite" className="text-sm text-[var(--muted)]">
++        {statusText}
++      </p>
++
++      {/* The bounded canvas stage */}
++      <div className="relative overflow-hidden rounded-2xl border border-[var(--line)] bg-[#0b0e14] [background-image:radial-gradient(120%_90%_at_50%_0%,#141a26_0%,#0b0e14_60%)]">
++        <div
++          ref={hostRef}
++          role="img"
++          aria-label={`Animated constellation of ${constellationItems.length} experience tiles across engineering, research, design, and math. Decorative view of the index below; use the filters, list, and detail panel to explore the same items.`}
++          className="h-[62vh] max-h-[640px] min-h-[380px] w-full touch-pan-y"
++        />
++        {engineFailed && (
++          <div className="absolute inset-0 flex items-center justify-center p-8 text-center text-sm text-[#8b93a7]">
++            This browser could not start the WebGL field. Every item is still available in the
++            index below.
++          </div>
++        )}
++        <div
++          ref={tooltipRef}
++          aria-hidden="true"
++          data-show="false"
++          className="c-tooltip pointer-events-none absolute left-0 top-0 z-10 max-w-56 rounded-md bg-black/80 px-2.5 py-1.5 text-xs text-white opacity-0 shadow-lg transition-opacity duration-100 data-[show=true]:opacity-100"
++        />
++
++        {/* Selection detail card, anchored inside the stage */}
++        {selected && (
++          <div className="absolute bottom-4 left-4 right-4 z-10 flex max-w-md items-start gap-3 rounded-xl border border-white/10 bg-[#131826] p-4 text-white sm:right-auto">
++            <span
++              aria-hidden="true"
++              className="mt-1 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-bold"
++              style={{ background: CATEGORIES[selected.category].css }}
++            >
++              {selected.monogram}
++            </span>
++            <div className="min-w-0 text-sm">
++              <p className="font-semibold">{selected.label}</p>
++              <p className="text-white/65">
++                {CATEGORIES[selected.category].label} · {selected.kind} · {selected.year}
++              </p>
++              {renderedCount != null &&
++                renderedCount < constellationItems.length &&
++                !isRendered(selected.id, renderedCount) && (
++                  <p className="mt-1 text-xs text-white/45">
++                    Not drawn in the reduced mobile field — it is still part of the index.
++                  </p>
++                )}
++            </div>
++            <button
++              type="button"
++              onClick={() => pick(selected.id)}
++              className="ml-auto rounded-md border border-white/15 px-2 py-1 text-xs text-white/80"
++            >
++              Clear
++            </button>
++          </div>
++        )}
++      </div>
++
++      {/* Semantic twin: every item as real, focusable DOM */}
++      <div aria-label="Experience index" role="group" className="space-y-2">
++        <h3 className="text-sm font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
++          Full index
++        </h3>
++        <div className="grid gap-2 md:grid-cols-2">
++          {CATEGORY_IDS.map((cat) => (
++            <CategoryGroup
++              key={cat}
++              cat={cat}
++              active={activeCats.includes(cat)}
++              selectedId={selected?.category === cat ? selected.id : null}
++              onPick={pick}
++            />
++          ))}
++        </div>
++      </div>
++    </section>
++  );
++}
++
++// Mirrors the engine's quartet subsampling so the card can say honestly
++// whether a list-selected item is drawn in the reduced mobile field.
++function isRendered(id, renderedCount) {
++  const stride = Math.round(constellationItems.length / renderedCount);
++  if (stride <= 1) return true;
++  return Math.floor(id / CATEGORY_IDS.length) % stride === 0;
++}
+diff --git a/components/constellation/engine.js b/components/constellation/engine.js
+new file mode 100644
+index 0000000..a151189
+--- /dev/null
++++ b/components/constellation/engine.js
+@@ -0,0 +1,748 @@
++// Pixi v8 engine for the experience constellation.
++//
++// Architecture notes (why it is shaped this way):
++// - One Pixi Application with a DEDICATED ticker (sharedTicker: false,
++//   autoStart: false). The single ticker callback owns simulation + render;
++//   nothing else schedules frames. Pausing = app.stop(), so no library
++//   ticker keeps running behind our back.
++// - All 500 node tiles + the ring/glow utility tiles live on ONE
++//   canvas-painted atlas (a single TextureSource), so the whole scene
++//   batches into ~3 draw calls (additive glow layer / nodes / ring).
++// - React never touches per-frame state. The component talks to this module
++//   through the returned handle (setFilter/setLayout/select/...), and the
++//   engine reports back through onSelect/onHover callbacks.
++// - Reduced motion: nothing is ever animated; state changes snap and we
++//   render exactly one frame on demand. The ticker never runs.
++//
++// This module is client-only. It must only be imported dynamically from a
++// browser effect.
++
++import { Application, Container, Sprite, Texture, Rectangle } from "pixi.js";
++import { CATEGORIES, CATEGORY_IDS } from "@/components/ConstellationData";
++
++const TILE = 88; // atlas cell size (px), content drawn inside with padding
++const TILE_PAD = 6;
++const ATLAS_COLS = 25;
++const GOLDEN = Math.PI * (3 - Math.sqrt(5));
++
++// ---------------------------------------------------------------------------
++// Atlas painting: every node gets a small procedural "logo" tile (shape +
++// category-hued gradient + monogram). Painted once, uploaded once.
++// ---------------------------------------------------------------------------
++
++function paintTile(ctx, cx, cy, item) {
++  const { hue } = CATEGORIES[item.category];
++  const s = item.seed;
++  const inner = TILE - TILE_PAD * 2;
++  const half = inner / 2;
++  const h = hue + (s - 0.5) * 26;
++  const light = 46 + s * 14;
++  const grad = ctx.createLinearGradient(cx - half, cy - half, cx + half, cy + half);
++  grad.addColorStop(0, `hsl(${h} 72% ${light + 12}%)`);
++  grad.addColorStop(1, `hsl(${h + 14} 68% ${light - 10}%)`);
++  ctx.fillStyle = grad;
++
++  const shape = Math.floor(s * 4.999) % 5;
++  ctx.beginPath();
++  if (shape === 0) {
++    // rounded square
++    ctx.roundRect(cx - half, cy - half, inner, inner, inner * 0.28);
++  } else if (shape === 1) {
++    ctx.arc(cx, cy, half, 0, Math.PI * 2);
++  } else if (shape === 2) {
++    // hexagon
++    for (let i = 0; i < 6; i++) {
++      const a = -Math.PI / 2 + (i * Math.PI) / 3;
++      const px = cx + Math.cos(a) * half;
++      const py = cy + Math.sin(a) * half;
++      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
++    }
++    ctx.closePath();
++  } else if (shape === 3) {
++    // diamond (rotated rounded square)
++    ctx.save();
++    ctx.translate(cx, cy);
++    ctx.rotate(Math.PI / 4);
++    ctx.roundRect(-half * 0.78, -half * 0.78, inner * 0.78, inner * 0.78, inner * 0.16);
++    ctx.restore();
++  } else {
++    // squircle-ish blob
++    ctx.roundRect(cx - half, cy - half * 0.92, inner, inner * 0.92, inner * 0.46);
++  }
++  ctx.fill();
++
++  // top sheen
++  ctx.save();
++  ctx.clip();
++  const sheen = ctx.createLinearGradient(cx, cy - half, cx, cy);
++  sheen.addColorStop(0, "rgba(255,255,255,0.28)");
++  sheen.addColorStop(1, "rgba(255,255,255,0)");
++  ctx.fillStyle = sheen;
++  ctx.fillRect(cx - half, cy - half, inner, half);
++  ctx.restore();
++
++  // monogram
++  ctx.fillStyle = "rgba(255,255,255,0.94)";
++  ctx.font = `600 ${Math.round(inner * 0.42)}px Arial, Helvetica, sans-serif`;
++  ctx.textAlign = "center";
++  ctx.textBaseline = "middle";
++  ctx.fillText(item.monogram, cx, cy + 1);
++}
++
++function buildAtlas(items) {
++  const count = items.length + 2; // + ring + glow utility tiles
++  const rows = Math.ceil(count / ATLAS_COLS);
++  const canvas = document.createElement("canvas");
++  canvas.width = ATLAS_COLS * TILE;
++  canvas.height = rows * TILE;
++  const ctx = canvas.getContext("2d");
++
++  items.forEach((item, i) => {
++    const cx = (i % ATLAS_COLS) * TILE + TILE / 2;
++    const cy = Math.floor(i / ATLAS_COLS) * TILE + TILE / 2;
++    paintTile(ctx, cx, cy, item);
++  });
++
++  // ring tile (white; tinted at runtime)
++  const ringIndex = items.length;
++  {
++    const cx = (ringIndex % ATLAS_COLS) * TILE + TILE / 2;
++    const cy = Math.floor(ringIndex / ATLAS_COLS) * TILE + TILE / 2;
++    ctx.strokeStyle = "rgba(255,255,255,1)";
++    ctx.lineWidth = 5;
++    ctx.beginPath();
++    ctx.arc(cx, cy, (TILE - TILE_PAD * 2) / 2 - 3, 0, Math.PI * 2);
++    ctx.stroke();
++  }
++  // glow tile (soft radial disc; tinted + additive at runtime)
++  const glowIndex = items.length + 1;
++  {
++    const cx = (glowIndex % ATLAS_COLS) * TILE + TILE / 2;
++    const cy = Math.floor(glowIndex / ATLAS_COLS) * TILE + TILE / 2;
++    const r = (TILE - TILE_PAD) / 2;
++    const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
++    g.addColorStop(0, "rgba(255,255,255,0.85)");
++    g.addColorStop(0.45, "rgba(255,255,255,0.25)");
++    g.addColorStop(1, "rgba(255,255,255,0)");
++    ctx.fillStyle = g;
++    ctx.beginPath();
++    ctx.arc(cx, cy, r, 0, Math.PI * 2);
++    ctx.fill();
++  }
++
++  const base = Texture.from(canvas);
++  // Nodes render well below atlas size most of the time; mipmaps kill the
++  // minification shimmer during drift.
++  base.source.autoGenerateMipmaps = true;
++  base.source.update();
++
++  const frameFor = (i) =>
++    new Texture({
++      source: base.source,
++      frame: new Rectangle(
++        (i % ATLAS_COLS) * TILE + TILE_PAD,
++        Math.floor(i / ATLAS_COLS) * TILE + TILE_PAD,
++        TILE - TILE_PAD * 2,
++        TILE - TILE_PAD * 2
++      ),
++    });
++
++  return {
++    base,
++    nodeTextures: items.map((_, i) => frameFor(i)),
++    ringTexture: frameFor(ringIndex),
++    glowTexture: frameFor(glowIndex),
++  };
++}
++
++// ---------------------------------------------------------------------------
++// Layouts: pure functions from (visible nodes, w, h) -> target positions.
++// ---------------------------------------------------------------------------
++
++function hash01(n) {
++  const x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
++  return x - Math.floor(x);
++}
++
++function computeLayout(mode, nodes, w, h) {
++  const visible = nodes.filter((n) => n.inFilter);
++  const cats = CATEGORY_IDS.filter((c) => visible.some((n) => n.item.category === c));
++  const cx = w / 2;
++  const cy = h / 2;
++  const margin = Math.min(w, h) * 0.08 + 18;
++
++  if (mode === "clusters") {
++    const rx = w * 0.5 - margin - Math.min(w, h) * 0.16;
++    const ry = h * 0.5 - margin - Math.min(w, h) * 0.16;
++    cats.forEach((cat, ci) => {
++      const catNodes = visible.filter((n) => n.item.category === cat);
++      const angle = -Math.PI / 2 + (ci * Math.PI * 2) / cats.length;
++      const ccx = cats.length === 1 ? cx : cx + Math.cos(angle) * rx * 0.62;
++      const ccy = cats.length === 1 ? cy : cy + Math.sin(angle) * ry * 0.62;
++      const clusterR =
++        Math.min(w, h) * (cats.length === 1 ? 0.4 : 0.24) * Math.sqrt(Math.max(catNodes.length, 8) / 125);
++      catNodes.forEach((n, k) => {
++        const r = clusterR * Math.sqrt((k + 0.5) / catNodes.length);
++        const a = k * GOLDEN + angle;
++        n.tx = ccx + Math.cos(a) * r + (n.item.seed - 0.5) * 10;
++        n.ty = ccy + Math.sin(a) * r + (hash01(n.item.id) - 0.5) * 10;
++      });
++    });
++  } else if (mode === "grid") {
++    const sorted = [...visible].sort(
++      (a, b) =>
++        CATEGORY_IDS.indexOf(a.item.category) - CATEGORY_IDS.indexOf(b.item.category) || a.item.id - b.item.id
++    );
++    const n = sorted.length;
++    const cols = Math.max(4, Math.round(Math.sqrt((n * (w - margin * 2)) / (h - margin * 2))));
++    const rows = Math.ceil(n / cols);
++    const cellX = (w - margin * 2) / cols;
++    const cellY = (h - margin * 2) / rows;
++    sorted.forEach((node, i) => {
++      const gx = i % cols;
++      const gy = Math.floor(i / cols);
++      const rowCount = gy === rows - 1 ? n - (rows - 1) * cols : cols;
++      const xOffset = gy === rows - 1 ? ((cols - rowCount) * cellX) / 2 : 0;
++      node.tx = margin + xOffset + gx * cellX + cellX / 2;
++      node.ty = margin + gy * cellY + cellY / 2;
++    });
++  } else if (mode === "rings") {
++    const maxR = Math.min(w, h) / 2 - margin;
++    cats.forEach((cat, ci) => {
++      const catNodes = visible.filter((n) => n.item.category === cat);
++      const r0 = maxR * (0.3 + (0.68 * ci) / Math.max(cats.length - 1, 1));
++      catNodes.forEach((n, k) => {
++        const a = (k * Math.PI * 2) / catNodes.length + ci * 0.5;
++        const r = r0 + (n.item.seed - 0.5) * maxR * 0.07;
++        n.tx = cx + Math.cos(a) * r * (w > h ? Math.min(w / h, 1.6) : 1);
++        n.ty = cy + Math.sin(a) * r * (h > w ? Math.min(h / w, 1.4) : 1);
++      });
++    });
++  } else {
++    // "field": seeded uniform scatter
++    visible.forEach((n) => {
++      n.tx = margin + n.item.seed * (w - margin * 2);
++      n.ty = margin + hash01(n.item.id * 7 + 13) * (h - margin * 2);
++    });
++  }
++  // Nodes outside the filter keep their last target and just dim in place.
++}
++
++// ---------------------------------------------------------------------------
++// Engine
++// ---------------------------------------------------------------------------
++
++export async function createConstellation({
++  host,
++  items,
++  lite = false,
++  nodeCap = Infinity,
++  reducedMotion = false,
++  onSelect = () => {},
++  onHover = () => {},
++  onStateChange = () => {},
++}) {
++  // Rendered subset for the mobile cap. Categories round-robin over ids
++  // (id % 4), so we subsample whole QUARTETS of consecutive ids — a naive
++  // `i % stride` would keep only even ids and silently drop the two
++  // odd-id categories.
++  const groups = CATEGORY_IDS.length;
++  const stride = items.length > nodeCap ? Math.ceil(items.length / nodeCap) : 1;
++  const rendered =
++    stride === 1 ? items : items.filter((_, i) => Math.floor(i / groups) % stride === 0);
++
++  const app = new Application();
++  await app.init({
++    preference: "webgl",
++    antialias: false, // tiles are pre-antialiased raster; MSAA buys nothing
++    backgroundAlpha: 0,
++    resolution: Math.min(globalThis.devicePixelRatio || 1, lite ? 1.5 : 2),
++    autoDensity: true,
++    width: Math.max(host.clientWidth, 2),
++    height: Math.max(host.clientHeight, 2),
++    autoStart: false, // we own start/stop; nothing runs until setActive(true)
++    sharedTicker: false, // dedicated ticker; app.stop() truly stops our work
++    powerPreference: lite ? "low-power" : "high-performance",
++  });
++  if (lite) app.ticker.maxFPS = 30;
++
++  host.appendChild(app.canvas);
++  app.canvas.style.width = "100%";
++  app.canvas.style.height = "100%";
++  app.canvas.style.display = "block";
++
++  const atlas = buildAtlas(rendered);
++
++  // Scene graph: glow layer (additive) -> nodes -> selection ring.
++  const glowLayer = new Container();
++  const nodeLayer = new Container();
++  const fxLayer = new Container();
++  app.stage.addChild(glowLayer, nodeLayer, fxLayer);
++
++  // Dim background starfield (static decor, same atlas -> same batch).
++  const starCount = lite ? 50 : 130;
++  const stars = [];
++  for (let i = 0; i < starCount; i++) {
++    const star = new Sprite({ texture: atlas.glowTexture, anchor: 0.5 });
++    star.alpha = 0.04 + hash01(i * 3.7) * 0.08;
++    star.scale.set(0.05 + hash01(i * 9.1) * 0.1);
++    glowLayer.addChild(star);
++    stars.push(star);
++  }
++
++  const nodes = rendered.map((item, i) => {
++    const sprite = new Sprite({ texture: atlas.nodeTextures[i], anchor: 0.5 });
++    nodeLayer.addChild(sprite);
++    return {
++      item,
++      sprite,
++      x: 0,
++      y: 0,
++      vx: 0,
++      vy: 0,
++      tx: 0,
++      ty: 0,
++      pushX: 0,
++      pushY: 0,
++      sizeJitter: 0.85 + item.seed * 0.3,
++      scale: 0.001,
++      targetScaleMul: 1,
++      alpha: 0,
++      targetAlpha: 1,
++      inFilter: true,
++    };
++  });
++  const nodeById = new Map(nodes.map((n) => [n.item.id, n]));
++
++  const hoverRing = new Sprite({ texture: atlas.ringTexture, anchor: 0.5, alpha: 0 });
++  const selGlow = new Sprite({ texture: atlas.glowTexture, anchor: 0.5, alpha: 0 });
++  selGlow.blendMode = "add";
++  const selRing = new Sprite({ texture: atlas.ringTexture, anchor: 0.5, alpha: 0 });
++  glowLayer.addChild(selGlow);
++  fxLayer.addChild(hoverRing, selRing);
++
++  // ---- state ---------------------------------------------------------------
++  const state = {
++    layout: "clusters",
++    activeCats: new Set(CATEGORY_IDS),
++    selectedId: null,
++    hoverId: null,
++    reducedMotion,
++    active: false, // section visible AND document visible
++    destroyed: false,
++    pointer: { x: -1e4, y: -1e4, inside: false },
++    time: 0,
++    baseSize: 24,
++    w: app.screen.width,
++    h: app.screen.height,
++  };
++
++  let renderQueued = 0; // rAF id for reduced-motion render-on-demand
++  const debug = { frames: 0 };
++  if (typeof window !== "undefined") {
++    window.__constellation = {
++      get running() {
++        return app.ticker.started;
++      },
++      get frames() {
++        return debug.frames;
++      },
++      get rendered() {
++        return rendered.length;
++      },
++    };
++  }
++
++  function announceState() {
++    host.dataset.animState = state.destroyed
++      ? "destroyed"
++      : !state.active
++        ? "paused"
++        : state.reducedMotion
++          ? "static"
++          : "running";
++    onStateChange(host.dataset.animState);
++  }
++
++  function computeBaseSize() {
++    const visibleCount = Math.max(nodes.filter((n) => n.inFilter).length, 40);
++    state.baseSize = Math.max(13, Math.min(36, Math.sqrt((state.w * state.h) / visibleCount) * 0.46));
++  }
++
++  function scatterStars() {
++    stars.forEach((star, i) => {
++      star.position.set(hash01(i * 13.3) * state.w, hash01(i * 31.7) * state.h);
++    });
++  }
++
++  function relayout() {
++    computeLayout(state.layout, nodes, state.w, state.h);
++    computeBaseSize();
++  }
++
++  function snapAll() {
++    for (const n of nodes) {
++      n.x = n.tx;
++      n.y = n.ty;
++      n.vx = 0;
++      n.vy = 0;
++      n.alpha = n.targetAlpha;
++      n.scale = ((state.baseSize * n.sizeJitter) / (TILE - TILE_PAD * 2)) * n.targetScaleMul;
++      applySprite(n);
++    }
++    positionFx();
++  }
++
++  function applySprite(n) {
++    n.sprite.position.set(n.x, n.y);
++    n.sprite.scale.set(n.scale);
++    n.sprite.alpha = n.alpha;
++  }
++
++  function positionFx() {
++    const sel = state.selectedId != null ? nodeById.get(state.selectedId) : null;
++    if (sel) {
++      const catColor = CATEGORIES[sel.item.category].css;
++      const s = sel.scale * 1.45;
++      selRing.position.set(sel.x, sel.y);
++      selRing.scale.set(s);
++      selRing.tint = catColor;
++      selRing.alpha = 0.95;
++      selGlow.position.set(sel.x, sel.y);
++      selGlow.scale.set(s * 2.4);
++      selGlow.tint = catColor;
++      selGlow.alpha = 0.5;
++    } else {
++      selRing.alpha = 0;
++      selGlow.alpha = 0;
++    }
++    const hov = state.hoverId != null && state.hoverId !== state.selectedId ? nodeById.get(state.hoverId) : null;
++    if (hov) {
++      hoverRing.position.set(hov.x, hov.y);
++      hoverRing.scale.set(hov.scale * 1.35);
++      hoverRing.alpha = 0.55;
++    } else {
++      hoverRing.alpha = 0;
++    }
++  }
++
++  // Render exactly one frame (reduced motion / paused refresh). Coalesced
++  // through rAF so bursts of events cost one render.
++  function renderOnce() {
++    if (state.destroyed || renderQueued) return;
++    renderQueued = requestAnimationFrame(() => {
++      renderQueued = 0;
++      if (!state.destroyed && state.active) {
++        app.render();
++        debug.frames += 1;
++      }
++    });
++  }
++
++  function afterChange() {
++    if (state.reducedMotion) {
++      snapAll();
++      renderOnce();
++    }
++    // In animated mode the running ticker picks the new targets up and
++    // springs there; if paused (offscreen), targets are ready for return.
++  }
++
++  // ---- simulation ----------------------------------------------------------
++  const SPRING_K = 46;
++  const DAMP = 6.2;
++  const driftAmp = lite ? 2.2 : 3.6;
++  const pointerRadius = 120;
++
++  function tick(ticker) {
++    const dt = Math.min(ticker.deltaMS, 50) / 1000;
++    state.time += dt;
++    debug.frames += 1;
++
++    const { pointer } = state;
++    const usePointer = pointer.inside && !lite;
++    let nearest = null;
++    let nearestD2 = Infinity;
++
++    for (const n of nodes) {
++      // pointer proximity: gentle radial push + swell
++      let push = 0;
++      if (usePointer && n.inFilter) {
++        const pdx = n.x - pointer.x;
++        const pdy = n.y - pointer.y;
++        const d2 = pdx * pdx + pdy * pdy;
++        if (d2 < pointerRadius * pointerRadius) {
++          const d = Math.sqrt(d2) || 1;
++          const f = 1 - d / pointerRadius;
++          push = f * f;
++          n.pushX = (pdx / d) * push * 30;
++          n.pushY = (pdy / d) * push * 30;
++          if (d2 < nearestD2) {
++            nearestD2 = d2;
++            nearest = n;
++          }
++        } else {
++          n.pushX *= 0.86;
++          n.pushY *= 0.86;
++        }
++      } else {
++        n.pushX *= 0.86;
++        n.pushY *= 0.86;
++      }
++
++      // ambient drift (skipped entirely under reduced motion; tick doesn't run)
++      const s = n.item.seed;
++      const driftX = driftAmp * Math.sin(state.time * (0.28 + s * 0.34) + n.item.phase);
++      const driftY = driftAmp * Math.cos(state.time * (0.22 + s * 0.42) + n.item.phase * 1.7);
++
++      const gx = n.tx + driftX + n.pushX;
++      const gy = n.ty + driftY + n.pushY;
++      n.vx += (gx - n.x) * SPRING_K * dt;
++      n.vy += (gy - n.y) * SPRING_K * dt;
++      const damp = Math.exp(-DAMP * dt);
++      n.vx *= damp;
++      n.vy *= damp;
++      n.x += n.vx * dt;
++      n.y += n.vy * dt;
++
++      // eased scale/alpha
++      const targetScale =
++        ((state.baseSize * n.sizeJitter) / (TILE - TILE_PAD * 2)) * n.targetScaleMul * (1 + push * 0.5);
++      const ease = Math.min(1, dt * 9);
++      n.scale += (targetScale - n.scale) * ease;
++      n.alpha += (n.targetAlpha - n.alpha) * ease;
++      applySprite(n);
++    }
++
++    // hover resolution (fine pointer only)
++    const hoverThreshold = Math.max(26, state.baseSize * 0.9);
++    const newHover = nearest && nearestD2 < hoverThreshold * hoverThreshold ? nearest.item.id : null;
++    if (newHover !== state.hoverId) {
++      state.hoverId = newHover;
++      app.canvas.style.cursor = newHover != null ? "pointer" : "default";
++      const n = newHover != null ? nodeById.get(newHover) : null;
++      onHover(n ? n.item : null, n ? n.x : 0, n ? n.y - state.baseSize : 0);
++    } else if (state.hoverId != null) {
++      const n = nodeById.get(state.hoverId);
++      onHover(n.item, n.x, n.y - state.baseSize);
++    }
++
++    positionFx();
++  }
++
++  app.ticker.add(tick);
++
++  // ---- input (DOM listeners on our canvas; Pixi's event system stays off,
++  // proximity + picking are already O(n) in the sim loop) --------------------
++  const canvas = app.canvas;
++
++  function toLocal(e) {
++    const rect = canvas.getBoundingClientRect();
++    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
++  }
++
++  function onPointerMove(e) {
++    const p = toLocal(e);
++    state.pointer.x = p.x;
++    state.pointer.y = p.y;
++    state.pointer.inside = true;
++    if (state.reducedMotion) {
++      // No proximity physics; still resolve hover discretely + render once.
++      resolveHoverStatic();
++    }
++  }
++
++  function onPointerLeave() {
++    state.pointer.inside = false;
++    if (state.hoverId != null) {
++      state.hoverId = null;
++      canvas.style.cursor = "default";
++      onHover(null, 0, 0);
++      if (state.reducedMotion) {
++        positionFx();
++        renderOnce();
++      }
++    }
++  }
++
++  function resolveHoverStatic() {
++    const hit = pick(state.pointer.x, state.pointer.y);
++    const id = hit ? hit.item.id : null;
++    if (id !== state.hoverId) {
++      state.hoverId = id;
++      canvas.style.cursor = id != null ? "pointer" : "default";
++      onHover(hit ? hit.item : null, hit ? hit.x : 0, hit ? hit.y - state.baseSize : 0);
++      positionFx();
++      renderOnce();
++    }
++  }
++
++  function pick(x, y) {
++    let best = null;
++    let bestD2 = Infinity;
++    const r = Math.max(24, state.baseSize);
++    for (const n of nodes) {
++      if (!n.inFilter && n.item.id !== state.selectedId) continue;
++      const dx = n.x - x;
++      const dy = n.y - y;
++      const d2 = dx * dx + dy * dy;
++      if (d2 < bestD2 && d2 < r * r) {
++        bestD2 = d2;
++        best = n;
++      }
++    }
++    return best;
++  }
++
++  let downAt = null;
++  function onPointerDown(e) {
++    downAt = { x: e.clientX, y: e.clientY, t: performance.now() };
++  }
++  function onPointerUp(e) {
++    if (!downAt) return;
++    const moved = Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y);
++    const elapsed = performance.now() - downAt.t;
++    downAt = null;
++    if (moved > 8 || elapsed > 600) return; // drag/long-press, not a tap
++    const p = toLocal(e);
++    const hit = pick(p.x, p.y);
++    api.select(hit ? hit.item.id : null);
++    // Only canvas-originated picks notify React; list/panel picks already
++    // originate there (prevents feedback loops).
++    onSelect(hit ? hit.item : null, { source: "canvas" });
++  }
++
++  canvas.addEventListener("pointermove", onPointerMove, { passive: true });
++  canvas.addEventListener("pointerleave", onPointerLeave, { passive: true });
++  canvas.addEventListener("pointerdown", onPointerDown, { passive: true });
++  canvas.addEventListener("pointerup", onPointerUp, { passive: true });
++
++  // ---- initial placement ----------------------------------------------------
++  relayout();
++  scatterStars();
++  // Nodes are born at their first target (slightly pulled to center for a
++  // subtle bloom-in when animated).
++  for (const n of nodes) {
++    if (state.reducedMotion) {
++      n.x = n.tx;
++      n.y = n.ty;
++    } else {
++      n.x = state.w / 2 + (n.tx - state.w / 2) * 0.72;
++      n.y = state.h / 2 + (n.ty - state.h / 2) * 0.72;
++    }
++    n.alpha = state.reducedMotion ? 1 : 0;
++    n.scale = ((state.baseSize * n.sizeJitter) / (TILE - TILE_PAD * 2)) * (state.reducedMotion ? 1 : 0.4);
++  }
++  if (state.reducedMotion) snapAll();
++
++  // ---- public API ------------------------------------------------------------
++  const api = {
++    get renderedCount() {
++      return rendered.length;
++    },
++
++    setLayout(mode) {
++      if (state.destroyed || state.layout === mode) return;
++      state.layout = mode;
++      relayout();
++      afterChange();
++    },
++
++    setFilter(activeCats) {
++      if (state.destroyed) return;
++      state.activeCats = new Set(activeCats);
++      for (const n of nodes) {
++        n.inFilter = state.activeCats.has(n.item.category);
++        n.targetAlpha = n.inFilter ? 1 : 0.06;
++        n.targetScaleMul = n.inFilter ? 1 : 0.55;
++      }
++      relayout();
++      afterChange();
++    },
++
++    // Returns true when the node is part of the rendered canvas subset.
++    select(id) {
++      if (state.destroyed) return false;
++      state.selectedId = id;
++      const n = id != null ? nodeById.get(id) : null;
++      if (n) n.targetScaleMul = Math.max(n.targetScaleMul, n.inFilter ? 1.25 : 0.9);
++      for (const other of nodes) {
++        if (other !== n) other.targetScaleMul = other.inFilter ? 1 : 0.55;
++      }
++      if (state.reducedMotion) {
++        snapAll();
++        renderOnce();
++      } else {
++        positionFx();
++      }
++      return id == null ? true : Boolean(n);
++    },
++
++    setReducedMotion(rm) {
++      if (state.destroyed || state.reducedMotion === rm) return;
++      state.reducedMotion = rm;
++      if (rm) {
++        app.stop();
++        snapAll();
++        renderOnce();
++      } else if (state.active) {
++        app.start();
++      }
++      announceState();
++    },
++
++    // active = section intersecting viewport AND document not hidden
++    setActive(active) {
++      if (state.destroyed || state.active === active) return;
++      state.active = active;
++      if (!active) {
++        app.stop(); // dedicated ticker halts; zero rAF work while away
++        if (renderQueued) {
++          cancelAnimationFrame(renderQueued);
++          renderQueued = 0;
++        }
++      } else if (state.reducedMotion) {
++        snapAll();
++        renderOnce(); // static mode: exactly one frame on re-entry
++      } else {
++        app.start();
++      }
++      announceState();
++    },
++
++    resize(w, h) {
++      if (state.destroyed || w < 4 || h < 4) return;
++      app.renderer.resize(w, h);
++      state.w = w;
++      state.h = h;
++      relayout();
++      scatterStars();
++      if (state.reducedMotion) {
++        snapAll();
++        renderOnce();
++      }
++    },
++
++    destroy() {
++      if (state.destroyed) return;
++      state.destroyed = true;
++      if (renderQueued) cancelAnimationFrame(renderQueued);
++      canvas.removeEventListener("pointermove", onPointerMove);
++      canvas.removeEventListener("pointerleave", onPointerLeave);
++      canvas.removeEventListener("pointerdown", onPointerDown);
++      canvas.removeEventListener("pointerup", onPointerUp);
++      app.ticker.remove(tick);
++      // Full teardown: children, textures, the shared atlas TextureSource,
++      // the WebGL context, and the canvas element itself.
++      app.destroy(
++        { removeView: true },
++        { children: true, texture: true, textureSource: true, context: true }
++      );
++      if (typeof window !== "undefined" && window.__constellation) delete window.__constellation;
++      delete host.dataset.animState;
++    },
++  };
++
++  announceState();
++  return api;
++}
+diff --git a/package-lock.json b/package-lock.json
+index fccc1dc..0288494 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -9,6 +9,7 @@
+       "version": "1.0.0",
+       "dependencies": {
+         "next": "16.2.12",
++        "pixi.js": "8.19.0",
+         "react": "19.2.8",
+         "react-dom": "19.2.8"
+       },
+@@ -690,6 +691,12 @@
+         "node": ">= 10"
+       }
+     },
++    "node_modules/@pixi/colord": {
++      "version": "2.9.6",
++      "resolved": "https://registry.npmjs.org/@pixi/colord/-/colord-2.9.6.tgz",
++      "integrity": "sha512-nezytU2pw587fQstUu1AsJZDVEynjskwOL+kibwcdxsMBFqPsFFNA7xl0ii/gXuDi6M0xj3mfRJj8pBSc2jCfA==",
++      "license": "MIT"
++    },
+     "node_modules/@swc/helpers": {
+       "version": "0.5.15",
+       "resolved": "https://registry.npmjs.org/@swc/helpers/-/helpers-0.5.15.tgz",
+@@ -1036,6 +1043,27 @@
+         "tailwindcss": "4.3.3"
+       }
+     },
++    "node_modules/@types/earcut": {
++      "version": "3.0.0",
++      "resolved": "https://registry.npmjs.org/@types/earcut/-/earcut-3.0.0.tgz",
++      "integrity": "sha512-k/9fOUGO39yd2sCjrbAJvGDEQvRwRnQIZlBz43roGwUZo5SHAmyVvSFyaVVZkicRVCaDXPKlbxrUcBuJoSWunQ==",
++      "license": "MIT"
++    },
++    "node_modules/@webgpu/types": {
++      "version": "0.1.72",
++      "resolved": "https://registry.npmjs.org/@webgpu/types/-/types-0.1.72.tgz",
++      "integrity": "sha512-0cF7RFM2edNoiIS1ODJp0/Gzv4/xSXhwoR0YCza+OWpJWtn4wmo9DvK91aLlH9+uUnwIriP7ZiC3WitmyhuzBw==",
++      "license": "BSD-3-Clause"
++    },
++    "node_modules/@xmldom/xmldom": {
++      "version": "0.8.15",
++      "resolved": "https://registry.npmjs.org/@xmldom/xmldom/-/xmldom-0.8.15.tgz",
++      "integrity": "sha512-/5NV/vDALVFDXgLmfsy9TRCBlKwO2LNBFzpzvb9iIj+jR+eSc6DLYYvVOdivT/jm7MtU6TebYuRmzEOI7w40UA==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=10.0.0"
++      }
++    },
+     "node_modules/baseline-browser-mapping": {
+       "version": "2.11.13",
+       "resolved": "https://registry.npmjs.org/baseline-browser-mapping/-/baseline-browser-mapping-2.11.13.tgz",
+@@ -1084,6 +1112,12 @@
+         "node": ">=8"
+       }
+     },
++    "node_modules/earcut": {
++      "version": "3.2.3",
++      "resolved": "https://registry.npmjs.org/earcut/-/earcut-3.2.3.tgz",
++      "integrity": "sha512-vnS4AVwp1KHAF13i1vp1/2D5evWy3k5u/iW/B81QVsUZtV8cv2tU0b2VNFlqvh4kYwrFMDdjPCfAmfyJW9y14Q==",
++      "license": "ISC"
++    },
+     "node_modules/enhanced-resolve": {
+       "version": "5.24.5",
+       "resolved": "https://registry.npmjs.org/enhanced-resolve/-/enhanced-resolve-5.24.5.tgz",
+@@ -1098,6 +1132,21 @@
+         "node": ">=10.13.0"
+       }
+     },
++    "node_modules/eventemitter3": {
++      "version": "5.0.4",
++      "resolved": "https://registry.npmjs.org/eventemitter3/-/eventemitter3-5.0.4.tgz",
++      "integrity": "sha512-mlsTRyGaPBjPedk6Bvw+aqbsXDtoAyAzm5MO7JgU+yVRyMQ5O8bD4Kcci7BS85f93veegeCPkL8R4GLClnjLFw==",
++      "license": "MIT"
++    },
++    "node_modules/gifuct-js": {
++      "version": "2.1.2",
++      "resolved": "https://registry.npmjs.org/gifuct-js/-/gifuct-js-2.1.2.tgz",
++      "integrity": "sha512-rI2asw77u0mGgwhV3qA+OEgYqaDn5UNqgs+Bx0FGwSpuqfYn+Ir6RQY5ENNQ8SbIiG/m5gVa7CD5RriO4f4Lsg==",
++      "license": "MIT",
++      "dependencies": {
++        "js-binary-schema-parser": "^2.0.3"
++      }
++    },
+     "node_modules/graceful-fs": {
+       "version": "4.2.11",
+       "resolved": "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.11.tgz",
+@@ -1105,6 +1154,12 @@
+       "dev": true,
+       "license": "ISC"
+     },
++    "node_modules/ismobilejs": {
++      "version": "1.1.1",
++      "resolved": "https://registry.npmjs.org/ismobilejs/-/ismobilejs-1.1.1.tgz",
++      "integrity": "sha512-VaFW53yt8QO61k2WJui0dHf4SlL8lxBofUuUmwBo0ljPk0Drz2TiuDW4jo3wDcv41qy/SxrJ+VAzJ/qYqsmzRw==",
++      "license": "MIT"
++    },
+     "node_modules/jiti": {
+       "version": "2.7.0",
+       "resolved": "https://registry.npmjs.org/jiti/-/jiti-2.7.0.tgz",
+@@ -1115,6 +1170,12 @@
+         "jiti": "lib/jiti-cli.mjs"
+       }
+     },
++    "node_modules/js-binary-schema-parser": {
++      "version": "2.0.3",
++      "resolved": "https://registry.npmjs.org/js-binary-schema-parser/-/js-binary-schema-parser-2.0.3.tgz",
++      "integrity": "sha512-xezGJmOb4lk/M1ZZLTR/jaBHQ4gG/lqQnJqdIv4721DMggsa1bDVlHXNeHYogaIEHD9vCRv0fcL4hMA+Coarkg==",
++      "license": "MIT"
++    },
+     "node_modules/lightningcss": {
+       "version": "1.32.0",
+       "resolved": "https://registry.npmjs.org/lightningcss/-/lightningcss-1.32.0.tgz",
+@@ -1485,12 +1546,44 @@
+         "node": "^10 || ^12 || >=14"
+       }
+     },
++    "node_modules/parse-svg-path": {
++      "version": "0.2.0",
++      "resolved": "https://registry.npmjs.org/parse-svg-path/-/parse-svg-path-0.2.0.tgz",
++      "integrity": "sha512-Tf7FFIrguPKQwzD4pWnYkR2VOv3raoHeKED80Bm+BYHI3KxC8KsgsGC5+fSMzAGDA6UEk4bHvmi+RsjmL3khpg==",
++      "license": "MIT"
++    },
+     "node_modules/picocolors": {
+       "version": "1.1.1",
+       "resolved": "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz",
+       "integrity": "sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==",
+       "license": "ISC"
+     },
++    "node_modules/pixi.js": {
++      "version": "8.19.0",
++      "resolved": "https://registry.npmjs.org/pixi.js/-/pixi.js-8.19.0.tgz",
++      "integrity": "sha512-pq1O6emA/GFjjeF+8d3Pb5t7knD8FsnfWGqQcRjYjsqFZ7QdzG1XgjLDUu0DFJRbafjV5+g8iNLFBx0b9649lg==",
++      "license": "MIT",
++      "workspaces": [
++        "examples",
++        "playground"
++      ],
++      "dependencies": {
++        "@pixi/colord": "^2.9.6",
++        "@types/earcut": "^3.0.0",
++        "@webgpu/types": "^0.1.69",
++        "@xmldom/xmldom": "^0.8.13",
++        "earcut": "^3.0.2",
++        "eventemitter3": "^5.0.1",
++        "gifuct-js": "^2.1.2",
++        "ismobilejs": "^1.1.1",
++        "parse-svg-path": "^0.2.0",
++        "tiny-lru": "^11.4.7"
++      },
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/pixijs"
++      }
++    },
+     "node_modules/postcss": {
+       "version": "8.5.26",
+       "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.5.26.tgz",
+@@ -1658,6 +1751,15 @@
+         "url": "https://opencollective.com/webpack"
+       }
+     },
++    "node_modules/tiny-lru": {
++      "version": "11.4.7",
++      "resolved": "https://registry.npmjs.org/tiny-lru/-/tiny-lru-11.4.7.tgz",
++      "integrity": "sha512-w/Te7uMUVeH0CR8vZIjr+XiN41V+30lkDdK+NRIDCUYKKuL9VcmaUEmaPISuwGhLlrTGh5yu18lENtR9axSxYw==",
++      "license": "BSD-3-Clause",
++      "engines": {
++        "node": ">=12"
++      }
++    },
+     "node_modules/tslib": {
+       "version": "2.8.1",
+       "resolved": "https://registry.npmjs.org/tslib/-/tslib-2.8.1.tgz",
+diff --git a/package.json b/package.json
+index e93a0fb..533551d 100644
+--- a/package.json
++++ b/package.json
+@@ -9,11 +9,12 @@
+   },
+   "dependencies": {
+     "next": "16.2.12",
++    "pixi.js": "8.19.0",
+     "react": "19.2.8",
+     "react-dom": "19.2.8"
+   },
+   "devDependencies": {
+-    "tailwindcss": "4.3.3",
+-    "@tailwindcss/postcss": "4.3.3"
++    "@tailwindcss/postcss": "4.3.3",
++    "tailwindcss": "4.3.3"
+   }
+ }

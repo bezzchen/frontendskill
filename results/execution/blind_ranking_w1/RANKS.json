@@ -1,0 +1,33 @@
+{
+  "recorded": "2026-08-12",
+  "reviewer": "harness owner",
+  "question": "memorable and distinctive - I would share this",
+  "ranking_as_given": [
+    "port 3183 (candidate C)",
+    "port 3181 (candidate A)",
+    "port 3182 (candidate B)"
+  ],
+  "resolved_ranking": [
+    {
+      "rank": 1,
+      "candidate": "C",
+      "run": "W1-fable-rep1",
+      "concept": "NLE timeline-dock page"
+    },
+    {
+      "rank": 2,
+      "candidate": "A",
+      "run": "W1-fable-rep2",
+      "concept": "live editor session / scrub-the-hero"
+    },
+    {
+      "rank": 3,
+      "candidate": "B",
+      "run": "W1-fable-rep3",
+      "concept": "The Observatory / 20s composition"
+    }
+  ],
+  "signature_moment_binaries": "not yet recorded",
+  "reviewer_calibration_note": "Owner: none of the three is the pinnacle of frontend design; owner's expressive ceiling = 3D / rich flashy animation per landing.love exemplars. This statement motivates the S1 spectacle register (see spectacle_fit.md) and means baseline W1 winners should not be read as the harness's upper bound.",
+  "blindness_caveat": "Partial: labels were anonymized, but the orchestrator's earlier report described each rep's concept, so identities were inferable. All three candidates are same-condition (baseline), so no condition bias was possible; strict blinding is reserved for the with-skill comparison."
+}

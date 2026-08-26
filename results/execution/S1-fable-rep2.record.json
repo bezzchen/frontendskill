@@ -1,0 +1,32 @@
+{
+ "run": "S1-fable-rep2",
+ "date": "2026-08-21",
+ "condition": "baseline_no_skill",
+ "model": "claude-fable-5",
+ "PROTOCOL_DEVIATION": {
+  "what": "The assigned pinned-fixture run directory was wiped by macOS tmp cleanup MID-BUILD; the agent reconstructed the entire project from its context in its own scratchpad and completed there.",
+  "consequences": [
+   "no fixture git provenance / no diff (source snapshot archived instead)",
+   "scaffold deviates: react 19.2.3 vs pinned 19.2.8; Tailwind absent (plain CSS); puppeteer-core saved as devDep (QA harness)",
+   "fonts via Google Fonts CDN rather than self-hosted"
+  ],
+  "validity_recommendation": "Score the experience normally under spectacle_fit (rubric scores the artifact, not the scaffold) but flag for cross-rep comparability; owner decides whether it counts toward the 3-rep baseline or is re-run."
+ },
+ "implementation": "\"The page is a Meridian project file\": 48s five-act scroll-scrubbed timeline; editorial-darkroom direction (Instrument Serif + JetBrains Mono, amber/teal); meridian render-sweep signature; working bezier editor re-timing 26 GPU lanes; stagger conductor with onion-skin trails; visitor curve+stagger compiled to real CSS/WAAPI typed by the playhead; film-premiere finale with Space-to-play letterbox + J/K/L. Raw WebGL2, stateless particle system, 3 draw calls, ZERO runtime deps. Agent's own QA: 22/22 puppeteer checks.",
+ "measurements": {
+  "m6_static": "PASS",
+  "m1_gpu_system_chrome": "PASS - desktop p50 16.8ms p95 20.8ms hitch 0%; mobile p50 16.9ms p95 20.1ms hitch 0% (~59 rAF/s)",
+  "m2_offscreen": "NOT_MEASURABLE_BY_GEOMETRY (viewport-fixed canvas; ratio ~1.0 reflects visible canvas); agent-verified pause paths: visibilitychange, IntersectionObserver, 20s idle",
+  "m3_reduced_motion": "PASS - ratio 0.00, parity true (onion-skin alternate cut)",
+  "m5_accessible_parallel": "PASS",
+  "console_errors": 0,
+  "m2b_hidden_pause_retro_2026_08_25": "PASS both profiles - measured from archived source snapshot per owner ruling: hidden/baseline ratio 0.00 (60.3 -> 0 rAF/s), clean resume to 60 rAF/s; M2 geometry gate mechanically reported NOT_MEASURABLE_BY_GEOMETRY (visible fraction 1.0), reproducing the v2.4 hand adjudication; M1 GPU re-confirmed p50 16.7ms 0% hitches. Full JSON: results/execution/S1-fable-rep2-m2b.json"
+ },
+ "artifacts": {
+  "source_snapshot": "results/execution/S1-fable-rep2-source.zip",
+  "measurements": "results/execution/S1-fable-rep2.json",
+  "screenshots": "results/execution/screenshots/S1-fable-rep2-*.png",
+  "motion_recording": "results/execution/motion/S1-fable-rep2.webm (46s, pre-registered choreography)"
+ },
+ "owner_ruling": "2026-08-24: counts toward the 3-rep spectacle baseline, flagged \u2014 artifact scored normally, comparability caveat (off-fixture rebuild: react 19.2.3 vs pinned .8, no Tailwind, no fixture git provenance) carried in all findings; archived source snapshot eligible for M2b retro-measurement"
+}

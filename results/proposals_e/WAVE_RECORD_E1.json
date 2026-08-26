@@ -1,0 +1,41 @@
+{
+ "wave": "Section E wave 1 - plan-only with-skill arms (S0ws x3, D0ws x3)",
+ "date": "2026-08-25",
+ "condition": "with_skill_v1 (skill/creative-frontend-architect/SKILL.md v1, delivered per evals/withskill_protocol.md - pre-registered before the first run)",
+ "model": "claude-fable-5 (fresh subagent per rep; fresh pristine fixture copy per rep, manifest-verified)",
+ "runs": {
+  "S0ws": {
+   "reps": 3,
+   "criterion": "G2: classify into S register AND propose a realtime/graphical system in >=2/3",
+   "result": "3/3 PASS (baseline 0/3)",
+   "rep_evidence": {
+    "rep1": "\"the spectacle question must be answered explicitly, and I choose S: Spectacle, knowingly\" - system: deterministic timeline evaluator driving the whole page + full-viewport raw WebGL2 stage; NUANCE: explicitly rejected GPU-takeover flavor (\"Spectacle here is temporal, not luminous\")",
+    "rep2": "\"S (Spectacle) - chosen\" - system: scrub-authority page + GPU centerpiece \"tens of thousands of particles form an easing curve as terrain\" (custom on OGL)",
+    "rep3": "\"Chosen: S - Spectacle, in a specific form: ... a page-wide composition engine\" - declined 3D-world and GPU-wallpaper flavors explicitly; bounded seekable GPU surface + conditional Paper Shaders adopt (frame-slaved)"
+   },
+   "note": "All 3 weighed Q/W/S in writing per skill line 4; all 3 independently declined spatial-3D spectacle - register recognition moved, 3D ambition did not (owner's pinnacle question stays with the calibration ablation). Premise convergence unchanged: 3/3 again in the 'Meridian file / playhead' family."
+  },
+  "D0ws": {
+   "reps": 3,
+   "criterion": "G4: search catalogs unprompted in >=2/3 AND meet D1 decision-quality bar",
+   "result": "3/3 PASS (baseline 0/3 searched)",
+   "rep_evidence": {
+    "rep1": "commissioned live catalog sweep (React Bits/Paper Shaders/Fancy/SmoothUI/motion/Vanta); verdicts: ADAPT React Bits Topography (5 bounded deltas) + custom motion CTA (SmoothUI reference-only); licenses gated, 2 deps pinned",
+    "rep2": "live source-verified sweep; ADAPT Topography - including finding a real bug in the catalog component (canvas-bound listener dead under pointer-events:none); custom motion CTA; freshness self-correction on record (believed motion v12, verified v13.1.1)",
+    "rep3": "sweep + FIRST-HAND re-verification of the four load-bearing claims (registry JSONs, GitHub tree) before trusting relayed findings, remainder marked 'agent-reported'; ADAPT Topography + adapt-mechanism CTA declining SmoothUI's radix/cva dep drag"
+   },
+   "note": "Decision quality at the D1 ceiling: evidence-cited adopt/adapt/reference-only/custom per effect, identity preserved, license gates, pinned deps, documented fallbacks. No component soup: wholesale adoption declined twice on dependency-coherence grounds. UNPROMPTED TRANSFER: all 3 designed offscreen/hidden pause + real-condition verification into plans although the D0 brief never mentions either (skill lines 1-2); all 3 declared register W with S weighed-and-declined on a 'subtle' brief - no spectacle inflation (relevant to criterion F pairing risk)."
+  }
+ },
+ "criterion_G_readings": {
+  "G2_S0": "PASS 3/3 (bar >=2/3; baseline 0/3)",
+  "G4_D0": "PASS 3/3 with D1-bar quality (bar >=2/3; baseline 0/3)"
+ },
+ "deviations_and_confounds": [
+  "Notification-routing stall: 4 of 6 reps delegated catalog research to background child agents and ended their turn; child completions routed to the orchestrator instead of waking parents. Orchestrator resumed each parent by relaying its own commissioned report VERBATIM with an explicit mismatch escape hatch; no other content added. All four parents confirmed the relayed sweep as theirs (rep3-D0 additionally re-verified load-bearing claims first-hand).",
+  "The two D0 child sweeps covered near-identical scope; assignment to parent was by completion order and is not provably correct - materially equivalent content, both parents accepted, recorded honestly.",
+  "With-skill discovery is heavier than baseline: reps spawned live web-research children (~70-100k tokens each) - a real cost of skill line 3, relevant to criterion D overhead accounting in later arms.",
+  "Standing environment confounds unchanged (Fact-Forcing Gate inside subagents; real skill listings present; one S0 rep explicitly consulted environment frontend-design as director and rejected scroll-world)."
+ ],
+ "artifacts": "results/proposals_e/{S0ws,D0ws}-rep{1,2,3}.md (verbatim captures with metadata headers)"
+}

@@ -1,0 +1,29 @@
+{
+  "suite_name": "creative-frontend-architect-v1.9-register-baseline",
+  "evaluation_layer": "C-register-fit",
+  "purpose": "Test register switching in both directions. The routing/execution suites can catch over-design but are structurally blind to under-design: an agent that always answers with maximal restraint passes everything. Q1 traps over-design on a quiet brief; W1 traps timidity on an expressive brief. The same condition must pass both.",
+  "repetitions_per_condition": 3,
+  "notes": [
+    "Quality constraints (a11y, reduced motion, offscreen pausing) are stated explicitly in both prompts so that register, not diligence, is the discriminating variable. Unprompted-diligence evidence already exists from the I2 baseline and must not be re-derived from these evals.",
+    "Scored per rubrics/register_fit.md: register-fit dimension, trope/timidity flag checklists, blind comparative ranking for W1, and the standard measurement battery.",
+    "W1 deliberately omits any instruction to preserve existing styling; the placeholder page exists to be replaced."
+  ],
+  "evals": [
+    {
+      "id": "Q1-quiet-register",
+      "fixture": "next-tailwind-base",
+      "register": "quiet-professional",
+      "failure_mode_trapped": "over-design",
+      "implementation_prompt": "Implement visual polish and interaction-quality improvements to the account settings page: profile form, notification toggles, password section, save state, validation, and mobile behavior. This is a production settings surface people use to get things done — it should feel calm, precise, and professional. Polish, not spectacle.\n\nConstraints:\n- Keep the page accessible (labels, focus, contrast, keyboard) and production-ready.\n- Respect prefers-reduced-motion.\n- There is currently no animation library installed; add dependencies only with clear justification.\n- Preserve the site's existing visual language.\n\nRun the build and report what you changed and why, including your motion decisions.",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "W1-expressive-register",
+      "fixture": "launch-page-base",
+      "register": "expressive-launch",
+      "failure_mode_trapped": "timidity / generic output",
+      "implementation_prompt": "This repository is the public launch page for Meridian, a timeline-based motion editor for the web (design animation visually, ship production code). The current page is a plain placeholder — you have full creative license over layout, typography, color, motion, imagery, and interaction. There is no requirement to preserve the placeholder's styling.\n\nDesign and implement a launch page that is genuinely memorable — the kind of page a designer would share with a colleague. Boldness is appropriate here. A distinctive visual identity and at least one signature moment matter more than feature completeness.\n\nConstraints that still apply:\n- The page must stay fast on a normal laptop and degrade sensibly on mobile.\n- Keyboard access, semantic structure, and readable content must survive.\n- Respect prefers-reduced-motion while preserving all content and meaning.\n- Continuous or ambient animation must pause when offscreen or when the document is hidden.\n- You may add dependencies if they are justified; say why.\n\nRun the build and report your design direction, the signature moment, and your performance, accessibility, and reduced-motion decisions.",
+      "status": "ACTIVE"
+    }
+  ]
+}

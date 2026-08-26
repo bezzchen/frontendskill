@@ -1,0 +1,54 @@
+{
+  "_instructions": "Fill this in WITHOUT opening SEALED_MAPPING.json. Watch candidate-A/B/C.webm at equal viewport, first 60s, then answer. Rename this file to RANKS.json when done; the mapping may be unsealed only after that. Mirrors the format of ../blind_ranking_w1/RANKS.json.",
+  "recorded": "YYYY-MM-DD",
+  "reviewer": "harness owner",
+  "question": "Which feels most like an authored interactive world I would send another creative developer? (rubrics/spectacle_fit.md, Comparative review)",
+  "ranking_as_given": ["candidate-?", "candidate-?", "candidate-?"],
+  "per_candidate_spectacle_scores": {
+    "_anchors": "0-4 per dimension, rubrics/spectacle_fit.md. Automatic caps apply: no materially interactive realtime system -> centrality <=2 and median <=2.5; component soup -> original_integration <=1; reduced-motion content loss -> run fails outright; M2 offscreen failure -> runtime_evidence <=1.",
+    "candidate-A": {
+      "realtime_system_centrality": null,
+      "interaction_causality": null,
+      "authored_continuity_acts": null,
+      "graphics_material_craft": null,
+      "original_integration": null,
+      "signature_memory_binary_yes_no": null,
+      "signature_memory_score": null,
+      "mobile_capability_adaptation": null,
+      "runtime_evidence": null,
+      "notes": ""
+    },
+    "candidate-B": {
+      "realtime_system_centrality": null,
+      "interaction_causality": null,
+      "authored_continuity_acts": null,
+      "graphics_material_craft": null,
+      "original_integration": null,
+      "signature_memory_binary_yes_no": null,
+      "signature_memory_score": null,
+      "mobile_capability_adaptation": null,
+      "runtime_evidence": null,
+      "notes": ""
+    },
+    "candidate-C": {
+      "realtime_system_centrality": null,
+      "interaction_causality": null,
+      "authored_continuity_acts": null,
+      "graphics_material_craft": null,
+      "original_integration": null,
+      "signature_memory_binary_yes_no": null,
+      "signature_memory_score": null,
+      "mobile_capability_adaptation": null,
+      "runtime_evidence": null,
+      "notes": ""
+    }
+  },
+  "runtime_evidence_prefill_do_not_rescore_blind": {
+    "_note": "Supplied so dimension 8 need not be judged by eye. These are per-RUN, so consulting them before ranking would break blindness - fill ranks and the visual dimensions FIRST, then map these in after unsealing.",
+    "S1-fable-rep1": "M1 PASS GPU (p50 17.2ms, 0% hitch); M2 NOT_MEASURABLE_BY_GEOMETRY; M2b NOT_MEASURED (source lost pre-instrument); M3/M5/M6 PASS; 0 console errors",
+    "S1-fable-rep2": "M1 PASS (p50 16.7-16.8ms); M2 NOT_MEASURABLE_BY_GEOMETRY; M2b PASS 0.00 clean resume (retro-measured); M3/M5/M6 PASS; PROTOCOL-DEVIATION run (off-fixture rebuild)",
+    "S1-fable-rep3": "M1 PASS (p50 16.7ms, 0% hitch); M2 NOT_MEASURABLE_BY_GEOMETRY; M2b PASS 0.00 native; M3 PASS full parity; M4/M5/M6 PASS; 1 benign favicon 404"
+  },
+  "blindness_caveat": "Soft: the owner has previously seen rep1 and rep2 recordings labeled (and rep2 live), and durations differ (86s / 46s / 47s). All three candidates are same-condition (baseline), so no condition bias is possible. Strict blinding is reserved for the Section E pooled comparison.",
+  "resolved_ranking": "fill after unsealing SEALED_MAPPING.json"
+}

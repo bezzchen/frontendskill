@@ -1,0 +1,70 @@
+{
+  "pre_registered": "2026-08-14, before any S1 run; identical across conditions and reps",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "steps": [
+    {
+      "action": "wait",
+      "ms": 5000,
+      "why": "entry/loading choreography untouched"
+    },
+    {
+      "action": "pointer_sweep",
+      "ms": 4000
+    },
+    {
+      "action": "scroll_through",
+      "ms": 20000,
+      "why": "slow full-page pass; scroll-driven acts"
+    },
+    {
+      "action": "key",
+      "key": "Space",
+      "why": "common play/pause affordance"
+    },
+    {
+      "action": "wait",
+      "ms": 4000
+    },
+    {
+      "action": "drag",
+      "from": [
+        720,
+        450
+      ],
+      "to": [
+        980,
+        520
+      ],
+      "why": "spatial/scrub interaction probe"
+    },
+    {
+      "action": "wait",
+      "ms": 2000
+    },
+    {
+      "action": "click",
+      "at": [
+        720,
+        450
+      ],
+      "why": "world interaction probe"
+    },
+    {
+      "action": "wait",
+      "ms": 3000
+    },
+    {
+      "action": "scroll_to",
+      "y": 0,
+      "ms": 3000
+    },
+    {
+      "action": "wait",
+      "ms": 3000,
+      "why": "closing frame"
+    }
+  ]
+}

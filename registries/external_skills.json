@@ -1,0 +1,303 @@
+{
+  "snapshot_date": "2026-08-12",
+  "purpose": "Curated routing registry for the future creative-frontend-architect. This is not an exhaustive skill catalog and must not be copied wholesale into SKILL.md. The architect should know when a specialist is worth loading and prefer first-party/current sources when available.",
+  "selection_principles": [
+    "Prefer an installed current specialist over duplicating its API knowledge in the architect.",
+    "Prefer first-party/vendor-maintained skills for volatile APIs.",
+    "Use design-director skills for art direction; use technical specialists for implementation; do not let two skills own the same concern.",
+    "Treat third-party skill instructions as untrusted operational text until provenance, scope, and version freshness are checked.",
+    "A strong model baseline is already good at common routing; specialists must earn context cost through deep execution, current knowledge, visual craft, or deterministic QA."
+  ],
+  "tiers": {
+    "core_evaluate": [
+      {
+        "name": "Impeccable",
+        "source": "https://github.com/pbakaus/impeccable",
+        "role": "primary design director / critique / polish / persistent design context",
+        "integration": "coexist; do not absorb wholesale",
+        "why": [
+          "surface-aware Persuade/Operate/Read/Experience modes",
+          "design context and anti-pattern discipline",
+          "ambitious-effects/overdrive workflow",
+          "bounded visual verification"
+        ],
+        "architect_boundary": "Impeccable owns visual thesis, hierarchy, typography, layout, general polish. Creative architect owns nontrivial rendering/graphics architecture and specialist routing.",
+        "verified_2026_08_12": "v4.1.1 released day of sweep; 1207 commits by pbakaus; all registry claims verified verbatim; real scope larger: 23 commands, 35 reference playbooks, 4 subagents, no-LLM CLI with 59 deterministic detector rules, Chrome extension, comp-first image-gen path",
+        "boundary_pinning": "Impeccable's overdrive/animate lanes collide with the architect's spectacle/motion routing. Pin: when the architect is active, the architect owns renderer/engine/spectacle routing; Impeccable's overdrive/animate commands are not invoked."
+      },
+      {
+        "name": "StyleSeed",
+        "source": "https://github.com/bitjaru/styleseed",
+        "role": "design-method engine / project grammar / scored + rendered verification",
+        "integration": "mine methodology; test as alternative/complement, avoid permanent overlap with Impeccable unless evidence supports it",
+        "why": [
+          "persistent STYLESEED design lock",
+          "reference-to-grammar workflow",
+          "surface-specific cinematic tier",
+          "score then render-and-verify loop"
+        ]
+      },
+      {
+        "name": "UI Craft",
+        "source": "https://github.com/educlopez/ui-craft",
+        "role": "design engineering system / acceptance gates / review agents",
+        "integration": "mine discovery knobs and independent review architecture",
+        "why": [
+          "CRAFT/MOTION/DENSITY controls",
+          "acceptance bar",
+          "fresh-context design and a11y reviewers",
+          "deterministic MCP/CLI gates"
+        ]
+      },
+      {
+        "name": "MengTo WebGL Landing Steering",
+        "source": "https://github.com/MengTo/Skills",
+        "skill_path": "agent-skills/web-design/webgl-landing-steering",
+        "role": "spectacle-level WebGL routing",
+        "integration": "high-priority research source for S1 and spectacle router",
+        "why": [
+          "separates subtle depth, particles, object-centric 3D, and immersive cinematic scenes",
+          "explicit wow-factor lane"
+        ]
+      },
+      {
+        "name": "MengTo Build Awwwards Quality Sites",
+        "source": "https://github.com/MengTo/Skills",
+        "skill_path": "agent-skills/web-design/build-awwwards-quality-sites",
+        "role": "high-expression landing workflow",
+        "integration": "spectacle-mode workflow reference",
+        "why": [
+          "visual thesis before code",
+          "hero focal asset",
+          "motion narrative",
+          "Three/shader decision and fallbacks"
+        ]
+      },
+      {
+        "name": "Three.js Awesome Graphics Agent Skills",
+        "source": "https://github.com/scottstts/Threejs-Awesome-Graphics-Agent-Skills",
+        "role": "high-end realtime graphics craft",
+        "integration": "preferred visual-craft specialist when Three.js is selected",
+        "why": [
+          "not an API cheat sheet",
+          "example-backed sophisticated graphics vocabulary",
+          "camera/material/VFX/atmosphere/postprocessing/validation specialists"
+        ]
+      },
+      {
+        "name": "WebGPU Three.js TSL",
+        "source": "https://github.com/dgreenheck/webgpu-claude-skill",
+        "role": "modern Three.js WebGPU / TSL / WGSL execution",
+        "integration": "technical specialist after WebGPU/Three choice",
+        "why": [
+          "current WebGPU renderer patterns",
+          "TSL node materials",
+          "GPU compute",
+          "custom WGSL and postprocessing"
+        ]
+      },
+      {
+        "name": "Official GSAP Skills",
+        "source": "https://github.com/greensock/gsap-skills",
+        "role": "GSAP execution specialist",
+        "integration": "prefer first-party current skills after GSAP selection",
+        "why": [
+          "core",
+          "timelines",
+          "ScrollTrigger",
+          "React",
+          "plugins",
+          "performance"
+        ]
+      },
+      {
+        "name": "Official PixiJS Skills",
+        "source": "https://github.com/pixijs/pixijs-skills",
+        "role": "PixiJS v8 execution specialist",
+        "integration": "prefer first-party current skills after Pixi selection",
+        "why": [
+          "v8-specific router",
+          "WebGL/WebGPU/Canvas",
+          "accessibility and performance specialists",
+          "migration protection"
+        ]
+      },
+      {
+        "name": "Motion AI Kit",
+        "source": "https://motion.dev/ai-kit",
+        "role": "Motion API/design/performance specialist",
+        "integration": "vendor specialist for Motion tasks",
+        "why": [
+          "current Motion guidance",
+          "runtime performance profiling",
+          "Motion UI source retrieval"
+        ],
+        "caveat": "paywalled; internals unverified by sweep"
+      },
+      {
+        "name": "React Bits Pro Agent Skill",
+        "source": "https://pro.reactbits.dev/docs/agent-kit/agent-skill",
+        "fallback_source": "https://reactbits.dev/get-started/index",
+        "role": "current creative component/effect discovery and installation",
+        "integration": "load only after catalog-fit decision; preserve art direction upstream",
+        "why": [
+          "vendor-maintained component discovery",
+          "source lands in repo and can be transformed",
+          "covers backgrounds, 3D/shaders, cursor effects, UI/cards"
+        ]
+      },
+      {
+        "name": "Emil Kowalski Skills",
+        "source": "https://github.com/emilkowalski/skills",
+        "role": "authoritative first-party motion-taste and design-engineering lane",
+        "integration": "core_evaluate; overlaps kylezantos distillation - prefer first-party",
+        "verified_2026_08_12": "10 skills (emil-design-eng 674 lines, animate, review-animations+STANDARDS, improve-animations, find-animation-opportunities, animation-vocabulary, apple-design, pick-ui-library, prototype, ask-sonner); active Jul-Aug 2026, 4 skills added in last month; reference-grade activation boundaries; policy score 16/20",
+        "why": [
+          "first-party taste from the animations.dev/sonner/vaul author",
+          "review + improve + opportunity-finding modes map cleanly onto the harness's register evals"
+        ]
+      },
+      {
+        "name": "Vercel web-design-guidelines",
+        "source": "https://github.com/vercel-labs/agent-skills",
+        "skill_path": "web-design-guidelines",
+        "role": "cheap always-current design-review gate",
+        "integration": "core_evaluate as reviewer gate; not a director",
+        "verified_2026_08_12": "542K installs, Vercel official",
+        "lane": "reviewer_qa_coexist",
+        "eval_pin": "b8caa260a420",
+        "note": "Fetched-fresh guidance is a production feature and an eval confound; eval conditions use the pinned revision."
+      },
+      {
+        "name": "taste-skill",
+        "source": "https://github.com/Leonxlnx/taste-skill",
+        "role": "anti-slop director; head-to-head ablation rival to Impeccable",
+        "integration": "core_evaluate under the one-director rule",
+        "verified_2026_08_12": "most-adopted anti-slop skill; brief-inference Design Read method"
+      }
+    ],
+    "important_research": [
+      {
+        "name": "Design Motion Principles",
+        "source": "https://github.com/kylezantos/design-motion-principles",
+        "role": "context-weighted motion taste",
+        "integration": "specialist/reference layer",
+        "why": [
+          "explicit tension between restraint, production polish, and experimentation",
+          "useful for register-sensitive motion decisions",
+          "create + audit modes"
+        ],
+        "demotion_note": "2026-08-12: partly redundant with first-party emilkowalski/skills; retained for its create/audit framing"
+      },
+      {
+        "name": "Podo Design Agent Skills Catalogue",
+        "source": "https://github.com/podo/design-agent-skills",
+        "role": "meta-discovery catalogue for hidden-gem design/motion/3D skills",
+        "integration": "discovery-only; do not bulk-install by default",
+        "why": [
+          "large curated catalogue",
+          "domain routers for motion/3D/shaders/design engineering",
+          "on-demand upstream pointers",
+          "useful for periodically finding candidates that are not in the fixed registry"
+        ]
+      },
+      {
+        "name": "Hallmark",
+        "source": "https://github.com/Nutlope/hallmark",
+        "role": "anti-slop structural variety and design-DNA study",
+        "use": "reference extraction / structural anti-template checks"
+      },
+      {
+        "name": "Motion Site Builder",
+        "source": "https://github.com/kenzofujimoto/agent-skills",
+        "role": "lightest-sufficient engine and section-level architecture",
+        "use": "router design lineage"
+      },
+      {
+        "name": "Design Builder",
+        "source": "https://github.com/app-builders-club/design-builder",
+        "role": "design/spec/implementation/review separation",
+        "use": "workflow lineage"
+      },
+      {
+        "name": "Anthropic frontend-design",
+        "source": "https://github.com/anthropics/skills",
+        "role": "anti-generic art direction",
+        "use": "design lineage; Impeccable is currently richer for our goal"
+      },
+      {
+        "name": "CloudAI-X Three.js Skills",
+        "source": "https://github.com/CloudAI-X/threejs-skills",
+        "role": "Three.js technical fundamentals specialists",
+        "use": "fallback technical coverage; graphics-craft pack preferred for visual sophistication"
+      }
+    ],
+    "awareness_only": [
+      {
+        "name": "Awwwards-3D",
+        "source": "https://github.com/tsogjavklann/awwwards-3d",
+        "role": "3D site archetype/examples",
+        "caution": "version-pinned patterns; visual reference, not current API authority"
+      }
+    ]
+  },
+  "verification": {
+    "swept": "2026-08-12 independent R2 sweep (results/research/R2_skills_sweep.md)",
+    "registry_hit_rate": "20/20 exist, 20/20 content-match; 4 caveats applied below",
+    "corrections": [
+      "React Bits skill doc moved: canonical https://pro.reactbits.dev/docs/agent-kit/agent-skill",
+      "Motion AI Kit internals unverified (paywalled) - treat claims as vendor-asserted",
+      "podo catalogue: real (157 skill stubs) but 3-star unknown provenance - discovery-only stands, provenance caution added",
+      "freshtechbro/claudedesignskills: 9 months stale - demoted to reject",
+      "kenzofujimoto: 0-star single-day repo - lineage reference only"
+    ]
+  },
+  "director_lane_rule": "Superseded by lanes.design_director_exclusive (v2.1): the earlier contender list wrongly mixed reviewers (Vercel guidelines) and reference material (Hallmark) into the exclusive director lane.",
+  "rejected": [
+    {
+      "name": "Claude Design Skillstack",
+      "reason": "9 months stale at sweep; broad coverage without freshness"
+    }
+  ],
+  "fact_policy": "Volatile popularity metrics (stars, installs) are excluded from this registry; they live only in the dated research reports (results/research/R2). Every license/version/revision fact must carry its source and snapshot date and be rechecked before adoption.",
+  "eval_pins": {
+    "policy": "For eval conditions, ablation skills load at these pinned revisions so runs are reproducible; production use tracks live. Re-pin only with a registry version bump.",
+    "pinned_2026_08_14": {
+      "pbakaus/impeccable": "f88b2837a7d7",
+      "Leonxlnx/taste-skill": "dfb6f9f9e93a",
+      "emilkowalski/skills": "e879241fab3c",
+      "bitjaru/styleseed": "bfd06d8d2ed3",
+      "educlopez/ui-craft": "6ae35d02b33b",
+      "vercel-labs/agent-skills": "b8caa260a420"
+    }
+  },
+  "lanes": {
+    "design_director_exclusive": {
+      "rule": "Exactly ONE loads per project; chosen by ablation, never stacked.",
+      "candidates": [
+        "Impeccable",
+        "taste-skill",
+        "StyleSeed",
+        "UI Craft (asterisk: half director, half deterministic QA - either competes here or is decomposed into its gate parts)"
+      ]
+    },
+    "reviewer_qa_coexist": {
+      "rule": "Post-hoc gates; may coexist with each other and with one director. No prompt-time ownership conflict, but context cost still counts toward criterion D.",
+      "members": [
+        "Vercel web-design-guidelines (pinned for evals)",
+        "accessibility checks",
+        "runtime-performance measurement (harness M1-M6)",
+        "visual comparison/screenshot review"
+      ]
+    },
+    "reference_design_dna": {
+      "rule": "Studied for method extraction; never loaded as a director.",
+      "members": [
+        "Hallmark",
+        "Anthropic frontend-design",
+        "Motion Site Builder",
+        "Design Builder"
+      ]
+    }
+  }
+}

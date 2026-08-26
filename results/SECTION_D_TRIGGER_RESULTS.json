@@ -1,0 +1,477 @@
+{
+ "run": "SECTION-D-trigger-tests",
+ "date": "2026-08-24",
+ "skill": "skill/creative-frontend-architect/SKILL.md v1",
+ "protocol": "evals/trigger_probe_protocol.md (pre-registered 2026-08-24)",
+ "queries_file": "evals/trigger_queries.json",
+ "model": "claude-fable-5 (fresh subagent per probe)",
+ "reps_per_query": 5,
+ "results": {
+  "Q01": {
+   "kind": "core_positive",
+   "should_trigger": true,
+   "replies": [
+    [
+     "creative-frontend-architect"
+    ],
+    [
+     "creative-frontend-architect",
+     "frontend-design"
+    ],
+    [
+     "creative-frontend-architect",
+     "frontend-design"
+    ],
+    [
+     "creative-frontend-architect"
+    ],
+    [
+     "creative-frontend-architect"
+    ]
+   ],
+   "correct_per_rep": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "correct": 5,
+   "query_pass": true,
+   "fd_cofire": 2
+  },
+  "Q02": {
+   "kind": "core_positive",
+   "should_trigger": true,
+   "replies": [
+    [
+     "creative-frontend-architect",
+     "frontend-design"
+    ],
+    [
+     "creative-frontend-architect"
+    ],
+    [
+     "creative-frontend-architect"
+    ],
+    [
+     "creative-frontend-architect",
+     "frontend-design"
+    ],
+    [
+     "creative-frontend-architect"
+    ]
+   ],
+   "correct_per_rep": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "correct": 5,
+   "query_pass": true,
+   "fd_cofire": 2
+  },
+  "Q03": {
+   "kind": "core_positive",
+   "should_trigger": true,
+   "replies": [
+    [
+     "creative-frontend-architect"
+    ],
+    [
+     "creative-frontend-architect"
+    ],
+    [
+     "creative-frontend-architect"
+    ],
+    [
+     "creative-frontend-architect"
+    ],
+    [
+     "creative-frontend-architect"
+    ]
+   ],
+   "correct_per_rep": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "correct": 5,
+   "query_pass": true,
+   "fd_cofire": 0
+  },
+  "Q04": {
+   "kind": "core_positive",
+   "should_trigger": true,
+   "replies": [
+    [
+     "creative-frontend-architect"
+    ],
+    [
+     "creative-frontend-architect"
+    ],
+    [
+     "creative-frontend-architect"
+    ],
+    [
+     "creative-frontend-architect"
+    ],
+    [
+     "creative-frontend-architect"
+    ]
+   ],
+   "correct_per_rep": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "correct": 5,
+   "query_pass": true,
+   "fd_cofire": 0
+  },
+  "Q05": {
+   "kind": "core_positive",
+   "should_trigger": true,
+   "replies": [
+    [
+     "creative-frontend-architect"
+    ],
+    [
+     "creative-frontend-architect",
+     "frontend-design"
+    ],
+    [
+     "creative-frontend-architect"
+    ],
+    [
+     "creative-frontend-architect"
+    ],
+    [
+     "creative-frontend-architect",
+     "frontend-design"
+    ]
+   ],
+   "correct_per_rep": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "correct": 5,
+   "query_pass": true,
+   "fd_cofire": 2
+  },
+  "Q06": {
+   "kind": "boundary_positive",
+   "should_trigger": true,
+   "replies": [
+    [
+     "creative-frontend-architect",
+     "frontend-design"
+    ],
+    [
+     "creative-frontend-architect",
+     "frontend-design"
+    ],
+    [
+     "creative-frontend-architect",
+     "frontend-design"
+    ],
+    [
+     "creative-frontend-architect",
+     "frontend-design"
+    ],
+    [
+     "creative-frontend-architect",
+     "frontend-design"
+    ]
+   ],
+   "correct_per_rep": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "correct": 5,
+   "query_pass": true,
+   "fd_cofire": 5
+  },
+  "Q07": {
+   "kind": "near_miss_negative",
+   "should_trigger": false,
+   "replies": [
+    [
+     "none"
+    ],
+    [
+     "none"
+    ],
+    [
+     "none"
+    ],
+    [
+     "tdd-workflow"
+    ],
+    [
+     "none"
+    ]
+   ],
+   "correct_per_rep": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "correct": 5,
+   "query_pass": true,
+   "fd_cofire": 0
+  },
+  "Q08": {
+   "kind": "near_miss_negative",
+   "should_trigger": false,
+   "replies": [
+    [
+     "none"
+    ],
+    [
+     "none"
+    ],
+    [
+     "none"
+    ],
+    [
+     "none"
+    ],
+    [
+     "none"
+    ]
+   ],
+   "correct_per_rep": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "correct": 5,
+   "query_pass": true,
+   "fd_cofire": 0
+  },
+  "Q09": {
+   "kind": "near_miss_negative",
+   "should_trigger": false,
+   "replies": [
+    [
+     "none"
+    ],
+    [
+     "none"
+    ],
+    [
+     "none"
+    ],
+    [
+     "none"
+    ],
+    [
+     "none"
+    ]
+   ],
+   "correct_per_rep": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "correct": 5,
+   "query_pass": true,
+   "fd_cofire": 0
+  },
+  "Q10": {
+   "kind": "near_miss_negative",
+   "should_trigger": false,
+   "replies": [
+    [
+     "none"
+    ],
+    [
+     "none"
+    ],
+    [
+     "none"
+    ],
+    [
+     "none"
+    ],
+    [
+     "none"
+    ]
+   ],
+   "correct_per_rep": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "correct": 5,
+   "query_pass": true,
+   "fd_cofire": 0
+  },
+  "Q11": {
+   "kind": "near_miss_negative",
+   "should_trigger": false,
+   "replies": [
+    [
+     "none"
+    ],
+    [
+     "none"
+    ],
+    [
+     "none"
+    ],
+    [
+     "none"
+    ],
+    [
+     "none"
+    ]
+   ],
+   "correct_per_rep": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "correct": 5,
+   "query_pass": true,
+   "fd_cofire": 0
+  },
+  "Q12": {
+   "kind": "boundary_positive",
+   "should_trigger": true,
+   "replies": [
+    [
+     "creative-frontend-architect",
+     "frontend-design"
+    ],
+    [
+     "creative-frontend-architect",
+     "frontend-design"
+    ],
+    [
+     "creative-frontend-architect",
+     "frontend-design"
+    ],
+    [
+     "creative-frontend-architect",
+     "frontend-design"
+    ],
+    [
+     "creative-frontend-architect",
+     "frontend-design"
+    ]
+   ],
+   "correct_per_rep": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "correct": 5,
+   "query_pass": true,
+   "fd_cofire": 5
+  },
+  "Q13": {
+   "kind": "easy_negative",
+   "should_trigger": false,
+   "replies": [
+    [
+     "none"
+    ],
+    [
+     "none"
+    ],
+    [
+     "none"
+    ],
+    [
+     "none"
+    ],
+    [
+     "none"
+    ]
+   ],
+   "correct_per_rep": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "correct": 5,
+   "query_pass": true,
+   "fd_cofire": 0
+  },
+  "Q14": {
+   "kind": "easy_negative",
+   "should_trigger": false,
+   "replies": [
+    [
+     "none"
+    ],
+    [
+     "none"
+    ],
+    [
+     "none"
+    ],
+    [
+     "none"
+    ],
+    [
+     "none"
+    ]
+   ],
+   "correct_per_rep": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "correct": 5,
+   "query_pass": true,
+   "fd_cofire": 0
+  }
+ },
+ "criterion_C": {
+  "core_positive": {
+   "required": "all pass >=4/5",
+   "observed": "5/5 queries at 5/5",
+   "pass": true
+  },
+  "near_miss_negative": {
+   "required": ">=80% of queries pass",
+   "observed": "5/5 queries pass; every rep correct (Q07 rep4 invoked tdd-workflow, cfa absent = correct)",
+   "pass": true
+  },
+  "boundary_positive_diagnostic": "Q06 5/5, Q12 5/5",
+  "easy_negative_diagnostic": "Q13 5/5, Q14 5/5",
+  "verdict": "PASS"
+ },
+ "total_correct": "70/70"
+}

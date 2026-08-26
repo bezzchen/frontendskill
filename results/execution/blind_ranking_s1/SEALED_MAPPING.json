@@ -1,0 +1,10 @@
+{
+ "sealed": true,
+ "created": "2026-08-25",
+ "protocol": "owner ranks candidates A/B/C per rubrics/spectacle_fit.md WITHOUT opening this file; mapping unsealed only after RANKS.json is recorded (mirrors blind_ranking_w1)",
+ "mapping": {
+  "candidate-A": "S1-fable-rep1",
+  "candidate-B": "S1-fable-rep2",
+  "candidate-C": "S1-fable-rep3"
+ }
+}

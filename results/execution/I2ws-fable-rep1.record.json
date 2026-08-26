@@ -1,0 +1,34 @@
+{
+ "run": "I2ws-fable-rep1",
+ "date": "2026-08-25",
+ "condition": "with_skill_v1 (evals/withskill_protocol.md)",
+ "model": "claude-fable-5",
+ "fixture": "anime-v4-portfolio 6f5dcaa (pristine copy verified)",
+ "interruptions": "1 org spend-limit kill mid-run; resumed from transcript per standing protocol (run dir continuity preserved); later self-restarted its preview after orchestrator server hygiene",
+ "implementation": "Register S scoped to the work section, named unprompted. DOM/CSS transforms on installed animejs@4.5.0 ONLY - zero dependency changes (verified via git diff of package.json). Fit gate run against the installed package itself: adopted createDraggable, the new-in-4.5 createLayout/AutoLayout FLIP (discovered by inspecting installed source, replacing a planned hand-rolled FLIP - freshness line in action), createScope media branching, createTimer; custom only ~40-line orbit math. 2 files changed, 606 insertions. Mobile = flowing tab UI with ZERO ambient animation by design; desktop orbit paused via IntersectionObserver + engine document.hidden suspension. Agent self-verified pause under real scroll and real hidden tab.",
+ "measurements": {
+  "m6_static": "PASS (build, cleanup, no interval loops, no anime v3 patterns)",
+  "m1_gpu_system_chrome": "desktop PASS p50 16.7ms, 0% hitch, 60 rAF/s; mobile N_A_NO_CONTINUOUS_ANIMATION (rAF 0 - static tab UI by design)",
+  "m2_offscreen": "NOT_MEASURABLE_BY_GEOMETRY (mechanical): the with-skill composition is a top-of-page section still 92% visible after scroll-away (baselines placed the viz below the fold, hence their measurable 1.00 FAILs). Per the pre-registered 2026-08-24 amendment, M2b is the operative pause measurement in this case. Agent's own real-scroll IO-pause verification stands as self-reported, not independently instrument-confirmed.",
+  "m2b_hidden_pause": "PASS desktop - ratio 0.00 (60 -> 0 rAF/s), clean resume to 60; mobile N/A (no animation). App-level pause verified by instrument.",
+  "m3_reduced_motion": "PASS both profiles, full content parity",
+  "m5_accessible_parallel": "PASS both profiles",
+  "m4_teardown": "PASS - glContexts [0,0,0] (DOM/CSS only, no GL)",
+  "console_errors": "1 on desktop: fixture-level /favicon.ico 404 (pre-existing, no icon shipped in fixture); mobile clean"
+ },
+ "pause_discipline_verdict": "PASS via operative measure (M2b 0.00 + clean resume); M2 not comparable to baseline on this rep due to layout difference - recorded, not scored as pass or fail on the M2 axis",
+ "artifacts": {
+  "diff": "results/execution/I2ws-fable-rep1.diff (2 files, 606 insertions)",
+  "source_snapshot": "results/execution/I2ws-fable-rep1-source.zip (+ safety copy in ~/Documents)",
+  "measurements": "results/execution/I2ws-fable-rep1.json",
+  "screenshots": "results/execution/screenshots/I2ws-fable-rep1-*.png"
+ },
+ "cost": {
+  "tokens": 245397,
+  "duration_ms": 4289390,
+  "duration_min": 71.5,
+  "convention": "tokens = total context tokens reported by the orchestrating harness (same convention as results/rep1_runs.json), NOT cumulative spend",
+  "backfilled": "2026-08-25 from orchestrator notifications, per the recording-gap recommendation in results/CRITERION_D_ACCOUNTING.md",
+  "caveat": "spend-limit interruption + transcript resume; wall-clock includes idle waiting, so duration is NOT comparable. First-completion segment was 1,420,202 ms."
+ }
+}

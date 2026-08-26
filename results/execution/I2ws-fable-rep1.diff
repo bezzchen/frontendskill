@@ -1,0 +1,652 @@
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..26b4368 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -24,3 +24,103 @@ html { background: var(--background); color: var(--foreground); }
+ body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
+ a { color: inherit; }
+ button, input { font: inherit; }
++
++/* --- Experience system ------------------------------------------------- */
++
++/* Small screens (default): a plain vertical flow; the inactive view is
++   hidden like a regular tab panel. */
++.exp-stage {
++  position: relative;
++  display: flex;
++  flex-direction: column;
++  gap: 0.75rem;
++}
++.exp-shell[data-state="float"] { display: none; }
++.exp-ring { display: none; }
++.exp-hint-desktop { display: none; }
++.exp-hint-mobile { display: inline; }
++
++.exp-card { cursor: default; }
++.exp-card:focus-visible {
++  outline: 2px solid var(--foreground);
++  outline-offset: 2px;
++}
++
++/* While swiping between views, keep vertical scroll native on the cards. */
++@media (max-width: 63.999rem) {
++  .exp-stage [data-card] { touch-action: pan-y; }
++}
++
++/* Large screens: structured column + orbit field around the core. */
++@media (min-width: 64rem) {
++  .exp-hint-desktop { display: inline; }
++  .exp-hint-mobile { display: none; }
++
++  .exp-stage {
++    display: grid;
++    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
++    column-gap: 1.5rem;
++    row-gap: 0.75rem;
++    align-content: center;
++    min-height: 32rem;
++  }
++  .exp-shell[data-state="dock"] {
++    grid-column: 1;
++    z-index: 1;
++  }
++  .exp-shell[data-state="float"] {
++    display: block;
++    position: absolute;
++    top: 0;
++    left: 0;
++    width: 11rem;
++    z-index: 10;
++    opacity: 0; /* revealed by the entrance animation once JS places it */
++    will-change: transform;
++  }
++  .exp-core {
++    position: absolute;
++    top: 0;
++    left: 0;
++    width: 12rem;
++    z-index: 2;
++    opacity: 0; /* revealed once JS centers it in the field */
++  }
++  .exp-ring {
++    display: block;
++    position: absolute;
++    top: 0;
++    left: 0;
++    z-index: 0;
++    border: 1px dashed var(--line);
++    border-radius: 50%;
++    opacity: 0;
++    pointer-events: none;
++  }
++  .exp-shell.is-grabbed { z-index: 30; }
++  .is-grabbed .exp-card { box-shadow: 0 14px 40px rgb(0 0 0 / 0.16); }
++}
++
++/* Reduced motion: drag/swipe affordances are disabled, so the hint that
++   advertises them is hidden. Content and tab controls remain untouched. */
++@media (prefers-reduced-motion: reduce) {
++  .exp-hint { display: none; }
++  .exp-system * { transition: none !important; }
++}
++
++/* No JavaScript: show every card in plain flow so nothing is lost. */
++@media (scripting: none) {
++  .exp-shell[data-state="float"] {
++    display: block;
++    position: static !important;
++    width: auto !important;
++    opacity: 1 !important;
++    transform: none !important;
++  }
++  .exp-core {
++    position: static !important;
++    width: auto !important;
++    opacity: 1 !important;
++  }
++  .exp-ring { display: none !important; }
++}
+diff --git a/components/ExperienceSystem.jsx b/components/ExperienceSystem.jsx
+index 0b2e08c..100059e 100644
+--- a/components/ExperienceSystem.jsx
++++ b/components/ExperienceSystem.jsx
+@@ -1,33 +1,520 @@
+ "use client";
+ 
++import { useEffect, useRef, useState } from "react";
++import { flushSync } from "react-dom";
++import {
++  animate,
++  createDraggable,
++  createLayout,
++  createScope,
++  createTimer,
++  stagger,
++  utils,
++} from "animejs";
++
+ const items = [
+-  { id: "exp-1", label: "Company A", type: "experience" },
+-  { id: "exp-2", label: "Company B", type: "experience" },
+-  { id: "exp-3", label: "Research Lab", type: "experience" },
+-  { id: "project-1", label: "Project Atlas", type: "project" },
+-  { id: "project-2", label: "Project Vector", type: "project" },
+-  { id: "project-3", label: "Project Field", type: "project" },
++  { id: "exp-1", label: "Company A", type: "experience", meta: "Senior engineer · 2022 — Now" },
++  { id: "exp-2", label: "Company B", type: "experience", meta: "Product engineer · 2019 — 22" },
++  { id: "exp-3", label: "Research Lab", type: "experience", meta: "Resident · 2017 — 19" },
++  { id: "project-1", label: "Project Atlas", type: "project", meta: "Mapping systems" },
++  { id: "project-2", label: "Project Vector", type: "project", meta: "Motion toolkit" },
++  { id: "project-3", label: "Project Field", type: "project", meta: "Spatial audio" },
+ ];
+ 
++const MODES = ["experience", "projects"];
++const kindOf = (mode) => (mode === "experience" ? "experience" : "project");
++
++/**
++ * Experience system.
++ *
++ * One set of semantic DOM nodes (6 item <button>s + a central core object) is
++ * arranged by cooperating anime.js systems, selected per media state via
++ * createScope({ mediaQueries }):
++ *
++ *  - Desktop, motion OK   — the active view docks into a structured column
++ *    (grid flow); the other view floats in a loose elliptical orbit around
++ *    the core. A single createTimer drives all ambient transforms (outer
++ *    shells only); createDraggable owns the inner card transforms with an
++ *    elastic spring-home release (container [0,0,0,0]); createLayout (FLIP)
++ *    animates the dock/float trade when tabs switch. The timer pauses while
++ *    the stage is offscreen (IntersectionObserver) and the engine itself
++ *    pauses on document.hidden (anime v4 default).
++ *  - Desktop, reduced motion — identical composition, statically placed. No
++ *    timer, no drag, instant tab switches.
++ *  - Small screens, motion OK — flow layout, tabs swap lists with a short
++ *    stagger; horizontal swipe on the panel (y axis disabled so vertical
++ *    scroll stays native) switches views with a rubber-band release.
++ *  - Small screens, reduced motion — plain tab swaps, no gestures/animation.
++ *
++ * scope.revert() in the effect cleanup reverts every anime construct
++ * (timer, draggables, layout, sets/animations); each branch also returns a
++ * cleanup that disconnects observers and scrubs the inline styles it wrote.
++ */
+ export function ExperienceSystem() {
++  const [mode, setMode] = useState("experience");
++  const rootRef = useRef(null);
++  const stageRef = useRef(null);
++  const coreRef = useRef(null);
++  const ringRef = useRef(null);
++  const modeRef = useRef(mode);
++  const switchRef = useRef(null);
++  const tablistRef = useRef(null);
++  modeRef.current = mode;
++
++  const requestMode = (next) => {
++    if (next === modeRef.current || !MODES.includes(next)) return;
++    if (switchRef.current) switchRef.current(next);
++    else setMode(next);
++  };
++
++  useEffect(() => {
++    const scope = createScope({
++      root: rootRef,
++      mediaQueries: {
++        desktop: "(min-width: 64rem)",
++        reduced: "(prefers-reduced-motion: reduce)",
++      },
++    });
++
++    scope.add((self) => {
++      const { desktop, reduced } = self.matches;
++      const $stage = stageRef.current;
++      const $core = coreRef.current;
++      const $ring = ringRef.current;
++      if (!$stage || !$core || !$ring) return;
++      const shells = Array.from($stage.querySelectorAll("[data-shell]"));
++      const cards = shells.map((s) => s.querySelector("[data-card]"));
++      const floats = () => shells.filter((s) => s.dataset.state === "float");
++      const docks = () => shells.filter((s) => s.dataset.state === "dock");
++
++      const scrub = () => {
++        [...shells, ...cards, $core, $ring, $stage].forEach((el) => {
++          if (!el) return;
++          ["transform", "opacity", "left", "top", "width", "height", "z-index", "touch-action", "will-change", "cursor"].forEach(
++            (p) => el.style.removeProperty(p),
++          );
++        });
++        shells.forEach((s) => s.classList.remove("is-grabbed"));
++        delete $stage.dataset.orbit;
++        switchRef.current = null;
++      };
++
++      /* ------------------------------------------------- small screens -- */
++      if (!desktop) {
++        $stage.dataset.orbit = "off";
++
++        const switchMobile = (next) => {
++          flushSync(() => setMode(next));
++          if (!reduced) {
++            animate(docks(), {
++              opacity: [0, 1],
++              y: [10, 0],
++              duration: 340,
++              delay: stagger(45),
++              ease: "out(3)",
++            });
++          }
++        };
++        switchRef.current = switchMobile;
++
++        let swipe = null;
++        if (!reduced) {
++          // Horizontal swipe between views. y is disabled, which makes the
++          // draggable set touch-action: pan-y, so vertical page scroll over
++          // the cards stays native. container [0,0,0,0] gives the
++          // rubber-band feel + spring-back-to-rest release.
++          swipe = createDraggable($stage, {
++            y: false,
++            container: [0, 0, 0, 0],
++            containerFriction: 0.55,
++            releaseStiffness: 160,
++            releaseDamping: 18,
++            cursor: false,
++            dragThreshold: { mouse: 8, touch: 12 },
++            onRelease: (d) => {
++              const idx = MODES.indexOf(modeRef.current);
++              if (d.x < -36 && idx < MODES.length - 1) switchMobile(MODES[idx + 1]);
++              else if (d.x > 36 && idx > 0) switchMobile(MODES[idx - 1]);
++            },
++          });
++        }
++
++        return () => {
++          if (swipe) swipe.disable();
++          scrub();
++        };
++      }
++
++      /* ---------------------------------------------- desktop geometry -- */
++      const rand = utils.createSeededRandom(11);
++      const field = { w: 0, h: 0, left: 0, cx: 0, cy: 0, rx: 0, ry: 0 };
++      const rec = new Map(); // shell -> orbit state
++      let transitioning = false;
++      let handoffTimer = 0;
++
++      const measure = () => {
++        const sr = $stage.getBoundingClientRect();
++        field.w = sr.width;
++        field.h = sr.height;
++        const dockRects = docks().map((s) => s.getBoundingClientRect());
++        const dockRight = dockRects.length
++          ? Math.max(...dockRects.map((r) => r.right)) - sr.left
++          : sr.width * 0.4;
++        field.left = Math.min(dockRight + 24, sr.width * 0.6);
++        field.cx = field.left + (field.w - field.left) / 2;
++        field.cy = field.h / 2;
++        const coreRect = $core.getBoundingClientRect();
++        const cardHalf = 88; // 11rem float card / 2
++        field.rx = Math.max(
++          utils.clamp((field.w - field.left) / 2 - cardHalf - 26, 120, 320),
++          coreRect.width / 2 + cardHalf + 14,
++        );
++        field.ry = utils.clamp(field.h / 2 - 76, 96, 250);
++        shells.forEach((s) => {
++          const r = rec.get(s);
++          if (r) {
++            const b = s.getBoundingClientRect();
++            r.w = b.width;
++            r.h = b.height;
++          }
++        });
++        utils.set($core, {
++          left: field.cx - coreRect.width / 2,
++          top: field.cy - coreRect.height / 2,
++        });
++        utils.set($ring, {
++          left: field.cx - field.rx,
++          top: field.cy - field.ry,
++          width: field.rx * 2,
++          height: field.ry * 2,
++        });
++      };
++
++      const seedFloat = (shell, i, n) => {
++        rec.set(shell, {
++          angle: (i / Math.max(n, 1)) * Math.PI * 2 - Math.PI / 2 + rand(-35, 35) / 100,
++          speed: rand(50, 72) / 1000, // rad/s — one lap every ~90-125s
++          rMul: rand(94, 108) / 100,
++          wobAmp: rand(6, 12),
++          wobFreq: rand(30, 55) / 100,
++          phase: rand(0, 628) / 100,
++          sway: rand(15, 28) / 10,
++          w: 176,
++          h: 112,
++          frozen: false,
++        });
++      };
++
++      const place = (shell) => {
++        const r = rec.get(shell);
++        if (!r) return;
++        const wob = Math.sin(r.phase) * r.wobAmp;
++        let x = field.cx + Math.cos(r.angle) * (field.rx * r.rMul + wob) - r.w / 2;
++        let y = field.cy + Math.sin(r.angle) * (field.ry * r.rMul + wob) - r.h / 2;
++        x = utils.clamp(x, field.left - 32, field.w - r.w + 16);
++        y = utils.clamp(y, 2, field.h - r.h - 2);
++        utils.set(shell, { x, y, rotate: Math.sin(r.phase * 0.6 + r.angle) * r.sway });
++      };
++
++      const placeAllFloats = () => floats().forEach(place);
++      const zeroDocks = () =>
++        docks().forEach((s) => {
++          rec.delete(s);
++          utils.set(s, { x: 0, y: 0, rotate: 0 });
++        });
++      const seedAllFloats = () => {
++        const fl = floats();
++        fl.forEach((s, i) => seedFloat(s, i, fl.length));
++      };
++
++      /* ------------------------------------- desktop, reduced motion ---- */
++      if (reduced) {
++        $stage.dataset.orbit = "static";
++        measure();
++        seedAllFloats();
++        // Deterministic still composition: no drift, no drag, no transitions.
++        rec.forEach((r) => {
++          r.wobAmp = 0;
++          r.sway = 0;
++        });
++        placeAllFloats();
++        zeroDocks();
++        utils.set([...shells, $core, $ring], { opacity: 1 });
++
++        const switchStatic = (next) => {
++          flushSync(() => setMode(next));
++          seedAllFloats();
++          rec.forEach((r) => {
++            r.wobAmp = 0;
++            r.sway = 0;
++          });
++          measure();
++          placeAllFloats();
++          zeroDocks();
++          utils.set(shells, { opacity: 1 });
++        };
++        switchRef.current = switchStatic;
++
++        const ro = new ResizeObserver(() => {
++          measure();
++          placeAllFloats();
++        });
++        ro.observe($stage);
++        return () => {
++          ro.disconnect();
++          scrub();
++        };
++      }
++
++      /* --------------------------------------- desktop, full motion ----- */
++      measure();
++      seedAllFloats();
++      placeAllFloats();
++      utils.set(shells, { opacity: 1 });
++
++      let breath = 0;
++      const driver = createTimer({
++        onUpdate: (t) => {
++          if (transitioning) return;
++          const dt = Math.min(t.deltaTime, 100) / 1000;
++          breath += dt;
++          utils.set($core, { scale: 1 + Math.sin(breath * 0.7) * 0.012 });
++          utils.set($ring, { rotate: (breath * 1.4) % 360 });
++          floats().forEach((shell) => {
++            const r = rec.get(shell);
++            if (!r || r.frozen) return;
++            r.angle += r.speed * dt;
++            r.phase += r.wobFreq * dt;
++            place(shell);
++          });
++        },
++      });
++
++      // Ambient loop stops whenever the stage is scrolled offscreen. The
++      // anime engine additionally suspends everything on document.hidden
++      // (engine.pauseOnDocumentHidden is true by default in v4).
++      const io = new IntersectionObserver(
++        ([entry]) => {
++          if (entry.isIntersecting) {
++            driver.resume();
++            $stage.dataset.orbit = "running";
++          } else {
++            driver.pause();
++            $stage.dataset.orbit = "paused";
++          }
++        },
++        { threshold: 0 },
++      );
++      io.observe($stage);
++
++      // Cards (inner element) are the drag targets; the orbit only ever
++      // writes to the outer shells, so each transform has exactly one owner.
++      // container [0,0,0,0] + friction = elastic pull, spring release home.
++      const draggables = cards.map((card) =>
++        createDraggable(card, {
++          container: [0, 0, 0, 0],
++          containerFriction: 0.3,
++          releaseMass: 1,
++          releaseStiffness: 110,
++          releaseDamping: 13,
++          velocityMultiplier: 0.85,
++          onGrab: (d) => {
++            const shell = d.$target.closest("[data-shell]");
++            const r = rec.get(shell);
++            if (r) r.frozen = true; // hold this card's orbit slot still
++            shell?.classList.add("is-grabbed");
++          },
++          onSettle: (d) => {
++            const shell = d.$target.closest("[data-shell]");
++            const r = rec.get(shell);
++            if (r) r.frozen = false;
++            shell?.classList.remove("is-grabbed");
++          },
++        }),
++      );
++
++      // FLIP reorganization between the two views: the same DOM nodes trade
++      // places between the structured column and the orbit field.
++      const layout = createLayout($stage, { children: "[data-shell]" });
++
++      // The FLIP (AutoLayout) and the orbit timer must never both own a
++      // shell's transform. The timer is frozen for the whole transition, and
++      // at each boundary the inline transform is stripped and rewritten from
++      // scratch — AutoLayout re-serializes restored transforms in a form the
++      // anime tween cache no longer recognizes as its own, and writing on top
++      // of that doubles the position.
++      const resetShellTransforms = () => {
++        shells.forEach((s) => s.style.removeProperty("transform"));
++        measure();
++        placeAllFloats();
++        zeroDocks();
++      };
++
++      const switchDesktop = (next) => {
++        if (transitioning || next === modeRef.current) return;
++        transitioning = true; // timer stops writing shell transforms
++        draggables.forEach((d) => {
++          d.setX(0, true);
++          d.setY(0, true);
++          d.disable();
++        });
++        layout.update(
++          () => {
++            flushSync(() => setMode(next));
++            seedAllFloats();
++            resetShellTransforms(); // new-state orbit slots, recorded by the FLIP
++            utils.set(shells, { opacity: 1 });
++          },
++          {
++            duration: 640,
++            ease: "inOut(2.4)",
++            delay: stagger(45),
++            onComplete: () => {
++              // A macrotask later, so AutoLayout's own inline-style restore
++              // has definitely finished before ownership returns to the timer.
++              handoffTimer = setTimeout(() => {
++                handoffTimer = 0;
++                resetShellTransforms();
++                transitioning = false;
++                draggables.forEach((d) => d.enable());
++              }, 0);
++            },
++          },
++        );
++      };
++      switchRef.current = switchDesktop;
++
++      let roTick = 0;
++      const ro = new ResizeObserver(() => {
++        if (roTick) return;
++        roTick = requestAnimationFrame(() => {
++          roTick = 0;
++          if (!transitioning) {
++            measure();
++            placeAllFloats();
++          }
++        });
++      });
++      ro.observe($stage);
++
++      // Entrance: the floating constellation fades up once on build.
++      animate(floats(), {
++        opacity: [0, 1],
++        scale: [0.96, 1],
++        duration: 480,
++        delay: stagger(55),
++        ease: "out(3)",
++      });
++      animate([$core, $ring], { opacity: [0, 1], duration: 560, ease: "out(2)" });
++
++      return () => {
++        io.disconnect();
++        ro.disconnect();
++        if (roTick) cancelAnimationFrame(roTick);
++        if (handoffTimer) clearTimeout(handoffTimer);
++        scrub();
++      };
++    });
++
++    return () => scope.revert();
++  }, []);
++
++  const onTablistKeyDown = (e) => {
++    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
++    e.preventDefault();
++    const idx = MODES.indexOf(modeRef.current);
++    const next =
++      MODES[e.key === "ArrowRight" ? (idx + 1) % MODES.length : (idx - 1 + MODES.length) % MODES.length];
++    requestMode(next);
++    tablistRef.current?.querySelector(`[data-tab="${next}"]`)?.focus();
++  };
++
++  const activeKind = kindOf(mode);
++
+   return (
+-    <section className="space-y-6" aria-labelledby="experience-title">
+-      <div>
+-        <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted)]">Experience system</p>
+-        <h2 id="experience-title" className="text-4xl font-semibold tracking-tight">
+-          Work and projects
+-        </h2>
++    <section ref={rootRef} className="exp-system space-y-6" aria-labelledby="experience-title">
++      <div className="flex flex-wrap items-end justify-between gap-4">
++        <div>
++          <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted)]">Experience system</p>
++          <h2 id="experience-title" className="text-4xl font-semibold tracking-tight">
++            Work and projects
++          </h2>
++        </div>
++        <div
++          ref={tablistRef}
++          role="tablist"
++          aria-label="Work and projects views"
++          onKeyDown={onTablistKeyDown}
++          className="inline-flex gap-1 rounded-full border border-[var(--line)] bg-[var(--surface)] p-1"
++        >
++          {MODES.map((m) => (
++            <button
++              key={m}
++              type="button"
++              role="tab"
++              data-tab={m}
++              id={`exp-tab-${m}`}
++              aria-selected={mode === m}
++              aria-controls="exp-stage"
++              tabIndex={mode === m ? 0 : -1}
++              onClick={() => requestMode(m)}
++              className={`rounded-full px-4 py-1.5 text-sm capitalize transition-colors ${
++                mode === m
++                  ? "bg-[var(--foreground)] text-[var(--background)]"
++                  : "text-[var(--muted)] hover:text-[var(--foreground)]"
++              }`}
++            >
++              {m}
++            </button>
++          ))}
++        </div>
+       </div>
+-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3" data-experience-system>
++
++      <p className="exp-hint text-sm text-[var(--muted)]">
++        <span className="exp-hint-desktop">
++          Drag any floating card — it springs back into orbit. Switch views to reorganize.
++        </span>
++        <span className="exp-hint-mobile">Swipe the panel or use the tabs to switch views.</span>
++      </p>
++
++      <div
++        ref={stageRef}
++        id="exp-stage"
++        role="tabpanel"
++        aria-labelledby={`exp-tab-${mode}`}
++        className="exp-stage"
++        data-experience-system
++        data-mode={mode}
++      >
++        <div ref={ringRef} className="exp-ring" aria-hidden="true" />
++        <div ref={coreRef} className="exp-core">
++          <div className="exp-core-card rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-5 text-center">
++            <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">Core</p>
++            <strong className="mt-2 block text-lg">Jordan Lee</strong>
++            <p className="mt-1 text-sm text-[var(--muted)]">Systems · Interfaces · Computation</p>
++            <p className="mt-3 text-xs text-[var(--muted)]">3 roles · 3 projects</p>
++          </div>
++        </div>
+         {items.map((item) => (
+-          <button
+-            className="min-h-28 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4 text-left"
+-            data-kind={item.type}
++          <div
+             key={item.id}
++            data-shell
++            data-id={item.id}
++            data-kind={item.type}
++            data-state={item.type === activeKind ? "dock" : "float"}
++            className="exp-shell"
+           >
+-            <span className="text-sm text-[var(--muted)]">{item.type}</span>
+-            <strong className="mt-2 block">{item.label}</strong>
+-          </button>
++            <button
++              type="button"
++              data-card
++              data-kind={item.type}
++              className="exp-card block h-full w-full min-h-28 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4 text-left"
++            >
++              <span className="text-sm text-[var(--muted)]">{item.type}</span>
++              <strong className="mt-2 block">{item.label}</strong>
++              <span className="mt-1 block text-sm text-[var(--muted)]">{item.meta}</span>
++            </button>
++          </div>
+         ))}
+       </div>
+     </section>

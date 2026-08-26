@@ -1,0 +1,31 @@
+{
+ "run": "S1-fable-rep3",
+ "date": "2026-08-25",
+ "condition": "baseline_no_skill",
+ "model": "claude-fable-5",
+ "fixture": "launch-page-base 3543ef9 (pristine copy verified before launch)",
+ "interruptions": "none - completed in one 57-minute run, 117 tool uses",
+ "implementation": "\"The page is a Meridian file\" - scroll-as-playhead over a 24s five-act sequence (First light / Tracks / Ease / Ship / Zenith); raw WebGL2 single instanced draw call of ~12k keyframe diamonds, formations computed in-vertex-shader from per-instance seeds blended by act weights; diegetic editor chrome (SMPTE timecode HUD, playhead hairline, master-timeline nav); signature system: draggable cubic-bezier editor that simultaneously re-times the particle field and live-rewrites the exported CSS (with copy button); night-to-noon dawn palette, Newsreader italic / Instrument Sans / Fragment Mono; ZERO dependencies added; ~2,090 first-party lines across 8 files; agent-run QA 21/21 incl. byte-identical reduced-motion frames and no-GL SVG poster fallback",
+ "measurements": {
+  "m6_static": "PASS (build, cleanup paths, no interval loops; no cross-file adjudication needed)",
+  "m1_gpu_system_chrome": "PASS both profiles - desktop p50 16.7ms p95 18.6ms hitch 0.0% (60.0 rAF/s); mobile p50 16.7ms p95 18.6ms hitch 0.0% (60.1 rAF/s)",
+  "m2_offscreen": "NOT_MEASURABLE_BY_GEOMETRY (mechanical verdict, v2.6 gate) - third consecutive viewport-fixed canvas backdrop; M2b is the operative pause measure",
+  "m2b_hidden_pause": "PASS both profiles - desktop ratio 0.00 (60.0->0.0 rAF/s), resumes True; mobile ratio 0.00 (60.0->0.0 rAF/s), resumes True (first S1 rep measured natively with the v2.6 instrument)",
+  "m3_reduced_motion": "PASS both profiles - desktop ratio 0.00, parity True (17 names)",
+  "m5_accessible_parallel": "PASS",
+  "m4_teardown": "PASS - glContexts/cycle [2, 2, 2]",
+  "console_errors": "1 on desktop profile only: the browser's implicit /favicon.ico request 404s (agent shipped no icon file); every page-referenced resource loads; mobile profile clean"
+ },
+ "artifacts": {
+  "diff": "results/execution/S1-fable-rep3.diff (8 files incl. untracked engine sources)",
+  "source_snapshot": "results/execution/S1-fable-rep3-source.zip (34KB; safety copy also at ~/Documents/S1-fable-rep3-source-SAFETY.zip)",
+  "measurements": "results/execution/S1-fable-rep3.json (GPU system Chrome; protocol incl. M2b amendment 2026-08-24)",
+  "screenshots": "results/execution/screenshots/S1-fable-rep3-*.png",
+  "motion_recording": "results/execution/motion/S1-fable-rep3.webm (47s, 6.3MB, pre-registered choreography)"
+ },
+ "notes": [
+  "Third consecutive baseline convergence on the 'page is a Meridian file / scroll-as-playhead' meta-concept - now rep1 (particle streaks + ease editor), rep2 (editorial darkroom + conductors), rep3 (keyframe diamonds + live CSS export). Concept-family convergence is a documented finding, not an artifact of shared context: all three ran fresh.",
+  "Agent created .claude/launch.json for its preview server (environment tooling residue, excluded from diff).",
+  "Environment confounds as documented for reps 1-2: Fact-Forcing Gate hook active inside subagent, real skill listings present."
+ ]
+}

@@ -1,0 +1,1723 @@
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..7102890 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -20,6 +20,56 @@
+ }
+ 
+ * { box-sizing: border-box; }
++
++/* --- Experience constellation (Fig. 01) ---------------------------------- */
++/* The plate is deliberately dark in both colour schemes, like a printed
++   figure plate; registration ticks mark its corners. */
++.constellation-plate {
++  position: relative;
++  background: #0b0e14;
++  border: 1px solid var(--line);
++}
++.constellation-host {
++  position: absolute;
++  inset: 0;
++  z-index: 1;
++}
++.constellation-canvas {
++  position: absolute;
++  inset: 0;
++  display: block;
++  width: 100% !important;
++  height: 100% !important;
++  touch-action: pan-y; /* the page must stay scrollable over the canvas on touch */
++}
++.constellation-plate .plate-ticks,
++.constellation-plate .plate-ticks::before,
++.constellation-plate .plate-ticks::after {
++  position: absolute;
++  width: 10px;
++  height: 10px;
++  pointer-events: none;
++  z-index: 2;
++}
++.constellation-plate .plate-ticks {
++  inset: 6px;
++  width: auto;
++  height: auto;
++}
++.constellation-plate .plate-ticks::before {
++  content: "";
++  left: 0;
++  top: 0;
++  border-left: 1px solid rgba(148, 163, 184, 0.55);
++  border-top: 1px solid rgba(148, 163, 184, 0.55);
++}
++.constellation-plate .plate-ticks::after {
++  content: "";
++  right: 0;
++  bottom: 0;
++  border-right: 1px solid rgba(148, 163, 184, 0.55);
++  border-bottom: 1px solid rgba(148, 163, 184, 0.55);
++}
+ html { background: var(--background); color: var(--foreground); }
+ body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
+ a { color: inherit; }
+diff --git a/app/page.jsx b/app/page.jsx
+index 52f37fd..6650ea5 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -1,5 +1,6 @@
+ import { SettingsPanel } from "@/components/SettingsPanel";
+ import { ProjectGrid } from "@/components/ProjectGrid";
++import { ConstellationSection } from "@/components/constellation/ConstellationSection";
+ 
+ export default function Home() {
+   return (
+@@ -12,6 +13,8 @@ export default function Home() {
+         </p>
+       </header>
+ 
++      <ConstellationSection />
++
+       <ProjectGrid />
+ 
+       <section className="max-w-2xl space-y-6" aria-labelledby="settings-title">
+diff --git a/components/ConstellationData.js b/components/ConstellationData.js
+index 7304001..b56223e 100644
+--- a/components/ConstellationData.js
++++ b/components/ConstellationData.js
+@@ -1,5 +1,110 @@
+-export const constellationItems = Array.from({ length: 500 }, (_, index) => ({
+-  id: index,
+-  label: `Node ${index + 1}`,
+-  category: ["engineering", "research", "design", "math"][index % 4],
+-}));
++// Experience-constellation dataset: 500 artifacts from a decade of work.
++// Deterministic (seeded) so the server-rendered list and the client canvas
++// always agree — no Math.random at module scope.
++
++function mulberry32(seed) {
++  let a = seed >>> 0;
++  return function next() {
++    a |= 0;
++    a = (a + 0x6d2b79f5) | 0;
++    let t = Math.imul(a ^ (a >>> 15), 1 | a);
++    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
++    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
++  };
++}
++
++export const CATEGORIES = [
++  {
++    id: "engineering",
++    label: "Engineering",
++    // Okabe–Ito-derived hues, brightened for the dark plate. CVD-safe set.
++    color: "#f5a524",
++    blurb: "Systems, tools, and infrastructure that shipped.",
++  },
++  {
++    id: "research",
++    label: "Research",
++    color: "#56b4e9",
++    blurb: "Papers read, replicated, and annotated.",
++  },
++  {
++    id: "design",
++    label: "Design",
++    color: "#e183b8",
++    blurb: "Interfaces, specimens, and interaction studies.",
++  },
++  {
++    id: "math",
++    label: "Math",
++    color: "#34c99a",
++    blurb: "Proof sketches and computational explorations.",
++  },
++];
++
++export const CATEGORY_IDS = CATEGORIES.map((c) => c.id);
++export const categoryById = Object.fromEntries(CATEGORIES.map((c) => [c.id, c]));
++
++const POOLS = {
++  engineering: {
++    a: ["Consensus", "Queue", "Shader", "Build", "Trace", "Schema", "Packet", "Replica", "Cache", "Lexer", "Vector", "Stream", "Kernel", "Socket", "Batch", "Cluster", "Signal", "Ledger"],
++    b: ["visualizer", "profiler", "pipeline", "compiler", "sandbox", "router", "planner", "emulator", "inspector", "allocator", "scheduler", "runtime", "monitor", "harness"],
++  },
++  research: {
++    a: ["Attention scaling", "Sparse retrieval", "Program synthesis", "Diffusion sampling", "Graph pruning", "Speculative decoding", "Curriculum learning", "Neural rendering", "Causal tracing", "Vector quantization", "Active sampling", "Grokking dynamics", "Feature circuits", "Long-context memory", "Reward shaping", "Data curation", "Sim-to-real transfer", "Uncertainty calibration"],
++    b: ["notes", "replication", "survey", "ablations", "benchmark", "critique", "reading", "digest", "walkthrough", "annotations", "experiments", "review", "summary", "questions"],
++  },
++  design: {
++    a: ["Terrain", "Ledger", "Signal", "Archive", "Meridian", "Tessera", "Halftone", "Waypoint", "Sediment", "Aperture", "Isogram", "Palimpsest", "Modulor", "Cursor", "Gnomon", "Fathom", "Umbra", "Verso"],
++    b: ["type specimen", "interface study", "motion sketch", "icon set", "grid system", "color study", "poster series", "wireframe kit", "map style", "chart language", "cursor set", "form patterns", "layout etude", "identity draft"],
++  },
++  math: {
++    a: ["Ramsey bounds", "Random walks", "Knot invariants", "Prime gaps", "Voronoi duals", "Markov mixing", "Braid groups", "Penrose tilings", "Elliptic curves", "Group actions", "Fourier tails", "Lattice packing", "Percolation", "Zeta zeros", "Convex hulls", "Chaos maps", "Spectral gaps", "Coin flips"],
++    b: ["proof sketch", "exploration", "counterexample", "visual proof", "conjecture", "computation", "lecture notes", "puzzle", "estimate", "simulation", "derivation", "worked example", "toy model", "heuristic"],
++  },
++};
++
++function titleCase(s) {
++  return s.charAt(0).toUpperCase() + s.slice(1);
++}
++
++function buildItems() {
++  const rand = mulberry32(0xc0ffee);
++  const used = new Set();
++  const items = [];
++  for (let index = 0; index < 500; index += 1) {
++    // Preserve the original dataset's index -> category mapping.
++    const category = CATEGORY_IDS[index % 4];
++    const pool = POOLS[category];
++    let label = "";
++    for (let attempt = 0; attempt < 24; attempt += 1) {
++      const a = pool.a[Math.floor(rand() * pool.a.length)];
++      const b = pool.b[Math.floor(rand() * pool.b.length)];
++      const candidate = `${a} ${b}`;
++      if (!used.has(candidate)) {
++        label = candidate;
++        break;
++      }
++    }
++    if (!label) {
++      label = `${pool.a[index % pool.a.length]} ${pool.b[index % pool.b.length]} ${Math.floor(index / 4) + 1}`;
++    }
++    used.add(label);
++    const year = 2016 + Math.floor(Math.pow(rand(), 0.62) * 11); // 2016..2026, weighted recent
++    items.push({
++      id: index,
++      label: titleCase(label),
++      category,
++      year: Math.min(year, 2026),
++      glyph: label.charAt(0).toUpperCase(),
++      shade: Math.floor(rand() * 3), // per-item badge shade variant (0..2)
++    });
++  }
++  return items;
++}
++
++export const constellationItems = buildItems();
++
++export const categoryCounts = constellationItems.reduce((acc, item) => {
++  acc[item.category] = (acc[item.category] || 0) + 1;
++  return acc;
++}, {});
+diff --git a/components/constellation/ConstellationSection.jsx b/components/constellation/ConstellationSection.jsx
+new file mode 100644
+index 0000000..607907f
+--- /dev/null
++++ b/components/constellation/ConstellationSection.jsx
+@@ -0,0 +1,372 @@
++"use client";
++
++import { useCallback, useEffect, useRef, useState } from "react";
++import {
++  CATEGORIES,
++  categoryById,
++  categoryCounts,
++  constellationItems,
++} from "../ConstellationData";
++import { ConstellationEngine } from "./engine";
++
++const itemById = new Map(constellationItems.map((item) => [item.id, item]));
++const itemsByCategory = CATEGORIES.map((cat) => ({
++  ...cat,
++  items: constellationItems.filter((item) => item.category === cat.id),
++}));
++const TOTAL = constellationItems.length;
++
++export function ConstellationSection() {
++  const hostRef = useRef(null);
++  const tooltipRef = useRef(null);
++  const engineRef = useRef(null);
++  const uiRef = useRef({ filter: null, grouped: false, selectedId: null });
++
++  const [filter, setFilter] = useState(null);
++  const [grouped, setGrouped] = useState(false);
++  const [selectedId, setSelectedId] = useState(null);
++  const [hoverItem, setHoverItem] = useState(null);
++  const [clusters, setClusters] = useState(null);
++  const [status, setStatus] = useState("loading"); // loading | live | idle | fallback
++  const [mode, setMode] = useState(null);
++  const [fps, setFps] = useState(null);
++  const [announce, setAnnounce] = useState("");
++  const [listOpen, setListOpen] = useState(false);
++
++  useEffect(() => {
++    uiRef.current = { filter, grouped, selectedId };
++  }, [filter, grouped, selectedId]);
++
++  const selectItem = useCallback((id) => {
++    setSelectedId(id);
++    engineRef.current?.select(id);
++    if (id == null) {
++      setAnnounce("Selection cleared.");
++    } else {
++      const item = itemById.get(id);
++      setAnnounce(`${item.label} selected. ${categoryById[item.category].label}, ${item.year}.`);
++    }
++  }, []);
++
++  const applyFilter = useCallback((f) => {
++    setFilter(f);
++    engineRef.current?.setFilter(f);
++    setAnnounce(
++      f
++        ? `Showing ${categoryCounts[f]} ${categoryById[f].label.toLowerCase()} works of ${TOTAL}.`
++        : `Showing all ${TOTAL} works.`
++    );
++  }, []);
++
++  const applyGrouped = useCallback((g) => {
++    setGrouped(g);
++    engineRef.current?.setGrouped(g);
++    setAnnounce(g ? "Grouped by discipline." : "Ungrouped: one field.");
++  }, []);
++
++  // Engine lifecycle. Pixi (and its chunk) loads lazily when the section
++  // approaches the viewport; everything is torn down on unmount.
++  useEffect(() => {
++    const host = hostRef.current;
++    if (!host) return undefined;
++    let engine = null;
++
++    const lowPower =
++      window.matchMedia("(pointer: coarse)").matches ||
++      navigator.maxTouchPoints > 1 ||
++      window.innerWidth < 768;
++    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
++
++    const io = new IntersectionObserver(
++      (entries) => {
++        if (!entries[0]?.isIntersecting || engine) return;
++        io.disconnect();
++        engine = new ConstellationEngine({
++          host,
++          items: constellationItems,
++          categories: CATEGORIES,
++          lowPower,
++          reducedMotion,
++          getInitialState: () => uiRef.current,
++          callbacks: {
++            onReady: () => {
++              const e = engine;
++              if (e) setMode({ low: e.lowPower, reduced: e.reducedMotion });
++            },
++            onSelect: (item) => {
++              // Canvas tap/click: toggle off when re-picking the current node,
++              // clear when picking empty sky.
++              if (!item) selectItem(null);
++              else selectItem(uiRef.current.selectedId === item.id ? null : item.id);
++            },
++            onHover: (item) => {
++              setHoverItem(item);
++              if (!item && tooltipRef.current) tooltipRef.current.style.opacity = "0";
++            },
++            onHoverMove: (x, y) => {
++              const el = tooltipRef.current;
++              if (!el) return;
++              el.style.opacity = "1";
++              el.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -100%)`;
++            },
++            onClusters: (c) => setClusters(c),
++            onRunState: (running) => setStatus(running ? "live" : "idle"),
++            onStats: ({ fps: value }) => setFps(value),
++          },
++        });
++        engineRef.current = engine;
++        engine.init().catch((err) => {
++          console.error("Constellation could not start WebGL:", err);
++          setStatus("fallback");
++          setListOpen(true);
++          engine?.destroy();
++          engine = null;
++          engineRef.current = null;
++        });
++      },
++      { rootMargin: "600px" }
++    );
++    io.observe(host);
++
++    return () => {
++      io.disconnect();
++      engineRef.current = null;
++      engine?.destroy();
++      engine = null;
++    };
++  }, [selectItem]);
++
++  const selectedItem = selectedId == null ? null : itemById.get(selectedId);
++  const visibleGroups = filter ? itemsByCategory.filter((g) => g.id === filter) : itemsByCategory;
++  const readout = [
++    `n=${TOTAL}`,
++    status === "fallback" ? "no gpu" : status,
++    status === "live" && fps ? `${fps}fps` : null,
++    mode?.low ? "touch mode" : null,
++    mode?.reduced ? "reduced motion" : null,
++  ]
++    .filter(Boolean)
++    .join(" · ");
++
++  return (
++    <section aria-labelledby="constellation-title" className="space-y-6">
++      <div className="flex flex-wrap items-baseline justify-between gap-2">
++        <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-[var(--muted)]">
++          Fig. 01 · Experience constellation
++        </p>
++        <p aria-hidden="true" className="font-mono text-[11px] tabular-nums tracking-[0.14em] text-[var(--muted)]">
++          {readout}
++        </p>
++      </div>
++
++      <div className="max-w-3xl space-y-3">
++        <h2 id="constellation-title" className="text-3xl font-semibold tracking-tight">
++          A decade of work, as a sky
++        </h2>
++        <p className="text-[var(--muted)] leading-7">
++          Five hundred artifacts — shipped systems, annotated papers, design studies, and proof
++          sketches — drawn as one field. Filter a discipline, group the sky, or pick any point to
++          inspect it. Every point here is also in the list below the map.
++        </p>
++      </div>
++
++      <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Filter by discipline">
++        <button
++          type="button"
++          aria-pressed={filter === null}
++          onClick={() => applyFilter(null)}
++          className={`rounded-full border px-3 py-1.5 text-sm transition-colors motion-reduce:transition-none ${
++            filter === null
++              ? "border-[var(--foreground)] bg-[var(--foreground)] text-[var(--background)]"
++              : "border-[var(--line)] bg-[var(--surface)] hover:border-[var(--muted)]"
++          }`}
++        >
++          All · {TOTAL}
++        </button>
++        {CATEGORIES.map((cat) => {
++          const active = filter === cat.id;
++          return (
++            <button
++              key={cat.id}
++              type="button"
++              aria-pressed={active}
++              onClick={() => applyFilter(active ? null : cat.id)}
++              className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors motion-reduce:transition-none ${
++                active
++                  ? "border-[var(--foreground)] bg-[var(--foreground)] text-[var(--background)]"
++                  : "border-[var(--line)] bg-[var(--surface)] hover:border-[var(--muted)]"
++              }`}
++            >
++              <span
++                aria-hidden="true"
++                className="h-2.5 w-2.5 rounded-full"
++                style={{ backgroundColor: cat.color }}
++              />
++              {cat.label} · {categoryCounts[cat.id]}
++            </button>
++          );
++        })}
++        <span aria-hidden="true" className="mx-1 hidden h-5 w-px bg-[var(--line)] sm:block" />
++        <button
++          type="button"
++          aria-pressed={grouped}
++          onClick={() => applyGrouped(!grouped)}
++          className={`rounded-full border px-3 py-1.5 text-sm transition-colors motion-reduce:transition-none ${
++            grouped
++              ? "border-[var(--foreground)] bg-[var(--foreground)] text-[var(--background)]"
++              : "border-[var(--line)] bg-[var(--surface)] hover:border-[var(--muted)]"
++          }`}
++        >
++          Group by discipline
++        </button>
++      </div>
++
++      <figure className="m-0 space-y-2">
++        <div
++          className="constellation-plate h-[clamp(380px,58vh,620px)] overflow-hidden rounded-xl"
++          role="img"
++          aria-label={`Map of ${TOTAL} works drawn as coloured points that drift, cluster, and respond to the pointer. The same works are available as buttons in the list titled “Browse all ${TOTAL} works as a list”.`}
++        >
++          <span aria-hidden="true" className="plate-ticks" />
++          {/* Engine-owned mount point: React renders nothing inside it. */}
++          <div ref={hostRef} className="constellation-host" />
++
++          {status === "loading" && (
++            <p
++              aria-hidden="true"
++              className="pointer-events-none absolute inset-0 z-[2] grid place-items-center font-mono text-xs tracking-[0.2em] text-slate-500"
++            >
++              PLOTTING FIELD…
++            </p>
++          )}
++          {status === "fallback" && (
++            <p className="pointer-events-none absolute inset-0 z-[2] grid place-items-center px-6 text-center text-sm text-slate-400">
++              This browser could not start the canvas. Every work is still available in the list
++              below.
++            </p>
++          )}
++
++          {/* Cluster labels (decorative: chips + list carry the semantics) */}
++          {clusters?.map((c) => (
++            <span
++              key={c.id}
++              aria-hidden="true"
++              className="pointer-events-none absolute z-[2] -translate-x-1/2 font-mono text-[10px] uppercase"
++              style={{
++                left: c.x,
++                top: Math.max(4, c.y - c.r - 18),
++                color: categoryById[c.id].color,
++                letterSpacing: "0.22em",
++              }}
++            >
++              {categoryById[c.id].label} · {c.count}
++            </span>
++          ))}
++
++          {/* Hover tooltip; position driven directly by the engine, no re-render */}
++          <div
++            ref={tooltipRef}
++            aria-hidden="true"
++            className="pointer-events-none absolute left-0 top-0 z-[3] whitespace-nowrap rounded-md border border-slate-700 bg-[#10141c]/95 px-2.5 py-1.5 font-mono text-[11px] text-slate-200 opacity-0"
++          >
++            {hoverItem ? (
++              <>
++                <span className="font-semibold text-white">{hoverItem.label}</span>
++                <span className="text-slate-400">
++                  {" "}
++                  · {categoryById[hoverItem.category].label} · {hoverItem.year}
++                </span>
++              </>
++            ) : null}
++          </div>
++        </div>
++        <figcaption className="font-mono text-[11px] tracking-[0.06em] text-[var(--muted)]">
++          Each point is one work; colour and silhouette encode its discipline. The field idles when
++          it leaves the viewport.
++        </figcaption>
++      </figure>
++
++      <div className="flex min-h-12 flex-wrap items-center gap-3 rounded-lg border border-[var(--line)] bg-[var(--surface)] px-4 py-3">
++        {selectedItem ? (
++          <>
++            <span
++              aria-hidden="true"
++              className="h-3 w-3 shrink-0 rounded-full"
++              style={{ backgroundColor: categoryById[selectedItem.category].color }}
++            />
++            <p className="m-0">
++              <strong>{selectedItem.label}</strong>{" "}
++              <span className="font-mono text-sm text-[var(--muted)]">
++                {categoryById[selectedItem.category].label} · {selectedItem.year} · №
++                {String(selectedItem.id + 1).padStart(3, "0")}
++              </span>
++            </p>
++            <button
++              type="button"
++              onClick={() => selectItem(null)}
++              className="ml-auto rounded-md border border-[var(--line)] px-3 py-1 text-sm hover:border-[var(--muted)]"
++            >
++              Clear selection
++            </button>
++          </>
++        ) : (
++          <p className="m-0 text-sm text-[var(--muted)]">
++            Nothing selected — hover to preview, click a point to pin it, or use the list below.
++          </p>
++        )}
++      </div>
++
++      <p role="status" aria-live="polite" className="sr-only">
++        {announce}
++      </p>
++
++      <details
++        open={listOpen}
++        onToggle={(e) => setListOpen(e.currentTarget.open)}
++        className="rounded-lg border border-[var(--line)] bg-[var(--surface)]"
++      >
++        <summary className="cursor-pointer select-none px-4 py-3 font-medium">
++          Browse all {TOTAL} works as a list
++        </summary>
++        <div className="grid gap-6 border-t border-[var(--line)] p-4 sm:grid-cols-2 lg:grid-cols-4">
++          {visibleGroups.map((group) => (
++            <section key={group.id} aria-labelledby={`constellation-cat-${group.id}`}>
++              <h3
++                id={`constellation-cat-${group.id}`}
++                className="mb-1 flex items-center gap-2 text-sm font-semibold"
++              >
++                <span
++                  aria-hidden="true"
++                  className="h-2.5 w-2.5 rounded-full"
++                  style={{ backgroundColor: group.color }}
++                />
++                {group.label} <span className="font-normal text-[var(--muted)]">({group.items.length})</span>
++              </h3>
++              <p className="mb-2 mt-0 text-xs text-[var(--muted)]">{group.blurb}</p>
++              <ul className="m-0 max-h-72 list-none overflow-y-auto p-0 pr-1">
++                {group.items.map((item) => {
++                  const active = selectedId === item.id;
++                  return (
++                    <li key={item.id}>
++                      <button
++                        type="button"
++                        aria-pressed={active}
++                        onClick={() => selectItem(active ? null : item.id)}
++                        className={`flex w-full items-baseline justify-between gap-2 rounded px-2 py-1 text-left text-sm hover:bg-[color-mix(in_srgb,var(--foreground)_6%,transparent)] ${
++                          active ? "bg-[color-mix(in_srgb,var(--foreground)_10%,transparent)] font-medium" : ""
++                        }`}
++                      >
++                        <span>{item.label}</span>
++                        <span className="shrink-0 font-mono text-xs text-[var(--muted)]">{item.year}</span>
++                      </button>
++                    </li>
++                  );
++                })}
++              </ul>
++            </section>
++          ))}
++        </div>
++      </details>
++    </section>
++  );
++}
+diff --git a/components/constellation/atlas.js b/components/constellation/atlas.js
+new file mode 100644
+index 0000000..b9cdf10
+--- /dev/null
++++ b/components/constellation/atlas.js
+@@ -0,0 +1,113 @@
++// Bakes every badge glyph the constellation needs into ONE RenderTexture.
++// ParticleContainer requires all particles to share a single texture source;
++// baking (category shape x hue x letter) cells into one atlas keeps the whole
++// 500-node field to a single batched draw call.
++
++const INK = "#0c1016";
++
++function hexToInt(hex) {
++  return parseInt(hex.slice(1), 16);
++}
++
++function darken(hex, f) {
++  const v = hexToInt(hex);
++  const r = Math.round(((v >> 16) & 0xff) * f);
++  const g = Math.round(((v >> 8) & 0xff) * f);
++  const b = Math.round((v & 0xff) * f);
++  return (r << 16) | (g << 8) | b;
++}
++
++function hexPoints(R) {
++  const pts = [];
++  for (let k = 0; k < 6; k += 1) {
++    const a = -Math.PI / 2 + (k * Math.PI) / 3;
++    pts.push(R * Math.cos(a), R * Math.sin(a));
++  }
++  return pts;
++}
++
++// Badge silhouette doubles as a category signal (redundant with hue, helps CVD).
++const SHAPES = ["round", "circle", "squircle", "hex"];
++
++function drawBadge(PIXI, shape, S, color) {
++  const g = new PIXI.Graphics();
++  const rim = darken(color, 0.55);
++  if (shape === "round") g.roundRect(-S / 2, -S / 2, S, S, S * 0.2);
++  else if (shape === "circle") g.circle(0, 0, S / 2);
++  else if (shape === "squircle") g.roundRect(-S / 2, -S / 2, S, S, S * 0.44);
++  else g.poly(hexPoints(S * 0.56));
++  g.fill({ color: hexToInt(color) });
++  g.stroke({ width: 3, color: rim, alpha: 1 });
++  return g;
++}
++
++/**
++ * Build the shared atlas.
++ * @returns {{ rt: RenderTexture, frames: Map<string, Texture>, cell: number }}
++ *   frames key: `${categoryId}:${glyphLetter}`
++ */
++export function buildAtlas(PIXI, renderer, items, categories, { resolution = 2, cell = 80 } = {}) {
++  // Unique (category, letter) pairs actually used by the data.
++  const keys = [];
++  const seen = new Set();
++  for (const item of items) {
++    const key = `${item.category}:${item.glyph}`;
++    if (!seen.has(key)) {
++      seen.add(key);
++      keys.push(key);
++    }
++  }
++
++  const cols = 8;
++  const rows = Math.ceil(keys.length / cols);
++  const rt = PIXI.RenderTexture.create({
++    width: cols * cell,
++    height: rows * cell,
++    resolution,
++    antialias: true,
++  });
++
++  const catIndex = Object.fromEntries(categories.map((c, i) => [c.id, i]));
++  const catColor = Object.fromEntries(categories.map((c) => [c.id, c.color]));
++
++  const scene = new PIXI.Container();
++  const S = cell * 0.76;
++  keys.forEach((key, i) => {
++    const [cat, letter] = key.split(":");
++    const badge = new PIXI.Container();
++    badge.position.set((i % cols) * cell + cell / 2, Math.floor(i / cols) * cell + cell / 2);
++    badge.addChild(drawBadge(PIXI, SHAPES[catIndex[cat] % SHAPES.length], S, catColor[cat]));
++    const mark = new PIXI.Text({
++      text: letter,
++      style: {
++        fontFamily: 'ui-monospace, "SF Mono", Menlo, Consolas, monospace',
++        fontSize: S * 0.56,
++        fontWeight: "700",
++        fill: INK,
++      },
++      resolution,
++    });
++    mark.anchor.set(0.5);
++    mark.position.set(0, 1);
++    badge.addChild(mark);
++    scene.addChild(badge);
++  });
++
++  renderer.render({ container: scene, target: rt });
++  // The bake scene (Graphics contexts, Text canvases) is no longer needed.
++  scene.destroy({ children: true, texture: true, textureSource: true });
++
++  const frames = new Map();
++  keys.forEach((key, i) => {
++    frames.set(
++      key,
++      new PIXI.Texture({
++        source: rt.source, // one shared source -> ParticleContainer stays one batch
++        frame: new PIXI.Rectangle((i % cols) * cell, Math.floor(i / cols) * cell, cell, cell),
++        label: `constellation-${key}`,
++      })
++    );
++  });
++
++  return { rt, frames, cell };
++}
+diff --git a/components/constellation/engine.js b/components/constellation/engine.js
+new file mode 100644
+index 0000000..e1d0582
+--- /dev/null
++++ b/components/constellation/engine.js
+@@ -0,0 +1,690 @@
++// ConstellationEngine — owns the Pixi application, the single render loop, all
++// canvas-side interaction, and every GPU resource. React never touches Pixi:
++// the section component calls the small public API below and receives events
++// through callbacks.
++//
++// Render-loop ownership rules implemented here:
++//  * exactly ONE ticker runs (app.ticker); Pixi's shared ticker is stopped and
++//    the EventSystem's Ticker.system listener is detached (we use native
++//    pointer events instead of Pixi's event system);
++//  * the loop pauses when the section is offscreen (IntersectionObserver),
++//    when the tab is hidden (visibilitychange), and when the simulation has
++//    settled with nothing animating (auto-sleep — this is how the canvas idles
++//    at zero cost under prefers-reduced-motion).
++//
++// pixi.js is imported dynamically inside init() so it never runs during SSR
++// and stays out of the initial JS bundle.
++
++import { computeTargets, hash01 } from "./layouts";
++import { buildAtlas } from "./atlas";
++
++const PLATE_INK = 0x0b0e14;
++const DIM_ALPHA = 0.1;
++const DIM_SCALE = 0.78;
++const SETTLE_FRAMES = 45;
++const SETTLE_EPS = 0.035;
++
++let liveInstances = 0;
++
++export class ConstellationEngine {
++  constructor({ host, items, categories, lowPower, reducedMotion, callbacks, getInitialState }) {
++    this.host = host;
++    this.items = items;
++    this.categories = categories;
++    this.categoryIds = categories.map((c) => c.id);
++    this.lowPower = !!lowPower;
++    this.reducedMotion = !!reducedMotion;
++    this.cb = callbacks || {};
++    this.getInitialState = getInitialState;
++
++    this.n = items.length;
++    this.destroyed = false;
++    this.ready = false;
++    this._counted = false;
++
++    // UI state (mirrored from React via applyState/setters)
++    this.filter = null;
++    this.grouped = false;
++    this.selectedIdx = -1;
++    this.hoverIdx = -1;
++
++    // run gates
++    this.pageVisible = typeof document !== "undefined" ? !document.hidden : true;
++    this.inView = false;
++    this.sleeping = false;
++    this._settled = 0;
++    this._frames = 0;
++    this._running = false;
++    this._statFrames = 0;
++    this._statMS = 0;
++    this._timeS = 0;
++
++    this.pointer = { x: 0, y: 0, inside: false, active: false, isTouch: false, downX: 0, downY: 0, downAt: 0 };
++    this.viewW = 0;
++    this.viewH = 0;
++
++    this._listeners = [];
++  }
++
++  // ---------------------------------------------------------------- lifecycle
++
++  async init() {
++    const host = this.host;
++    const PIXI = await import("pixi.js");
++    if (this.destroyed) return false;
++    this.PIXI = PIXI;
++
++    // Rule: no library ticker may free-run besides the one we own.
++    PIXI.Ticker.shared.autoStart = false;
++    PIXI.Ticker.shared.stop();
++
++    const dpr = Math.min(globalThis.devicePixelRatio || 1, this.lowPower ? 1.5 : 2);
++    const app = new PIXI.Application();
++    await app.init({
++      width: Math.max(2, host.clientWidth),
++      height: Math.max(2, host.clientHeight),
++      background: PLATE_INK,
++      antialias: !this.lowPower,
++      resolution: dpr,
++      autoDensity: true,
++      preference: "webgl",
++      powerPreference: this.lowPower ? "low-power" : "high-performance",
++      // We never use Pixi's event system; disable its features outright.
++      eventFeatures: { move: false, globalMove: false, click: false, wheel: false },
++    });
++    if (this.destroyed) {
++      app.destroy({ removeView: true }, { children: true, texture: true, textureSource: true, context: true });
++      return false;
++    }
++    this.app = app;
++
++    // Detach Pixi's EventSystem entirely: removes its document/global pointer
++    // listeners AND its interaction listener on the auto-starting Ticker.system.
++    app.renderer.events.setTargetElement(null);
++    app.stage.eventMode = "none";
++    app.stage.interactiveChildren = false;
++
++    // We own start/stop; nothing runs until the visibility gates allow it.
++    app.stop();
++    // v8's SchedulerSystem parks a permanent listener on the auto-starting
++    // Ticker.system (it drives periodic GPU-resource GC). Gate it with the
++    // same run gates as our loop: frozen here, started/stopped in
++    // _updateRunState so GC still runs while the field is live.
++    PIXI.Ticker.system.stop();
++    if (this.lowPower) app.ticker.maxFPS = 30;
++
++    this.viewW = app.renderer.width;
++    this.viewH = app.renderer.height;
++
++    const canvas = app.canvas;
++    canvas.className = "constellation-canvas";
++    canvas.setAttribute("aria-hidden", "true");
++    host.appendChild(canvas);
++    this.canvas = canvas;
++
++    // --- atlas + particles -------------------------------------------------
++    const atlas = buildAtlas(PIXI, app.renderer, this.items, this.categories, { resolution: dpr });
++    this.atlas = atlas;
++    // Small at rest (a sky, not confetti); hover/selection magnify to legibility.
++    this.baseScale = this.lowPower ? 0.18 : 0.27;
++    this.nodeRadius = (atlas.cell / 2) * this.baseScale;
++
++    const n = this.n;
++    this.x = new Float32Array(n);
++    this.y = new Float32Array(n);
++    this.vx = new Float32Array(n);
++    this.vy = new Float32Array(n);
++    this.s = new Float32Array(n);
++    this.a = new Float32Array(n);
++    this.jitter = new Float32Array(n);
++    this.ph1 = new Float32Array(n);
++    this.ph2 = new Float32Array(n);
++    this.f1 = new Float32Array(n);
++    this.f2 = new Float32Array(n);
++    this.dimmed = new Uint8Array(n);
++    this.idToIndex = new Map();
++
++    const layout = this._layout();
++    this.tx = layout.tx;
++    this.ty = layout.ty;
++    this.clusters = layout.clusters;
++
++    const pc = new PIXI.ParticleContainer({
++      // position: drift/regroup; vertex: hover/selection scaling; color: filter fades.
++      // rotation and uvs never change -> static attributes.
++      dynamicProperties: { position: true, vertex: true, color: true, rotation: false, uvs: false },
++    });
++    this.particleContainer = pc;
++    this.particles = new Array(n);
++
++    for (let i = 0; i < n; i += 1) {
++      const item = this.items[i];
++      this.idToIndex.set(item.id, i);
++      const j = 0.9 + hash01(item.id * 7 + 3) * 0.24;
++      this.jitter[i] = j;
++      this.ph1[i] = hash01(item.id * 5 + 1) * Math.PI * 2;
++      this.ph2[i] = hash01(item.id * 5 + 2) * Math.PI * 2;
++      this.f1[i] = 0.22 + hash01(item.id * 5 + 4) * 0.3; // rad/s — slow
++      this.f2[i] = 0.18 + hash01(item.id * 5 + 5) * 0.28;
++      this.x[i] = this.tx[i];
++      this.y[i] = this.ty[i];
++      this.s[i] = this.baseScale * j;
++      this.a[i] = this.reducedMotion ? 1 : 0; // gentle fade-in unless PRM
++      const particle = new PIXI.Particle({
++        texture: atlas.frames.get(`${item.category}:${item.glyph}`),
++        x: this.x[i],
++        y: this.y[i],
++        anchorX: 0.5,
++        anchorY: 0.5,
++        scaleX: this.s[i],
++        scaleY: this.s[i],
++        alpha: this.a[i],
++      });
++      this.particles[i] = particle;
++      pc.addParticle(particle);
++    }
++    app.stage.addChild(pc);
++
++    // --- selection / hover rings (2 Graphics, ordinary container) ----------
++    this.overlay = new PIXI.Container();
++    this.hoverRing = new PIXI.Graphics();
++    this.selRing = new PIXI.Graphics();
++    this.hoverRing.visible = false;
++    this.selRing.visible = false;
++    this.overlay.addChild(this.hoverRing, this.selRing);
++    app.stage.addChild(this.overlay);
++    this._drawHoverRing();
++
++    // --- listeners / observers ---------------------------------------------
++    this._bindDom();
++
++    // --- loop ----------------------------------------------------------------
++    this._tick = this._tick.bind(this);
++    app.ticker.add(this._tick);
++
++    this.ready = true;
++    liveInstances += 1;
++    this._counted = true;
++    this._exposeDebug();
++
++    // Adopt whatever the UI already shows (filter may have been set while lazy-loading).
++    const initial = this.getInitialState ? this.getInitialState() : null;
++    if (initial) this.applyState(initial, { animate: false });
++
++    app.render(); // guarantee a first paint even if gates keep the loop off
++    this._updateRunState();
++    this.cb.onReady?.();
++    return true;
++  }
++
++  destroy() {
++    if (this.destroyed) return;
++    this.destroyed = true;
++    this.cb = {};
++
++    for (const [target, type, fn, opts] of this._listeners) target.removeEventListener(type, fn, opts);
++    this._listeners = [];
++    this._io?.disconnect();
++    this._io = null;
++    this._ro?.disconnect();
++    this._ro = null;
++
++    if (this.app) {
++      this.app.ticker.remove(this._tick);
++      // Destroys renderer + context, stage children (ParticleContainer,
++      // overlay Graphics), their textures and texture sources, and removes
++      // the canvas from the DOM.
++      this.app.destroy(
++        { removeView: true },
++        { children: true, texture: true, textureSource: true, context: true }
++      );
++      this.app = null;
++    }
++    if (this.atlas) {
++      // Frames wrap the shared render texture; make sure both are released
++      // even if the stage destroy above missed them (guarded internally).
++      for (const tex of this.atlas.frames.values()) if (!tex.destroyed) tex.destroy(false);
++      if (!this.atlas.rt.destroyed) this.atlas.rt.destroy(true);
++      this.atlas = null;
++    }
++    this.particles = null;
++    this.particleContainer = null;
++    this.canvas = null;
++
++    if (this._counted) {
++      liveInstances -= 1;
++      this._counted = false;
++    }
++    if (typeof window !== "undefined" && window.__constellation?.engine === this) {
++      delete window.__constellation;
++    }
++  }
++
++  // ---------------------------------------------------------------- public UI
++
++  applyState({ filter = null, grouped = false, selectedId = null }, { animate = true } = {}) {
++    if (!this.ready) return;
++    this.filter = filter;
++    this.grouped = grouped;
++    this._applyDim();
++    this._relayout(animate);
++    this.select(selectedId, { silent: true });
++    this._wake();
++  }
++
++  setFilter(filter) {
++    if (!this.ready) return;
++    this.filter = filter;
++    this._applyDim();
++    this._relayout(true);
++    this._wake();
++  }
++
++  setGrouped(grouped) {
++    if (!this.ready) return;
++    this.grouped = grouped;
++    this._relayout(true);
++    this._wake();
++  }
++
++  select(id, { silent = false } = {}) {
++    if (!this.ready) return;
++    const idx = id == null ? -1 : this.idToIndex.get(id) ?? -1;
++    this.selectedIdx = idx;
++    this._drawSelRing();
++    this._wake();
++  }
++
++  // ---------------------------------------------------------------- internals
++
++  _layout() {
++    return computeTargets({
++      items: this.items,
++      categoryIds: this.categoryIds,
++      w: this.viewW,
++      h: this.viewH,
++      grouped: this.grouped,
++      filter: this.grouped ? null : this.filter,
++    });
++  }
++
++  _relayout(animate) {
++    const layout = this._layout();
++    this.tx = layout.tx;
++    this.ty = layout.ty;
++    this.clusters = layout.clusters;
++    if (!animate || this.reducedMotion) {
++      for (let i = 0; i < this.n; i += 1) {
++        this.x[i] = this.tx[i];
++        this.y[i] = this.ty[i];
++        this.vx[i] = 0;
++        this.vy[i] = 0;
++      }
++    }
++    this.cb.onClusters?.(this.grouped ? this.clusters : null);
++  }
++
++  _applyDim() {
++    const f = this.filter;
++    for (let i = 0; i < this.n; i += 1) {
++      this.dimmed[i] = f && this.items[i].category !== f ? 1 : 0;
++    }
++  }
++
++  _bindDom() {
++    const on = (target, type, fn, opts) => {
++      target.addEventListener(type, fn, opts);
++      this._listeners.push([target, type, fn, opts]);
++    };
++    const canvas = this.canvas;
++
++    on(canvas, "pointermove", (e) => {
++      const p = this.pointer;
++      const rect = canvas.getBoundingClientRect();
++      if (!rect.width || !rect.height) return;
++      p.x = ((e.clientX - rect.left) / rect.width) * this.viewW;
++      p.y = ((e.clientY - rect.top) / rect.height) * this.viewH;
++      p.isTouch = e.pointerType !== "mouse";
++      p.inside = !p.isTouch;
++      this._wake();
++    });
++    on(canvas, "pointerdown", (e) => {
++      const p = this.pointer;
++      const rect = canvas.getBoundingClientRect();
++      if (!rect.width || !rect.height) return;
++      p.x = ((e.clientX - rect.left) / rect.width) * this.viewW;
++      p.y = ((e.clientY - rect.top) / rect.height) * this.viewH;
++      p.isTouch = e.pointerType !== "mouse";
++      p.active = true;
++      p.downX = e.clientX;
++      p.downY = e.clientY;
++      p.downAt = performance.now();
++      this._wake();
++    });
++    on(canvas, "pointerup", (e) => {
++      const p = this.pointer;
++      const moved = Math.hypot(e.clientX - p.downX, e.clientY - p.downY);
++      const quick = performance.now() - p.downAt < 700;
++      p.active = false;
++      if (moved < 7 && quick) {
++        const rect = canvas.getBoundingClientRect();
++        if (rect.width && rect.height) {
++          const px = ((e.clientX - rect.left) / rect.width) * this.viewW;
++          const py = ((e.clientY - rect.top) / rect.height) * this.viewH;
++          const idx = this._pick(px, py);
++          this.cb.onSelect?.(idx === -1 ? null : this.items[idx]);
++        }
++      }
++      this._wake();
++    });
++    const clearPointer = () => {
++      this.pointer.inside = false;
++      this.pointer.active = false;
++      this._wake(); // one more pass so hover state clears, then it settles
++    };
++    on(canvas, "pointerleave", clearPointer);
++    on(canvas, "pointercancel", clearPointer);
++
++    on(document, "visibilitychange", () => {
++      this.pageVisible = !document.hidden;
++      this._updateRunState();
++    });
++
++    this._io = new IntersectionObserver(
++      (entries) => {
++        this.inView = entries[0]?.isIntersecting ?? false;
++        if (this.inView) this._wake();
++        else this._updateRunState();
++      },
++      { rootMargin: "80px", threshold: 0 }
++    );
++    this._io.observe(this.host);
++
++    this._ro = new ResizeObserver(() => this._resize());
++    this._ro.observe(this.host);
++
++    this._mq = matchMedia("(prefers-reduced-motion: reduce)");
++    const onMq = () => {
++      this.reducedMotion = this._mq.matches;
++      this._relayout(false);
++      this._wake();
++    };
++    on(this._mq, "change", onMq);
++  }
++
++  _resize() {
++    if (!this.ready || this.destroyed) return;
++    const w = this.host.clientWidth;
++    const h = this.host.clientHeight;
++    if (!w || !h || (w === this.viewW && h === this.viewH)) return;
++    this.app.renderer.resize(w, h);
++    this.viewW = w;
++    this.viewH = h;
++    this._relayout(false); // resize is not a choreography moment: snap to the new map
++    this._drawSelRing();
++    this._wake();
++  }
++
++  _pick(px, py) {
++    let best = -1;
++    let bestD2 = Infinity;
++    for (let i = 0; i < this.n; i += 1) {
++      const dx = this.x[i] - px;
++      const dy = this.y[i] - py;
++      const d2 = dx * dx + dy * dy;
++      const r = (this.atlas.cell / 2) * this.s[i] + 12;
++      if (d2 < r * r && d2 < bestD2) {
++        bestD2 = d2;
++        best = i;
++      }
++    }
++    return best;
++  }
++
++  // ------------------------------------------------------------------- loop
++
++  _tick(ticker) {
++    const dtF = Math.min(ticker.deltaTime, 3); // 60fps-normalised frames
++    this._timeS += ticker.deltaMS / 1000;
++    this._frames += 1;
++
++    // fps readout, once per second
++    this._statFrames += 1;
++    this._statMS += ticker.deltaMS;
++    if (this._statMS >= 1000) {
++      this.cb.onStats?.({ fps: Math.round((this._statFrames * 1000) / this._statMS) });
++      this._statFrames = 0;
++      this._statMS = 0;
++    }
++
++    const n = this.n;
++    const reduced = this.reducedMotion;
++    const amp = reduced ? 0 : this.lowPower ? 2.0 : 3.2;
++    const p = this.pointer;
++    const forcesOn = !reduced && ((p.inside && !this.lowPower) || (p.isTouch && p.active));
++    const trackPointer = p.inside || (p.isTouch && p.active);
++    const magR = 90;
++    const repR = this.lowPower ? 100 : 130;
++    const damp = Math.pow(0.86, dtF);
++    const K = 0.006 * dtF;
++    const sel = this.selectedIdx;
++    const t = this._timeS;
++
++    // The node currently courted by the cursor (nearest within the magnify
++    // radius, decided last frame) is exempt from repulsion — otherwise the
++    // repel force pushes every node out of its own pick radius and hover can
++    // never engage. The crowd parts; the courted node stays and magnifies.
++    const cand = this._cand ?? -1;
++    let nearest = -1;
++    let nearestD2 = Infinity;
++    let maxDelta = 0;
++
++    for (let i = 0; i < n; i += 1) {
++      // ambient drift target around the layout target
++      let ax = this.tx[i];
++      let ay = this.ty[i];
++      if (amp > 0) {
++        ax += amp * Math.sin(t * this.f1[i] + this.ph1[i]);
++        ay += amp * Math.cos(t * this.f2[i] + this.ph2[i]);
++      }
++
++      let dx = 0;
++      let dy = 0;
++      let d2 = Infinity;
++      if (trackPointer) {
++        dx = this.x[i] - p.x;
++        dy = this.y[i] - p.y;
++        d2 = dx * dx + dy * dy;
++        if (p.inside && d2 < nearestD2) {
++          nearestD2 = d2;
++          nearest = i;
++        }
++      }
++
++      if (reduced) {
++        // No ambient, no springs: nodes sit exactly on their targets.
++        this.x[i] = ax;
++        this.y[i] = ay;
++        this.vx[i] = 0;
++        this.vy[i] = 0;
++      } else {
++        let vx = this.vx[i] * damp + (ax - this.x[i]) * K;
++        let vy = this.vy[i] * damp + (ay - this.y[i]) * K;
++        if (forcesOn && i !== cand && d2 < repR * repR && d2 > 0.01) {
++          const d = Math.sqrt(d2);
++          const f = ((1 - d / repR) * (1 - d / repR) * 0.55 * dtF) / d;
++          vx += dx * f;
++          vy += dy * f;
++        }
++        this.vx[i] = vx;
++        this.vy[i] = vy;
++        this.x[i] += vx * dtF;
++        this.y[i] += vy * dtF;
++        const v = Math.abs(vx) + Math.abs(vy);
++        if (v > maxDelta) maxDelta = v;
++      }
++
++      // scale target: base jitter, then selection/hover/dim/magnify modifiers
++      let ts = this.baseScale * this.jitter[i];
++      const isDim = this.dimmed[i] === 1 && i !== sel;
++      if (isDim) ts *= DIM_SCALE;
++      if (i === sel) ts *= 1.5;
++      if (i === this.hoverIdx) ts *= 1.35;
++      if (forcesOn && !p.isTouch && d2 < magR * magR) {
++        const m = 1 - Math.sqrt(d2) / magR;
++        ts *= 1 + 0.6 * m * m;
++      }
++      const ta = isDim ? DIM_ALPHA : 1;
++      if (reduced) {
++        this.s[i] = ts;
++        this.a[i] = ta;
++      } else {
++        const ds = (ts - this.s[i]) * Math.min(1, 0.22 * dtF);
++        const da = (ta - this.a[i]) * Math.min(1, 0.12 * dtF);
++        this.s[i] += ds;
++        this.a[i] += da;
++        const m = Math.abs(ds) + Math.abs(da) * 24;
++        if (m > maxDelta) maxDelta = m;
++      }
++
++      const particle = this.particles[i];
++      particle.x = this.x[i];
++      particle.y = this.y[i];
++      particle.scaleX = this.s[i];
++      particle.scaleY = this.s[i];
++      particle.alpha = this.a[i];
++    }
++
++    // hover bookkeeping (mouse only): nearest within the magnify radius is
++    // the candidate (repel-exempt next frame); within its own pick radius it
++    // becomes the hovered node.
++    let hover = -1;
++    if (p.inside && nearest !== -1 && nearestD2 < magR * magR) {
++      this._cand = nearest;
++      const r = (this.atlas.cell / 2) * this.s[nearest] + 10;
++      if (nearestD2 < r * r) hover = nearest;
++    } else {
++      this._cand = -1;
++    }
++    if (hover !== this.hoverIdx) {
++      this.hoverIdx = hover;
++      this.hoverRing.visible = hover !== -1;
++      this.cb.onHover?.(hover === -1 ? null : this.items[hover]);
++    }
++    if (hover !== -1) {
++      this.hoverRing.position.set(this.x[hover], this.y[hover]);
++      const k = this.s[hover] / this.baseScale;
++      this.hoverRing.scale.set(k);
++      this.cb.onHoverMove?.(this.x[hover], this.y[hover] - this.nodeRadius * k - 6);
++    }
++    if (sel !== -1) {
++      this.selRing.position.set(this.x[sel], this.y[sel]);
++      this.selRing.scale.set(this.s[sel] / this.baseScale);
++    }
++
++    // auto-sleep: with ambient drift there is always work; under
++    // prefers-reduced-motion the field settles and the loop stops itself.
++    const busy = amp > 0 || trackPointer || p.active || maxDelta > SETTLE_EPS;
++    this._settled = busy ? 0 : this._settled + 1;
++    if (this._settled > SETTLE_FRAMES) this._sleep();
++  }
++
++  // ------------------------------------------------------------------ rings
++
++  _drawHoverRing() {
++    const r = this.nodeRadius + 5;
++    this.hoverRing.clear();
++    this.hoverRing.circle(0, 0, r).stroke({ width: 1.5, color: 0xffffff, alpha: 0.55 });
++  }
++
++  _drawSelRing() {
++    const idx = this.selectedIdx;
++    this.selRing.clear();
++    if (idx === -1) {
++      this.selRing.visible = false;
++      return;
++    }
++    const color = parseInt(this.categories.find((c) => c.id === this.items[idx].category).color.slice(1), 16);
++    const r = this.nodeRadius + 6;
++    this.selRing.circle(0, 0, r).stroke({ width: 2, color, alpha: 0.95 });
++    this.selRing.circle(0, 0, r + 5).stroke({ width: 1, color, alpha: 0.35 });
++    this.selRing.visible = true;
++    this.selRing.position.set(this.x[idx], this.y[idx]);
++  }
++
++  // ------------------------------------------------------------------ gates
++
++  _updateRunState() {
++    if (!this.ready || this.destroyed) return;
++    const shouldRun = this.pageVisible && this.inView && !this.sleeping;
++    if (shouldRun && !this._running) {
++      this._running = true;
++      this.app.start();
++      this.PIXI.Ticker.system.start(); // resume Pixi's scheduler (GC) with us
++    } else if (!shouldRun && this._running) {
++      this._running = false;
++      this.app.stop();
++      this.PIXI.Ticker.system.stop(); // no rendering -> no background scheduler work
++    }
++    this.cb.onRunState?.(this._running);
++  }
++
++  _wake() {
++    if (this.destroyed || !this.ready) return;
++    this._settled = 0;
++    if (this.sleeping) this.sleeping = false;
++    this._updateRunState();
++  }
++
++  _sleep() {
++    if (this.sleeping) return;
++    this.sleeping = true;
++    this._updateRunState();
++  }
++
++  // ------------------------------------------------------------------ debug
++
++  _exposeDebug() {
++    if (process.env.NODE_ENV === "production" || typeof window === "undefined") return;
++    const engine = this;
++    window.__constellation = {
++      engine,
++      get frames() {
++        return engine._frames;
++      },
++      get running() {
++        return engine._running;
++      },
++      get sleeping() {
++        return engine.sleeping;
++      },
++      get inView() {
++        return engine.inView;
++      },
++      get pageVisible() {
++        return engine.pageVisible;
++      },
++      get nodeCount() {
++        return engine.n;
++      },
++      get lowPower() {
++        return engine.lowPower;
++      },
++      get reducedMotion() {
++        return engine.reducedMotion;
++      },
++      get resolution() {
++        return engine.app?.renderer.resolution;
++      },
++      get sharedTickerStarted() {
++        return engine.PIXI.Ticker.shared.started;
++      },
++      get systemTickerListeners() {
++        return engine.PIXI.Ticker.system.count;
++      },
++      get instances() {
++        return liveInstances;
++      },
++    };
++  }
++}
+diff --git a/components/constellation/layouts.js b/components/constellation/layouts.js
+new file mode 100644
+index 0000000..62e4a77
+--- /dev/null
++++ b/components/constellation/layouts.js
+@@ -0,0 +1,129 @@
++// Pure, deterministic layout targets for the constellation.
++// All functions are hash/seed based so server, client, and every re-render agree.
++
++const GOLDEN = Math.PI * (3 - Math.sqrt(5)); // golden angle
++
++function mulberry32(seed) {
++  let a = seed >>> 0;
++  return function next() {
++    a |= 0;
++    a = (a + 0x6d2b79f5) | 0;
++    let t = Math.imul(a ^ (a >>> 15), 1 | a);
++    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
++    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
++  };
++}
++
++export function hash01(n) {
++  let x = (n + 0x9e3779b9) >>> 0;
++  x = Math.imul(x ^ (x >>> 16), 0x21f0aaad) >>> 0;
++  x = Math.imul(x ^ (x >>> 15), 0x735a2d97) >>> 0;
++  return ((x ^ (x >>> 15)) >>> 0) / 4294967296;
++}
++
++/** Evenly scattered "sky": jittered grid with a seeded permutation so categories interleave. */
++function scatterInto(tx, ty, items, w, h, pad) {
++  const n = items.length;
++  const iw = Math.max(1, w - pad * 2);
++  const ih = Math.max(1, h - pad * 2);
++  const cols = Math.max(1, Math.round(Math.sqrt(n * (iw / ih))));
++  const rows = Math.ceil(n / cols);
++  const cellW = iw / cols;
++  const cellH = ih / rows;
++  const cellCount = cols * rows;
++
++  // Seeded Fisher-Yates permutation of grid cells.
++  const perm = new Uint32Array(cellCount);
++  for (let i = 0; i < cellCount; i += 1) perm[i] = i;
++  const rand = mulberry32(0x5eed);
++  for (let i = cellCount - 1; i > 0; i -= 1) {
++    const j = Math.floor(rand() * (i + 1));
++    const t = perm[i];
++    perm[i] = perm[j];
++    perm[j] = t;
++  }
++
++  for (let i = 0; i < n; i += 1) {
++    const cell = perm[i];
++    const cx = cell % cols;
++    const cy = Math.floor(cell / cols);
++    const id = items[i].id;
++    const jx = (hash01(id * 2 + 1) - 0.5) * cellW * 0.92;
++    const jy = (hash01(id * 2 + 2) - 0.5) * cellH * 0.92;
++    tx[i] = pad + (cx + 0.5) * cellW + jx;
++    ty[i] = pad + (cy + 0.5) * cellH + jy;
++  }
++}
++
++/** Phyllotaxis disc: the j-th of `count` points in a disc of radius R at (cx, cy). */
++function phyllotaxis(j, count, cx, cy, R, angleSeed) {
++  const r = R * Math.sqrt((j + 0.5) / count);
++  const theta = j * GOLDEN + angleSeed;
++  return [cx + r * Math.cos(theta), cy + r * Math.sin(theta)];
++}
++
++function clusterGrid(categoryIds, w, h, pad) {
++  const k = categoryIds.length;
++  const iw = w - pad * 2;
++  const ih = h - pad * 2;
++  const wide = iw / ih > 2.1;
++  const cols = wide ? k : Math.ceil(Math.sqrt(k));
++  const rows = Math.ceil(k / cols);
++  const cellW = iw / cols;
++  const cellH = ih / rows;
++  const R = Math.min(cellW, cellH) * 0.46;
++  return categoryIds.map((id, i) => ({
++    id,
++    x: pad + ((i % cols) + 0.5) * cellW,
++    y: pad + (Math.floor(i / cols) + 0.5) * cellH,
++    r: R,
++  }));
++}
++
++/**
++ * Compute target positions for every node.
++ * @returns {{ tx: Float32Array, ty: Float32Array, clusters: Array|null }}
++ */
++export function computeTargets({ items, categoryIds, w, h, grouped, filter }) {
++  const n = items.length;
++  const tx = new Float32Array(n);
++  const ty = new Float32Array(n);
++  const pad = Math.max(26, Math.min(w, h) * 0.07);
++  let clusters = null;
++
++  if (grouped) {
++    const centers = clusterGrid(categoryIds, w, h, pad);
++    const byCat = Object.fromEntries(centers.map((c) => [c.id, c]));
++    const counts = {};
++    const seen = {};
++    for (let i = 0; i < n; i += 1) counts[items[i].category] = (counts[items[i].category] || 0) + 1;
++    for (let i = 0; i < n; i += 1) {
++      const cat = items[i].category;
++      const c = byCat[cat];
++      const j = (seen[cat] = (seen[cat] || 0) + 1) - 1;
++      const catIndex = categoryIds.indexOf(cat);
++      const [x, y] = phyllotaxis(j, counts[cat], c.x, c.y, c.r, catIndex * 1.7);
++      tx[i] = x;
++      ty[i] = y;
++    }
++    clusters = centers.map((c) => ({ ...c, count: counts[c.id] || 0 }));
++  } else {
++    scatterInto(tx, ty, items, w, h, pad);
++    if (filter) {
++      // Filtered discipline gathers into a centre disc; the rest stay scattered, dimmed by the engine.
++      let count = 0;
++      for (let i = 0; i < n; i += 1) if (items[i].category === filter) count += 1;
++      const R = Math.min(w, h) * 0.42 - pad * 0.4;
++      let j = 0;
++      for (let i = 0; i < n; i += 1) {
++        if (items[i].category !== filter) continue;
++        const [x, y] = phyllotaxis(j, count, w / 2, h / 2, Math.max(40, R), 0.9);
++        tx[i] = x;
++        ty[i] = y;
++        j += 1;
++      }
++    }
++  }
++
++  return { tx, ty, clusters };
++}
+diff --git a/package-lock.json b/package-lock.json
+index fccc1dc..0288494 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -9,6 +9,7 @@
+       "version": "1.0.0",
+       "dependencies": {
+         "next": "16.2.12",
++        "pixi.js": "8.19.0",
+         "react": "19.2.8",
+         "react-dom": "19.2.8"
+       },
+@@ -690,6 +691,12 @@
+         "node": ">= 10"
+       }
+     },
++    "node_modules/@pixi/colord": {
++      "version": "2.9.6",
++      "resolved": "https://registry.npmjs.org/@pixi/colord/-/colord-2.9.6.tgz",
++      "integrity": "sha512-nezytU2pw587fQstUu1AsJZDVEynjskwOL+kibwcdxsMBFqPsFFNA7xl0ii/gXuDi6M0xj3mfRJj8pBSc2jCfA==",
++      "license": "MIT"
++    },
+     "node_modules/@swc/helpers": {
+       "version": "0.5.15",
+       "resolved": "https://registry.npmjs.org/@swc/helpers/-/helpers-0.5.15.tgz",
+@@ -1036,6 +1043,27 @@
+         "tailwindcss": "4.3.3"
+       }
+     },
++    "node_modules/@types/earcut": {
++      "version": "3.0.0",
++      "resolved": "https://registry.npmjs.org/@types/earcut/-/earcut-3.0.0.tgz",
++      "integrity": "sha512-k/9fOUGO39yd2sCjrbAJvGDEQvRwRnQIZlBz43roGwUZo5SHAmyVvSFyaVVZkicRVCaDXPKlbxrUcBuJoSWunQ==",
++      "license": "MIT"
++    },
++    "node_modules/@webgpu/types": {
++      "version": "0.1.72",
++      "resolved": "https://registry.npmjs.org/@webgpu/types/-/types-0.1.72.tgz",
++      "integrity": "sha512-0cF7RFM2edNoiIS1ODJp0/Gzv4/xSXhwoR0YCza+OWpJWtn4wmo9DvK91aLlH9+uUnwIriP7ZiC3WitmyhuzBw==",
++      "license": "BSD-3-Clause"
++    },
++    "node_modules/@xmldom/xmldom": {
++      "version": "0.8.15",
++      "resolved": "https://registry.npmjs.org/@xmldom/xmldom/-/xmldom-0.8.15.tgz",
++      "integrity": "sha512-/5NV/vDALVFDXgLmfsy9TRCBlKwO2LNBFzpzvb9iIj+jR+eSc6DLYYvVOdivT/jm7MtU6TebYuRmzEOI7w40UA==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=10.0.0"
++      }
++    },
+     "node_modules/baseline-browser-mapping": {
+       "version": "2.11.13",
+       "resolved": "https://registry.npmjs.org/baseline-browser-mapping/-/baseline-browser-mapping-2.11.13.tgz",
+@@ -1084,6 +1112,12 @@
+         "node": ">=8"
+       }
+     },
++    "node_modules/earcut": {
++      "version": "3.2.3",
++      "resolved": "https://registry.npmjs.org/earcut/-/earcut-3.2.3.tgz",
++      "integrity": "sha512-vnS4AVwp1KHAF13i1vp1/2D5evWy3k5u/iW/B81QVsUZtV8cv2tU0b2VNFlqvh4kYwrFMDdjPCfAmfyJW9y14Q==",
++      "license": "ISC"
++    },
+     "node_modules/enhanced-resolve": {
+       "version": "5.24.5",
+       "resolved": "https://registry.npmjs.org/enhanced-resolve/-/enhanced-resolve-5.24.5.tgz",
+@@ -1098,6 +1132,21 @@
+         "node": ">=10.13.0"
+       }
+     },
++    "node_modules/eventemitter3": {
++      "version": "5.0.4",
++      "resolved": "https://registry.npmjs.org/eventemitter3/-/eventemitter3-5.0.4.tgz",
++      "integrity": "sha512-mlsTRyGaPBjPedk6Bvw+aqbsXDtoAyAzm5MO7JgU+yVRyMQ5O8bD4Kcci7BS85f93veegeCPkL8R4GLClnjLFw==",
++      "license": "MIT"
++    },
++    "node_modules/gifuct-js": {
++      "version": "2.1.2",
++      "resolved": "https://registry.npmjs.org/gifuct-js/-/gifuct-js-2.1.2.tgz",
++      "integrity": "sha512-rI2asw77u0mGgwhV3qA+OEgYqaDn5UNqgs+Bx0FGwSpuqfYn+Ir6RQY5ENNQ8SbIiG/m5gVa7CD5RriO4f4Lsg==",
++      "license": "MIT",
++      "dependencies": {
++        "js-binary-schema-parser": "^2.0.3"
++      }
++    },
+     "node_modules/graceful-fs": {
+       "version": "4.2.11",
+       "resolved": "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.11.tgz",
+@@ -1105,6 +1154,12 @@
+       "dev": true,
+       "license": "ISC"
+     },
++    "node_modules/ismobilejs": {
++      "version": "1.1.1",
++      "resolved": "https://registry.npmjs.org/ismobilejs/-/ismobilejs-1.1.1.tgz",
++      "integrity": "sha512-VaFW53yt8QO61k2WJui0dHf4SlL8lxBofUuUmwBo0ljPk0Drz2TiuDW4jo3wDcv41qy/SxrJ+VAzJ/qYqsmzRw==",
++      "license": "MIT"
++    },
+     "node_modules/jiti": {
+       "version": "2.7.0",
+       "resolved": "https://registry.npmjs.org/jiti/-/jiti-2.7.0.tgz",
+@@ -1115,6 +1170,12 @@
+         "jiti": "lib/jiti-cli.mjs"
+       }
+     },
++    "node_modules/js-binary-schema-parser": {
++      "version": "2.0.3",
++      "resolved": "https://registry.npmjs.org/js-binary-schema-parser/-/js-binary-schema-parser-2.0.3.tgz",
++      "integrity": "sha512-xezGJmOb4lk/M1ZZLTR/jaBHQ4gG/lqQnJqdIv4721DMggsa1bDVlHXNeHYogaIEHD9vCRv0fcL4hMA+Coarkg==",
++      "license": "MIT"
++    },
+     "node_modules/lightningcss": {
+       "version": "1.32.0",
+       "resolved": "https://registry.npmjs.org/lightningcss/-/lightningcss-1.32.0.tgz",
+@@ -1485,12 +1546,44 @@
+         "node": "^10 || ^12 || >=14"
+       }
+     },
++    "node_modules/parse-svg-path": {
++      "version": "0.2.0",
++      "resolved": "https://registry.npmjs.org/parse-svg-path/-/parse-svg-path-0.2.0.tgz",
++      "integrity": "sha512-Tf7FFIrguPKQwzD4pWnYkR2VOv3raoHeKED80Bm+BYHI3KxC8KsgsGC5+fSMzAGDA6UEk4bHvmi+RsjmL3khpg==",
++      "license": "MIT"
++    },
+     "node_modules/picocolors": {
+       "version": "1.1.1",
+       "resolved": "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz",
+       "integrity": "sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==",
+       "license": "ISC"
+     },
++    "node_modules/pixi.js": {
++      "version": "8.19.0",
++      "resolved": "https://registry.npmjs.org/pixi.js/-/pixi.js-8.19.0.tgz",
++      "integrity": "sha512-pq1O6emA/GFjjeF+8d3Pb5t7knD8FsnfWGqQcRjYjsqFZ7QdzG1XgjLDUu0DFJRbafjV5+g8iNLFBx0b9649lg==",
++      "license": "MIT",
++      "workspaces": [
++        "examples",
++        "playground"
++      ],
++      "dependencies": {
++        "@pixi/colord": "^2.9.6",
++        "@types/earcut": "^3.0.0",
++        "@webgpu/types": "^0.1.69",
++        "@xmldom/xmldom": "^0.8.13",
++        "earcut": "^3.0.2",
++        "eventemitter3": "^5.0.1",
++        "gifuct-js": "^2.1.2",
++        "ismobilejs": "^1.1.1",
++        "parse-svg-path": "^0.2.0",
++        "tiny-lru": "^11.4.7"
++      },
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/pixijs"
++      }
++    },
+     "node_modules/postcss": {
+       "version": "8.5.26",
+       "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.5.26.tgz",
+@@ -1658,6 +1751,15 @@
+         "url": "https://opencollective.com/webpack"
+       }
+     },
++    "node_modules/tiny-lru": {
++      "version": "11.4.7",
++      "resolved": "https://registry.npmjs.org/tiny-lru/-/tiny-lru-11.4.7.tgz",
++      "integrity": "sha512-w/Te7uMUVeH0CR8vZIjr+XiN41V+30lkDdK+NRIDCUYKKuL9VcmaUEmaPISuwGhLlrTGh5yu18lENtR9axSxYw==",
++      "license": "BSD-3-Clause",
++      "engines": {
++        "node": ">=12"
++      }
++    },
+     "node_modules/tslib": {
+       "version": "2.8.1",
+       "resolved": "https://registry.npmjs.org/tslib/-/tslib-2.8.1.tgz",
+diff --git a/package.json b/package.json
+index e93a0fb..533551d 100644
+--- a/package.json
++++ b/package.json
+@@ -9,11 +9,12 @@
+   },
+   "dependencies": {
+     "next": "16.2.12",
++    "pixi.js": "8.19.0",
+     "react": "19.2.8",
+     "react-dom": "19.2.8"
+   },
+   "devDependencies": {
+-    "tailwindcss": "4.3.3",
+-    "@tailwindcss/postcss": "4.3.3"
++    "@tailwindcss/postcss": "4.3.3",
++    "tailwindcss": "4.3.3"
+   }
+ }

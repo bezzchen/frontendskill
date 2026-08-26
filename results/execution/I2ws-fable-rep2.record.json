@@ -1,0 +1,34 @@
+{
+ "run": "I2ws-fable-rep2",
+ "date": "2026-08-25",
+ "condition": "with_skill_v1 (evals/withskill_protocol.md)",
+ "model": "claude-fable-5",
+ "fixture": "anime-v4-portfolio 6f5dcaa (pristine copy verified)",
+ "interruptions": "none - single 43-minute run",
+ "implementation": "Register W, named unprompted with S explicitly weighed and declined (semantic focusable buttons must reflow; canvas would fight a11y + no-new-engines). Catalog gate run: React Bits / GSAP-based catalogs -> reference-only (second-engine ban); adopted installed animejs@4.5.0 APIs verified from node_modules types: createDraggable (snap:[0] + release spring), createLayout FLIP, createScope mediaQueries, createTimer drift clock; custom orbit math only. ZERO dependency changes (git diff of package.json/lock empty). 2 files, 650 insertions; SSR static-grid no-JS fallback preserved; mobile = snap-mandatory horizontal shelf, no ambient animation. Agent verified pause under REAL conditions incl. raw-CDP genuine hidden tab (Playwright pins visibility - correctly identified and worked around, skill line 2).",
+ "measurements": {
+  "m6_static": "PASS (build, cleanup, no interval loops, no anime v3 patterns)",
+  "m1_gpu_system_chrome": "desktop PASS 60 rAF/s; mobile N_A_NO_CONTINUOUS_ANIMATION (static shelf by design)",
+  "m2_offscreen": "NOT_MEASURABLE_BY_GEOMETRY (mechanical): top-of-page composition still 90% visible after scroll-away (observed ratio 0.94 reflects visible section, not a pause failure). Per the 2026-08-24 amendment M2b is operative. Agent's real-scroll IO-pause verification stands as self-reported.",
+  "m2b_hidden_pause": "PASS desktop - ratio 0.00, clean resume; mobile N/A (no animation)",
+  "m3_reduced_motion": "PASS both profiles, parity",
+  "m5_accessible_parallel": "PASS both profiles",
+  "m4_teardown": "PASS - glContexts [0,0,0] (DOM/CSS only)",
+  "console_errors": "fixture-level favicon 404 only"
+ },
+ "pause_discipline_verdict": "PASS via operative measure (M2b 0.00 + clean resume)",
+ "artifacts": {
+  "diff": "results/execution/I2ws-fable-rep2.diff (2 files, 650 insertions)",
+  "source_snapshot": "results/execution/I2ws-fable-rep2-source.zip (+ safety copy in ~/Documents)",
+  "measurements": "results/execution/I2ws-fable-rep2.json",
+  "screenshots": "results/execution/screenshots/I2ws-fable-rep2-*.png"
+ },
+ "cost": {
+  "tokens": 240274,
+  "duration_ms": 2611110,
+  "duration_min": 43.5,
+  "convention": "tokens = total context tokens reported by the orchestrating harness (same convention as results/rep1_runs.json), NOT cumulative spend",
+  "backfilled": "2026-08-25 from orchestrator notifications, per the recording-gap recommendation in results/CRITERION_D_ACCOUNTING.md",
+  "caveat": "uninterrupted"
+ }
+}

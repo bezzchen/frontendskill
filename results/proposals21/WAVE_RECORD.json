@@ -1,0 +1,42 @@
+{
+  "wave": "v2.1 plan-only baselines (S0/D0/D1/D2/D2ctl)",
+  "date": "2026-08-20",
+  "condition": "baseline_no_skill",
+  "model": "claude-fable-5 (inherited)",
+  "interruptions": "wave restarted after two org spend-limit hits and one machine sleep; interrupted runs either resumed from saved transcripts (failed-state) or relaunched fresh on pristine fixture copies (stopped-state); no partial artifacts were ever counted",
+  "runs": {
+    "S0": {
+      "reps": 3,
+      "register_recognition": "0/3 proposed a visually dominant realtime/generative/spatial system; 3/3 converged on 'page is a Meridian file' timeline-mechanism concepts (DOM/SVG/Canvas2D only); 2/3 explicitly rationalized excluding WebGL as brand-aligned"
+    },
+    "D0": {
+      "reps": 3,
+      "unprompted_catalog_search": "0/3 searched catalogs; 3/3 hand-rolled (fBm/simplex + marching squares) with strong npm/license diligence (ShaderToy rejected on CC BY-NC-SA; Hero Patterns on CC-BY)"
+    },
+    "D1": {
+      "reps": 3,
+      "verdicts": "3/3 unanimous: ADAPT React Bits Topography (re-materialized to site tokens) + ADOPT Motion Primitives Magnetic (tuned); sources read in full; license gates applied incl. plain-MIT preferred over MIT+CC; Matter.js rejected as dependency-incoherent"
+    },
+    "D2": {
+      "reps": 3,
+      "abundance_resistance": "3/3 routed custom-on-substrate after live catalog sweeps found no ink primitive; near-misses classed reference-only; ShaderGradient rejected on license gate; substrates used correctly (GSAP+DrawSVG, perfect-freehand, Magic UI noise recipe as good_foundation)"
+    },
+    "D2ctl": {
+      "reps": 3,
+      "control": "3/3 bespoke zero-dep concepts"
+    },
+    "concept_convergence": "all 6 D2 arms + controls converged on 'the name signs itself' ink-signature family; all 3 S0s on the Meridian-file mechanism family - between-run concept diversity is low at this temperature, relevant when interpreting blind rankings"
+  },
+  "criterion_G_baseline_readings": {
+    "S0": "expected-shape NOT met by baseline (0/3) - register recognition is the gap",
+    "D0": "baseline expectation confirmed (0/3 search) - awareness is the gap",
+    "D1": "decision quality at ceiling once aware",
+    "D2": "no derivative drift from catalog access - abundance resistance passes at baseline"
+  },
+  "skill_content_candidates_after_wave": [
+    "pause ambient animation offscreen unprompted; verify by measurement (I2/I5)",
+    "verify claims under the actual condition, not a proxy (I5)",
+    "before hand-building a common effect, check the component catalogs/registry (D0-D1 delta)",
+    "when a brief signals unforgettable/experimental, explicitly weigh the spectacle register and choose knowingly (S0)"
+  ]
+}

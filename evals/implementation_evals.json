@@ -1,0 +1,71 @@
+{
+  "suite_name": "creative-frontend-architect-v1.6-specialist-execution-baseline",
+  "policy": "Run after routing review. These cases intentionally pin the specialist architecture so they test whether the agent can execute a selected tool correctly, not whether it can route to that tool.",
+  "repetitions_per_condition": 3,
+  "priority_cases": [
+    {
+      "id": "I2-anime-v4-execution",
+      "source_routing_eval": "E2-preserve-anime-v4",
+      "fixture": "anime-v4-portfolio",
+      "focus": [
+        "version-correct Anime.js v4 usage",
+        "drag/layout behavior",
+        "React cleanup",
+        "mobile/touch",
+        "reduced motion",
+        "no redundant engine"
+      ],
+      "pinned_specialist": "animejs@4.5.0 (already installed in fixture)",
+      "implementation_prompt": "Implement the requested experience system in this repository.\n\nUse the project's existing Anime.js v4.5.0 motion system. Do not add GSAP, Motion, Three.js/R3F, or another animation engine.\n\nRequirements:\n- On larger screens, the experience/project items should form a loose orbiting/living composition around a central project object.\n- Items must be draggable with appropriate release/snap behavior.\n- Switching between Experience and Projects must smoothly reorganize the same semantic DOM elements into a clean structured layout/state.\n- Design a touch/mobile interaction that is appropriate for small screens rather than forcing the desktop orbit onto mobile.\n- Respect prefers-reduced-motion while preserving all content and controls.\n- Use version-correct Anime.js v4 APIs from the installed package; inspect package/types/docs if uncertain.\n- Integrate cleanly with React lifecycle and remove/revert animation state on unmount.\n- Preserve the fixture's visual language rather than redesigning the whole site.\n\nRun the build and report what you changed, including any lifecycle, mobile, and reduced-motion decisions.",
+      "status": "ACTIVE",
+      "counts_toward_next_execution_baseline": true
+    },
+    {
+      "id": "I4-dom-gpu-execution",
+      "source_routing_eval": "E4-dom-plus-gpu-media",
+      "fixture": "next-tailwind-base",
+      "focus": [
+        "semantic DOM preservation",
+        "bounded GPU architecture",
+        "shader quality",
+        "GPU cleanup",
+        "fallback",
+        "responsive behavior"
+      ],
+      "pinned_specialist": "curtainsjs@8.1.6",
+      "implementation_prompt": "Implement the project-media effect in this repository using curtainsjs@8.1.6 as the bounded DOM+GPU layer. Install exactly curtainsjs@8.1.6 if it is not already present.\n\nRequirements:\n- Preserve the existing project grid as semantic DOM: links, headings, descriptions, layout, and SEO content must remain normal HTML.\n- Apply WebGL only to the project media surfaces.\n- Add a refined liquid/refraction distortion that responds to pointer movement on capable desktop devices.\n- Add a more dramatic shader-driven visual transition when a project link is activated, without rebuilding routing or the whole page in WebGL.\n- Do not introduce Three.js/R3F.\n- Provide sensible touch/mobile behavior and a reduced-motion/non-WebGL fallback.\n- Handle resize/scroll synchronization, WebGL context/resource cleanup, and unmounting correctly.\n- Keep GPU work bounded to this section and avoid an unnecessary always-on render loop when the effect is inactive/offscreen.\n- Keep the visual treatment coherent with the existing restrained fixture.\n\nRun the build and report the implementation, fallback behavior, and cleanup/performance decisions.",
+      "status": "DEFERRED",
+      "defer_reason": "The pinned curtainsjs@8.1.6 case is a valid legacy WebGL compatibility test, but the same author now actively publishes gpu-curtains as a WebGPU rewrite/successor. Do not silently replace the pin. Decide whether Layer C should test legacy WebGL compatibility, modern WebGPU, or both before running I4.",
+      "counts_toward_next_execution_baseline": false
+    },
+    {
+      "id": "I5-dense-2d-execution",
+      "source_routing_eval": "E5-dense-2d-renderer",
+      "fixture": "next-tailwind-base",
+      "focus": [
+        "renderer density",
+        "smooth interaction",
+        "offscreen pausing",
+        "mobile degradation",
+        "accessible parallel representation"
+      ],
+      "pinned_specialist": "pixi.js@8.19.0",
+      "implementation_prompt": "Implement the bounded experience-constellation visualization in this repository using pixi.js@8.19.0. Install exactly pixi.js@8.19.0 if it is not already present.\n\nRequirements:\n- Render roughly 500 interactive logo/image nodes in one bounded visualization section.\n- Nodes should drift subtly, respond to pointer proximity, support selection/filtering, and smoothly regroup by category.\n- Use PixiJS v8 patterns appropriate to the installed version.\n- Keep the surrounding page in normal React/Next.js DOM; do not migrate the site into canvas or 3D.\n- Do not use Three.js/R3F.\n- Avoid 500 continuously animated React DOM nodes.\n- Implement sensible batching/render-loop ownership and pause or reduce work when the visualization is offscreen.\n- Design a lower-cost mobile/touch mode.\n- Provide an accessible semantic representation/control surface for the same meaningful items outside or alongside the canvas.\n- Clean up the Pixi application, listeners, textures/resources, and observers on unmount.\n- Respect prefers-reduced-motion without removing access to the content.\n\nRun the build and report the rendering, performance, accessibility, and cleanup decisions.",
+      "status": "ACTIVE",
+      "counts_toward_next_execution_baseline": true
+    }
+  ],
+  "capture": [
+    "full trace",
+    "final response",
+    "git diff",
+    "dependencies added or removed",
+    "build/test output",
+    "screenshots at representative viewports",
+    "motion/video capture when possible",
+    "browser console errors",
+    "token usage",
+    "duration"
+  ],
+  "evaluation_layer": "C-specialist-execution"
+}

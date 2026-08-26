@@ -1,0 +1,1573 @@
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..a4b1f33 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -1,26 +1,1133 @@
+ @import "tailwindcss";
+ 
++/* ------------------------------------------------------------------
++   MERIDIAN — design tokens
++   Stage (light canvas where compositions render) + Chrome (instrument
++   panel). Functional NLE colors: playhead red, keyframe amber,
++   selection cyan.
++------------------------------------------------------------------- */
+ :root {
+   color-scheme: light dark;
+-  --background: #f5f5f3;
+-  --foreground: #161616;
+-  --muted: #6b6b66;
+-  --surface: #ffffff;
+-  --line: #deded8;
++
++  --paper: #ebede9;
++  --paper-high: #f6f7f4;
++  --ink: #17191b;
++  --muted: #575c55;
++  --hair: #c7cac1;
++  --hair-soft: #d9dcd3;
++
++  --chrome: #141519;
++  --chrome-2: #1b1d22;
++  --chrome-deep: #0e0f12;
++  --chrome-line: #2b2e34;
++  --chrome-ink: #e9ebe6;
++  --chrome-mut: #8f949a;
++
++  --red: #d8391c;
++  --red-hi: #ff5a3c;
++  --amber: #f2b63c;
++  --cyan: #3fc1d8;
++
++  --sans: var(--font-archivo), "Archivo", system-ui, sans-serif;
++  --mono: var(--font-martian), "Martian Mono", ui-monospace, monospace;
++
++  --dock-h: 116px;
++  --wrap: 1240px;
+ }
+ 
+ @media (prefers-color-scheme: dark) {
+   :root {
+-    --background: #111110;
+-    --foreground: #f5f5f2;
+-    --muted: #a0a099;
+-    --surface: #181817;
+-    --line: #31312f;
++    --paper: #1b1d20;
++    --paper-high: #212327;
++    --ink: #eceee9;
++    --muted: #a0a59e;
++    --hair: #34373c;
++    --hair-soft: #2a2d31;
++    --chrome: #101114;
++    --chrome-2: #17181c;
++    --chrome-deep: #0b0c0e;
++    --chrome-line: #292c31;
++    --red: #ff5a3c;
++  }
++}
++
++/* ------------------------------------------------------------------
++   Base
++------------------------------------------------------------------- */
++* {
++  box-sizing: border-box;
++}
++
++html {
++  background: var(--paper);
++  color: var(--ink);
++  scroll-behavior: auto; /* the dock owns smoothness deliberately */
++}
++
++body {
++  margin: 0;
++  font-family: var(--sans);
++  font-size: 16.5px;
++  line-height: 1.6;
++  -webkit-font-smoothing: antialiased;
++  text-rendering: optimizeLegibility;
++  overflow-x: clip;
++}
++
++a {
++  color: inherit;
++}
++
++button,
++input {
++  font: inherit;
++}
++
++::selection {
++  background: var(--red);
++  color: #fff;
++}
++
++:focus-visible {
++  outline: 2px solid var(--cyan);
++  outline-offset: 2px;
++  border-radius: 2px;
++}
++
++.mono {
++  font-family: var(--mono);
++}
++
++.wrap {
++  max-width: var(--wrap);
++  margin-inline: auto;
++  padding-inline: clamp(20px, 4vw, 48px);
++}
++
++main {
++  padding-bottom: calc(var(--dock-h) + 88px);
++}
++
++.skip {
++  position: absolute;
++  left: 16px;
++  top: -60px;
++  z-index: 100;
++  background: var(--ink);
++  color: var(--paper);
++  padding: 10px 16px;
++  border-radius: 6px;
++  font-size: 14px;
++  transition: top 0.15s ease;
++}
++
++.skip:focus-visible {
++  top: 16px;
++}
++
++/* Progressive enhancement: interactive chrome appears once JS runs */
++.dock,
++.sweep,
++.btn[data-play] {
++  display: none;
++}
++
++/* ------------------------------------------------------------------
++   Header
++------------------------------------------------------------------- */
++.site-head {
++  border-bottom: 1px solid var(--hair);
++}
++
++.site-head .wrap {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  gap: 16px;
++  padding-block: 18px;
++}
++
++.brand {
++  display: inline-flex;
++  align-items: baseline;
++  gap: 10px;
++  text-decoration: none;
++}
++
++.brand .word {
++  font-family: var(--sans);
++  font-variation-settings: "wdth" 125;
++  font-weight: 800;
++  font-size: 17px;
++  letter-spacing: 0.06em;
++}
++
++.brand .beta {
++  font-family: var(--mono);
++  font-size: 9px;
++  letter-spacing: 0.14em;
++  color: var(--red);
++  border: 1px solid currentColor;
++  border-radius: 3px;
++  padding: 2px 5px;
++  transform: translateY(-2px);
++}
++
++/* ------------------------------------------------------------------
++   Buttons
++------------------------------------------------------------------- */
++.btn {
++  display: inline-flex;
++  align-items: center;
++  gap: 10px;
++  border: 1px solid var(--ink);
++  border-radius: 7px;
++  padding: 12px 22px;
++  font-size: 15px;
++  font-weight: 600;
++  text-decoration: none;
++  background: none;
++  color: var(--ink);
++  cursor: pointer;
++  transition: background-color 0.16s ease, color 0.16s ease,
++    border-color 0.16s ease;
++}
++
++.btn-primary {
++  background: var(--ink);
++  color: var(--paper);
++}
++
++.btn-primary:hover {
++  background: var(--red);
++  border-color: var(--red);
++  color: #fff;
++}
++
++.btn-ghost:hover {
++  border-color: var(--red);
++  color: var(--red);
++}
++
++.btn-small {
++  padding: 8px 14px;
++  font-size: 13.5px;
++  border-radius: 6px;
++}
++
++.btn .tri {
++  width: 0;
++  height: 0;
++  border-block: 5px solid transparent;
++  border-left: 8px solid var(--red);
++}
++
++.btn-ghost:hover .tri {
++  border-left-color: currentColor;
++}
++
++/* ------------------------------------------------------------------
++   Eyebrows / section furniture — clip metadata, mirrored in the dock
++------------------------------------------------------------------- */
++.eyebrow {
++  font-family: var(--mono);
++  font-size: 10.5px;
++  font-weight: 500;
++  letter-spacing: 0.16em;
++  text-transform: uppercase;
++  color: var(--muted);
++  display: flex;
++  align-items: center;
++  gap: 10px;
++  margin: 0 0 22px;
++}
++
++.eyebrow::before {
++  content: "";
++  width: 7px;
++  height: 7px;
++  background: var(--amber);
++  border: 1px solid var(--ink);
++  rotate: 45deg;
++  flex: none;
++}
++
++.eyebrow .tc-range {
++  margin-left: auto;
++  color: var(--red);
++  letter-spacing: 0.08em;
++}
++
++section {
++  scroll-margin-top: 24px;
++}
++
++/* ------------------------------------------------------------------
++   Hero
++------------------------------------------------------------------- */
++.hero .wrap {
++  padding-top: clamp(48px, 9vh, 96px);
++}
++
++.h1 {
++  margin: 0 0 30px;
++  font-variation-settings: "wdth" 125;
++  font-weight: 800;
++  text-transform: uppercase;
++  font-size: clamp(42px, 7.7vw, 108px);
++  line-height: 0.93;
++  letter-spacing: -0.012em;
++}
++
++.h1 .hw {
++  display: inline-block;
++}
++
++.hero-sub {
++  max-width: 60ch;
++  margin: 0 0 34px;
++  font-size: clamp(16.5px, 1.5vw, 19px);
++  color: var(--muted);
++}
++
++.hero-sub strong {
++  color: var(--ink);
++  font-weight: 600;
++}
++
++.hero-ctas {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 14px;
++  margin-bottom: clamp(48px, 8vh, 84px);
++}
++
++html.js .btn[data-play] {
++  display: inline-flex;
++}
++
++/* Hero figure: drafting-table cubic, grabbed by its handles */
++.hero-fig {
++  border-block: 1px solid var(--hair);
++  background: var(--paper-high);
++}
++
++.hero-fig svg {
++  display: block;
++  width: 100%;
++  height: auto;
++}
++
++.fig-caption {
++  display: flex;
++  justify-content: space-between;
++  gap: 16px;
++  padding: 12px 0 0;
++  font-family: var(--mono);
++  font-size: 10px;
++  letter-spacing: 0.12em;
++  color: var(--muted);
++  text-transform: uppercase;
++}
++
++.scrub-hint {
++  margin-top: clamp(40px, 7vh, 72px);
++  font-family: var(--mono);
++  font-size: 11px;
++  letter-spacing: 0.1em;
++  color: var(--muted);
++  display: none;
++}
++
++html.js .scrub-hint {
++  display: block;
++}
++
++.scrub-hint b {
++  color: var(--red);
++  font-weight: 500;
++}
++
++/* Hero entrance — a one-shot render pass, armed by JS, killed by RM */
++.hero.play .hw {
++  animation: hw-rise 0.8s cubic-bezier(0.18, 0.9, 0.24, 1.12) both;
++  animation-delay: calc(0.1s + var(--i) * 0.07s);
++}
++
++.hero.play .hero-sub,
++.hero.play .hero-ctas,
++.hero.play .eyebrow {
++  animation: soft-rise 0.7s ease-out both;
++}
++
++.hero.play .eyebrow {
++  animation-delay: 0.02s;
++}
++
++.hero.play .hero-sub {
++  animation-delay: 0.42s;
++}
++
++.hero.play .hero-ctas {
++  animation-delay: 0.52s;
++}
++
++.hero.play .curve {
++  stroke-dasharray: 1;
++  stroke-dashoffset: 1;
++  animation: draw-in 1.15s cubic-bezier(0.45, 0, 0.2, 1) 0.45s both;
++}
++
++.hero.play .fig-detail {
++  animation: soft-rise 0.6s ease-out 1.15s both;
++}
++
++@keyframes hw-rise {
++  from {
++    opacity: 0;
++    transform: translateY(0.38em);
++  }
++  to {
++    opacity: 1;
++    transform: none;
++  }
++}
++
++@keyframes soft-rise {
++  from {
++    opacity: 0;
++    transform: translateY(14px);
++  }
++  to {
++    opacity: 1;
++    transform: none;
++  }
++}
++
++@keyframes draw-in {
++  to {
++    stroke-dashoffset: 0;
++  }
++}
++
++/* ------------------------------------------------------------------
++   Sections
++------------------------------------------------------------------- */
++.section {
++  padding-top: clamp(72px, 12vh, 132px);
++}
++
++.h2 {
++  margin: 0 0 18px;
++  font-variation-settings: "wdth" 125;
++  font-weight: 800;
++  text-transform: uppercase;
++  font-size: clamp(30px, 4.4vw, 56px);
++  line-height: 0.98;
++  letter-spacing: -0.008em;
++}
++
++.lede {
++  max-width: 58ch;
++  margin: 0 0 44px;
++  color: var(--muted);
++  font-size: 17px;
++}
++
++/* ------------------------------------------------------------------
++   Capability cards — instrument panels with scrubbed demos
++------------------------------------------------------------------- */
++.cards {
++  display: grid;
++  grid-template-columns: repeat(3, minmax(0, 1fr));
++  gap: 18px;
++}
++
++.card {
++  background: var(--paper-high);
++  border: 1px solid var(--hair);
++  border-radius: 10px;
++  padding: 20px 20px 22px;
++  display: flex;
++  flex-direction: column;
++  gap: 12px;
++}
++
++.card-label {
++  font-family: var(--mono);
++  font-size: 9.5px;
++  letter-spacing: 0.15em;
++  text-transform: uppercase;
++  color: var(--muted);
++  display: flex;
++  justify-content: space-between;
++  gap: 8px;
++}
++
++.card-label i {
++  font-style: normal;
++  color: var(--red);
++}
++
++.card h3 {
++  margin: 0;
++  font-size: 21px;
++  font-weight: 700;
++  letter-spacing: -0.01em;
++}
++
++.card p {
++  margin: 0;
++  color: var(--muted);
++  font-size: 15px;
++  line-height: 1.55;
++}
++
++.demo {
++  margin-top: auto;
++  border: 1px solid var(--hair-soft);
++  border-radius: 7px;
++  background: var(--paper);
++  overflow: hidden;
++}
++
++.demo svg {
++  display: block;
++  width: 100%;
++  height: auto;
++}
++
++/* Code demo (card + band) */
++.code {
++  font-family: var(--mono);
++  font-size: 11.5px;
++  line-height: 1.75;
++  letter-spacing: 0;
++  padding: 14px 16px;
++  margin: 0;
++  overflow-x: auto;
++  white-space: pre;
++}
++
++.code .ln {
++  display: block;
++}
++
++.code .c-dim {
++  color: var(--muted);
++}
++
++.code .c-red {
++  color: var(--red);
++}
++
++.code .c-amb {
++  color: #a8842c;
++}
++
++.code .c-cyn {
++  color: #2a8fa2;
++}
++
++/* armed = JS + motion OK: lines hide until the playhead compiles them */
++.armed .ln {
++  opacity: 0;
++  transform: translateY(6px);
++  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.2, 0.8, 0.3, 1.15);
++}
++
++.armed .ln.on {
++  opacity: 1;
++  transform: none;
++}
++
++/* ------------------------------------------------------------------
++   Export band — chrome material, terminal output
++------------------------------------------------------------------- */
++.band {
++  margin-top: clamp(80px, 13vh, 140px);
++  background: var(--chrome);
++  color: var(--chrome-ink);
++  border-block: 1px solid var(--chrome-line);
++  padding-block: clamp(64px, 9vh, 110px);
++}
++
++.band .eyebrow {
++  color: var(--chrome-mut);
++}
++
++.band .eyebrow .tc-range {
++  color: var(--red-hi);
++}
++
++.band-grid {
++  display: grid;
++  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
++  gap: clamp(28px, 4vw, 64px);
++  align-items: start;
++}
++
++.band .h2 {
++  color: var(--chrome-ink);
++}
++
++.band .lede {
++  color: var(--chrome-mut);
++  margin-bottom: 26px;
++}
++
++.band-stats {
++  display: flex;
++  gap: 28px;
++  margin: 0;
++  padding: 0;
++  list-style: none;
++  font-family: var(--mono);
++  font-size: 10.5px;
++  letter-spacing: 0.12em;
++  text-transform: uppercase;
++  color: var(--chrome-mut);
++}
++
++.band-stats b {
++  display: block;
++  font-size: 20px;
++  letter-spacing: 0;
++  color: var(--chrome-ink);
++  font-weight: 500;
++  margin-bottom: 4px;
++}
++
++.band-stats .hot {
++  color: var(--red-hi);
++}
++
++.terminal {
++  background: var(--chrome-deep);
++  border: 1px solid var(--chrome-line);
++  border-radius: 10px;
++  overflow: hidden;
++}
++
++.term-bar {
++  display: flex;
++  align-items: center;
++  gap: 8px;
++  padding: 10px 14px;
++  border-bottom: 1px solid var(--chrome-line);
++  font-family: var(--mono);
++  font-size: 9.5px;
++  letter-spacing: 0.12em;
++  color: var(--chrome-mut);
++  text-transform: uppercase;
++}
++
++.term-bar::before {
++  content: "";
++  width: 8px;
++  height: 8px;
++  border-radius: 50%;
++  background: var(--red-hi);
++}
++
++.terminal .code {
++  font-size: 12px;
++  padding: 18px 20px 22px;
++  color: #c8cdc9;
++}
++
++.terminal .c-ok {
++  color: var(--cyan);
++}
++
++.terminal .c-amb {
++  color: var(--amber);
++}
++
++.terminal .c-red {
++  color: var(--red-hi);
++}
++
++.terminal .c-dim {
++  color: #6b7076;
++}
++
++/* ------------------------------------------------------------------
++   Access / footer
++------------------------------------------------------------------- */
++.access .h2 {
++  max-width: 17ch;
++}
++
++.access-row {
++  display: flex;
++  flex-wrap: wrap;
++  align-items: center;
++  gap: 20px;
++  margin-top: 36px;
++}
++
++.access-alt {
++  font-family: var(--mono);
++  font-size: 11px;
++  letter-spacing: 0.08em;
++  color: var(--muted);
++}
++
++.access-alt a {
++  color: var(--red);
++  text-underline-offset: 3px;
++}
++
++.site-foot {
++  margin-top: clamp(72px, 11vh, 120px);
++  border-top: 1px solid var(--hair);
++  padding-top: 26px;
++  display: flex;
++  flex-wrap: wrap;
++  gap: 12px 32px;
++  justify-content: space-between;
++  font-family: var(--mono);
++  font-size: 10px;
++  letter-spacing: 0.1em;
++  text-transform: uppercase;
++  color: var(--muted);
++}
++
++.site-foot .jkl b {
++  color: var(--ink);
++  font-weight: 500;
++  border: 1px solid var(--hair);
++  border-radius: 3px;
++  padding: 1px 4px;
++  background: var(--paper-high);
++}
++
++/* ------------------------------------------------------------------
++   THE DOCK — this page is a Meridian composition
++------------------------------------------------------------------- */
++html.js .dock {
++  display: grid;
++}
++
++html.js .sweep {
++  display: block;
++}
++
++.dock {
++  position: fixed;
++  inset-inline: 0;
++  bottom: 0;
++  z-index: 60;
++  height: var(--dock-h);
++  grid-template-columns: 246px minmax(0, 1fr);
++  background: var(--chrome);
++  border-top: 1px solid var(--chrome-line);
++  color: var(--chrome-ink);
++  box-shadow: 0 -12px 32px rgba(10, 11, 13, 0.18);
++}
++
++.dock-side {
++  display: flex;
++  flex-direction: column;
++  justify-content: center;
++  gap: 7px;
++  padding: 10px 16px;
++  border-right: 1px solid var(--chrome-line);
++  min-width: 0;
++}
++
++.transport {
++  display: flex;
++  gap: 6px;
++}
++
++.t-btn {
++  width: 30px;
++  height: 26px;
++  display: inline-flex;
++  align-items: center;
++  justify-content: center;
++  background: var(--chrome-2);
++  border: 1px solid var(--chrome-line);
++  border-radius: 5px;
++  color: var(--chrome-ink);
++  cursor: pointer;
++  padding: 0;
++}
++
++.t-btn:hover {
++  border-color: var(--cyan);
++  color: var(--cyan);
++}
++
++.t-btn svg {
++  display: block;
++}
++
++.t-play {
++  color: var(--red-hi);
++}
++
++.tc {
++  font-family: var(--mono);
++  font-size: 16px;
++  font-weight: 500;
++  letter-spacing: 0.05em;
++  color: var(--red-hi);
++  font-variant-numeric: tabular-nums;
++  line-height: 1;
++}
++
++.dock-meta {
++  font-family: var(--mono);
++  font-size: 8.5px;
++  letter-spacing: 0.08em;
++  color: var(--chrome-mut);
++  line-height: 1.5;
++  white-space: nowrap;
++  overflow: hidden;
++  text-overflow: ellipsis;
++}
++
++.dock-main {
++  display: flex;
++  min-width: 0;
++}
++
++.dock-gut {
++  flex: none;
++  width: 32px;
++  display: flex;
++  flex-direction: column;
++  border-right: 1px solid var(--chrome-line);
++}
++
++.dock-gut .g {
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  font-family: var(--mono);
++  font-size: 7.5px;
++  letter-spacing: 0.1em;
++  color: var(--chrome-mut);
++}
++
++.g-ruler {
++  height: 26px;
++  border-bottom: 1px solid var(--chrome-line);
++}
++
++.g-marks {
++  height: 15px;
++  border-bottom: 1px solid rgba(255, 255, 255, 0.045);
++}
++
++.g-clips {
++  height: 40px;
++  border-bottom: 1px solid rgba(255, 255, 255, 0.045);
++}
++
++.g-audio {
++  height: 17px;
++}
++
++.dock-tl {
++  position: relative;
++  flex: 1;
++  min-width: 0;
++}
++
++.lane {
++  position: relative;
++}
++
++.ruler {
++  height: 26px;
++  border-bottom: 1px solid var(--chrome-line);
++  cursor: col-resize;
++  touch-action: none;
++  overflow: hidden;
++}
++
++.ruler:focus-visible {
++  outline-offset: -2px;
++}
++
++.tick-label {
++  position: absolute;
++  bottom: 4px;
++  transform: translateX(4px);
++  font-family: var(--mono);
++  font-size: 8px;
++  letter-spacing: 0.06em;
++  color: var(--chrome-mut);
++  pointer-events: none;
++}
++
++.track {
++  border-bottom: 1px solid rgba(255, 255, 255, 0.045);
++}
++
++.t-marks {
++  height: 15px;
++}
++
++.t-clips {
++  height: 40px;
++}
++
++.t-audio {
++  height: 17px;
++  border-bottom: 0;
++}
++
++.mark {
++  position: absolute;
++  top: 3px;
++  bottom: 3px;
++  border-radius: 2px;
++  background: var(--chrome-2);
++  border: 1px solid #303439;
++}
++
++.mark::before {
++  content: "";
++  position: absolute;
++  left: -2px;
++  top: 50%;
++  width: 4px;
++  height: 4px;
++  translate: 0 -50%;
++  rotate: 45deg;
++  background: var(--amber);
++}
++
++.clip {
++  position: absolute;
++  top: 5px;
++  bottom: 5px;
++  display: flex;
++  align-items: center;
++  gap: 7px;
++  padding: 0 9px;
++  border-radius: 5px;
++  background: #22252b;
++  border: 1px solid #363a41;
++  color: #ccd1d7;
++  font-family: var(--mono);
++  font-size: 8.5px;
++  letter-spacing: 0.1em;
++  white-space: nowrap;
++  overflow: hidden;
++  cursor: pointer;
++  transition: border-color 0.15s ease, background-color 0.15s ease;
++}
++
++.clip:hover {
++  border-color: var(--cyan);
++  color: #fff;
++}
++
++.clip[data-active="true"] {
++  background: #2b2f36;
++  border-color: var(--red-hi);
++  color: #fff;
++}
++
++.clip .kf {
++  flex: none;
++  width: 5px;
++  height: 5px;
++  rotate: 45deg;
++  background: var(--amber);
++}
++
++.aline {
++  position: absolute;
++  left: 0;
++  right: 0;
++  top: 50%;
++  height: 1px;
++  background: #2e3238;
++}
++
++.aname {
++  position: absolute;
++  right: 8px;
++  top: 50%;
++  translate: 0 -50%;
++  font-family: var(--mono);
++  font-size: 7.5px;
++  letter-spacing: 0.1em;
++  color: #5b6067;
++  pointer-events: none;
++}
++
++.playhead {
++  position: absolute;
++  top: 0;
++  bottom: 0;
++  left: 0;
++  width: 1px;
++  background: var(--red-hi);
++  z-index: 5;
++  pointer-events: none;
++  will-change: transform;
++}
++
++.ph-grab {
++  position: absolute;
++  top: 0;
++  left: -5px;
++  width: 11px;
++  height: 14px;
++  background: var(--red-hi);
++  clip-path: polygon(0 0, 100% 0, 100% 60%, 50% 100%, 0 60%);
++}
++
++/* The meridian — playhead's shadow cast up through the page */
++.sweep {
++  position: fixed;
++  top: 0;
++  bottom: var(--dock-h);
++  left: 0;
++  width: 1px;
++  background: var(--red);
++  opacity: 0.16;
++  z-index: 30;
++  pointer-events: none;
++  will-change: transform;
++}
++
++/* ------------------------------------------------------------------
++   Reduced motion — the static cut. All content, no choreography.
++------------------------------------------------------------------- */
++@media (prefers-reduced-motion: reduce) {
++  .hero.play .hw,
++  .hero.play .hero-sub,
++  .hero.play .hero-ctas,
++  .hero.play .eyebrow,
++  .hero.play .fig-detail {
++    animation: none;
++  }
++
++  .hero.play .curve {
++    animation: none;
++    stroke-dasharray: none;
++    stroke-dashoffset: 0;
++  }
++
++  .armed .ln {
++    opacity: 1;
++    transform: none;
++    transition: none;
++  }
++
++  [data-reveal] {
++    opacity: 1 !important;
++    transform: none !important;
++  }
++
++  html.js .btn[data-play],
++  .t-play,
++  .jkl {
++    display: none;
++  }
++
++  .btn,
++  .clip {
++    transition: none;
++  }
++}
++
++/* ------------------------------------------------------------------
++   Responsive
++------------------------------------------------------------------- */
++@media (max-width: 1023px) {
++  .sweep {
++    display: none !important;
++  }
++
++  .band-grid {
++    grid-template-columns: 1fr;
++  }
++}
++
++@media (max-width: 860px) {
++  .cards {
++    grid-template-columns: minmax(0, 1fr);
++  }
++
++  .card {
++    max-width: 560px;
+   }
+ }
+ 
+-* { box-sizing: border-box; }
+-html { background: var(--background); color: var(--foreground); }
+-body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
+-a { color: inherit; }
+-button, input { font: inherit; }
++@media (max-width: 720px) {
++  :root {
++    --dock-h: 56px;
++  }
++
++  body {
++    font-size: 15.5px;
++  }
++
++  .dock {
++    grid-template-columns: auto minmax(0, 1fr);
++    align-items: stretch;
++    padding-bottom: env(safe-area-inset-bottom);
++    height: calc(var(--dock-h) + env(safe-area-inset-bottom));
++  }
++
++  .dock-side {
++    flex-direction: row;
++    align-items: center;
++    gap: 10px;
++    padding: 0 12px;
++  }
++
++  .transport {
++    gap: 4px;
++  }
++
++  .t-btn {
++    width: 26px;
++    height: 24px;
++  }
++
++  .tc {
++    font-size: 11px;
++  }
++
++  .dock-meta,
++  .t-marks,
++  .t-audio,
++  .dock-gut {
++    display: none;
++  }
++
++  .ruler {
++    height: 22px;
++  }
++
++  .t-clips {
++    height: calc(var(--dock-h) - 23px);
++    border-bottom: 0;
++  }
++
++  .clip {
++    font-size: 7.5px;
++    padding: 0 6px;
++    gap: 5px;
++  }
++
++  .eyebrow .tc-range {
++    display: none;
++  }
++
++  .site-foot {
++    flex-direction: column;
++    gap: 10px;
++  }
++}
+diff --git a/app/layout.jsx b/app/layout.jsx
+index 35fc217..e0842ad 100644
+--- a/app/layout.jsx
++++ b/app/layout.jsx
+@@ -1,13 +1,35 @@
++import { Archivo, Martian_Mono } from "next/font/google";
+ import "./globals.css";
+ 
++const archivo = Archivo({
++  subsets: ["latin"],
++  axes: ["wdth"],
++  variable: "--font-archivo",
++  display: "swap",
++});
++
++const martian = Martian_Mono({
++  subsets: ["latin"],
++  variable: "--font-martian",
++  display: "swap",
++});
++
+ export const metadata = {
+-  title: "Meridian",
+-  description: "Meridian is a timeline-based motion editor for the web. Design animation visually, ship production code.",
++  title: "Meridian — edit motion like footage",
++  description:
++    "Meridian is a timeline-based motion editor for the web. Design animation on real tracks — springs, keyframes, gesture curves — then export production JavaScript and CSS. No runtime, no lock-in.",
++};
++
++export const viewport = {
++  themeColor: [
++    { media: "(prefers-color-scheme: light)", color: "#ebede9" },
++    { media: "(prefers-color-scheme: dark)", color: "#141519" },
++  ],
+ };
+ 
+ export default function RootLayout({ children }) {
+   return (
+-    <html lang="en">
++    <html lang="en" className={`${archivo.variable} ${martian.variable}`}>
+       <body>{children}</body>
+     </html>
+   );
+diff --git a/app/page.jsx b/app/page.jsx
+index 6f15aef..3ce8489 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -1,31 +1,345 @@
++import Director from "./director";
++
++/* Spring curve sampled once at module scope — deterministic, SSR-safe */
++const SPRING_POINTS = (() => {
++  const pts = [];
++  for (let i = 0; i <= 72; i++) {
++    const t = i / 72;
++    const v = 1 - Math.exp(-4.2 * t) * Math.cos(11 * t);
++    pts.push(`${(14 + t * 312).toFixed(1)},${(122 - v * 74).toFixed(1)}`);
++  }
++  return pts.join(" ");
++})();
++
++function Grid({ id }) {
++  return (
++    <defs>
++      <pattern id={id} width="24" height="24" patternUnits="userSpaceOnUse">
++        <path d="M24 0H0V24" fill="none" stroke="currentColor" strokeOpacity="0.09" />
++      </pattern>
++    </defs>
++  );
++}
++
+ export default function Home() {
+   return (
+-    <main className="mx-auto max-w-3xl space-y-16 px-6 py-24">
+-      <section className="space-y-4">
+-        <h1 className="text-4xl font-semibold">Meridian</h1>
+-        <p className="text-lg text-[var(--muted)]">
+-          A timeline-based motion editor for the web. Design animation visually, ship production code.
+-        </p>
+-        <a
+-          className="inline-block rounded-md bg-[var(--foreground)] px-4 py-2 text-[var(--background)]"
+-          href="#get-access"
+-        >
+-          Get early access
+-        </a>
+-      </section>
+-
+-      <section className="space-y-6">
+-        <h2 className="text-2xl font-semibold">What it does</h2>
+-        <ul className="space-y-4 text-[var(--muted)]">
+-          <li>Visual timeline editing for springs, keyframes, and gesture-driven motion.</li>
+-          <li>One-click export to production JavaScript and CSS with no runtime lock-in.</li>
+-          <li>Live preview across breakpoints, with reduced-motion variants built in.</li>
+-        </ul>
+-      </section>
+-
+-      <footer className="border-t border-[var(--line)] pt-8 text-sm text-[var(--muted)]" id="get-access">
+-        <p>Meridian is in private beta. hello@meridian.tools</p>
+-      </footer>
+-    </main>
++    <>
++      <a className="skip" href="#main">
++        Skip to content
++      </a>
++
++      <header className="site-head">
++        <div className="wrap">
++          <a className="brand" href="/" aria-label="Meridian home">
++            <span className="word">MERIDIAN</span>
++            <span className="beta">BETA</span>
++          </a>
++          <a className="btn btn-primary btn-small" href="#access">
++            Request access
++          </a>
++        </div>
++      </header>
++
++      <main id="main">
++        {/* ============ CLIP 01 · HERO ============ */}
++        <section className="hero" data-clip="hero" data-clip-label="HERO">
++          <div className="wrap">
++            <p className="eyebrow">
++              Clip 01 · Timeline-based motion editor for the web
++              <span className="tc-range" data-range aria-hidden="true"></span>
++            </p>
++
++            <h1 className="h1">
++              <span className="hw" style={{ "--i": 0 }}>
++                Edit
++              </span>{" "}
++              <span className="hw" style={{ "--i": 1 }}>
++                motion
++              </span>
++              <br />
++              <span className="hw" style={{ "--i": 2 }}>
++                like
++              </span>{" "}
++              <span className="hw" style={{ "--i": 3 }}>
++                footage.
++              </span>
++            </h1>
++
++            <p className="hero-sub">
++              Meridian puts web animation on a real timeline — springs, keyframes, and
++              gesture curves on tracks you can scrub until it feels right. Then it
++              exports <strong>plain JavaScript and CSS</strong>. No runtime. No
++              lock-in.
++            </p>
++
++            <div className="hero-ctas">
++              <a className="btn btn-primary" href="#access">
++                Request early access
++              </a>
++              <button className="btn btn-ghost" type="button" data-play>
++                <span className="tri" aria-hidden="true"></span>
++                Play this page
++              </button>
++            </div>
++          </div>
++
++          <figure className="hero-fig" aria-hidden="true">
++            <svg viewBox="0 0 1180 320" role="presentation" focusable="false">
++              <Grid id="grid-hero" />
++              <rect width="1180" height="320" fill="url(#grid-hero)" color="#575c55" />
++              <line x1="48" y1="272" x2="1132" y2="272" stroke="var(--hair)" />
++
++              {/* handles + hardware */}
++              <g className="fig-detail">
++                <line x1="48" y1="272" x2="330" y2="272" stroke="var(--cyan)" strokeWidth="1.2" />
++                <line x1="1132" y1="48" x2="470" y2="48" stroke="var(--cyan)" strokeWidth="1.2" />
++                <circle cx="330" cy="272" r="5" fill="var(--paper-high)" stroke="var(--cyan)" strokeWidth="1.5" />
++                <circle cx="470" cy="48" r="5" fill="var(--paper-high)" stroke="var(--cyan)" strokeWidth="1.5" />
++                <rect x="43" y="267" width="10" height="10" transform="rotate(45 48 272)" fill="var(--amber)" stroke="var(--ink)" />
++                <rect x="1127" y="43" width="10" height="10" transform="rotate(45 1132 48)" fill="var(--amber)" stroke="var(--ink)" />
++                <line x1="764" y1="14" x2="764" y2="300" stroke="var(--red)" strokeWidth="1.5" />
++                <circle cx="764" cy="76" r="5.5" fill="var(--red)" />
++                <text x="774" y="26" fontFamily="var(--mono)" fontSize="11" fill="var(--red)" letterSpacing="1">
++                  00:02:37
++                </text>
++              </g>
++
++              <path
++                className="curve"
++                d="M 48 272 C 330 272, 470 48, 1132 48"
++                pathLength="1"
++                fill="none"
++                stroke="var(--ink)"
++                strokeWidth="2.5"
++                strokeLinecap="round"
++              />
++            </svg>
++          </figure>
++
++          <div className="wrap">
++            <div className="fig-caption">
++              <span>Fig. 01 — cubic spline, grabbed by its handles</span>
++              <span>V1 · frame-accurate</span>
++            </div>
++
++            <p className="scrub-hint">
++              ▼ This page is a Meridian file. The timeline below is real — <b>scroll to
++              scrub it</b>, click a clip to jump, or press play.
++            </p>
++          </div>
++        </section>
++
++        {/* ============ CLIP 02 · CAPABILITIES ============ */}
++        <section className="section" data-clip="capabilities" data-clip-label="CAPABILITIES">
++          <div className="wrap">
++            <p className="eyebrow">
++              Clip 02 · Capabilities
++              <span className="tc-range" data-range aria-hidden="true"></span>
++            </p>
++            <h2 className="h2">Direct every frame.</h2>
++            <p className="lede">
++              The editor&rsquo;s three core panels, live on this page — every demo below
++              is scrubbed by your scroll, the same way Meridian scrubs a composition.
++            </p>
++
++            <div className="cards">
++              <article className="card" data-reveal>
++                <p className="card-label">
++                  <span>Track · Curves</span>
++                  <i>◆ 12 kf</i>
++                </p>
++                <h3>Curves you can grab</h3>
++                <p>
++                  Springs and beziers with real handles — drag the overshoot until it
++                  feels right, not until the numbers look right.
++                </p>
++                <div className="demo" data-demo="curve" aria-hidden="true">
++                  <svg viewBox="0 0 340 150" role="presentation" focusable="false">
++                    <Grid id="grid-curve" />
++                    <rect width="340" height="150" fill="url(#grid-curve)" color="#575c55" />
++                    <line x1="14" y1="48" x2="326" y2="48" stroke="var(--hair)" strokeDasharray="3 4" />
++                    <line x1="14" y1="122" x2="326" y2="122" stroke="var(--hair)" />
++                    <polyline
++                      className="spark"
++                      points={SPRING_POINTS}
++                      fill="none"
++                      stroke="var(--ink)"
++                      strokeWidth="2"
++                      strokeLinecap="round"
++                    />
++                    <rect x="10" y="118" width="8" height="8" transform="rotate(45 14 122)" fill="var(--amber)" stroke="var(--ink)" strokeWidth="0.8" />
++                    <rect x="322" y="44" width="8" height="8" transform="rotate(45 326 48)" fill="var(--amber)" stroke="var(--ink)" strokeWidth="0.8" />
++                    <circle className="dot" cx="326" cy="48" r="4.5" fill="var(--red)" />
++                    <text x="18" y="20" fontFamily="var(--mono)" fontSize="9" fill="var(--muted)" letterSpacing="1">
++                      spring(180, 14)
++                    </text>
++                  </svg>
++                </div>
++              </article>
++
++              <article className="card" data-reveal>
++                <p className="card-label">
++                  <span>Track · Export</span>
++                  <i>◆ compiled</i>
++                </p>
++                <h3>Export is the product</h3>
++                <p>
++                  One click compiles your timeline to plain CSS keyframes and vanilla
++                  JS. Ship the motion, not a runtime.
++                </p>
++                <div className="demo" data-demo="code">
++                  <pre className="code" aria-label="Exported CSS keyframes">
++                    <code>
++                      <span className="ln c-dim">{"/* timeline → compile */"}</span>
++                      <span className="ln">
++                        <span className="c-red">@keyframes</span> rise {"{"}
++                      </span>
++                      <span className="ln">
++                        {"  "}0% {"{"} translate: 0 34px; opacity: 0 {"}"}
++                      </span>
++                      <span className="ln">
++                        {"  "}62% {"{"} translate: 0 -4px {"}"} <span className="c-amb">{"/* ◆ overshoot */"}</span>
++                      </span>
++                      <span className="ln">
++                        {"  "}100% {"{"} translate: 0 0; opacity: 1 {"}"}
++                      </span>
++                      <span className="ln">{"}"}</span>
++                    </code>
++                  </pre>
++                </div>
++              </article>
++
++              <article className="card" data-reveal>
++                <p className="card-label">
++                  <span>Track · Preview</span>
++                  <i>◆ 3 cuts</i>
++                </p>
++                <h3>Preview every context</h3>
++                <p>
++                  Scrub the same cut across breakpoints and the reduced-motion variant
++                  before it ships anywhere.
++                </p>
++                <div className="demo" data-demo="frames" aria-hidden="true">
++                  <svg viewBox="0 0 340 150" role="presentation" focusable="false">
++                    <Grid id="grid-frames" />
++                    <rect width="340" height="150" fill="url(#grid-frames)" color="#575c55" />
++                    <g stroke="var(--muted)" fill="none" strokeWidth="1.2">
++                      <rect x="18" y="34" width="64" height="92" rx="4" />
++                      <rect x="104" y="24" width="92" height="102" rx="4" />
++                      <rect x="218" y="14" width="106" height="112" rx="4" />
++                    </g>
++                    <g fontFamily="var(--mono)" fontSize="8" fill="var(--muted)" letterSpacing="1">
++                      <text x="18" y="28">375</text>
++                      <text x="104" y="18">768</text>
++                      <text x="218" y="9">1280</text>
++                    </g>
++                    <path className="mp mp-0" d="M 28 112 Q 60 112, 70 50" fill="none" stroke="var(--hair)" strokeDasharray="2 3" />
++                    <path className="mp mp-1" d="M 114 112 Q 160 112, 184 40" fill="none" stroke="var(--hair)" strokeDasharray="2 3" />
++                    <path className="mp mp-2" d="M 228 112 Q 290 112, 312 30" fill="none" stroke="var(--hair)" strokeDasharray="2 3" />
++                    <circle className="fdot fdot-0" cx="70" cy="50" r="4" fill="var(--red)" />
++                    <circle className="fdot fdot-1" cx="184" cy="40" r="4" fill="var(--red)" />
++                    <circle className="fdot fdot-2" cx="312" cy="30" r="4" fill="var(--red)" />
++                  </svg>
++                </div>
++              </article>
++            </div>
++          </div>
++        </section>
++
++        {/* ============ CLIP 03 · OUTPUT ============ */}
++        <section className="band" data-clip="output" data-clip-label="OUTPUT">
++          <div className="wrap">
++            <p className="eyebrow">
++              Clip 03 · Output
++              <span className="tc-range" data-range aria-hidden="true"></span>
++            </p>
++            <div className="band-grid">
++              <div data-reveal>
++                <h2 className="h2">What ships is code you could have written.</h2>
++                <p className="lede">
++                  You just didn&rsquo;t have to. Meridian compiles the timeline itself —
++                  springs become cubic segments, gestures become event bindings, and a
++                  reduced-motion cut is generated for free.
++                </p>
++                <ul className="band-stats">
++                  <li>
++                    <b className="hot">0 kB</b>
++                    runtime added
++                  </li>
++                  <li>
++                    <b>60 fps</b>
++                    spring sampling
++                  </li>
++                  <li>
++                    <b>1:1</b>
++                    editor ↔ export
++                  </li>
++                </ul>
++              </div>
++
++              <div className="terminal" data-reveal data-demo="code">
++                <p className="term-bar">meridian · export</p>
++                <pre className="code" aria-label="Export command output">
++                  <code>
++                    <span className="ln">
++                      <span className="c-dim">$</span> meridian export ./launch.mer <span className="c-cyn">--target web</span>
++                    </span>
++                    <span className="ln c-dim">⠿ compiling 4 clips · 23 keyframed layers</span>
++                    <span className="ln">
++                      <span className="c-ok">✓</span> motion.css{"   "}<span className="c-amb">2.1 kB</span>{"  "}springs → cubic segments
++                    </span>
++                    <span className="ln">
++                      <span className="c-ok">✓</span> motion.js{"    "}<span className="c-amb">0.9 kB</span>{"  "}gesture bindings only
++                    </span>
++                    <span className="ln">
++                      <span className="c-ok">✓</span> static cut{"   "}<span className="c-amb">auto</span>{"    "}prefers-reduced-motion
++                    </span>
++                    <span className="ln">
++                      done in 212 ms — <span className="c-red">runtime added: 0 kB</span>
++                    </span>
++                  </code>
++                </pre>
++              </div>
++            </div>
++          </div>
++        </section>
++
++        {/* ============ CLIP 04 · ACCESS ============ */}
++        <section className="section access" id="access" data-clip="access" data-clip-label="ACCESS">
++          <div className="wrap">
++            <p className="eyebrow">
++              Clip 04 · Access
++              <span className="tc-range" data-range aria-hidden="true"></span>
++            </p>
++            <h2 className="h2" data-reveal>
++              Private beta. Rolling admits.
++            </h2>
++            <p className="lede" data-reveal>
++              We onboard a few teams every week while the export pipeline hardens. Tell
++              us what you&rsquo;re animating and where it ships — motion-obsessed teams
++              move to the front of the queue.
++            </p>
++            <div className="access-row" data-reveal>
++              <a className="btn btn-primary" href="mailto:hello@meridian.tools?subject=Early%20access">
++                Request early access
++              </a>
++              <p className="access-alt">
++                or write to <a href="mailto:hello@meridian.tools">hello@meridian.tools</a>
++              </p>
++            </div>
++
++            <footer className="site-foot">
++              <span>© 2026 Meridian — made frame by frame</span>
++              <span className="jkl">
++                <b>J</b> <b>K</b> <b>L</b> shuttle · click the timeline to seek
++              </span>
++              <span>Reduced motion? This page ships its own static cut.</span>
++            </footer>
++          </div>
++        </section>
++      </main>
++
++      <Director />
++    </>
+   );
+ }

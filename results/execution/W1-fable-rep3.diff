@@ -1,0 +1,1298 @@
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..d773591 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -1,26 +1,594 @@
+ @import "tailwindcss";
+ 
++/* ————————————————————————————————————————————————
++   MERIDIAN — design tokens
++   The observatory: night indigo field, starlight text,
++   brass measurement chrome, and one red that always
++   means "the present moment".
++———————————————————————————————————————————————— */
++
+ :root {
+-  color-scheme: light dark;
+-  --background: #f5f5f3;
+-  --foreground: #161616;
+-  --muted: #6b6b66;
+-  --surface: #ffffff;
+-  --line: #deded8;
++  color-scheme: dark;
++
++  --night: #0e1224;
++  --night-deep: #0a0e1c;
++  --raised: #151a33;
++  --starlight: #eae8dc;
++  --dim: #9da0bc;
++  --brass: #c9a96d;
++  --brass-bright: #e8cc90;
++  --playhead: #ff4a2e;
++
++  --hairline: rgba(234, 232, 220, 0.13);
++  --brassline: rgba(201, 169, 109, 0.38);
++  --brassline-faint: rgba(201, 169, 109, 0.16);
++
++  --ease-out: cubic-bezier(0.19, 0.84, 0.27, 1);
++}
++
++* {
++  box-sizing: border-box;
++}
++
++html {
++  background: var(--night);
++  color: var(--starlight);
++  scrollbar-gutter: stable;
++}
++
++body {
++  margin: 0;
++  overflow-x: clip;
++  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
++  font-size: 1.0625rem;
++  line-height: 1.65;
++  -webkit-font-smoothing: antialiased;
++}
++
++a {
++  color: inherit;
++}
++
++button,
++input {
++  font: inherit;
++}
++
++::selection {
++  background: rgba(255, 74, 46, 0.4);
++  color: var(--starlight);
++}
++
++:focus-visible {
++  outline: 2px solid var(--brass-bright);
++  outline-offset: 3px;
++  border-radius: 2px;
++}
++
++.display {
++  font-family: var(--font-display), ui-serif, Georgia, serif;
++  font-weight: 400;
++  letter-spacing: 0.01em;
++}
++
++.mono {
++  font-family: var(--font-mono), ui-monospace, "SF Mono", monospace;
++  font-variant-numeric: tabular-nums;
++}
++
++.skip {
++  position: fixed;
++  top: -4rem;
++  left: 1rem;
++  z-index: 100;
++  padding: 0.6rem 1rem;
++  background: var(--brass);
++  color: #171204;
++  font-size: 0.875rem;
++  border-radius: 3px;
++  transition: top 0.15s ease;
++}
++
++.skip:focus-visible {
++  top: 1rem;
++}
++
++/* ————— transport bar ————— */
++
++.transport {
++  position: fixed;
++  inset: 0 0 auto 0;
++  z-index: 50;
++  display: flex;
++  align-items: stretch;
++  gap: 1.25rem;
++  height: 3.5rem;
++  padding: 0 1.25rem;
++  background: color-mix(in srgb, var(--night-deep) 88%, transparent);
++  backdrop-filter: blur(10px);
++  border-bottom: 1px solid var(--hairline);
++}
++
++.wordmark {
++  display: flex;
++  align-items: center;
++  gap: 0.65rem;
++  font-family: var(--font-display), ui-serif, serif;
++  font-size: 0.845rem;
++  letter-spacing: 0.34em;
++  color: var(--starlight);
++  text-decoration: none;
++  white-space: nowrap;
++}
++
++.ruler {
++  position: relative;
++  flex: 1;
++  align-self: stretch;
++  overflow: hidden;
++  background:
++    repeating-linear-gradient(90deg, var(--brassline-faint) 0 1px, transparent 1px 10%) left bottom / 100% 14px
++      no-repeat,
++    repeating-linear-gradient(90deg, var(--brassline-faint) 0 1px, transparent 1px 2.5%) left bottom / 100% 7px
++      no-repeat;
++}
++
++.ruler-label {
++  position: absolute;
++  top: 0.35rem;
++  transform: translateX(-50%);
++  font-size: 0.5625rem;
++  letter-spacing: 0.1em;
++  color: var(--dim);
++  opacity: 0.75;
++}
++
++.ruler-marker {
++  position: absolute;
++  inset: 0 auto 0 0;
++  width: 11px;
++  margin-left: -5px;
++  will-change: transform;
++  pointer-events: none;
++}
++
++.ruler-marker::before {
++  content: "";
++  position: absolute;
++  inset: 0 auto 0 5px;
++  width: 1.5px;
++  background: var(--playhead);
++}
++
++.ruler-marker::after {
++  content: "";
++  position: absolute;
++  top: 0;
++  left: 0;
++  border-left: 5.5px solid transparent;
++  border-right: 5.5px solid transparent;
++  border-top: 6px solid var(--playhead);
+ }
+ 
+-@media (prefers-color-scheme: dark) {
+-  :root {
+-    --background: #111110;
+-    --foreground: #f5f5f2;
+-    --muted: #a0a099;
+-    --surface: #181817;
+-    --line: #31312f;
++.tc {
++  align-self: center;
++  min-width: 7.5ch;
++  text-align: right;
++  font-size: 0.845rem;
++  color: var(--brass);
++  transition: color 0.2s ease;
++}
++
++.is-playing .tc {
++  color: var(--playhead);
++}
++
++.tc-meta {
++  align-self: center;
++  font-size: 0.655rem;
++  letter-spacing: 0.12em;
++  color: var(--dim);
++  white-space: nowrap;
++}
++
++/* ————— the meridian line ————— */
++
++.meridian-line {
++  position: fixed;
++  inset: 3.5rem auto 0 50%;
++  width: 1px;
++  z-index: 40;
++  background: linear-gradient(
++    to bottom,
++    var(--playhead),
++    rgba(255, 74, 46, 0.28) 30%,
++    rgba(255, 74, 46, 0.28) 70%,
++    var(--playhead)
++  );
++  opacity: 0;
++  pointer-events: none;
++  transition: opacity 0.5s ease;
++}
++
++.is-playing .meridian-line {
++  opacity: 0.55;
++}
++
++/* ————— track headers & rules ————— */
++
++.track-head {
++  display: flex;
++  align-items: center;
++  gap: 0.7rem;
++  font-family: var(--font-mono), ui-monospace, monospace;
++  font-variant-numeric: tabular-nums;
++  font-size: 0.7rem;
++  letter-spacing: 0.16em;
++  text-transform: uppercase;
++  color: var(--brass);
++}
++
++.track-head .in-point {
++  margin-left: auto;
++  color: var(--dim);
++}
++
++.kf {
++  flex: none;
++  width: 7px;
++  height: 7px;
++  background: var(--brass);
++  transform: rotate(45deg);
++}
++
++@media (prefers-reduced-motion: no-preference) {
++  .kf.lit {
++    animation: kf-flash 0.7s ease-out;
++  }
++}
++
++@keyframes kf-flash {
++  0% {
++    background: var(--playhead);
++    box-shadow: 0 0 14px 3px rgba(255, 74, 46, 0.85);
++  }
++  100% {
++    background: var(--brass);
++    box-shadow: 0 0 0 0 rgba(255, 74, 46, 0);
++  }
++}
++
++.tick-rule {
++  height: 13px;
++  margin-top: 0.8rem;
++  background:
++    linear-gradient(var(--brassline), var(--brassline)) left bottom / 100% 1px no-repeat,
++    repeating-linear-gradient(90deg, var(--brassline) 0 1px, transparent 1px 64px) left bottom / 100% 13px no-repeat,
++    repeating-linear-gradient(90deg, var(--brassline-faint) 0 1px, transparent 1px 12.8px) left bottom / 100% 6px
++      no-repeat;
++}
++
++/* ————— reveals (motion-gated, safe without JS) ————— */
++
++@media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
++  .reveal {
++    opacity: 0;
++    transform: translateY(22px);
++    transition:
++      opacity 0.75s ease,
++      transform 0.75s var(--ease-out);
++    transition-delay: calc(var(--stagger, 0) * 90ms);
++  }
++
++  .reveal.on {
++    opacity: 1;
++    transform: none;
+   }
+ }
+ 
+-* { box-sizing: border-box; }
+-html { background: var(--background); color: var(--foreground); }
+-body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
+-a { color: inherit; }
+-button, input { font: inherit; }
++@media (prefers-reduced-motion: no-preference) {
++  .rise {
++    opacity: 0;
++    transform: translateY(26px);
++    animation: rise 0.95s var(--ease-out) forwards;
++    animation-delay: calc(var(--stagger, 0) * 130ms);
++  }
++
++  @keyframes rise {
++    to {
++      opacity: 1;
++      transform: none;
++    }
++  }
++}
++
++/* ————— buttons & chips ————— */
++
++.btn {
++  display: inline-flex;
++  align-items: center;
++  gap: 0.55rem;
++  padding: 0.72rem 1.35rem;
++  border-radius: 3px;
++  border: 1px solid transparent;
++  font-size: 0.95rem;
++  font-weight: 500;
++  letter-spacing: 0.01em;
++  text-decoration: none;
++  cursor: pointer;
++  transition:
++    background-color 0.2s ease,
++    border-color 0.2s ease,
++    color 0.2s ease;
++}
++
++.btn-primary {
++  background: var(--brass);
++  color: #171204;
++}
++
++.btn-primary:hover {
++  background: var(--brass-bright);
++}
++
++.btn-ghost {
++  background: transparent;
++  border-color: var(--brassline);
++  color: var(--starlight);
++}
++
++.btn-ghost:hover {
++  border-color: var(--brass);
++  color: var(--brass-bright);
++}
++
++.btn-small {
++  padding: 0.42rem 0.9rem;
++  font-size: 0.815rem;
++}
++
++.play-glyph {
++  display: inline-block;
++  width: 0;
++  height: 0;
++  border-left: 7px solid currentColor;
++  border-top: 4.5px solid transparent;
++  border-bottom: 4.5px solid transparent;
++}
++
++.pause-glyph {
++  display: inline-block;
++  width: 7px;
++  height: 9px;
++  border-left: 2.5px solid currentColor;
++  border-right: 2.5px solid currentColor;
++}
++
++.chip {
++  padding: 0.34rem 0.8rem;
++  border: 1px solid var(--hairline);
++  border-radius: 999px;
++  background: transparent;
++  color: var(--dim);
++  font-family: var(--font-mono), ui-monospace, monospace;
++  font-size: 0.72rem;
++  letter-spacing: 0.06em;
++  cursor: pointer;
++  transition:
++    color 0.15s ease,
++    border-color 0.15s ease;
++}
++
++.chip:hover {
++  color: var(--starlight);
++  border-color: var(--brassline);
++}
++
++.chip[aria-pressed="true"] {
++  color: var(--brass-bright);
++  border-color: var(--brass);
++}
++
++/* ————— cards ————— */
++
++.instrument {
++  background: linear-gradient(180deg, var(--raised), color-mix(in srgb, var(--raised) 60%, var(--night)));
++  border: 1px solid var(--hairline);
++  border-radius: 10px;
++}
++
++.code-card {
++  background: var(--night-deep);
++  border: 1px solid var(--hairline);
++  border-radius: 8px;
++  overflow-x: auto;
++  font-family: var(--font-mono), ui-monospace, monospace;
++  font-size: 0.815rem;
++  line-height: 1.75;
++}
++
++.code-card code {
++  display: block;
++  padding: 1.4rem 1.6rem;
++  white-space: pre;
++  color: var(--starlight);
++}
++
++.code-comment {
++  color: var(--brass);
++  opacity: 0.75;
++}
++
++.code-dim {
++  color: var(--dim);
++}
++
++/* ————— curve editor ————— */
++
++.graph-svg {
++  display: block;
++  width: 100%;
++  height: auto;
++  touch-action: none;
++}
++
++.graph-handle {
++  cursor: grab;
++}
++
++.graph-handle:active {
++  cursor: grabbing;
++}
++
++.graph-handle:focus-visible {
++  outline: 2px solid var(--brass-bright);
++  outline-offset: 2px;
++}
++
++.runner {
++  position: relative;
++  height: 3rem;
++  border: 1px solid var(--hairline);
++  border-radius: 6px;
++  background: repeating-linear-gradient(90deg, transparent 0 calc(25% - 1px), var(--brassline-faint) calc(25% - 1px) 25%);
++  overflow: hidden;
++}
++
++.runner-dot {
++  position: absolute;
++  top: 50%;
++  left: 14px;
++  width: 15px;
++  height: 15px;
++  margin-top: -7.5px;
++  background: var(--brass-bright);
++  rotate: 45deg;
++  will-change: transform;
++}
++
++.bezier-readout {
++  font-size: 0.845rem;
++  color: var(--brass-bright);
++  overflow-wrap: anywhere;
++}
++
++/* ————— dope sheet ————— */
++
++.sheet-row {
++  display: grid;
++  grid-template-columns: minmax(11rem, 16rem) 1fr auto;
++  gap: 1.5rem;
++  align-items: center;
++  padding: 1.35rem 1.6rem;
++}
++
++.sheet-row + .sheet-row {
++  border-top: 1px solid var(--hairline);
++}
++
++.lane {
++  position: relative;
++  align-self: stretch;
++  min-height: 2.6rem;
++  background: repeating-linear-gradient(90deg, var(--brassline-faint) 0 1px, transparent 1px 10%);
++}
++
++.lane-bar {
++  position: absolute;
++  top: 50%;
++  height: 7px;
++  margin-top: -3.5px;
++  background: linear-gradient(90deg, var(--brass), color-mix(in srgb, var(--brass) 55%, transparent));
++  border-radius: 1px;
++}
++
++.lane-bar::before {
++  content: "";
++  position: absolute;
++  left: -4px;
++  top: 50%;
++  width: 9px;
++  height: 9px;
++  margin-top: -4.5px;
++  background: var(--starlight);
++  transform: rotate(45deg);
++}
++
++@media (max-width: 47rem) {
++  .sheet-row {
++    grid-template-columns: 1fr auto;
++  }
++
++  .sheet-row .lane {
++    grid-column: 1 / -1;
++    grid-row: 2;
++    min-height: 1.9rem;
++  }
++}
++
++/* ————— hero ornaments ————— */
++
++.astrolabe {
++  position: absolute;
++  top: 3rem;
++  right: -12rem;
++  width: min(46rem, 60vw);
++  opacity: 0.17;
++  pointer-events: none;
++}
++
++.star {
++  position: absolute;
++  display: none;
++  width: 4px;
++  height: 4px;
++  background: var(--brass);
++  transform: rotate(45deg);
++  opacity: 0.55;
++  pointer-events: none;
++}
++
++@media (min-width: 48rem) {
++  .star {
++    display: block;
++  }
++}
++
++.star--faint {
++  width: 3px;
++  height: 3px;
++  background: var(--starlight);
++  opacity: 0.3;
++}
++
++/* ————— type scale ————— */
++
++.h-hero {
++  font-size: clamp(3rem, 8.4vw, 6.75rem);
++  line-height: 1.02;
++  margin: 0;
++}
++
++.h-section {
++  font-size: clamp(1.85rem, 3.6vw, 2.7rem);
++  line-height: 1.12;
++  margin: 0;
++}
++
++.h-end {
++  font-size: clamp(2.6rem, 6vw, 4.6rem);
++  line-height: 1.05;
++  margin: 0;
++}
++
++.lede {
++  color: var(--dim);
++  max-width: 58ch;
++}
++
++.hint {
++  font-size: 0.72rem;
++  letter-spacing: 0.14em;
++  text-transform: uppercase;
++  color: var(--dim);
++}
+diff --git a/app/layout.jsx b/app/layout.jsx
+index 35fc217..2370516 100644
+--- a/app/layout.jsx
++++ b/app/layout.jsx
+@@ -1,13 +1,38 @@
++import { Marcellus, Instrument_Sans, Spline_Sans_Mono } from "next/font/google";
+ import "./globals.css";
+ 
++const display = Marcellus({
++  weight: "400",
++  subsets: ["latin"],
++  variable: "--font-display",
++  display: "swap",
++});
++
++const body = Instrument_Sans({
++  subsets: ["latin"],
++  variable: "--font-body",
++  display: "swap",
++});
++
++const mono = Spline_Sans_Mono({
++  subsets: ["latin"],
++  variable: "--font-mono",
++  display: "swap",
++});
++
+ export const metadata = {
+-  title: "Meridian",
+-  description: "Meridian is a timeline-based motion editor for the web. Design animation visually, ship production code.",
++  title: "Meridian — motion, measured",
++  description:
++    "Meridian is a timeline-based motion editor for the web. Draw easings, springs, and keyframes on a real timeline, then ship them as production JavaScript and CSS.",
++};
++
++export const viewport = {
++  themeColor: "#0E1224",
+ };
+ 
+ export default function RootLayout({ children }) {
+   return (
+-    <html lang="en">
++    <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
+       <body>{children}</body>
+     </html>
+   );
+diff --git a/app/page.jsx b/app/page.jsx
+index 6f15aef..c2405a4 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -1,31 +1,605 @@
++"use client";
++
++import { useCallback, useEffect, useRef, useState } from "react";
++import CurveEditor from "./curve-editor";
++
++const COMP = 20; /* the page is a 20-second composition */
++const FPS = 60;
++const HEADER = 56;
++
++function formatTC(sec) {
++  const s = Math.max(0, sec);
++  const m = Math.floor(s / 60);
++  const ss = Math.floor(s % 60);
++  const ff = Math.floor((s % 1) * FPS);
++  return `${m}:${String(ss).padStart(2, "0")}:${String(ff).padStart(2, "0")}`;
++}
++
++const RULER_LABELS = [
++  { at: "0%", t: "0:00" },
++  { at: "25%", t: "0:05" },
++  { at: "50%", t: "0:10" },
++  { at: "75%", t: "0:15" },
++  { at: "100%", t: "0:20" },
++];
++
++const STARS = [
++  { top: "14%", left: "56%", faint: false },
++  { top: "24%", left: "79%", faint: true },
++  { top: "10%", left: "90%", faint: true },
++  { top: "52%", left: "68%", faint: false },
++  { top: "66%", left: "87%", faint: true },
++  { top: "38%", left: "61%", faint: true },
++  { top: "78%", left: "74%", faint: true },
++];
++
++/* Astrolabe ring: a tick every 6 degrees, a longer one every 30. */
++const TICKS = Array.from({ length: 60 }, (_, i) => {
++  const a = (i * 6 * Math.PI) / 180;
++  const major = i % 5 === 0;
++  const r1 = major ? 216 : 227;
++  const c = Math.cos(a);
++  const s = Math.sin(a);
++  return {
++    x1: (250 + r1 * c).toFixed(1),
++    y1: (250 + r1 * s).toFixed(1),
++    x2: (250 + 240 * c).toFixed(1),
++    y2: (250 + 240 * s).toFixed(1),
++    major,
++  };
++});
++
++const SHEET = [
++  {
++    name: "Springs & gestures",
++    desc: "Stiffness, damping, and velocity live on the timeline. Scrub physics like any keyframe.",
++    inT: 2,
++    outT: 9,
++  },
++  {
++    name: "Breakpoint preview",
++    desc: "One timeline, every viewport. Motion adapts with your layout while you watch.",
++    inT: 4,
++    outT: 14,
++  },
++  {
++    name: "Reduced-motion variants",
++    desc: "Every composition carries an accessible variant. Meridian exports both; the visitor's settings choose.",
++    inT: 6,
++    outT: 18,
++  },
++  {
++    name: "Zero-runtime export",
++    desc: "Plain CSS and JavaScript out. Nothing to install, nothing to ship but your animation.",
++    inT: 0,
++    outT: 20,
++  },
++];
++
+ export default function Home() {
++  const [playing, setPlaying] = useState(false);
++  const [reduced, setReduced] = useState(false);
++
++  const playingRef = useRef(false);
++  const reducedRef = useRef(false);
++  const rafRef = useRef(0);
++  const lastTsRef = useRef(0);
++  const activeUntilRef = useRef(0);
++  const trackWRef = useRef(0);
++  const tcRef = useRef(null);
++  const markerRef = useRef(null);
++  const rulerRef = useRef(null);
++
++  const stopPlay = useCallback(() => {
++    playingRef.current = false;
++    lastTsRef.current = 0;
++    setPlaying(false);
++  }, []);
++
++  const tick = useCallback((ts) => {
++    const doc = document.documentElement;
++    const scrollable = Math.max(1, doc.scrollHeight - window.innerHeight);
++
++    if (playingRef.current) {
++      const last = lastTsRef.current || ts;
++      const dt = Math.min(0.05, (ts - last) / 1000);
++      lastTsRef.current = ts;
++      const next = window.scrollY + (scrollable / COMP) * dt;
++      if (next >= scrollable - 0.5) {
++        window.scrollTo(0, scrollable);
++        playingRef.current = false;
++        lastTsRef.current = 0;
++        setPlaying(false);
++      } else {
++        window.scrollTo(0, next);
++      }
++    }
++
++    const frac = Math.min(1, Math.max(0, window.scrollY / scrollable));
++    if (tcRef.current) tcRef.current.textContent = formatTC(frac * COMP);
++    if (markerRef.current) {
++      markerRef.current.style.transform = `translateX(${(frac * trackWRef.current).toFixed(1)}px)`;
++    }
++
++    if (playingRef.current || performance.now() < activeUntilRef.current) {
++      rafRef.current = requestAnimationFrame(tick);
++    } else {
++      rafRef.current = 0;
++    }
++  }, []);
++
++  const wake = useCallback(() => {
++    activeUntilRef.current = performance.now() + 250;
++    if (!rafRef.current) rafRef.current = requestAnimationFrame(tick);
++  }, [tick]);
++
++  const startPlay = useCallback(() => {
++    const doc = document.documentElement;
++    const scrollable = Math.max(1, doc.scrollHeight - window.innerHeight);
++    if (window.scrollY >= scrollable - 4) window.scrollTo(0, 0);
++    playingRef.current = true;
++    lastTsRef.current = 0;
++    setPlaying(true);
++    wake();
++  }, [wake]);
++
++  /* Under reduced motion, "play" becomes an instant step to the next track. */
++  const jumpNext = useCallback(() => {
++    const y = window.scrollY;
++    const tops = Array.from(document.querySelectorAll("[data-track]")).map(
++      (s) => s.getBoundingClientRect().top + y - HEADER
++    );
++    const target = tops.find((top) => top > y + 8);
++    window.scrollTo(0, target ?? 0);
++  }, []);
++
++  const handlePlayControl = useCallback(() => {
++    if (reducedRef.current) jumpNext();
++    else if (playingRef.current) stopPlay();
++    else startPlay();
++  }, [jumpNext, startPlay, stopPlay]);
++
++  useEffect(() => {
++    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
++    const apply = () => {
++      reducedRef.current = mq.matches;
++      setReduced(mq.matches);
++      if (mq.matches) stopPlay();
++    };
++    apply();
++    mq.addEventListener("change", apply);
++    return () => mq.removeEventListener("change", apply);
++  }, [stopPlay]);
++
++  useEffect(() => {
++    /* Measure the ruler and write each track's true in-point into its label. */
++    const measure = () => {
++      trackWRef.current = rulerRef.current ? rulerRef.current.clientWidth : 0;
++      const doc = document.documentElement;
++      const scrollable = Math.max(1, doc.scrollHeight - window.innerHeight);
++      document.querySelectorAll("[data-track]").forEach((sec) => {
++        const span = sec.querySelector("[data-in]");
++        if (!span) return;
++        const top = sec.getBoundingClientRect().top + window.scrollY;
++        span.textContent = formatTC(Math.min(COMP, (Math.max(0, top - HEADER) / scrollable) * COMP));
++      });
++    };
++    measure();
++    if (document.fonts?.ready) document.fonts.ready.then(measure).catch(() => {});
++
++    const onScroll = () => wake();
++    const onResize = () => {
++      measure();
++      wake();
++    };
++    const onVis = () => {
++      if (document.hidden) stopPlay();
++    };
++    /* Any real user input takes the transport back from autoplay.
++       Wheel always cancels (scroll intent, wherever the cursor sits);
++       presses on transport controls are exempt so the Pause button
++       itself doesn't stop-then-retoggle. */
++    const cancel = (e) => {
++      if (!playingRef.current) return;
++      if (e.type === "keydown" && e.code === "Space") return;
++      if (e.type !== "wheel") {
++        const el = e.target;
++        if (el && el.closest && el.closest("[data-transport-control]")) return;
++      }
++      stopPlay();
++    };
++    const onSpace = (e) => {
++      if (e.code !== "Space" || reducedRef.current) return;
++      if (e.target === document.body || e.target === document.documentElement) {
++        e.preventDefault();
++        if (playingRef.current) stopPlay();
++        else startPlay();
++      }
++    };
++
++    window.addEventListener("scroll", onScroll, { passive: true });
++    window.addEventListener("resize", onResize);
++    document.addEventListener("visibilitychange", onVis);
++    window.addEventListener("wheel", cancel, { passive: true });
++    window.addEventListener("touchstart", cancel, { passive: true });
++    window.addEventListener("pointerdown", cancel, true);
++    window.addEventListener("keydown", cancel);
++    window.addEventListener("keydown", onSpace);
++
++    /* One-shot section reveals. */
++    const io = new IntersectionObserver(
++      (entries) => {
++        entries.forEach((en) => {
++          if (en.isIntersecting) {
++            en.target.classList.add("on");
++            io.unobserve(en.target);
++          }
++        });
++      },
++      { rootMargin: "0px 0px -10% 0px", threshold: 0.04 }
++    );
++    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
++
++    /* While playing, keyframe diamonds flash as they cross the meridian. */
++    const mio = new IntersectionObserver(
++      (entries) => {
++        entries.forEach((en) => {
++          if (en.isIntersecting && playingRef.current) en.target.classList.add("lit");
++        });
++      },
++      { rootMargin: "-49% 0px -49% 0px" }
++    );
++    document.querySelectorAll(".kf").forEach((el) => mio.observe(el));
++
++    const onAnimEnd = (e) => {
++      if (e.target && e.target.classList && e.target.classList.contains("lit")) {
++        e.target.classList.remove("lit");
++      }
++    };
++    document.addEventListener("animationend", onAnimEnd);
++
++    wake();
++
++    return () => {
++      window.removeEventListener("scroll", onScroll);
++      window.removeEventListener("resize", onResize);
++      document.removeEventListener("visibilitychange", onVis);
++      window.removeEventListener("wheel", cancel);
++      window.removeEventListener("touchstart", cancel);
++      window.removeEventListener("pointerdown", cancel, true);
++      window.removeEventListener("keydown", cancel);
++      window.removeEventListener("keydown", onSpace);
++      document.removeEventListener("animationend", onAnimEnd);
++      io.disconnect();
++      mio.disconnect();
++      if (rafRef.current) cancelAnimationFrame(rafRef.current);
++      rafRef.current = 0;
++    };
++  }, [wake, stopPlay, startPlay]);
++
++  const playLabel = reduced ? "Next track" : playing ? "Pause" : "Play this page";
++
+   return (
+-    <main className="mx-auto max-w-3xl space-y-16 px-6 py-24">
+-      <section className="space-y-4">
+-        <h1 className="text-4xl font-semibold">Meridian</h1>
+-        <p className="text-lg text-[var(--muted)]">
+-          A timeline-based motion editor for the web. Design animation visually, ship production code.
++    <div className={playing ? "is-playing" : undefined}>
++      <a className="skip mono" href="#main">
++        Skip to content
++      </a>
++
++      {/* ————— transport ————— */}
++      <header className="transport" data-transport-control>
++        <span className="wordmark">
++          <span className="kf" aria-hidden="true" />
++          MERIDIAN
++        </span>
++
++        <div className="ruler hidden md:block" ref={rulerRef} aria-hidden="true">
++          {RULER_LABELS.map((l, i) => (
++            <span
++              key={l.t}
++              className="ruler-label mono"
++              style={{
++                left: l.at,
++                transform: i === 0 ? "none" : i === RULER_LABELS.length - 1 ? "translateX(-100%)" : undefined,
++              }}
++            >
++              {l.t}
++            </span>
++          ))}
++          <span className="ruler-marker" ref={markerRef} />
++        </div>
++
++        <p className="tc mono m-0" ref={tcRef} aria-hidden="true">
++          0:00:00
+         </p>
+-        <a
+-          className="inline-block rounded-md bg-[var(--foreground)] px-4 py-2 text-[var(--background)]"
+-          href="#get-access"
++        <p className="tc-meta mono m-0 hidden sm:block">20.0 S · {FPS} FPS</p>
++
++        <button
++          type="button"
++          className="btn btn-ghost btn-small self-center"
++          onClick={handlePlayControl}
++          aria-pressed={reduced ? undefined : playing}
++          aria-keyshortcuts={reduced ? undefined : "Space"}
+         >
+-          Get early access
+-        </a>
+-      </section>
+-
+-      <section className="space-y-6">
+-        <h2 className="text-2xl font-semibold">What it does</h2>
+-        <ul className="space-y-4 text-[var(--muted)]">
+-          <li>Visual timeline editing for springs, keyframes, and gesture-driven motion.</li>
+-          <li>One-click export to production JavaScript and CSS with no runtime lock-in.</li>
+-          <li>Live preview across breakpoints, with reduced-motion variants built in.</li>
+-        </ul>
+-      </section>
+-
+-      <footer className="border-t border-[var(--line)] pt-8 text-sm text-[var(--muted)]" id="get-access">
+-        <p>Meridian is in private beta. hello@meridian.tools</p>
+-      </footer>
+-    </main>
++          {playing ? <span className="pause-glyph" aria-hidden="true" /> : <span className="play-glyph" aria-hidden="true" />}
++          {reduced ? "Next" : playing ? "Pause" : "Play"}
++        </button>
++      </header>
++
++      {/* The meridian: the line the composition is read against while playing. */}
++      <span className="meridian-line" aria-hidden="true" />
++
++      <main id="main" className="relative mx-auto max-w-6xl px-6 md:px-10">
++        {/* ————— TRACK 01 · TITLE ————— */}
++        <section data-track id="title" aria-labelledby="title-h" className="relative flex min-h-[92svh] flex-col justify-center overflow-hidden pt-28 pb-20">
++          <svg className="astrolabe hidden md:block" viewBox="0 0 500 500" aria-hidden="true">
++            <circle cx="250" cy="250" r="240" fill="none" stroke="var(--brass)" strokeWidth="1" />
++            <circle cx="250" cy="250" r="168" fill="none" stroke="var(--brass)" strokeWidth="0.5" strokeDasharray="2 5" />
++            {TICKS.map((t, i) => (
++              <line
++                key={i}
++                x1={t.x1}
++                y1={t.y1}
++                x2={t.x2}
++                y2={t.y2}
++                stroke="var(--brass)"
++                strokeWidth={t.major ? 1.4 : 0.7}
++              />
++            ))}
++          </svg>
++          {STARS.map((s, i) => (
++            <span key={i} className={s.faint ? "star star--faint" : "star"} style={{ top: s.top, left: s.left }} aria-hidden="true" />
++          ))}
++
++          <div className="relative">
++            <p className="track-head m-0">
++              <span className="kf" aria-hidden="true" />
++              Track 01 · Title
++              <span className="in-point">
++                IN <span data-in>0:00:00</span>
++              </span>
++            </p>
++            <div className="tick-rule" aria-hidden="true" />
++
++            <h1 id="title-h" className="display h-hero mt-16 md:mt-24">
++              <span className="block rise" style={{ "--stagger": 0 }}>
++                Motion,
++              </span>
++              <span className="block rise" style={{ "--stagger": 1 }}>
++                measured.
++              </span>
++            </h1>
++
++            <p className="lede rise mt-8 text-lg md:text-xl" style={{ "--stagger": 2 }}>
++              Meridian is a timeline-based motion editor for the web. Draw easings, springs, and keyframes on a real
++              timeline — then ship them as the production JavaScript and CSS you would have written by hand.
++            </p>
++
++            <div className="rise mt-10 flex flex-wrap items-center gap-4" style={{ "--stagger": 3 }}>
++              <a className="btn btn-primary" href="mailto:hello@meridian.tools?subject=Meridian%20early%20access">
++                Request early access
++              </a>
++              <button type="button" className="btn btn-ghost" onClick={handlePlayControl} data-transport-control>
++                {playing ? (
++                  <span className="pause-glyph" aria-hidden="true" />
++                ) : (
++                  <span className="play-glyph" aria-hidden="true" />
++                )}
++                {playLabel}
++              </button>
++            </div>
++
++            <p className="hint mono rise mt-8" style={{ "--stagger": 4 }}>
++              {reduced ? (
++                "Scrolling scrubs the timeline."
++              ) : (
++                <>
++                  <span className="hidden md:inline">Or press Space — </span>scrolling scrubs the timeline.
++                </>
++              )}
++            </p>
++          </div>
++        </section>
++
++        {/* ————— TRACK 02 · GRAPH EDITOR ————— */}
++        <section data-track id="graph" aria-labelledby="graph-h" className="py-24 md:py-32">
++          <p className="track-head reveal m-0">
++            <span className="kf" aria-hidden="true" />
++            Track 02 · Graph editor
++            <span className="in-point">
++              IN <span data-in>0:04:30</span>
++            </span>
++          </p>
++          <div className="tick-rule reveal" aria-hidden="true" />
++
++          <h2 id="graph-h" className="display h-section reveal mt-12" style={{ "--stagger": 1 }}>
++            Draw the curve. Keep the code.
++          </h2>
++          <p className="lede reveal mt-5" style={{ "--stagger": 2 }}>
++            The graph editor is the whole point, not a dialog box. Shape an easing below — the readout is live, and
++            it is exactly what Meridian writes into your stylesheet.
++          </p>
++
++          <div className="reveal mt-10" style={{ "--stagger": 3 }}>
++            <CurveEditor reduced={reduced} />
++          </div>
++        </section>
++
++        {/* ————— TRACK 03 · EXPORT ————— */}
++        <section data-track id="export" aria-labelledby="export-h" className="py-24 md:py-32">
++          <p className="track-head reveal m-0">
++            <span className="kf" aria-hidden="true" />
++            Track 03 · Export
++            <span className="in-point">
++              IN <span data-in>0:09:00</span>
++            </span>
++          </p>
++          <div className="tick-rule reveal" aria-hidden="true" />
++
++          <h2 id="export-h" className="display h-section reveal mt-12" style={{ "--stagger": 1 }}>
++            The timeline is the source of truth.
++          </h2>
++          <p className="lede reveal mt-5" style={{ "--stagger": 2 }}>
++            Meridian compiles what you scrub into plain code: springs become Web Animations API calls, easings become
++            cubic-bezier, gestures become event handlers you can read in review.
++          </p>
++
++          <div className="mt-12 grid items-stretch gap-6 lg:grid-cols-[1fr_1.15fr]">
++            <figure className="instrument reveal m-0 p-5 sm:p-7" style={{ "--stagger": 3 }}>
++              <svg className="mono block h-auto w-full" viewBox="0 0 340 172" role="img" aria-label="A Meridian timeline: three tracks named card, shadow, and badge, each with keyframed bars, read by a red playhead.">
++                <text x="10" y="16" fontSize="7.5" letterSpacing="1.5" fill="var(--brass)">
++                  SCENE — CARD-ENTER
++                </text>
++                <text x="330" y="16" fontSize="7.5" textAnchor="end" fill="var(--playhead)">
++                  0:00:14
++                </text>
++                <line x1="10" y1="28" x2="330" y2="28" stroke="var(--brassline)" strokeWidth="0.8" />
++                {Array.from({ length: 17 }, (_, i) => (
++                  <line
++                    key={i}
++                    x1={10 + i * 20}
++                    y1={i % 4 === 0 ? 21 : 24}
++                    x2={10 + i * 20}
++                    y2="28"
++                    stroke="var(--brassline)"
++                    strokeWidth="0.8"
++                  />
++                ))}
++
++                {[
++                  { label: "card", y: 62, bx: 78, bw: 148 },
++                  { label: "shadow", y: 100, bx: 98, bw: 150 },
++                  { label: "badge", y: 138, bx: 150, bw: 118 },
++                ].map((row) => (
++                  <g key={row.label}>
++                    <text x="10" y={row.y + 3} fontSize="8" fill="var(--dim)">
++                      {row.label}
++                    </text>
++                    <line x1="70" y1={row.y} x2="330" y2={row.y} stroke="var(--hairline)" strokeWidth="0.8" />
++                    <rect x={row.bx} y={row.y - 3.5} width={row.bw} height="7" rx="1" fill="var(--brass)" opacity="0.5" />
++                    <rect
++                      x={row.bx - 3.2}
++                      y={row.y - 3.2}
++                      width="6.4"
++                      height="6.4"
++                      fill="var(--starlight)"
++                      transform={`rotate(45 ${row.bx} ${row.y})`}
++                    />
++                    <rect
++                      x={row.bx + row.bw - 3.2}
++                      y={row.y - 3.2}
++                      width="6.4"
++                      height="6.4"
++                      fill="var(--starlight)"
++                      transform={`rotate(45 ${row.bx + row.bw} ${row.y})`}
++                    />
++                  </g>
++                ))}
++
++                <line x1="170" y1="21" x2="170" y2="160" stroke="var(--playhead)" strokeWidth="1.4" />
++                <path d="M 164 21 L 176 21 L 170 29 Z" fill="var(--playhead)" />
++              </svg>
++              <figcaption className="mono hint mt-4">What you scrub…</figcaption>
++            </figure>
++
++            <figure className="reveal m-0 flex flex-col" style={{ "--stagger": 4 }}>
++              <pre className="code-card m-0 flex-1">
++                <code>
++                  <span className="code-comment">{"/* exported by Meridian · scene: card-enter */"}</span>
++                  {"\n.card-enter {\n  animation: card-enter 420ms cubic-bezier(0.31, 0.72, 0.28, 1) both;\n}\n\n@keyframes card-enter {\n  from { opacity: 0; transform: translateY(12px) scale(0.98); }\n}\n\n"}
++                  <span className="code-comment">{"/* springs compile to Web Animations API */"}</span>
++                  {"\nel.animate(spring({ stiffness: 320, damping: 26 }), 480);"}
++                </code>
++              </pre>
++              <figcaption className="mono hint mt-4">…is what you ship.</figcaption>
++            </figure>
++          </div>
++
++          <p className="lede reveal mt-10" style={{ "--stagger": 1 }}>
++            No runtime. No lock-in. Delete Meridian tomorrow and the animation still ships.
++          </p>
++        </section>
++
++        {/* ————— TRACK 04 · CAPABILITIES ————— */}
++        <section data-track id="system" aria-labelledby="system-h" className="py-24 md:py-32">
++          <p className="track-head reveal m-0">
++            <span className="kf" aria-hidden="true" />
++            Track 04 · Capabilities
++            <span className="in-point">
++              IN <span data-in>0:13:30</span>
++            </span>
++          </p>
++          <div className="tick-rule reveal" aria-hidden="true" />
++
++          <h2 id="system-h" className="display h-section reveal mt-12" style={{ "--stagger": 1 }}>
++            Built like an instrument.
++          </h2>
++          <p className="lede reveal mt-5" style={{ "--stagger": 2 }}>
++            Four commitments, laid out the way Meridian lays out everything — on tracks.
++          </p>
++
++          <ul className="instrument reveal mt-10 list-none overflow-hidden p-0" style={{ "--stagger": 3 }}>
++            {SHEET.map((row) => (
++              <li key={row.name} className="sheet-row">
++                <div>
++                  <h3 className="m-0 text-base font-semibold">{row.name}</h3>
++                  <p className="m-0 mt-1.5 text-[0.9rem] leading-relaxed" style={{ color: "var(--dim)" }}>
++                    {row.desc}
++                  </p>
++                </div>
++                <div className="lane" aria-hidden="true">
++                  <span
++                    className="lane-bar"
++                    style={{
++                      left: `${(row.inT / COMP) * 100}%`,
++                      width: `${((row.outT - row.inT) / COMP) * 100}%`,
++                    }}
++                  />
++                </div>
++                <p className="mono m-0 self-center text-[0.72rem] tracking-wider" style={{ color: "var(--dim)" }}>
++                  {formatTC(row.inT).slice(0, 4)} – {formatTC(row.outT).slice(0, 4)}
++                </p>
++              </li>
++            ))}
++          </ul>
++        </section>
++
++        {/* ————— TRACK 05 · END CARD ————— */}
++        <footer data-track id="access" className="pt-24 pb-14 text-center md:pt-32">
++          <p className="track-head reveal m-0 text-left">
++            <span className="kf" aria-hidden="true" />
++            Track 05 · End card
++            <span className="in-point">
++              IN <span data-in>0:17:30</span>
++            </span>
++          </p>
++          <div className="tick-rule reveal" aria-hidden="true" />
++
++          <h2 className="display h-end reveal mx-auto mt-20 max-w-3xl" style={{ "--stagger": 1 }}>
++            Begin at zero.
++          </h2>
++          <p className="lede reveal mx-auto mt-6" style={{ "--stagger": 2 }}>
++            Meridian is in private beta. We open access in small batches, in the order requests arrive.
++          </p>
++
++          <div className="reveal mt-10 flex flex-wrap items-center justify-center gap-4" style={{ "--stagger": 3 }}>
++            <a className="btn btn-primary" href="mailto:hello@meridian.tools?subject=Meridian%20early%20access">
++              Request early access
++            </a>
++            <a className="mono text-sm underline decoration-[var(--brassline)] underline-offset-4 hover:decoration-[var(--brass)]" href="mailto:hello@meridian.tools">
++              hello@meridian.tools
++            </a>
++          </div>
++
++          <div
++            className="mono mt-24 flex flex-wrap items-center justify-between gap-3 border-t pt-7 text-[0.66rem] uppercase tracking-[0.14em]"
++            style={{ borderColor: "var(--hairline)", color: "var(--dim)" }}
++          >
++            <p className="m-0">Meridian — Greenwich for interfaces</p>
++            <p className="m-0">This page is a 20.0 s composition at 60 fps</p>
++            <p className="m-0">© 2026</p>
++          </div>
++        </footer>
++      </main>
++    </div>
+   );
+ }

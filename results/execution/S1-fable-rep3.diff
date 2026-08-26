@@ -1,0 +1,2203 @@
+diff --git a/app/code-panel.jsx b/app/code-panel.jsx
+new file mode 100644
+index 0000000..12094c7
+--- /dev/null
++++ b/app/code-panel.jsx
+@@ -0,0 +1,79 @@
++"use client";
++
++import { useRef, useState, useSyncExternalStore } from "react";
++import { curveStore, fmt } from "../lib/curve";
++
++/*
++ * Act 03: the export. Not a mockup — the values are live-bound to the
++ * curve the visitor shaped in Act 02. Copy gives you real, runnable CSS.
++ */
++
++export default function CodePanel() {
++  const c = useSyncExternalStore(curveStore.subscribe, curveStore.get, curveStore.get);
++  const [copied, setCopied] = useState(false);
++  const timer = useRef(0);
++
++  const bezier = `cubic-bezier(${fmt(c.x1)}, ${fmt(c.y1)}, ${fmt(c.x2)}, ${fmt(c.y2)})`;
++
++  // [cssClass, text] token pairs, one array per line
++  const lines = [
++    [["tok-c", "/* meridian export — seq 001 · curve 01 */"]],
++    [["tok-sel", ".hero-card"], ["", " {"]],
++    [["", "  "], ["tok-prop", "animation"], ["", ": "], ["tok-val", `rise 640ms ${bezier}`], ["", " "], ["tok-kw", "both"], ["", ";"]],
++    [["", "}"]],
++    [["", ""]],
++    [["tok-kw", "@keyframes"], ["", " "], ["tok-sel", "rise"], ["", " {"]],
++    [["", "  "], ["tok-prop", "from"], ["", " { "], ["tok-prop", "translate"], ["", ": "], ["tok-val", "0 28px"], ["", "; "], ["tok-prop", "opacity"], ["", ": "], ["tok-val", "0"], ["", "; }"]],
++    [["", "  "], ["tok-prop", "to"], ["", "   { "], ["tok-prop", "translate"], ["", ": "], ["tok-val", "0 0"], ["", ";    "], ["tok-prop", "opacity"], ["", ": "], ["tok-val", "1"], ["", "; }"]],
++    [["", "}"]],
++    [["", ""]],
++    [["tok-c", "/* reduced-motion variant, exported alongside */"]],
++    [["tok-kw", "@media"], ["", " (prefers-reduced-motion: reduce) {"]],
++    [["", "  "], ["tok-sel", ".hero-card"], ["", " { "], ["tok-prop", "animation"], ["", ": "], ["tok-val", "fade 240ms linear"], ["", " "], ["tok-kw", "both"], ["", "; }"]],
++    [["", "}"]],
++  ];
++
++  const plain = lines
++    .map((line) => line.map(([, text]) => text).join(""))
++    .join("\n");
++
++  const copy = async () => {
++    try {
++      await navigator.clipboard.writeText(plain);
++      setCopied(true);
++      clearTimeout(timer.current);
++      timer.current = setTimeout(() => setCopied(false), 1800);
++    } catch {
++      // clipboard unavailable — the code stays selectable by hand
++    }
++  };
++
++  return (
++    <div className="code-panel">
++      <div className="cp-head">
++        <span>Export · CSS + WAAPI</span>
++        <button type="button" className="cp-copy" onClick={copy} data-copied={copied}>
++          {copied ? "Copied" : "Copy CSS"}
++        </button>
++      </div>
++      <pre tabIndex={0} aria-label="Generated CSS, live-bound to the easing curve from Act 02">
++        <code>
++          {lines.map((line, i) => (
++            <span key={i}>
++              {line.map(([cls, text], j) =>
++                cls ? (
++                  <span key={j} className={cls}>
++                    {text}
++                  </span>
++                ) : (
++                  <span key={j}>{text}</span>
++                )
++              )}
++              {"\n"}
++            </span>
++          ))}
++        </code>
++      </pre>
++    </div>
++  );
++}
+diff --git a/app/curve-editor.jsx b/app/curve-editor.jsx
+new file mode 100644
+index 0000000..72e7ad4
+--- /dev/null
++++ b/app/curve-editor.jsx
+@@ -0,0 +1,217 @@
++"use client";
++
++import { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
++import { curveStore, PRESETS, cssBezier, easeAt, fmt } from "../lib/curve";
++
++/*
++ * The Act 02 instrument: a real cubic-bezier editor.
++ * Pointer-draggable, keyboard-adjustable (arrow keys, shift for fine steps),
++ * announced politely to screen readers. Whatever it holds drives the WebGL
++ * river behind it and the compiled export in Act 03.
++ */
++
++// plot geometry (SVG user units)
++const W = 260;
++const H = 300;
++const PX0 = 26; // x for value 0
++const PX1 = 234; // x for value 1
++const PY0 = 252; // y for value 0
++const PY1 = 108; // y for value 1  (headroom above for overshoot)
++
++const toPx = (x, y) => [PX0 + x * (PX1 - PX0), PY0 + y * (PY1 - PY0)];
++const fromPx = (px, py) => [(px - PX0) / (PX1 - PX0), (py - PY0) / (PY1 - PY0)];
++
++export default function CurveEditor({ reducedMotion }) {
++  const curve = useSyncExternalStore(curveStore.subscribe, curveStore.get, curveStore.get);
++  const plotRef = useRef(null);
++  const dotRef = useRef(null);
++  const liveRef = useRef(null);
++  const announceT = useRef(0);
++
++  const [p1x, p1y] = toPx(curve.x1, curve.y1);
++  const [p2x, p2y] = toPx(curve.x2, curve.y2);
++  const [ax, ay] = toPx(0, 0);
++  const [bx, by] = toPx(1, 1);
++
++  const announce = useCallback((c) => {
++    clearTimeout(announceT.current);
++    announceT.current = setTimeout(() => {
++      if (liveRef.current) liveRef.current.textContent = `Easing set to ${cssBezier(c)}`;
++    }, 450);
++  }, []);
++
++  useEffect(() => () => clearTimeout(announceT.current), []);
++
++  const dragHandle = useCallback(
++    (which) => (e) => {
++      e.preventDefault();
++      const svg = plotRef.current?.querySelector("svg");
++      if (!svg) return;
++      const el = e.currentTarget;
++      el.setPointerCapture(e.pointerId);
++      const rect = svg.getBoundingClientRect();
++      const scaleX = W / rect.width;
++      const scaleY = H / rect.height;
++
++      const move = (ev) => {
++        const px = (ev.clientX - rect.left) * scaleX;
++        const py = (ev.clientY - rect.top) * scaleY;
++        const [x, y] = fromPx(px, py);
++        const c = { ...curveStore.get() };
++        if (which === 1) { c.x1 = x; c.y1 = y; } else { c.x2 = x; c.y2 = y; }
++        curveStore.set(c);
++      };
++      const up = (ev) => {
++        el.releasePointerCapture(ev.pointerId);
++        el.removeEventListener("pointermove", move);
++        el.removeEventListener("pointerup", up);
++        el.removeEventListener("pointercancel", up);
++        announce(curveStore.get());
++      };
++      el.addEventListener("pointermove", move);
++      el.addEventListener("pointerup", up);
++      el.addEventListener("pointercancel", up);
++    },
++    [announce]
++  );
++
++  const keyHandle = useCallback(
++    (which) => (e) => {
++      const step = e.shiftKey ? 0.005 : 0.02;
++      let dx = 0;
++      let dy = 0;
++      if (e.key === "ArrowLeft") dx = -step;
++      else if (e.key === "ArrowRight") dx = step;
++      else if (e.key === "ArrowUp") dy = step;
++      else if (e.key === "ArrowDown") dy = -step;
++      else return;
++      e.preventDefault();
++      const c = { ...curveStore.get() };
++      if (which === 1) { c.x1 += dx; c.y1 += dy; } else { c.x2 += dx; c.y2 += dy; }
++      curveStore.set(c);
++      announce(curveStore.get());
++    },
++    [announce]
++  );
++
++  const applyPreset = (p) => {
++    curveStore.set({ ...p.v });
++    announce(p.v);
++  };
++
++  const isPreset = (p) =>
++    Math.abs(p.v.x1 - curve.x1) < 0.005 &&
++    Math.abs(p.v.y1 - curve.y1) < 0.005 &&
++    Math.abs(p.v.x2 - curve.x2) < 0.005 &&
++    Math.abs(p.v.y2 - curve.y2) < 0.005;
++
++  const preview = () => {
++    const dot = dotRef.current;
++    const track = dot?.parentElement;
++    if (!dot || !track) return;
++    const dist = track.clientWidth;
++    if (reducedMotion) {
++      // no travel animation: place the dot at the end; the ghost row already
++      // plots the ease against time
++      dot.style.transform = `translateX(${dist}px) rotate(45deg)`;
++      return;
++    }
++    dot.style.transform = "translateX(0) rotate(45deg)";
++    dot.animate(
++      [
++        { transform: "translateX(0) rotate(45deg)" },
++        { transform: `translateX(${dist}px) rotate(45deg)` },
++      ],
++      { duration: 950, easing: cssBezier(curve), fill: "forwards" }
++    );
++  };
++
++  // ghost row: the ease sampled at 9 timestamps — the still-life of the curve
++  const ghosts = Array.from({ length: 9 }, (_, i) => {
++    const t = i / 8;
++    return { t, p: easeAt(t, curve) };
++  });
++
++  const pathD = `M ${ax} ${ay} C ${p1x} ${p1y}, ${p2x} ${p2y}, ${bx} ${by}`;
++
++  return (
++    <div className="curve-editor" role="group" aria-label="Easing curve editor">
++      <div className="ce-head">
++        <span>Ease · Curve 01</span>
++        <output className="ce-readout" aria-live="off">{cssBezier(curve)}</output>
++      </div>
++
++      <div className="ce-plot" ref={plotRef}>
++        <svg viewBox={`0 0 ${W} ${H}`} aria-hidden="true" focusable="false">
++          {/* grid */}
++          {[0.25, 0.5, 0.75].map((g) => (
++            <line key={`v${g}`} className="ce-grid" x1={toPx(g, 0)[0]} y1={28} x2={toPx(g, 0)[0]} y2={PY0} />
++          ))}
++          {[0.25, 0.5, 0.75, 1.25].map((g) => (
++            <line key={`h${g}`} className="ce-grid" x1={PX0} y1={toPx(0, g)[1]} x2={PX1} y2={toPx(0, g)[1]} />
++          ))}
++          <rect className="ce-frame" x={PX0} y={PY1} width={PX1 - PX0} height={PY0 - PY1} />
++          {/* linear reference */}
++          <line className="ce-linear" x1={ax} y1={ay} x2={bx} y2={by} />
++          {/* control arms */}
++          <line className="ce-arm" x1={ax} y1={ay} x2={p1x} y2={p1y} />
++          <line className="ce-arm" x1={bx} y1={by} x2={p2x} y2={p2y} />
++          {/* the curve */}
++          <path className="ce-path" d={pathD} />
++          <circle className="ce-end" cx={ax} cy={ay} r="4" />
++          <circle className="ce-end" cx={bx} cy={by} r="4" />
++        </svg>
++
++        <button
++          type="button"
++          className="ce-handle"
++          style={{ left: `${(p1x / W) * 100}%`, top: `${(p1y / H) * 100}%` }}
++          aria-label={`Control point 1: ${fmt(curve.x1)}, ${fmt(curve.y1)}. Arrow keys to adjust, shift for fine steps.`}
++          onPointerDown={dragHandle(1)}
++          onKeyDown={keyHandle(1)}
++        />
++        <button
++          type="button"
++          className="ce-handle"
++          style={{ left: `${(p2x / W) * 100}%`, top: `${(p2y / H) * 100}%` }}
++          aria-label={`Control point 2: ${fmt(curve.x2)}, ${fmt(curve.y2)}. Arrow keys to adjust, shift for fine steps.`}
++          onPointerDown={dragHandle(2)}
++          onKeyDown={keyHandle(2)}
++        />
++      </div>
++
++      <div className="ce-track" aria-hidden="true">
++        {ghosts.map((g) => (
++          <span
++            key={g.t}
++            className="ce-ghost"
++            style={{ left: `${Math.min(Math.max(g.p, -0.1), 1.1) * 100}%`, opacity: 0.25 + g.t * 0.45 }}
++          />
++        ))}
++        <span className="ce-dot" ref={dotRef} />
++      </div>
++
++      <div className="ce-actions">
++        <div className="ce-presets" role="group" aria-label="Easing presets">
++          {PRESETS.map((p) => (
++            <button
++              key={p.id}
++              type="button"
++              className="ce-chip"
++              aria-pressed={isPreset(p)}
++              onClick={() => applyPreset(p)}
++            >
++              {p.label}
++            </button>
++          ))}
++        </div>
++        <button type="button" className="ce-play" onClick={preview}>
++          Preview
++        </button>
++      </div>
++      <p className="ce-note">Grey diamonds sample the ease at nine timestamps.</p>
++
++      <p aria-live="polite" ref={liveRef} style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clipPath: "inset(50%)" }} />
++    </div>
++  );
++}
+diff --git a/app/experience.jsx b/app/experience.jsx
+new file mode 100644
+index 0000000..65f58d4
+--- /dev/null
++++ b/app/experience.jsx
+@@ -0,0 +1,504 @@
++"use client";
++
++import { useCallback, useEffect, useRef, useState } from "react";
++import { Field, supportsWebGL2 } from "../lib/engine";
++import { curveStore } from "../lib/curve";
++import CurveEditor from "./curve-editor";
++import CodePanel from "./code-panel";
++
++/*
++ * The page is a Meridian file.
++ * Your scrollbar is the playhead of an eight-hundred-frame sequence; the HUD
++ * is the editor's chrome; the WebGL field of keyframe diamonds is the scene
++ * being scrubbed. Five acts, one continuous timeline.
++ */
++
++const ACTS = [
++  { id: "overture", num: "00", label: "First light" },
++  { id: "tracks", num: "01", label: "Tracks" },
++  { id: "ease", num: "02", label: "Ease" },
++  { id: "ship", num: "03", label: "Ship" },
++  { id: "zenith", num: "04", label: "Zenith" },
++];
++
++const TOTAL_FRAMES = 24 * 30; // a 24-second sequence at 30 fps
++
++function timecode(t) {
++  const f = Math.round(t * TOTAL_FRAMES);
++  const ss = Math.floor(f / 30);
++  const mm = Math.floor(ss / 60);
++  const pad = (n) => String(n).padStart(2, "0");
++  return `00:${pad(mm)}:${pad(ss % 60)}:${pad(f % 30)}`;
++}
++
++export default function Experience() {
++  const canvasRef = useRef(null);
++  const dawnRef = useRef(null);
++  const playheadRef = useRef(null);
++  const fillRef = useRef(null);
++  const caretRef = useRef(null);
++  const tcRef = useRef(null);
++  const rulerRef = useRef(null);
++  const sectionRefs = useRef({});
++  const engineRef = useRef(null);
++  const boundsRef = useRef([0, 0.2, 0.4, 0.6, 0.8]);
++  const scrollableRef = useRef(1);
++  const reducedRef = useRef(false);
++
++  const [actIdx, setActIdx] = useState(0);
++  const [marks, setMarks] = useState([0, 20, 40, 60, 80]);
++  const [reduced, setReduced] = useState(false);
++
++  useEffect(() => {
++    const doc = document.documentElement;
++    doc.classList.add("js");
++
++    const qs = new URLSearchParams(window.location.search);
++    const prmQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
++    const fineQuery = window.matchMedia("(pointer: fine)");
++    let rm = prmQuery.matches || qs.has("rm");
++    reducedRef.current = rm;
++    setReduced(rm);
++
++    const noGL = qs.has("nogl") || !supportsWebGL2();
++    let engine = null;
++
++    if (noGL) {
++      doc.classList.add("no-gl");
++    } else {
++      // capability recipe: same identity, lighter field on lighter machines
++      const coarse = window.matchMedia("(pointer: coarse)").matches;
++      const small = Math.min(window.innerWidth, window.innerHeight * 2) < 820;
++      const lowMem = navigator.deviceMemory !== undefined && navigator.deviceMemory <= 4;
++      let count = 12000;
++      let dprCap = 2;
++      let sizePx = 3.1;
++      if (coarse || small) {
++        count = 4200;
++        dprCap = 1.5;
++        sizePx = 2.5;
++      }
++      if (lowMem) count = Math.floor(count * 0.6);
++
++      engine = new Field(canvasRef.current, {
++        count,
++        dprCap,
++        sizePx,
++        onContextLost: () => doc.classList.add("no-gl"),
++      });
++      if (engine.init()) {
++        doc.classList.remove("no-gl");
++      } else {
++        doc.classList.add("no-gl");
++        engine = null;
++      }
++      engineRef.current = engine;
++    }
++
++    // ——— master timeline geometry ———
++    const measure = () => {
++      const vh = window.innerHeight;
++      const scrollable = Math.max(doc.scrollHeight - vh, 1);
++      scrollableRef.current = scrollable;
++      const b = ACTS.map((a) => {
++        const el = sectionRefs.current[a.id];
++        return el ? Math.min(el.offsetTop / scrollable, 0.999) : 0;
++      });
++      b[0] = 0;
++      boundsRef.current = b;
++      engine?.setBounds(b);
++      setMarks(b.map((f) => f * 100));
++    };
++
++    // ——— scrub: scroll drives everything ———
++    let raw = 0;
++    let ticking = false;
++    const apply = () => {
++      ticking = false;
++      const vw = window.innerWidth;
++      if (playheadRef.current) playheadRef.current.style.transform = `translateX(${raw * vw}px)`;
++      if (fillRef.current) fillRef.current.style.transform = `scaleX(${raw})`;
++      if (caretRef.current) caretRef.current.style.transform = `translateX(${raw * (rulerRef.current?.clientWidth || vw)}px)`;
++      if (tcRef.current) tcRef.current.textContent = timecode(raw);
++      if (dawnRef.current) {
++        const d = Math.max(0, (raw - 0.58) / 0.42);
++        dawnRef.current.style.opacity = String(Math.pow(d, 1.4));
++      }
++      const b = boundsRef.current;
++      let i = 0;
++      for (let k = 1; k < b.length; k++) if (raw >= b[k] - 0.001) i = k;
++      setActIdx((prev) => (prev === i ? prev : i));
++    };
++    const onScroll = () => {
++      raw = Math.min(Math.max(window.scrollY / scrollableRef.current, 0), 1);
++      engine?.setScroll(raw);
++      if (!ticking) {
++        ticking = true;
++        requestAnimationFrame(apply);
++      }
++    };
++
++    // ——— pointer ripple (fine pointers, full-motion mode only) ———
++    const onPointerMove = (e) => {
++      if (!engine || engine.mode !== "flow") return;
++      const a = window.innerWidth / window.innerHeight;
++      engine.setPointer(
++        (e.clientX / window.innerWidth) * 2 * a - a,
++        -((e.clientY / window.innerHeight) * 2 - 1)
++      );
++    };
++
++    // ——— lifecycle: never render for nobody ———
++    const onVisibility = () => {
++      if (!engine) return;
++      if (document.hidden) engine.stop();
++      else if (engine.mode === "flow") engine.start();
++    };
++    const io = new IntersectionObserver(
++      (entries) => {
++        if (!engine) return;
++        for (const en of entries) {
++          if (en.isIntersecting && engine.mode === "flow" && !document.hidden) engine.start();
++          else if (!en.isIntersecting) engine.stop();
++        }
++      },
++      { threshold: 0 }
++    );
++    if (canvasRef.current) io.observe(canvasRef.current);
++
++    // ——— reveals ———
++    const revealIO = new IntersectionObserver(
++      (entries) => {
++        for (const en of entries) {
++          if (en.isIntersecting) {
++            en.target.classList.add("in");
++            revealIO.unobserve(en.target);
++          }
++        }
++      },
++      { threshold: 0.2 }
++    );
++    document.querySelectorAll(".reveal").forEach((el) => revealIO.observe(el));
++
++    // ——— reduced motion: five still poses instead of a stream ———
++    const applyMotionMode = () => {
++      rm = prmQuery.matches || qs.has("rm");
++      reducedRef.current = rm;
++      setReduced(rm);
++      if (!engine) return;
++      if (rm) {
++        engine.setMode("static");
++      } else {
++        engine.setMode("flow");
++        if (!document.hidden) engine.start();
++      }
++    };
++
++    const onResize = () => {
++      engine?.resize();
++      measure();
++      onScroll();
++    };
++
++    const unsubscribeCurve = curveStore.subscribe((c) => {
++      engine?.setCurve([c.x1, c.y1, c.x2, c.y2]);
++    });
++    const c0 = curveStore.get();
++    engine?.setCurve([c0.x1, c0.y1, c0.x2, c0.y2]);
++
++    measure();
++    applyMotionMode();
++    onScroll();
++    apply();
++
++    window.addEventListener("scroll", onScroll, { passive: true });
++    window.addEventListener("resize", onResize);
++    document.addEventListener("visibilitychange", onVisibility);
++    if (fineQuery.matches) window.addEventListener("pointermove", onPointerMove, { passive: true });
++    prmQuery.addEventListener("change", applyMotionMode);
++
++    // fonts settle → offsets can shift
++    const remeasure = setTimeout(measure, 600);
++
++    return () => {
++      clearTimeout(remeasure);
++      window.removeEventListener("scroll", onScroll);
++      window.removeEventListener("resize", onResize);
++      document.removeEventListener("visibilitychange", onVisibility);
++      window.removeEventListener("pointermove", onPointerMove);
++      prmQuery.removeEventListener("change", applyMotionMode);
++      io.disconnect();
++      revealIO.disconnect();
++      unsubscribeCurve();
++      engine?.destroy();
++      engineRef.current = null;
++    };
++  }, []);
++
++  const seek = useCallback((i) => {
++    window.scrollTo({
++      top: boundsRef.current[i] * scrollableRef.current + 2,
++      behavior: reducedRef.current ? "auto" : "smooth",
++    });
++  }, []);
++
++  const rulerSeek = useCallback((e) => {
++    if (e.target.closest("button")) return;
++    const rect = e.currentTarget.getBoundingClientRect();
++    const frac = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
++    window.scrollTo({
++      top: frac * scrollableRef.current,
++      behavior: reducedRef.current ? "auto" : "smooth",
++    });
++  }, []);
++
++  const setSection = (id) => (el) => {
++    sectionRefs.current[id] = el;
++  };
++
++  return (
++    <>
++      <a className="skip-link" href="#main">
++        Skip to content
++      </a>
++
++      {/* the stage */}
++      <div className="sky" aria-hidden="true" />
++      <div className="sky-dawn" aria-hidden="true" ref={dawnRef} />
++      <canvas className="stagecanvas" ref={canvasRef} aria-hidden="true" />
++      <Poster />
++      <div className="grain" aria-hidden="true" />
++      <div className="vignette" aria-hidden="true" />
++      <div className="playhead" aria-hidden="true" ref={playheadRef} />
++
++      {/* editor chrome */}
++      <header className="hud-top">
++        <span className="wordmark">
++          <span className="kf" aria-hidden="true">
++            ◆
++          </span>
++          Meridian
++        </span>
++        <div className="hud-meta">
++          <span className="hud-seq">Seq 001 · Launch</span>
++          <span className="hud-tc">
++            TC <b ref={tcRef}>00:00:00:00</b>
++          </span>
++        </div>
++      </header>
++
++      <main id="main">
++        {/* ACT 00 — FIRST LIGHT */}
++        <section id="overture" className="act act-overture" aria-labelledby="overture-h" ref={setSection("overture")}>
++          <div className="stage">
++            <div className="block reveal">
++              <p className="eyebrow">
++                Meridian <span className="stamp">· motion editor for the web</span>
++              </p>
++              <h1 className="headline" id="overture-h">
++                The web&rsquo;s <em>missing</em> timeline.
++              </h1>
++              <p className="lede">
++                Interface motion deserves what film has had for a century: a real timeline.{" "}
++                <strong>Meridian</strong> lets you sequence keyframes, sculpt easing, and ship the
++                exact CSS and Web Animations code you would have written by hand.
++              </p>
++              <p className="scrollhint">
++                <span className="kf" aria-hidden="true" />
++                Scroll to scrub the sequence
++              </p>
++            </div>
++          </div>
++        </section>
++
++        {/* ACT 01 — TRACKS */}
++        <section id="tracks" className="act act-tracks" aria-labelledby="tracks-h" ref={setSection("tracks")}>
++          <div className="stage">
++            <div className="block block--right reveal">
++              <p className="eyebrow">
++                Act 01 · Tracks <span className="stamp">tc 00:00:06:00</span>
++              </p>
++              <h2 className="headline" id="tracks-h">
++                Every element <em>on a track.</em>
++              </h2>
++              <p className="lede">
++                The dope sheet, rebuilt for the DOM. Stack elements into tracks, spread properties
++                into lanes, and cut springs, keyframes and gestures together the way editors cut
++                film. The playhead sweeping the field behind this card is the same one you&rsquo;ll
++                drive in Meridian.
++              </p>
++              <dl className="featrows">
++                <div className="featrow">
++                  <dt>Scrub</dt>
++                  <dd>
++                    <b>Frame-accurate playhead</b> — step by frame, snap to beats, audition in
++                    place.
++                  </dd>
++                </div>
++                <div className="featrow">
++                  <dt>Lanes</dt>
++                  <dd>
++                    <b>A lane per property</b> — transform, opacity, filter, custom properties.
++                  </dd>
++                </div>
++                <div className="featrow">
++                  <dt>Nesting</dt>
++                  <dd>
++                    <b>Sequences inside sequences</b> — compose scenes from reusable clips.
++                  </dd>
++                </div>
++              </dl>
++            </div>
++          </div>
++        </section>
++
++        {/* ACT 02 — EASE */}
++        <section id="ease" className="act act-ease" aria-labelledby="ease-h" ref={setSection("ease")}>
++          <div className="stage stage--split">
++            <div className="block reveal">
++              <p className="eyebrow">
++                Act 02 · Ease <span className="stamp">tc 00:00:12:00</span>
++              </p>
++              <h2 className="headline" id="ease-h">
++                Easing you can <em>hold.</em>
++              </h2>
++              <p className="lede">
++                Curves aren&rsquo;t numbers you guess — they&rsquo;re shapes you grab. Drag the
++                handles: the river of frames behind this card re-times instantly, and so does the
++                code you&rsquo;ll ship in the next act. The dim blue stream is linear time; the gold
++                one is yours.
++              </p>
++            </div>
++            <div className="reveal">
++              <CurveEditor reducedMotion={reduced} />
++            </div>
++          </div>
++        </section>
++
++        {/* ACT 03 — SHIP */}
++        <section id="ship" className="act act-ship" aria-labelledby="ship-h" ref={setSection("ship")}>
++          <div className="stage stage--split">
++            <div className="block reveal">
++              <p className="eyebrow">
++                Act 03 · Ship <span className="stamp">tc 00:00:18:00</span>
++              </p>
++              <h2 className="headline" id="ship-h">
++                Ship the code, <em>not a runtime.</em>
++              </h2>
++              <p className="lede">
++                Meridian compiles your timeline to plain CSS and the Web Animations API. No player,
++                no dependencies, no lock-in. The export beside this card is live — it&rsquo;s the
++                curve you just shaped, and its reduced-motion variant ships with it.
++              </p>
++            </div>
++            <div className="reveal">
++              <CodePanel />
++            </div>
++          </div>
++        </section>
++
++        {/* ACT 04 — ZENITH */}
++        <section id="zenith" className="act act-zenith" aria-labelledby="zenith-h" ref={setSection("zenith")}>
++          <div className="stage">
++            <div className="block block--center reveal">
++              <p className="eyebrow">
++                Act 04 · Zenith <span className="stamp">tc 00:00:24:00</span>
++              </p>
++              <h2 className="headline" id="zenith-h">
++                Cross the <em>meridian.</em>
++              </h2>
++              <p className="lede">
++                The private beta opens this autumn. Early seats go to teams shipping real interface
++                motion — bring a project, leave with a timeline.
++              </p>
++              <div className="cta-row">
++                <a className="btn-solar" href="mailto:hello@meridian.tools?subject=Early%20access">
++                  Request early access
++                </a>
++                <a className="link-quiet" href="mailto:hello@meridian.tools">
++                  hello@meridian.tools
++                </a>
++              </div>
++            </div>
++          </div>
++        </section>
++      </main>
++
++      {/* the master timeline */}
++      <nav className="hud-bottom" aria-label="Sequence timeline">
++        <div className="tl-ruler" ref={rulerRef} onPointerDown={rulerSeek}>
++          <div className="tl-fill" ref={fillRef} aria-hidden="true" />
++          <div className="tl-caret" ref={caretRef} aria-hidden="true" />
++          <div className="tl-marks">
++            {ACTS.map((a, i) => (
++              <button
++                key={a.id}
++                type="button"
++                className="tl-mark"
++                style={{ left: `${marks[i]}%` }}
++                aria-current={i === actIdx ? "true" : undefined}
++                onClick={() => seek(i)}
++              >
++                <span className="num">{a.num}</span>
++                <span className="lbl">{a.label}</span>
++              </button>
++            ))}
++          </div>
++        </div>
++      </nav>
++
++      <footer className="site-footer">
++        <div className="footer-inner">
++          <p className="colophon">
++            <b>Colophon.</b> Set in Newsreader, Instrument Sans and Fragment Mono. The field behind
++            this page is twelve thousand keyframe diamonds drawn in a single WebGL2 call, scrubbed
++            by your scrollbar. It rests when the tab is hidden, travels lighter on smaller
++            machines, and holds five still poses if you prefer reduced motion. Docs and changelog
++            arrive with the beta.
++          </p>
++          <p className="footer-meta">
++            Meridian Tools · MMXXVI
++            <br />
++            <a href="mailto:hello@meridian.tools">hello@meridian.tools</a>
++            <br />
++            <span>Private beta · Autumn 2026</span>
++          </p>
++        </div>
++      </footer>
++    </>
++  );
++}
++
++/* Static poster for machines without WebGL2 — the meridian arc, embroidered
++   in SVG diamonds. Same identity, zero GPU. */
++function Poster() {
++  const diamonds = [];
++  for (let i = 0; i < 72; i++) {
++    const t = i / 71;
++    const x = 4 + t * 92;
++    const nx = t * 2 - 1;
++    const y = 58 - 30 * (1 - nx * nx);
++    const s = 0.5 + (1 - Math.abs(nx)) * 0.9;
++    const o = 0.25 + (1 - Math.abs(nx)) * 0.75;
++    diamonds.push(
++      <rect
++        key={i}
++        x={-s / 2}
++        y={-s / 2}
++        width={s}
++        height={s}
++        fill={i % 9 === 0 ? "#efece3" : "#f5b845"}
++        opacity={o}
++        transform={`translate(${x} ${y}) rotate(45)`}
++      />
++    );
++  }
++  return (
++    <div className="poster" aria-hidden="true">
++      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
++        {diamonds}
++        <line x1="0" y1="58" x2="100" y2="58" stroke="#f5b845" strokeOpacity="0.25" strokeWidth="0.15" />
++      </svg>
++    </div>
++  );
++}
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..db00885 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -1,26 +1,711 @@
+ @import "tailwindcss";
+ 
++/* ————————————————————————————————————————————————
++   MERIDIAN — design tokens
++   A night sky crossing toward noon. Gold is the sun,
++   glass-blue is the instrument, paper is the voice.
++———————————————————————————————————————————————— */
+ :root {
+-  color-scheme: light dark;
+-  --background: #f5f5f3;
+-  --foreground: #161616;
+-  --muted: #6b6b66;
+-  --surface: #ffffff;
+-  --line: #deded8;
+-}
+-
+-@media (prefers-color-scheme: dark) {
+-  :root {
+-    --background: #111110;
+-    --foreground: #f5f5f2;
+-    --muted: #a0a099;
+-    --surface: #181817;
+-    --line: #31312f;
+-  }
++  color-scheme: dark;
++
++  --night-0: #05070f;
++  --night-1: #0a0f1e;
++  --night-2: #101731;
++
++  --paper: #efece3;
++  --muted: #a4a094;
++  --faint: #6d6a62;
++
++  --solar: #f5b845;
++  --solar-2: #d08a26;
++  --glass: #9cc5de;
++
++  --line: rgba(239, 236, 227, 0.14);
++  --line-soft: rgba(239, 236, 227, 0.07);
++
++  --font-display: var(--font-newsreader), "Iowan Old Style", Georgia, serif;
++  --font-body: var(--font-instrument), "Helvetica Neue", Arial, sans-serif;
++  --font-mono: var(--font-fragment), "SF Mono", "Cascadia Code", monospace;
++
++  --hud-x: clamp(1.1rem, 3.4vw, 2.4rem);
++}
++
++html {
++  background: var(--night-0);
++  color: var(--paper);
++  scrollbar-color: rgba(245, 184, 69, 0.4) rgba(10, 15, 30, 0.6);
++}
++
++@media (prefers-reduced-motion: no-preference) {
++  html { scroll-behavior: smooth; }
++}
++
++html, body { overflow-x: clip; }
++
++body {
++  margin: 0;
++  font-family: var(--font-body);
++  font-size: 1rem;
++  line-height: 1.6;
++  -webkit-font-smoothing: antialiased;
++  text-rendering: optimizeLegibility;
+ }
+ 
+-* { box-sizing: border-box; }
+-html { background: var(--background); color: var(--foreground); }
+-body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
++::selection { background: var(--solar); color: #171006; }
++
+ a { color: inherit; }
+ button, input { font: inherit; }
++
++:focus-visible {
++  outline: 2px solid var(--solar);
++  outline-offset: 3px;
++  border-radius: 4px;
++}
++
++.skip-link {
++  position: fixed;
++  top: 0.75rem;
++  left: 0.75rem;
++  z-index: 100;
++  padding: 0.6rem 1rem;
++  background: var(--night-1);
++  border: 1px solid var(--line);
++  border-radius: 999px;
++  font-family: var(--font-mono);
++  font-size: 0.72rem;
++  letter-spacing: 0.12em;
++  text-transform: uppercase;
++  text-decoration: none;
++  transform: translateY(-300%);
++}
++.skip-link:focus-visible { transform: none; }
++
++/* ————— Backdrop: the sky ————— */
++.sky, .sky-dawn, .grain, .vignette {
++  position: fixed;
++  inset: 0;
++  pointer-events: none;
++}
++.sky {
++  z-index: 0;
++  background:
++    radial-gradient(130% 85% at 50% 118%, #1d1a33 0%, rgba(29, 26, 51, 0) 60%),
++    radial-gradient(120% 75% at 50% -22%, #0d1631 0%, rgba(13, 22, 49, 0) 55%),
++    linear-gradient(180deg, var(--night-0) 0%, #070b18 100%);
++}
++.sky-dawn {
++  z-index: 0;
++  opacity: 0;
++  background:
++    radial-gradient(90% 55% at 50% 108%, rgba(245, 184, 69, 0.34) 0%, rgba(245, 184, 69, 0) 62%),
++    linear-gradient(180deg, rgba(10, 14, 34, 0) 34%, rgba(64, 32, 44, 0.5) 78%, rgba(146, 78, 33, 0.5) 100%);
++}
++.grain {
++  z-index: 3;
++  opacity: 0.05;
++  mix-blend-mode: overlay;
++  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
++  background-size: 220px 220px;
++}
++.vignette {
++  z-index: 3;
++  background: radial-gradient(125% 125% at 50% 46%, rgba(0, 0, 0, 0) 58%, rgba(0, 0, 0, 0.55) 100%);
++}
++
++.stagecanvas {
++  position: fixed;
++  inset: 0;
++  z-index: 1;
++  width: 100%;
++  height: 100%;
++  display: block;
++}
++
++/* Static poster if WebGL2 is unavailable */
++.poster {
++  position: fixed;
++  inset: 0;
++  z-index: 1;
++  display: none;
++  pointer-events: none;
++}
++.no-gl .poster { display: block; }
++.no-gl .stagecanvas { display: none; }
++.poster svg { width: 100%; height: 100%; }
++
++/* ————— Playhead hairline ————— */
++.playhead {
++  position: fixed;
++  top: 0;
++  left: 0;
++  z-index: 4;
++  width: 1px;
++  height: 100%;
++  pointer-events: none;
++  background: linear-gradient(180deg,
++    rgba(245, 184, 69, 0) 0%,
++    rgba(245, 184, 69, 0.42) 22%,
++    rgba(245, 184, 69, 0.42) 78%,
++    rgba(245, 184, 69, 0.9) 100%);
++  will-change: transform;
++}
++
++/* ————— HUD chrome ————— */
++.hud-top {
++  position: fixed;
++  top: 0;
++  left: 0;
++  right: 0;
++  z-index: 40;
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  gap: 1rem;
++  padding: 1.05rem var(--hud-x) 0.9rem;
++  font-family: var(--font-mono);
++  font-size: 0.68rem;
++  letter-spacing: 0.16em;
++  text-transform: uppercase;
++  color: var(--muted);
++  background: linear-gradient(180deg, rgba(5, 7, 15, 0.75), rgba(5, 7, 15, 0));
++}
++.wordmark {
++  display: inline-flex;
++  align-items: center;
++  gap: 0.55rem;
++  color: var(--paper);
++  font-size: 0.74rem;
++  letter-spacing: 0.34em;
++  text-decoration: none;
++}
++.wordmark .kf { color: var(--solar); }
++.hud-meta { display: flex; align-items: baseline; gap: 1.6rem; white-space: nowrap; }
++.hud-seq { color: var(--faint); }
++.hud-tc { color: var(--paper); font-variant-numeric: tabular-nums; }
++.hud-tc b { color: var(--solar); font-weight: 400; }
++
++.hud-bottom {
++  position: fixed;
++  left: 0;
++  right: 0;
++  bottom: 0;
++  z-index: 40;
++  padding: 2rem var(--hud-x) 0.9rem;
++  background: linear-gradient(0deg, rgba(5, 7, 15, 0.82), rgba(5, 7, 15, 0));
++}
++.tl-ruler {
++  position: relative;
++  height: 44px;
++  cursor: pointer;
++  border-top: 1px solid var(--line);
++  background:
++    repeating-linear-gradient(90deg, var(--line-soft) 0 1px, transparent 1px calc(100% / 48)),
++    repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px calc(100% / 12));
++  background-size: 100% 7px, 100% 13px;
++  background-repeat: no-repeat;
++}
++.tl-fill {
++  position: absolute;
++  top: -1px;
++  left: 0;
++  height: 2px;
++  width: 100%;
++  background: linear-gradient(90deg, var(--solar-2), var(--solar));
++  transform-origin: 0 50%;
++  transform: scaleX(0);
++  will-change: transform;
++}
++.tl-caret {
++  position: absolute;
++  top: -1px;
++  left: 0;
++  width: 11px;
++  height: 11px;
++  margin-left: -5.5px;
++  background: var(--solar);
++  clip-path: polygon(50% 100%, 0 0, 100% 0);
++  will-change: transform;
++}
++.tl-marks { position: absolute; inset: 0; }
++.tl-mark {
++  position: absolute;
++  top: 10px;
++  transform: translateX(-1px);
++  display: flex;
++  align-items: center;
++  gap: 0.5rem;
++  padding: 0.25rem 0.4rem 0.25rem 0;
++  background: none;
++  border: none;
++  cursor: pointer;
++  color: var(--faint);
++  font-family: var(--font-mono);
++  font-size: 0.62rem;
++  letter-spacing: 0.14em;
++  text-transform: uppercase;
++  white-space: nowrap;
++  transition: color 180ms ease;
++}
++.tl-mark::before {
++  content: "";
++  width: 7px;
++  height: 7px;
++  background: currentColor;
++  transform: rotate(45deg);
++  flex: none;
++}
++.tl-mark:hover { color: var(--paper); }
++.tl-mark[aria-current="true"] { color: var(--solar); }
++.tl-mark .lbl { opacity: 0.85; }
++@media (max-width: 720px) {
++  .tl-mark .lbl { display: none; }
++  .tl-ruler { height: 38px; }
++  .hud-seq { display: none; }
++}
++
++/* ————— Acts ————— */
++main { position: relative; z-index: 10; }
++
++.act { position: relative; }
++.act-overture { height: 172svh; }
++.act-tracks { height: 250svh; }
++.act-ease { height: 290svh; }
++.act-ship { height: 250svh; }
++.act-zenith { height: 165svh; }
++
++.stage {
++  position: sticky;
++  top: 0;
++  height: 100svh;
++  display: grid;
++  grid-template-columns: minmax(0, 1fr);
++  align-content: center;
++  padding: 6.5rem var(--hud-x) 7.5rem;
++  box-sizing: border-box;
++}
++
++.block {
++  max-width: min(36rem, 100%);
++  box-sizing: border-box;
++  padding: 2.2rem 2.4rem;
++  border-radius: 1.4rem;
++  background: radial-gradient(130% 130% at 50% 50%,
++    rgba(5, 7, 15, 0.78) 0%,
++    rgba(5, 7, 15, 0.52) 58%,
++    rgba(5, 7, 15, 0) 82%);
++}
++.block--right { justify-self: end; }
++.block--center { justify-self: center; text-align: center; }
++
++.eyebrow {
++  display: inline-flex;
++  align-items: center;
++  gap: 0.6rem;
++  margin: 0 0 1.1rem;
++  font-family: var(--font-mono);
++  font-size: 0.66rem;
++  letter-spacing: 0.24em;
++  text-transform: uppercase;
++  color: var(--muted);
++}
++.eyebrow::before {
++  content: "";
++  width: 7px;
++  height: 7px;
++  background: var(--solar);
++  transform: rotate(45deg);
++}
++.eyebrow .stamp { color: var(--faint); }
++
++.headline {
++  margin: 0 0 1.2rem;
++  font-family: var(--font-display);
++  font-style: italic;
++  font-weight: 420;
++  letter-spacing: -0.015em;
++  line-height: 1.02;
++  text-wrap: balance;
++  color: var(--paper);
++}
++h1.headline { font-size: clamp(3rem, 8.2vw, 6.6rem); margin-bottom: 1.5rem; }
++h2.headline { font-size: clamp(2.3rem, 5.2vw, 4.3rem); }
++.headline em {
++  font-style: normal;
++  color: var(--solar);
++}
++
++.lede {
++  margin: 0;
++  max-width: 33rem;
++  font-size: clamp(1rem, 1.35vw, 1.14rem);
++  line-height: 1.65;
++  color: var(--muted);
++}
++.lede strong { color: var(--paper); font-weight: 500; }
++.block--center .lede { margin-inline: auto; }
++
++.featrows { margin: 1.8rem 0 0; }
++.featrow {
++  display: grid;
++  grid-template-columns: 7.5rem 1fr;
++  gap: 1rem;
++  padding: 0.85rem 0;
++  border-top: 1px solid var(--line-soft);
++}
++.featrow dt {
++  font-family: var(--font-mono);
++  font-size: 0.64rem;
++  letter-spacing: 0.16em;
++  text-transform: uppercase;
++  color: var(--solar);
++  padding-top: 0.22rem;
++}
++.featrow dd { margin: 0; color: var(--muted); font-size: 0.95rem; }
++.featrow dd b { color: var(--paper); font-weight: 500; }
++
++.scrollhint {
++  display: inline-flex;
++  align-items: center;
++  gap: 0.7rem;
++  margin-top: 2.6rem;
++  font-family: var(--font-mono);
++  font-size: 0.68rem;
++  letter-spacing: 0.2em;
++  text-transform: uppercase;
++  color: var(--faint);
++}
++.scrollhint .kf {
++  width: 8px;
++  height: 8px;
++  background: var(--solar);
++  transform: rotate(45deg);
++}
++@media (prefers-reduced-motion: no-preference) {
++  .scrollhint .kf { animation: hint-drop 2.1s cubic-bezier(0.34, 1.4, 0.24, 1) infinite; }
++  @keyframes hint-drop {
++    0%, 100% { translate: 0 -4px; opacity: 1; }
++    50% { translate: 0 5px; opacity: 0.45; }
++  }
++}
++
++/* ————— Split stages (editor / code) ————— */
++.stage--split {
++  display: grid;
++  grid-template-columns: minmax(0, 30rem) minmax(0, 34rem);
++  justify-content: space-between;
++  align-items: center;
++  gap: 2.5rem;
++}
++@media (max-width: 980px) {
++  /* mobile recipe: the split stages un-stick and flow, so the editor and
++     code panel are never height-locked against the viewport */
++  .stage--split {
++    position: static;
++    height: auto;
++    min-height: 100svh;
++    grid-template-columns: minmax(0, 1fr);
++    align-content: start;
++    gap: 1.6rem;
++    padding-top: 5.6rem;
++    padding-bottom: 7.5rem;
++  }
++  .stage--split .block { padding: 1.4rem 1.6rem; }
++  .curve-editor { max-width: 100%; justify-self: stretch; }
++}
++
++/* ————— Curve editor ————— */
++.curve-editor {
++  position: relative;
++  width: 100%;
++  /* never taller than the stage: plot height ≈ width × 300/260 + chrome */
++  max-width: min(26rem, max(15rem, calc((100svh - 27.5rem) * 0.86)));
++  justify-self: end;
++  padding: 1.3rem;
++  border: 1px solid var(--line);
++  border-radius: 1.2rem;
++  background: rgba(7, 10, 21, 0.82);
++}
++.ce-head {
++  display: flex;
++  justify-content: space-between;
++  align-items: baseline;
++  flex-wrap: wrap;
++  gap: 0.3rem 1rem;
++  margin-bottom: 0.8rem;
++  font-family: var(--font-mono);
++  font-size: 0.64rem;
++  letter-spacing: 0.18em;
++  text-transform: uppercase;
++  color: var(--faint);
++}
++.ce-plot { position: relative; touch-action: none; }
++.ce-plot svg { display: block; width: 100%; height: auto; }
++.ce-grid { stroke: var(--line-soft); stroke-width: 1; }
++.ce-frame { stroke: var(--line); stroke-width: 1; fill: none; }
++.ce-linear { stroke: rgba(156, 197, 222, 0.35); stroke-width: 1; stroke-dasharray: 3 5; }
++.ce-arm { stroke: rgba(239, 236, 227, 0.35); stroke-width: 1; }
++.ce-path { stroke: var(--solar); stroke-width: 2.5; fill: none; stroke-linecap: round; }
++.ce-end { fill: var(--paper); }
++.ce-handle {
++  position: absolute;
++  width: 44px;
++  height: 44px;
++  margin: -22px 0 0 -22px;
++  padding: 0;
++  background: none;
++  border: none;
++  cursor: grab;
++  touch-action: none;
++}
++.ce-handle:active { cursor: grabbing; }
++.ce-handle::after {
++  content: "";
++  position: absolute;
++  inset: 50%;
++  width: 13px;
++  height: 13px;
++  margin: -6.5px 0 0 -6.5px;
++  background: var(--night-0);
++  border: 2px solid var(--glass);
++  transform: rotate(45deg);
++  transition: background 150ms ease, scale 150ms ease;
++}
++.ce-handle:hover::after, .ce-handle:focus-visible::after { background: var(--glass); scale: 1.15; }
++.ce-readout {
++  display: block;
++  font-family: var(--font-mono);
++  font-size: 0.72rem;
++  letter-spacing: 0;
++  text-transform: none;
++  color: var(--glass);
++  font-variant-numeric: tabular-nums;
++}
++.ce-actions {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  flex-wrap: wrap;
++  gap: 0.6rem;
++  margin-top: 0.9rem;
++}
++.ce-presets { display: flex; flex-wrap: wrap; gap: 0.5rem; }
++.ce-chip {
++  padding: 0.42rem 0.85rem;
++  border: 1px solid var(--line);
++  border-radius: 999px;
++  background: none;
++  color: var(--muted);
++  font-family: var(--font-mono);
++  font-size: 0.62rem;
++  letter-spacing: 0.14em;
++  text-transform: uppercase;
++  cursor: pointer;
++  transition: color 150ms ease, border-color 150ms ease;
++}
++.ce-chip:hover { color: var(--paper); border-color: var(--paper); }
++.ce-chip[aria-pressed="true"] { color: #171006; background: var(--solar); border-color: var(--solar); }
++
++.ce-track {
++  position: relative;
++  height: 34px;
++  margin-top: 1.1rem;
++  border-top: 1px solid var(--line-soft);
++  padding-top: 12px;
++}
++.ce-ghost {
++  position: absolute;
++  top: 18px;
++  width: 7px;
++  height: 7px;
++  margin-left: -3.5px;
++  background: var(--faint);
++  opacity: 0.5;
++  transform: rotate(45deg);
++}
++.ce-dot {
++  position: absolute;
++  top: 14px;
++  left: 0;
++  width: 15px;
++  height: 15px;
++  margin-left: -7.5px;
++  background: var(--solar);
++  transform: rotate(45deg);
++  box-shadow: 0 0 18px rgba(245, 184, 69, 0.7);
++}
++.ce-play {
++  padding: 0.5rem 1.1rem;
++  border: 1px solid var(--solar);
++  border-radius: 999px;
++  background: none;
++  color: var(--solar);
++  font-family: var(--font-mono);
++  font-size: 0.64rem;
++  letter-spacing: 0.18em;
++  text-transform: uppercase;
++  cursor: pointer;
++  transition: background 150ms ease, color 150ms ease;
++}
++.ce-play:hover { background: var(--solar); color: #171006; }
++.ce-note {
++  margin: 0.7rem 0 0;
++  font-size: 0.72rem;
++  color: var(--faint);
++}
++
++/* ————— Code panel ————— */
++.code-panel {
++  border: 1px solid var(--line);
++  border-radius: 1.2rem;
++  background: rgba(7, 10, 21, 0.85);
++  overflow: hidden;
++}
++.cp-head {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  gap: 1rem;
++  padding: 0.8rem 1.2rem;
++  border-bottom: 1px solid var(--line-soft);
++  font-family: var(--font-mono);
++  font-size: 0.64rem;
++  letter-spacing: 0.18em;
++  text-transform: uppercase;
++  color: var(--faint);
++}
++.cp-copy {
++  padding: 0.4rem 0.9rem;
++  border: 1px solid var(--line);
++  border-radius: 999px;
++  background: none;
++  color: var(--muted);
++  font-family: var(--font-mono);
++  font-size: 0.62rem;
++  letter-spacing: 0.14em;
++  text-transform: uppercase;
++  cursor: pointer;
++  transition: color 150ms ease, border-color 150ms ease;
++}
++.cp-copy:hover { color: var(--solar); border-color: var(--solar); }
++.cp-copy[data-copied="true"] { color: #171006; background: var(--solar); border-color: var(--solar); }
++.code-panel pre {
++  margin: 0;
++  padding: 1.3rem 1.4rem 1.5rem;
++  overflow-x: auto;
++  font-family: var(--font-mono);
++  font-size: 0.78rem;
++  line-height: 1.75;
++  color: var(--muted);
++}
++.tok-c { color: var(--faint); }
++.tok-sel { color: var(--glass); }
++.tok-prop { color: var(--paper); }
++.tok-val { color: var(--solar); font-variant-numeric: tabular-nums; }
++.tok-kw { color: #d8a0e8; }
++
++/* ————— CTA / buttons ————— */
++.btn-solar {
++  display: inline-block;
++  padding: 0.95rem 1.9rem;
++  border: none;
++  border-radius: 999px;
++  background: linear-gradient(180deg, #ffd069, var(--solar) 55%, #e29a2d);
++  color: #171006;
++  font-family: var(--font-body);
++  font-weight: 600;
++  font-size: 1rem;
++  letter-spacing: 0.01em;
++  text-decoration: none;
++  cursor: pointer;
++  box-shadow: 0 0 40px rgba(245, 184, 69, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.4);
++  transition: transform 180ms cubic-bezier(0.34, 1.4, 0.24, 1), box-shadow 180ms ease;
++}
++.btn-solar:hover { box-shadow: 0 0 60px rgba(245, 184, 69, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4); }
++@media (prefers-reduced-motion: no-preference) {
++  .btn-solar:hover { transform: translateY(-2px); }
++  .btn-solar:active { transform: translateY(0); }
++}
++.cta-row {
++  display: flex;
++  flex-wrap: wrap;
++  align-items: center;
++  justify-content: center;
++  gap: 1.4rem;
++  margin-top: 2.4rem;
++}
++.link-quiet {
++  font-family: var(--font-mono);
++  font-size: 0.78rem;
++  letter-spacing: 0.06em;
++  color: var(--muted);
++  text-decoration: none;
++  border-bottom: 1px solid var(--line);
++  padding-bottom: 2px;
++  transition: color 150ms ease, border-color 150ms ease;
++}
++.link-quiet:hover { color: var(--solar); border-color: var(--solar); }
++
++/* ————— Footer ————— */
++.site-footer {
++  position: relative;
++  z-index: 20;
++  background: linear-gradient(180deg, rgba(5, 7, 15, 0) 0%, var(--night-0) 8rem);
++  padding: 10rem var(--hud-x) 7rem;
++}
++.footer-inner {
++  max-width: 62rem;
++  margin: 0 auto;
++  border-top: 1px solid var(--line);
++  padding-top: 2.6rem;
++  display: grid;
++  grid-template-columns: 1fr auto;
++  gap: 2rem;
++  align-items: start;
++}
++.footer-inner p { margin: 0; }
++.colophon {
++  max-width: 34rem;
++  font-size: 0.82rem;
++  line-height: 1.7;
++  color: var(--faint);
++}
++.colophon b { color: var(--muted); font-weight: 500; }
++.footer-meta {
++  text-align: right;
++  font-family: var(--font-mono);
++  font-size: 0.68rem;
++  letter-spacing: 0.14em;
++  text-transform: uppercase;
++  color: var(--faint);
++  line-height: 2.1;
++}
++.footer-meta a { text-decoration: none; }
++.footer-meta a:hover { color: var(--solar); }
++@media (max-width: 720px) {
++  .footer-inner { grid-template-columns: 1fr; }
++  .footer-meta { text-align: left; }
++}
++
++/* ————— Reveals (motion only when welcome) ————— */
++@media (prefers-reduced-motion: no-preference) {
++  .js .reveal {
++    opacity: 0;
++    translate: 0 16px;
++    transition: opacity 700ms ease, translate 700ms cubic-bezier(0.22, 1, 0.36, 1);
++  }
++  .js .reveal.in { opacity: 1; translate: 0 0; }
++}
++
++/* ————— Reduced motion: the calm edition ————— */
++@media (prefers-reduced-motion: reduce) {
++  .tl-fill, .tl-caret, .playhead { transition: none; }
++  .ce-dot { box-shadow: none; }
++}
++
++@media (max-width: 720px) {
++  .block { padding: 1.5rem 1.4rem; }
++  .stage { padding: 5.2rem 1.1rem 6.4rem; }
++  .featrow { grid-template-columns: 1fr; gap: 0.2rem; }
++  h1.headline { font-size: clamp(2.6rem, 11.5vw, 3.6rem); }
++  h2.headline { font-size: clamp(1.9rem, 8vw, 2.6rem); }
++}
+diff --git a/app/layout.jsx b/app/layout.jsx
+index 35fc217..60f9487 100644
+--- a/app/layout.jsx
++++ b/app/layout.jsx
+@@ -1,13 +1,45 @@
+ import "./globals.css";
++import { Newsreader, Instrument_Sans, Fragment_Mono } from "next/font/google";
++
++const newsreader = Newsreader({
++  subsets: ["latin"],
++  style: ["normal", "italic"],
++  variable: "--font-newsreader",
++  display: "swap",
++});
++
++const instrument = Instrument_Sans({
++  subsets: ["latin"],
++  variable: "--font-instrument",
++  display: "swap",
++});
++
++const fragment = Fragment_Mono({
++  subsets: ["latin"],
++  weight: "400",
++  variable: "--font-fragment",
++  display: "swap",
++});
+ 
+ export const metadata = {
+-  title: "Meridian",
+-  description: "Meridian is a timeline-based motion editor for the web. Design animation visually, ship production code.",
++  title: "Meridian — the web's missing timeline",
++  description:
++    "Meridian is a timeline-based motion editor for the web. Sequence keyframes, sculpt easing you can hold, and ship the exact CSS and Web Animations code you'd have written by hand.",
++  openGraph: {
++    title: "Meridian — the web's missing timeline",
++    description:
++      "Design animation visually, ship production code. A timeline-based motion editor for the web.",
++    type: "website",
++  },
++};
++
++export const viewport = {
++  themeColor: "#05070f",
+ };
+ 
+ export default function RootLayout({ children }) {
+   return (
+-    <html lang="en">
++    <html lang="en" className={`${newsreader.variable} ${instrument.variable} ${fragment.variable}`}>
+       <body>{children}</body>
+     </html>
+   );
+diff --git a/app/page.jsx b/app/page.jsx
+index 6f15aef..46d62dc 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -1,31 +1,5 @@
+-export default function Home() {
+-  return (
+-    <main className="mx-auto max-w-3xl space-y-16 px-6 py-24">
+-      <section className="space-y-4">
+-        <h1 className="text-4xl font-semibold">Meridian</h1>
+-        <p className="text-lg text-[var(--muted)]">
+-          A timeline-based motion editor for the web. Design animation visually, ship production code.
+-        </p>
+-        <a
+-          className="inline-block rounded-md bg-[var(--foreground)] px-4 py-2 text-[var(--background)]"
+-          href="#get-access"
+-        >
+-          Get early access
+-        </a>
+-      </section>
+-
+-      <section className="space-y-6">
+-        <h2 className="text-2xl font-semibold">What it does</h2>
+-        <ul className="space-y-4 text-[var(--muted)]">
+-          <li>Visual timeline editing for springs, keyframes, and gesture-driven motion.</li>
+-          <li>One-click export to production JavaScript and CSS with no runtime lock-in.</li>
+-          <li>Live preview across breakpoints, with reduced-motion variants built in.</li>
+-        </ul>
+-      </section>
++import Experience from "./experience";
+ 
+-      <footer className="border-t border-[var(--line)] pt-8 text-sm text-[var(--muted)]" id="get-access">
+-        <p>Meridian is in private beta. hello@meridian.tools</p>
+-      </footer>
+-    </main>
+-  );
++export default function Home() {
++  return <Experience />;
+ }
+diff --git a/lib/curve.js b/lib/curve.js
+new file mode 100644
+index 0000000..aeda7b9
+--- /dev/null
++++ b/lib/curve.js
+@@ -0,0 +1,71 @@
++/*
++ * The one curve that runs the whole page.
++ * Edited in the Act 02 editor, rendered by the WebGL river,
++ * and compiled into the Act 03 export. A tiny external store so
++ * React components and the engine can all subscribe.
++ */
++
++let state = { x1: 0.34, y1: 1.4, x2: 0.24, y2: 1 };
++const subs = new Set();
++
++export const PRESETS = [
++  { id: "linear", label: "Linear", v: { x1: 0.333, y1: 0.333, x2: 0.667, y2: 0.667 } },
++  { id: "glide", label: "Glide", v: { x1: 0.16, y1: 1, x2: 0.3, y2: 1 } },
++  { id: "snap", label: "Snap", v: { x1: 0.9, y1: 0, x2: 0.1, y2: 1 } },
++  { id: "meridian", label: "Meridian", v: { x1: 0.34, y1: 1.4, x2: 0.24, y2: 1 } },
++];
++
++export const curveStore = {
++  get: () => state,
++  set(next) {
++    state = {
++      x1: clamp(next.x1, 0, 1),
++      y1: clamp(next.y1, -0.6, 1.7),
++      x2: clamp(next.x2, 0, 1),
++      y2: clamp(next.y2, -0.6, 1.7),
++    };
++    subs.forEach((fn) => fn(state));
++  },
++  subscribe(fn) {
++    subs.add(fn);
++    return () => subs.delete(fn);
++  },
++};
++
++function clamp(v, lo, hi) {
++  return Math.min(hi, Math.max(lo, Number.isFinite(v) ? v : lo));
++}
++
++export function fmt(v) {
++  const r = Math.round(v * 100) / 100;
++  return String(r);
++}
++
++export function cssBezier(c) {
++  return `cubic-bezier(${fmt(c.x1)}, ${fmt(c.y1)}, ${fmt(c.x2)}, ${fmt(c.y2)})`;
++}
++
++/* Solve progress = Y(t) where X(t) = x, like the CSS engine does. */
++export function easeAt(x, c) {
++  if (x <= 0) return 0;
++  if (x >= 1) return 1;
++  let t = x;
++  for (let i = 0; i < 8; i++) {
++    const cx = bez(t, c.x1, c.x2) - x;
++    const dx = bezD(t, c.x1, c.x2);
++    if (Math.abs(cx) < 1e-5) break;
++    if (Math.abs(dx) < 1e-6) break;
++    t -= cx / dx;
++    t = Math.min(1, Math.max(0, t));
++  }
++  return bez(t, c.y1, c.y2);
++}
++
++function bez(t, p1, p2) {
++  const it = 1 - t;
++  return 3 * it * it * t * p1 + 3 * it * t * t * p2 + t * t * t;
++}
++function bezD(t, p1, p2) {
++  const it = 1 - t;
++  return 3 * it * it * p1 + 6 * it * t * (p2 - p1) + 3 * t * t * (1 - p2);
++}
+diff --git a/lib/engine.js b/lib/engine.js
+new file mode 100644
+index 0000000..2573485
+--- /dev/null
++++ b/lib/engine.js
+@@ -0,0 +1,475 @@
++/*
++ * Meridian field engine — raw WebGL2, no dependencies.
++ *
++ * One instanced draw call renders N "keyframe diamonds". Every formation the
++ * field can take (hero arc, dope sheet, easing river, compiled grid, zenith
++ * line) is computed procedurally in the vertex shader from per-instance
++ * seeds, and blended by act weights derived from a single master-timeline
++ * uniform (uScroll). CPU cost per frame is a handful of uniform uploads.
++ */
++
++const VERT = `#version 300 es
++precision highp float;
++
++layout(location = 0) in vec4 aSeed;   // r0..r3 in [0,1)
++layout(location = 1) in vec4 aSeed2;  // r4..r7 in [0,1)
++
++uniform vec2  uRes;       // drawing buffer px
++uniform float uAspect;    // w/h
++uniform float uTime;      // seconds
++uniform float uScroll;    // master timeline, 0..1 (smoothed)
++uniform float uBounds[5]; // act start fractions b0..b4
++uniform vec4  uCurve;     // x1,y1,x2,y2
++uniform vec4  uPointer;   // world x, world y, strength, _
++uniform float uFlow;      // 1 = live, 0 = frozen (reduced motion poster)
++uniform float uSizePx;    // base diamond size in device px
++
++out vec3  vColor;
++out float vAlpha;
++out float vGlow;
++out vec2  vCorner;
++
++const vec3 SOLAR   = vec3(0.961, 0.722, 0.271);
++const vec3 SOLAR2  = vec3(0.816, 0.541, 0.149);
++const vec3 PAPER   = vec3(0.937, 0.925, 0.890);
++const vec3 GLASS   = vec3(0.612, 0.773, 0.871);
++const vec3 DUSK    = vec3(0.384, 0.447, 0.596);
++
++float bez1(float t, float p1, float p2) {
++  float it = 1.0 - t;
++  return 3.0*it*it*t*p1 + 3.0*it*t*t*p2 + t*t*t;
++}
++float bezD(float t, float p1, float p2) {
++  float it = 1.0 - t;
++  return 3.0*it*it*p1 + 6.0*it*t*(p2 - p1) + 3.0*t*t*(1.0 - p2);
++}
++float win(float s, float a, float b, float f) {
++  return smoothstep(a - f, a + f, s) * (1.0 - smoothstep(b - f, b + f, s));
++}
++
++void main() {
++  float A = uAspect;
++  float s = uScroll;
++  float F = 0.035; // act crossfade feather
++
++  // ——— act weights ———
++  float w0 = 1.0 - smoothstep(uBounds[1] - F, uBounds[1] + F, s);
++  float w1 = win(s, uBounds[1], uBounds[2], F);
++  float w2 = win(s, uBounds[2], uBounds[3], F);
++  float w3 = win(s, uBounds[3], uBounds[4], F);
++  float w4 = smoothstep(uBounds[4] - F, uBounds[4] + F, s);
++
++  vec2  pos   = vec2(0.0);
++  vec3  col   = vec3(0.0);
++  float alpha = 0.0;
++  float size  = 0.0;
++  float tFroze = uTime * uFlow;
++
++  // ——— F0 · first light: dust + a sun arc ———
++  if (w0 > 0.001) {
++    bool onArc = aSeed.w < 0.42;
++    vec2 p;
++    float a0;
++    vec3 c0;
++    if (onArc) {
++      float x = mix(-A, A, aSeed.x);
++      float nx = x / A;
++      p = vec2(x, 0.02 + 0.52 * (1.0 - nx * nx) - 0.3);
++      p.y += (aSeed.y - 0.5) * 0.055;
++      float peak = 1.0 - abs(nx);
++      a0 = 0.25 + 0.85 * peak * peak;
++      c0 = mix(SOLAR2, SOLAR, peak);
++      if (aSeed2.x > 0.92) c0 = PAPER;
++    } else {
++      p = vec2(mix(-A, A, aSeed.x), mix(-1.05, 1.05, aSeed.y));
++      a0 = 0.05 + 0.14 * aSeed2.y;
++      c0 = mix(DUSK, GLASS, aSeed2.x);
++    }
++    p += 0.018 * vec2(sin(tFroze * 0.24 + aSeed.z * 6.283), cos(tFroze * 0.19 + aSeed.y * 6.283));
++    pos += w0 * p; col += w0 * c0; alpha += w0 * a0;
++    size += w0 * (onArc ? 1.05 : 0.6);
++  }
++
++  // ——— F1 · the dope sheet: seven tracks, a sweeping playhead ———
++  if (w1 > 0.001) {
++    float row = floor(aSeed.x * 7.0);
++    float x = mix(-0.92 * A, 0.92 * A, aSeed.y);
++    if (aSeed2.x < 0.55) {
++      x = ((floor(aSeed.y * 24.0) + 0.5) / 24.0) * 1.84 * A - 0.92 * A; // beat-quantised keys
++    }
++    float y = 0.62 - row * 0.205;
++    y += sin(tFroze * 0.5 + aSeed.z * 6.283) * 0.008;
++
++    float lp = clamp((s - uBounds[1]) / max(uBounds[2] - uBounds[1], 1e-4), 0.0, 1.0);
++    float ph = mix(-0.92 * A, 0.92 * A, lp);
++    float flash = exp(-abs(x - ph) * (9.0 / max(A, 1.0))) * 1.5;
++    float lit = (1.0 - step(ph, x)) * 0.4;
++
++    float a1 = 0.16 + lit + flash;
++    vec3 c1 = mix(mix(DUSK, PAPER, 0.35), SOLAR, clamp(lit * 1.6 + flash, 0.0, 1.0));
++    pos += w1 * vec2(x, y); col += w1 * c1; alpha += w1 * a1;
++    size += w1 * (1.15 + flash * 0.9);
++  }
++
++  // ——— F2 · the easing river: your curve, made of light ———
++  if (w2 > 0.001) {
++    float u = fract(aSeed.x + tFroze * (0.02 + 0.045 * aSeed.y));
++    bool ghost = aSeed2.y > 0.86; // linear reference stream
++    float gx = ghost ? u : bez1(u, uCurve.x, uCurve.z);
++    float gy = ghost ? u : bez1(u, uCurve.y, uCurve.w);
++    vec2 p = vec2(mix(-0.98 * A, 0.98 * A, gx), mix(-0.62, 0.42, gy));
++
++    vec2 d = vec2(bezD(u, uCurve.x, uCurve.z), bezD(u, uCurve.y, uCurve.w));
++    float speed = ghost ? 1.0 : length(d);
++    vec2 n = normalize(vec2(-d.y, d.x) + 1e-4);
++    p += (ghost ? vec2(0.0, 1.0) : n) * (aSeed.z - 0.5) * (ghost ? 0.02 : 0.085);
++
++    float a2 = ghost ? 0.14 : (0.10 + 0.42 * clamp(speed * 0.55, 0.0, 1.4));
++    vec3 c2 = ghost ? GLASS : mix(SOLAR2, mix(SOLAR, PAPER, 0.45), clamp(speed * 0.4, 0.0, 1.0));
++    pos += w2 * p; col += w2 * c2; alpha += w2 * a2;
++    size += w2 * (ghost ? 0.55 : 0.95);
++  }
++
++  // ——— F3 · compile: the field quantises into a code grid ———
++  if (w3 > 0.001) {
++    float gx = (floor(aSeed.x * 64.0) + 0.5) / 64.0;
++    float gy = (floor(aSeed.y * 36.0) + 0.5) / 36.0;
++    vec2 p = vec2(mix(-0.96 * A, 0.96 * A, gx), mix(-0.78, 0.78, gy));
++    float scan = smoothstep(0.94, 1.0, fract(gy * 1.0 - tFroze * 0.05));
++    float a3 = 0.07 + 0.30 * scan + 0.10 * step(0.94, aSeed2.z);
++    vec3 c3 = mix(mix(DUSK, GLASS, 0.6), PAPER, scan);
++    pos += w3 * p; col += w3 * c3; alpha += w3 * a3;
++    size += w3 * 0.5;
++  }
++
++  // ——— F4 · zenith: everything converges on the meridian ———
++  if (w4 > 0.001) {
++    float t = aSeed.x * 2.0 - 1.0;
++    float x = sign(t) * pow(abs(t), 1.4) * A;
++    float yy = aSeed.y - 0.5;
++    float yLine = sign(yy) * pow(abs(yy * 2.0), 3.0) * 0.42;
++    yLine += sin(tFroze * 0.6 + aSeed.z * 6.283) * 0.006;
++    float core = exp(-abs(yLine) * 7.0) * exp(-abs(x) / A * 1.15);
++    float y = yLine - 0.28; // ride below the CTA, above the timeline bar
++    float a4 = 0.08 + core * 1.25;
++    vec3 c4 = mix(SOLAR2, mix(SOLAR, PAPER, core), core);
++    pos += w4 * vec2(x, y); col += w4 * c4; alpha += w4 * a4;
++    size += w4 * (0.8 + core * 0.9);
++  }
++
++  // ——— pointer ripple ———
++  vec2 pd = pos - uPointer.xy;
++  float push = exp(-dot(pd, pd) * 9.0) * 0.11 * uPointer.z;
++  pos += normalize(pd + 1e-4) * push;
++
++  // ——— twinkle ———
++  alpha *= 0.78 + 0.24 * sin(uTime * (0.5 + aSeed2.w * 1.6) + aSeed.x * 40.0);
++
++  float px = uSizePx * (0.55 + aSeed2.z * 0.95) * size;
++  vec2 corner = vec2(float(gl_VertexID & 1), float((gl_VertexID >> 1) & 1)) * 2.0 - 1.0;
++  vCorner = corner;
++  vColor = col;
++  vAlpha = clamp(alpha, 0.0, 1.6);
++  vGlow = clamp(px / max(uSizePx, 1.0) - 0.3, 0.2, 1.4);
++
++  vec2 clip = vec2(pos.x / A, pos.y);
++  clip += corner * (px * 2.0) / uRes;
++  gl_Position = vec4(clip, 0.0, 1.0);
++}`;
++
++const FRAG = `#version 300 es
++precision mediump float;
++
++in vec3  vColor;
++in float vAlpha;
++in float vGlow;
++in vec2  vCorner;
++out vec4 outColor;
++
++void main() {
++  float d = abs(vCorner.x) + abs(vCorner.y);
++  float core = 1.0 - smoothstep(0.5, 1.0, d);
++  float glow = exp(-d * 1.9) * 0.55;
++  float a = (core + glow * vGlow) * vAlpha;
++  // tiny dither to avoid banding in the glow
++  a += (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) / 255.0;
++  outColor = vec4(vColor * a, a);
++}`;
++
++function mulberry32(seed) {
++  return function () {
++    seed |= 0;
++    seed = (seed + 0x6d2b79f5) | 0;
++    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
++    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
++    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
++  };
++}
++
++export function supportsWebGL2() {
++  try {
++    const c = document.createElement("canvas");
++    return !!c.getContext("webgl2");
++  } catch {
++    return false;
++  }
++}
++
++export class Field {
++  constructor(canvas, opts = {}) {
++    this.canvas = canvas;
++    this.count = opts.count ?? 12000;
++    this.dprCap = opts.dprCap ?? 2;
++    this.sizeBase = opts.sizePx ?? 3.1;
++
++    this.gl = null;
++    this.program = null;
++    this.vao = null;
++    this.uni = {};
++
++    this.targetScroll = 0;
++    this.scroll = 0;
++    this.bounds = new Float32Array([0, 0.2, 0.4, 0.6, 0.8]);
++    this.curve = new Float32Array([0.34, 1.4, 0.24, 1]);
++    this.pointer = { x: 0, y: 0, tx: 0, ty: 0, strength: 0 };
++
++    this.mode = "flow"; // "flow" | "static"
++    this.running = false;
++    this.raf = 0;
++    this.lastT = 0;
++    this.staticTime = 40; // frozen clock for the reduced-motion poster
++    this.staticAct = -1;
++
++    // adaptive quality
++    this.ema = 16;
++    this.frames = 0;
++    this.qualityStep = 0;
++
++    this._loop = this._loop.bind(this);
++    this._onContextLost = this._onContextLost.bind(this);
++    this._onContextRestored = this._onContextRestored.bind(this);
++    this.onContextLost = opts.onContextLost || null;
++  }
++
++  init() {
++    const gl = this.canvas.getContext("webgl2", {
++      alpha: true,
++      antialias: false,
++      depth: false,
++      stencil: false,
++      premultipliedAlpha: true,
++      powerPreference: "high-performance",
++    });
++    if (!gl) return false;
++    this.gl = gl;
++
++    const compile = (type, src) => {
++      const sh = gl.createShader(type);
++      gl.shaderSource(sh, src);
++      gl.compileShader(sh);
++      if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
++        console.error("[meridian] shader:", gl.getShaderInfoLog(sh));
++        return null;
++      }
++      return sh;
++    };
++    const vs = compile(gl.VERTEX_SHADER, VERT);
++    const fs = compile(gl.FRAGMENT_SHADER, FRAG);
++    if (!vs || !fs) return false;
++
++    const prog = gl.createProgram();
++    gl.attachShader(prog, vs);
++    gl.attachShader(prog, fs);
++    gl.linkProgram(prog);
++    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
++      console.error("[meridian] link:", gl.getProgramInfoLog(prog));
++      return false;
++    }
++    this.program = prog;
++
++    for (const name of ["uRes", "uAspect", "uTime", "uScroll", "uCurve", "uPointer", "uFlow", "uSizePx"]) {
++      this.uni[name] = gl.getUniformLocation(prog, name);
++    }
++    this.uni.uBounds = gl.getUniformLocation(prog, "uBounds[0]");
++
++    // per-instance seeds — deterministic so reloads look identical
++    const rand = mulberry32(19260817);
++    const seeds = new Float32Array(this.count * 8);
++    for (let i = 0; i < seeds.length; i++) seeds[i] = rand();
++
++    const vao = gl.createVertexArray();
++    gl.bindVertexArray(vao);
++    const buf = gl.createBuffer();
++    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
++    gl.bufferData(gl.ARRAY_BUFFER, seeds, gl.STATIC_DRAW);
++    gl.enableVertexAttribArray(0);
++    gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 32, 0);
++    gl.vertexAttribDivisor(0, 1);
++    gl.enableVertexAttribArray(1);
++    gl.vertexAttribPointer(1, 4, gl.FLOAT, false, 32, 16);
++    gl.vertexAttribDivisor(1, 1);
++    gl.bindVertexArray(null);
++    this.vao = vao;
++
++    gl.disable(gl.DEPTH_TEST);
++    gl.enable(gl.BLEND);
++    gl.blendFunc(gl.ONE, gl.ONE); // additive light
++
++    this.canvas.addEventListener("webglcontextlost", this._onContextLost, false);
++    this.canvas.addEventListener("webglcontextrestored", this._onContextRestored, false);
++
++    this.resize();
++    return true;
++  }
++
++  _onContextLost(e) {
++    e.preventDefault();
++    this.stop();
++    if (this.onContextLost) this.onContextLost();
++  }
++  _onContextRestored() {
++    this.init();
++    if (this.mode === "flow") this.start();
++    else this.renderStatic(true);
++  }
++
++  resize() {
++    const dpr = Math.min(window.devicePixelRatio || 1, this.dprCap);
++    const w = Math.round(window.innerWidth * dpr);
++    const h = Math.round(window.innerHeight * dpr);
++    if (this.canvas.width !== w || this.canvas.height !== h) {
++      this.canvas.width = w;
++      this.canvas.height = h;
++    }
++    this.dpr = dpr;
++    if (this.mode === "static") this.renderStatic(true);
++  }
++
++  setScroll(t) {
++    this.targetScroll = t;
++    if (this.mode === "static") this.renderStatic(false);
++  }
++  setBounds(arr) {
++    for (let i = 0; i < 5; i++) this.bounds[i] = arr[i] ?? this.bounds[i];
++    if (this.mode === "static") this.renderStatic(true);
++  }
++  setCurve(c) {
++    this.curve[0] = c[0]; this.curve[1] = c[1]; this.curve[2] = c[2]; this.curve[3] = c[3];
++    if (this.mode === "static") this.renderStatic(true);
++  }
++  setPointer(x, y, strength = 1) {
++    this.pointer.tx = x;
++    this.pointer.ty = y;
++    this.pointer.strength = Math.min(this.pointer.strength + strength * 0.25, 1);
++  }
++
++  setMode(mode) {
++    if (this.mode === mode) return;
++    this.mode = mode;
++    if (mode === "static") {
++      this.stop();
++      this.renderStatic(true);
++    }
++  }
++
++  actIndex(t) {
++    let i = 0;
++    for (let k = 1; k < 5; k++) if (t >= this.bounds[k]) i = k;
++    return i;
++  }
++
++  start() {
++    if (this.running || !this.gl || this.mode === "static") return;
++    this.running = true;
++    this.lastT = performance.now();
++    this.raf = requestAnimationFrame(this._loop);
++  }
++  stop() {
++    this.running = false;
++    if (this.raf) cancelAnimationFrame(this.raf);
++    this.raf = 0;
++  }
++
++  _loop(now) {
++    if (!this.running) return;
++    const dt = Math.min((now - this.lastT) / 1000, 0.05);
++    this.lastT = now;
++
++    // critically-damped follow: buttery scrub without lag mush
++    const k = 1 - Math.exp(-dt * 6.5);
++    this.scroll += (this.targetScroll - this.scroll) * k;
++
++    const pk = 1 - Math.exp(-dt * 8);
++    this.pointer.x += (this.pointer.tx - this.pointer.x) * pk;
++    this.pointer.y += (this.pointer.ty - this.pointer.y) * pk;
++    this.pointer.strength *= Math.exp(-dt * 1.4);
++
++    this._draw((now / 1000) % 3600, 1);
++    this._watchQuality(dt);
++    this.raf = requestAnimationFrame(this._loop);
++  }
++
++  renderStatic(force) {
++    if (!this.gl) return;
++    const act = this.actIndex(this.targetScroll);
++    if (!force && act === this.staticAct) return;
++    this.staticAct = act;
++    // pose the field at the act's midpoint: a pure, fully-formed formation
++    const b = this.bounds;
++    const end = act < 4 ? b[act + 1] : 1;
++    this.scroll = (b[act] + end) / 2;
++    this.pointer.strength = 0;
++    this._draw(this.staticTime, 0);
++  }
++
++  _draw(timeSec, flow) {
++    const gl = this.gl;
++    const w = this.canvas.width;
++    const h = this.canvas.height;
++    gl.viewport(0, 0, w, h);
++    gl.clearColor(0, 0, 0, 0);
++    gl.clear(gl.COLOR_BUFFER_BIT);
++
++    gl.useProgram(this.program);
++    gl.bindVertexArray(this.vao);
++    gl.uniform2f(this.uni.uRes, w, h);
++    gl.uniform1f(this.uni.uAspect, w / h);
++    gl.uniform1f(this.uni.uTime, timeSec);
++    gl.uniform1f(this.uni.uScroll, this.scroll);
++    gl.uniform1fv(this.uni.uBounds, this.bounds);
++    gl.uniform4fv(this.uni.uCurve, this.curve);
++    gl.uniform4f(this.uni.uPointer, this.pointer.x, this.pointer.y, this.pointer.strength, 0);
++    gl.uniform1f(this.uni.uFlow, flow);
++    gl.uniform1f(this.uni.uSizePx, this.sizeBase * this.dpr);
++    gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, this.count);
++    gl.bindVertexArray(null);
++  }
++
++  _watchQuality(dt) {
++    this.frames++;
++    if (this.frames < 120) return;
++    this.ema = this.ema * 0.96 + dt * 1000 * 0.04;
++    if (this.ema > 23 && this.qualityStep === 0) {
++      this.qualityStep = 1;
++      this.dprCap = Math.min(this.dprCap, 1.25);
++      this.ema = 16;
++      this.resize();
++    } else if (this.ema > 23 && this.qualityStep === 1 && this.frames > 420) {
++      this.qualityStep = 2;
++      this.count = Math.max(Math.floor(this.count * 0.55), 2200);
++      this.ema = 16;
++    }
++  }
++
++  destroy() {
++    this.stop();
++    this.canvas.removeEventListener("webglcontextlost", this._onContextLost);
++    this.canvas.removeEventListener("webglcontextrestored", this._onContextRestored);
++    const gl = this.gl;
++    if (gl) {
++      const ext = gl.getExtension("WEBGL_lose_context");
++      if (ext) ext.loseContext();
++    }
++    this.gl = null;
++  }
++}

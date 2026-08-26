@@ -1,0 +1,35 @@
+{
+  "suite_name": "creative-frontend-architect-v2.1-spectacle-baseline",
+  "evaluation_layer": "S-spectacle",
+  "repetitions_per_condition": 3,
+  "scored_by": [
+    "rubrics/spectacle_fit.md",
+    "rubrics/execution_measurement.md",
+    "motion recording via scripts/capture_motion.mjs"
+  ],
+  "notes": [
+    "Baseline runs get NO calibration reference; references/landing_love_calibration.md is an ablation arm per the run matrix, never baseline context.",
+    "Motion recording is mandatory: without it the S1 median is capped at 3 by rubric rule.",
+    "Motion recordings use the pre-registered per-eval choreography file, identical across all conditions and reps - hand-tuning choreography per run would confound the comparison."
+  ],
+  "evals": [
+    {
+      "id": "S1-spectacle-launch",
+      "fixture": "launch-page-base",
+      "register": "spectacle-immersive",
+      "failure_mode_trapped": "ordinary-sections-with-decoration; peripheral effects; component soup",
+      "implementation_prompt": "This repository is the public launch page for Meridian, a timeline-based motion editor for the web (design animation visually, ship production code). The current page is a plain placeholder with full creative and technical license.\n\nBuild the page as a spectacle-grade interactive experience: the page itself should behave as an authored realtime visual system - spatial, generative, shader-driven, physics-driven, or cinematic - in which the visitor's input materially changes what they see, and which unfolds as multiple connected acts rather than isolated sections. The graphical system must be structurally central to the experience, not a decorative layer. Any renderer or library is acceptable if the concept justifies it.\n\nConstraints that still apply:\n- Readable content, semantic structure, and keyboard access must survive.\n- prefers-reduced-motion must preserve all content and meaning through an intentionally designed low-motion variant - not a gutted page.\n- Continuous rendering must pause when offscreen or when the document is hidden.\n- Design a coherent lower-cost mobile/capability recipe that preserves the identity.\n- The experience must stay smooth on a normal laptop.\n\nRun the build and report: the design direction, the acts, the signature system, why you chose the renderer(s) you chose, and your performance, accessibility, and reduced-motion decisions.",
+      "status": "ACTIVE",
+      "choreography_script": "evals/choreography/S1-spectacle-launch.choreography.json"
+    },
+    {
+      "id": "S0-register-recognition",
+      "fixture": "launch-page-base",
+      "mode": "plan-only (routing eval; cheap)",
+      "failure_mode_trapped": "not recognizing that a brief calls for the spectacle register",
+      "prompt": "This repository is the public launch page for Meridian, a timeline-based motion editor for the web. The founders want something unforgettable: an experimental, creative web experience people will talk about - not a normal marketing page. Full creative license.\n\nPropose the concept and the technical architecture you would build. Do not implement yet.",
+      "deleading_note": "Deliberately never mentions 3D, WebGL, shaders, canvas, or any technology - tests whether the agent independently reaches for a realtime/graphical system when the brief calls for spectacle.",
+      "expected_shape": "recognizes the S register; proposes a visually dominant realtime/generative/spatial system with acts and interaction causality; names concrete rendering architecture with fallbacks"
+    }
+  ]
+}

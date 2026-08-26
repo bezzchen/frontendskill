@@ -1,0 +1,35 @@
+{
+ "run": "I5ws-fable-rep2",
+ "date": "2026-08-25",
+ "condition": "with_skill_v1 (evals/withskill_protocol.md)",
+ "model": "claude-fable-5",
+ "fixture": "next-tailwind-base edf3be4 (pristine copy verified)",
+ "interruptions": "none - single 38-minute run",
+ "implementation": "Register S deliberately bounded to the section. Custom on pinned pixi.js@8.19.0 (exact; only dep change). Dedicated ticker (sharedTicker:false, autoStart:false); atlas-batched ~3 draw calls; IO rootMargin gate + visibilitychange; reduced-motion = ticker never runs, on-demand frames; mobile 252-node subset with honest status line; caught own category-dropping subsample bug. 7 files, 1344 insertions. Agent self-verified pause by counting ITS OWN ticker frames - a proxy; did not gate or mention Pixi v8's autostarting Ticker.system (SchedulerSystem GC).",
+ "measurements": {
+  "m6_static": "PASS (build, cleanup path, no interval loops)",
+  "m1_gpu_system_chrome": "PASS both profiles - p50 14.6ms, 0% hitches (onscreen ~120 rAF/s total)",
+  "m2_offscreen": "MOBILE: FAIL ratio 0.50 (binding; section fully exits viewport; threshold 0.2). DESKTOP: NOT_MEASURABLE_BY_GEOMETRY (60% visible; observed 1.01).",
+  "m2b_hidden_pause": "FAIL both profiles - ratio 0.50 (60 of ~120 rAF/s persists under synthetic hidden), resumes cleanly",
+  "m3_reduced_motion": "FAIL both profiles - ratio 0.50 with FULL content parity (the app's own ticker never runs under PRM; the residual rAF is the same ungated source)",
+  "m5_accessible_parallel": "PASS both profiles (500-item index, chips, live region)",
+  "m4_teardown": "PASS - glContexts stable [3,3,3]",
+  "console_errors": "fixture-level favicon 404 only (desktop); mobile clean"
+ },
+ "pause_discipline_verdict": "FAIL - the exact-half signature (0.50 on every should-stop probe) indicates one 60/s rAF source surviving all pause paths. ATTRIBUTION NOW OBSERVED (2026-08-25 probe, results/execution/I5ws-rep2-ATTRIBUTION.json): rAF tallied by callback identity shows TWO independent Pixi Ticker loops at 60/s while active and exactly ONE surviving at 60/s once the section fully exits (visible fraction 0.00) - arithmetically the measured 0.50. Matched control I5ws-rep3 shows the identical two-ticker structure while active and ZERO survivors when paused. Remaining one-step inference (system vs shared): Pixi v8's autostarting Ticker.system GC scheduler, which rep1-ws explicitly gated and measured 0.00 in the identical battery, and which baseline I5-rep2 also silenced for its 0.00. Same failure class as BASELINE rep1 (0.51: own loop stopped, library ticker remained) one layer deeper. The agent's proxy self-verification (counting its own ticker, not global rAF) is precisely the skill-line-2 failure mode; the instrument caught it.",
+ "artifacts": {
+  "diff": "results/execution/I5ws-fable-rep2.diff (7 files, 1344 insertions)",
+  "source_snapshot": "results/execution/I5ws-fable-rep2-source.zip (+ safety copy in ~/Documents)",
+  "measurements": "results/execution/I5ws-fable-rep2.json",
+  "screenshots": "results/execution/screenshots/I5ws-fable-rep2-*.png"
+ },
+ "attribution_followup": "results/execution/I5ws-rep2-ATTRIBUTION.json - the agent's own-loop frame counter read zero while a second Pixi loop ran at full rate, which is exactly why skill line 2's 'verify the actual condition' needs to mean GLOBAL rAF activity, not your own counter.",
+ "cost": {
+  "tokens": 217673,
+  "duration_ms": 2267993,
+  "duration_min": 37.8,
+  "convention": "tokens = total context tokens reported by the orchestrating harness (same convention as results/rep1_runs.json), NOT cumulative spend",
+  "backfilled": "2026-08-25 from orchestrator notifications, per the recording-gap recommendation in results/CRITERION_D_ACCOUNTING.md",
+  "caveat": "uninterrupted"
+ }
+}

@@ -1,0 +1,28 @@
+{
+  "manifest_version": 1,
+  "created_for": "creative-frontend-architect eval v1.6",
+  "verified_package_versions_on_2026_08_10": {
+    "next": "16.2.12",
+    "react": "19.2.8",
+    "tailwindcss": "4.3.3",
+    "animejs": "4.5.0"
+  },
+  "fixtures": {
+    "next-tailwind-base": {
+      "git_revision": "edf3be4edf037a10751ce185538f43c5cf6bffee",
+      "content_sha256_excluding_git": "4aab0da1d78d9a25958abd88c8d61f422d8211f10baa6bc8d8dbd1cb76c3ef99",
+      "dependency_lock": "package-lock.json frozen and committed"
+    },
+    "anime-v4-portfolio": {
+      "git_revision": "6f5dcaad43cc1482e52306df42843cdc3985ec03",
+      "content_sha256_excluding_git": "724d5cf01d7be096518119be12d51c581ec0cf74341f13bdb53746c551f06aeb",
+      "dependency_lock": "package-lock.json frozen and committed"
+    },
+    "launch-page-base": {
+      "git_revision": "3543ef943fcc5434ff7653a1147d944bf8f40223",
+      "content_sha256_excluding_git": "b12f71a5889bef493f4ff77d96ab287f49375641f06f302f72776701c1670125",
+      "dependency_lock": "package-lock.json frozen and committed"
+    }
+  },
+  "baseline_blocker": null
+}

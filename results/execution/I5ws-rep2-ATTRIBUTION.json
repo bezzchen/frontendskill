@@ -1,0 +1,23 @@
+{
+ "investigation": "I5ws-rep2 pause-failure attribution",
+ "date": "2026-08-25",
+ "question": "The rep2 record attributed its surviving ~60/s rAF source to Pixi v8's autostarting Ticker.system by differential inference. Can it be OBSERVED instead?",
+ "method": "scripts/investigations/attribution_probe2.mjs - wraps requestAnimationFrame at init-script time and tallies calls BY CALLBACK IDENTITY, so independent loops are counted separately. Mobile profile (iPhone 14 Pro), matching the harness profile where the section fully exits the viewport; element visible fraction asserted before sampling. 3s samples, GPU system Chrome. NOT part of the pinned battery.",
+ "runs": {
+  "I5ws-rep2 (harness verdict: FAIL, M2/M2b/M3 all ~0.50)": {
+   "onscreen": "2 distinct callbacks x 180 calls / 3s = 60/s each (120/s total)",
+   "paused_visibleFractionOfElement": 0.0,
+   "paused": "1 distinct callback x 180 calls / 3s = 60/s SURVIVES",
+   "callback_source_signature": "t=>{this._requestId=null,this.started&&(this.update(t),this.started&&null===this._requestId&&this._head.next&&(this._requestId=requestAnimationFrame(this._tick)... == Pixi Ticker._tick"
+  },
+  "I5ws-rep3 (harness verdict: PASS, 0.00 everywhere) - MATCHED CONTROL": {
+   "onscreen": "2 distinct callbacks x 180 calls / 3s = 60/s each (120/s total) - IDENTICAL two-ticker structure",
+   "paused_visibleFractionOfElement": 0.0,
+   "paused": "0 callbacks - empty tally",
+   "callback_source_signature": "same Pixi Ticker._tick signature (different minified param name)"
+  }
+ },
+ "observed_conclusion": "OBSERVED (upgraded from inference): both builds run TWO independent Pixi Ticker loops while the section is active. On scroll-out, rep3 stops both; rep2 stops only its own, leaving exactly one Pixi Ticker at 60/s - arithmetically identical to the harness's 0.50 ratio on every should-stop probe.",
+ "residual_inference_step": "The surviving loop is identified as a Pixi Ticker by exact source signature, and as NOT the app's own ticker by the observed disappearance of the other loop. Naming it specifically Ticker.system (rather than Ticker.shared) rests on: (a) rep2 configured sharedTicker:false/autoStart:false; (b) Pixi v8 autostarts Ticker.system for SchedulerSystem GC; (c) rep3, whose only documented difference is gating Ticker.system in lockstep, leaves ZERO survivors under this identical probe. Ticker.system.started was never read directly - the builds' debug hooks expose only {running,frames,rendered} and do not reach the Ticker class - so this last step remains inference, now backed by a matched control rather than by argument alone.",
+ "consequence": "Strengthens skill v1.1 candidate #1 (name the deeper default ticker in line 1) and #2 (require global-rAF verification, not own-loop counting): rep2's own-loop counter read zero while a second Pixi loop ran at full rate."
+}

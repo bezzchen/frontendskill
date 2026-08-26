@@ -1,0 +1,690 @@
+diff --git a/README.md b/README.md
+index be87d9c..fa68bbd 100644
+--- a/README.md
++++ b/README.md
+@@ -3,7 +3,8 @@
+ Personal portfolio: work experience and selected projects.
+ 
+ Built with Next.js, React, and Tailwind CSS. Motion is handled with Anime.js
+-(see `components/IntroFade.jsx`).
++(see `components/IntroFade.jsx` and the orbital experience system in
++`components/ExperienceSystem.jsx`).
+ 
+ ## Development
+ 
+diff --git a/components/ExperienceSystem.jsx b/components/ExperienceSystem.jsx
+index 0b2e08c..e2d0e80 100644
+--- a/components/ExperienceSystem.jsx
++++ b/components/ExperienceSystem.jsx
+@@ -1,5 +1,16 @@
+ "use client";
+ 
++import { useEffect, useRef, useState } from "react";
++import {
++  animate,
++  createAnimatable,
++  createDraggable,
++  createScope,
++  createTimer,
++  stagger,
++  utils,
++} from "animejs";
++
+ const items = [
+   { id: "exp-1", label: "Company A", type: "experience" },
+   { id: "exp-2", label: "Company B", type: "experience" },
+@@ -9,27 +20,639 @@ const items = [
+   { id: "project-3", label: "Project Field", type: "project" },
+ ];
+ 
++const VIEWS = [
++  { id: "all", label: "All", hubLabel: "All work", hubCount: "6 items" },
++  { id: "experience", label: "Experience", hubLabel: "Experience", hubCount: "3 roles" },
++  { id: "projects", label: "Projects", hubLabel: "Projects", hubCount: "3 projects" },
++];
++
++const activeKindFor = (viewId) =>
++  viewId === "experience" ? "experience" : viewId === "projects" ? "project" : null;
++
+ export function ExperienceSystem() {
++  const rootRef = useRef(null);
++  const stageRef = useRef(null);
++  const scopeRef = useRef(null);
++  const viewRef = useRef("all");
++  const [view, setViewState] = useState("all");
++
++  const selectView = (id) => {
++    if (id === viewRef.current) return;
++    viewRef.current = id;
++    setViewState(id);
++    const scope = scopeRef.current;
++    if (scope && scope.methods.setView) scope.methods.setView(id);
++  };
++
++  useEffect(() => {
++    const root = rootRef.current;
++    const stage = stageRef.current;
++    if (!root || !stage) return undefined;
++
++    // Play the entrance choreography only once per mount, not on every
++    // breakpoint / reduced-motion re-build.
++    let didIntro = false;
++
++    const q = (sel) => Array.from(stage.querySelectorAll(sel));
++
++    // Tracks non-animated layout styles (position/display/width/...) that
++    // Anime.js should not own, and restores the original inline style
++    // attribute when the scope constructor is reverted (breakpoint change or
++    // unmount). Animated properties are reverted by the Scope itself.
++    const makeStyler = () => {
++      const saved = [];
++      const set = (el, styles) => {
++        if (!el) return;
++        if (!saved.some(([tracked]) => tracked === el)) {
++          saved.push([el, el.getAttribute("style")]);
++        }
++        Object.assign(el.style, styles);
++      };
++      const restore = () => {
++        for (const [el, style] of saved) {
++          if (style === null) el.removeAttribute("style");
++          else el.setAttribute("style", style);
++        }
++        saved.length = 0;
++      };
++      return { set, restore };
++    };
++
++    const rand = (min, max) => min + Math.random() * (max - min);
++
++    const scope = createScope({
++      root,
++      mediaQueries: {
++        isDesktop: "(min-width: 768px)",
++        reduceMotion: "(prefers-reduced-motion: reduce)",
++      },
++    });
++
++    // ------------------------------------------------------------------
++    // Desktop: loose orbital composition around the central hub object.
++    // ------------------------------------------------------------------
++    function buildDesktop(self, styler, els) {
++      const { $wraps, $nodes, $hub, $disc, $rings } = els;
++      const reduced = self.matches.reduceMotion;
++      const geo = { w: 0, h: 0, cx: 0, cy: 0, hubW: 0, hubH: 0 };
++
++      styler.set(stage, { display: "block", position: "relative" });
++      styler.set($hub, { display: "flex" });
++      $wraps.forEach(($wrap) =>
++        styler.set($wrap, { position: "absolute", left: "0px", top: "0px", width: "11rem", zIndex: "20" })
++      );
++      if (!reduced) $rings.forEach(($ring) => styler.set($ring, { display: "block" }));
++
++      const kindCounts = {};
++      const state = $wraps.map(($wrap) => {
++        const $node = $wrap.querySelector("[data-node]");
++        const kind = $node.dataset.kind;
++        const kindIndex = kindCounts[kind] ?? 0;
++        kindCounts[kind] = kindIndex + 1;
++        const ring = kind === "experience" ? 0 : 1;
++        return {
++          $wrap,
++          $node,
++          kind,
++          ring,
++          kindIndex,
++          w: 176,
++          h: 112,
++          rx: 0,
++          ry: 0,
++          angle: (kindIndex * (Math.PI * 2)) / 3 + (ring === 0 ? -Math.PI / 2 : -Math.PI / 6),
++          dir: ring === 0 ? 1 : -1,
++          speed: rand(0.09, 0.16),
++          radiusJitter: rand(0.92, 1.08),
++          bobAmp: rand(5, 9),
++          bobFreq: rand(0.35, 0.7),
++          bobPhase: rand(0, Math.PI * 2),
++          weight: 0,
++          slotX: 0,
++          slotY: 0,
++          dim: 1,
++          scaleTo: 1,
++          held: false,
++          bobHold: 0,
++          px: 0,
++          py: 0,
++          anm: createAnimatable($wrap, { x: 0, y: 0 }),
++        };
++      });
++
++      const measure = () => {
++        geo.w = stage.clientWidth;
++        geo.h = Math.round(Math.min(540, Math.max(430, geo.w * 0.52)));
++        styler.set(stage, { height: `${geo.h}px` });
++        geo.cx = geo.w / 2;
++        geo.cy = geo.h / 2;
++        geo.hubW = $hub.offsetWidth;
++        geo.hubH = $hub.offsetHeight;
++        for (const it of state) {
++          it.w = it.$wrap.offsetWidth;
++          it.h = it.$wrap.offsetHeight;
++          const maxRx = geo.cx - it.w / 2 - 10;
++          const maxRy = geo.cy - it.h / 2 - 14;
++          it.rx = Math.min((it.ring === 0 ? geo.w * 0.2 : geo.w * 0.315) * it.radiusJitter, maxRx);
++          it.ry = Math.min((it.ring === 0 ? geo.h * 0.25 : geo.h * 0.4) * it.radiusJitter, maxRy);
++        }
++        // Faint guide rings, sized to each orbit.
++        const dims = [
++          { rx: geo.w * 0.2, ry: geo.h * 0.25 },
++          { rx: Math.min(geo.w * 0.315, geo.cx - 98), ry: geo.h * 0.4 },
++        ];
++        $rings.forEach(($ring, i) => {
++          const { rx, ry } = dims[i] || dims[0];
++          styler.set($ring, {
++            width: `${Math.round(rx * 2)}px`,
++            height: `${Math.round(ry * 2)}px`,
++            left: `${Math.round(geo.cx - rx)}px`,
++            top: `${Math.round(geo.cy - ry)}px`,
++          });
++        });
++      };
++
++      // Structured slot layouts, expressed as element centers.
++      const computeSlots = (viewId) => {
++        const cardW = Math.max(...state.map((it) => it.w));
++        const cardH = Math.max(...state.map((it) => it.h));
++        const hubR = geo.hubW / 2;
++        const activeKind = activeKindFor(viewId);
++        if (!activeKind) {
++          // Static "all" layout, used when reduced motion replaces the orbit:
++          // hub on the left, one tidy column per kind.
++          const hubX = Math.max(hubR + 12, geo.w * 0.14);
++          const left = hubX + hubR + 44;
++          return {
++            hub: { x: hubX, y: geo.cy },
++            list: state.map((it) => ({
++              x: left + cardW / 2 + (it.ring === 1 ? cardW + 18 : 0),
++              y: geo.cy + (it.kindIndex - 1) * (cardH + 16),
++              dim: 1,
++              scale: 1,
++            })),
++          };
++        }
++        // Active kind stacks in a clean column; the other kind minifies into
++        // a dimmed reference column on the right edge.
++        const hubX = Math.max(hubR + 12, geo.w * 0.16);
++        const dockScale = 0.72;
++        const dockX = geo.w - (cardW * dockScale) / 2 - 12;
++        const stackX = Math.min(
++          Math.max(geo.w * 0.52, hubX + hubR + cardW / 2 + 48),
++          dockX - (cardW * dockScale) / 2 - cardW / 2 - 32
++        );
++        return {
++          hub: { x: hubX, y: geo.cy },
++          list: state.map((it) =>
++            it.kind === activeKind
++              ? {
++                  x: stackX,
++                  y: geo.cy + (it.kindIndex - 1) * (cardH + 18),
++                  dim: 1,
++                  scale: 1,
++                }
++              : {
++                  x: dockX,
++                  y: geo.cy + (it.kindIndex - 1) * (cardH * dockScale + 12),
++                  dim: 0.5,
++                  scale: dockScale,
++                }
++          ),
++        };
++      };
++
++      let lastT = 0;
++
++      const renderItem = (it, t) => {
++        const bob = it.held ? it.bobHold : Math.sin(t * it.bobFreq + it.bobPhase) * it.bobAmp;
++        const ox = geo.cx + Math.cos(it.angle) * it.rx;
++        const oy = geo.cy + Math.sin(it.angle) * it.ry + bob;
++        const x = it.slotX + (ox - it.slotX) * it.weight;
++        const y = it.slotY + (oy - it.slotY) * it.weight;
++        it.px = x;
++        it.py = y;
++        it.anm.x(x - it.w / 2);
++        it.anm.y(y - it.h / 2);
++      };
++
++      const renderOnce = () => {
++        state.forEach((it) => renderItem(it, lastT));
++      };
++
++      // The single writer for wrapper positions: advances orbital drift and
++      // blends between orbit and structured slots via each item's weight.
++      const tick = reduced
++        ? null
++        : createTimer({
++            autoplay: false,
++            onUpdate: (timer) => {
++              const dt = timer.deltaTime / 1000;
++              lastT = timer.currentTime / 1000;
++              for (const it of state) {
++                if (!it.held && it.weight > 0.0001) it.angle += it.speed * it.dir * dt;
++                renderItem(it, lastT);
++              }
++            },
++          });
++
++      const applyView = (viewId, animated) => {
++        const slots = computeSlots(viewId);
++        const toOrbit = viewId === "all" && !reduced;
++        // While orbiting, the hub anchors the composition at the stage
++        // center; structured layouts move it to its computed slot.
++        const hubX = (toOrbit ? geo.cx : slots.hub.x) - geo.hubW / 2;
++        const hubY = (toOrbit ? geo.cy : slots.hub.y) - geo.hubH / 2;
++
++        state.forEach((it, i) => {
++          it.dim = slots.list[i].dim;
++          it.scaleTo = slots.list[i].scale;
++          // Seed slots from the live orbital position so leaving the orbit
++          // blends continuously instead of detouring through stale slots.
++          if (it.weight >= 0.999) {
++            it.slotX = it.px;
++            it.slotY = it.py;
++          }
++        });
++
++        if (!animated || reduced) {
++          utils.remove(state);
++          utils.remove($nodes);
++          utils.remove($hub);
++          if ($rings.length) utils.remove($rings);
++          state.forEach((it, i) => {
++            it.weight = toOrbit ? 1 : 0;
++            it.slotX = slots.list[i].x;
++            it.slotY = slots.list[i].y;
++          });
++          utils.set($nodes, {
++            opacity: (el, i) => state[i].dim,
++            scale: (el, i) => state[i].scaleTo,
++          });
++          utils.set($hub, { x: hubX, y: hubY });
++          if ($rings.length) utils.set($rings, { opacity: toOrbit ? 0.6 : 0 });
++          renderOnce();
++          if (tick) {
++            if (toOrbit) tick.resume();
++            else tick.pause();
++          }
++          return;
++        }
++
++        tick.resume();
++        animate(state, {
++          weight: toOrbit ? 1 : 0,
++          slotX: (target, i) => slots.list[i].x,
++          slotY: (target, i) => slots.list[i].y,
++          duration: 950,
++          delay: stagger(50),
++          ease: "inOut(2.4)",
++          onComplete: () => {
++            // Park the ticker once a structured layout has settled, unless a
++            // newer transition put us back on course for the orbit.
++            if (viewRef.current !== "all" && tick) tick.pause();
++          },
++        });
++        animate($nodes, {
++          opacity: (el, i) => state[i].dim,
++          scale: (el, i) => state[i].scaleTo,
++          duration: 800,
++          delay: stagger(50),
++          ease: "inOut(2)",
++        });
++        animate($hub, { x: hubX, y: hubY, duration: 950, ease: "inOut(2.4)" });
++        if ($rings.length) {
++          animate($rings, { opacity: toOrbit ? 0.6 : 0, duration: 700, ease: "inOut(2)" });
++        }
++      };
++
++      // Draggable cards with an elastic spring return to their slot in the
++      // composition: snap [0] on both axes always resolves the release
++      // destination back to the wrapper origin, and with no container there
++      // are no bounds that could clamp the way home if the composition
++      // drifted mid-drag.
++      if (!reduced) {
++        state.forEach((it) => {
++          createDraggable(it.$node, {
++            x: { snap: [0] },
++            y: { snap: [0] },
++            releaseStiffness: 120,
++            releaseDamping: 10,
++            velocityMultiplier: 1.15,
++            onGrab: () => {
++              it.held = true;
++              it.bobHold = Math.sin(lastT * it.bobFreq + it.bobPhase) * it.bobAmp;
++              it.$wrap.style.zIndex = "40";
++              animate(it.$node, { scale: it.scaleTo * 1.06, duration: 220, ease: "out(3)" });
++            },
++            onRelease: () => {
++              // Let the wrapper rejoin the drift while the card springs home.
++              it.held = false;
++              animate(it.$node, { scale: it.scaleTo, duration: 480, ease: "out(3)" });
++            },
++            onSettle: () => {
++              it.$wrap.style.zIndex = "20";
++            },
++          });
++        });
++      }
++
++      measure();
++
++      if (!reduced && !didIntro) {
++        didIntro = true;
++        state.forEach((it) => {
++          it.weight = 0;
++          it.slotX = geo.cx;
++          it.slotY = geo.cy;
++        });
++        utils.set($nodes, { opacity: 0, scale: 0.65 });
++        utils.set($hub, { opacity: 0, x: geo.cx - geo.hubW / 2, y: geo.cy - geo.hubH / 2 });
++        if ($rings.length) utils.set($rings, { opacity: 0 });
++        renderOnce();
++        animate($hub, { opacity: 1, duration: 600, ease: "out(2)" });
++        applyView(viewRef.current, true);
++      } else {
++        applyView(viewRef.current, false);
++      }
++
++      if (!reduced) {
++        // Gentle breathing on the hub disc keeps the resting composition alive.
++        animate($disc, {
++          scale: [
++            { to: 1.035, duration: 2600, ease: "inOut(2)" },
++            { to: 1, duration: 2600, ease: "inOut(2)" },
++          ],
++          delay: 800,
++          loop: true,
++        });
++      }
++
++      let lastW = stage.clientWidth;
++      const ro = new ResizeObserver(() => {
++        if (stage.clientWidth === lastW) return;
++        lastW = stage.clientWidth;
++        self.execute(() => {
++          measure();
++          applyView(viewRef.current, false);
++        });
++      });
++      ro.observe(stage);
++
++      self.data.applyView = applyView;
++
++      return () => {
++        ro.disconnect();
++        self.data.applyView = null;
++      };
++    }
++
++    // ------------------------------------------------------------------
++    // Mobile / small screens: tidy stacked list, filter reflow animation,
++    // and a horizontal swipe (x-axis drag with rubber-band) to switch views.
++    // ------------------------------------------------------------------
++    function buildMobile(self, styler, els) {
++      const { $wraps, $nodes, $hint } = els;
++      const reduced = self.matches.reduceMotion;
++
++      styler.set(stage, { display: "block", position: "relative" });
++      $wraps.forEach(($wrap) =>
++        styler.set($wrap, { position: "absolute", left: "0px", top: "0px", width: "100%" })
++      );
++      if ($hint && !reduced) styler.set($hint, { display: "block" });
++
++      const kindCounts = {};
++      const state = $wraps.map(($wrap) => {
++        const $node = $wrap.querySelector("[data-node]");
++        const kind = $node.dataset.kind;
++        const kindIndex = kindCounts[kind] ?? 0;
++        kindCounts[kind] = kindIndex + 1;
++        return { $wrap, $node, kind, kindIndex, h: 112 };
++      });
++
++      const gap = 10;
++      const sectionGap = 26;
++
++      const measure = () => {
++        state.forEach((it) => {
++          it.h = it.$wrap.offsetHeight || 112;
++        });
++      };
++
++      const rows = (viewId) => {
++        const activeKind = activeKindFor(viewId);
++        const res = state.map(() => ({ y: 0, dim: 1, scale: 1 }));
++        const order = activeKind
++          ? [...state.filter((it) => it.kind === activeKind), ...state.filter((it) => it.kind !== activeKind)]
++          : [...state];
++        let y = 0;
++        order.forEach((it, pos) => {
++          const idx = state.indexOf(it);
++          if (activeKind && pos === 3) y += sectionGap;
++          const inactive = activeKind ? it.kind !== activeKind : false;
++          res[idx].y = y;
++          res[idx].dim = inactive ? 0.5 : 1;
++          res[idx].scale = inactive ? 0.965 : 1;
++          y += it.h + gap;
++        });
++        return { res, height: y - gap };
++      };
++
++      const applyView = (viewId, animated) => {
++        const { res, height } = rows(viewId);
++        if (!animated || reduced) {
++          utils.remove($wraps);
++          utils.remove($nodes);
++          state.forEach((it, i) => {
++            utils.set(it.$wrap, { y: res[i].y });
++            utils.set(it.$node, { opacity: res[i].dim, scale: res[i].scale });
++          });
++          utils.set(stage, { height });
++          return;
++        }
++        animate($wraps, {
++          y: (el, i) => res[i].y,
++          duration: 620,
++          delay: stagger(35),
++          ease: "inOut(2.2)",
++        });
++        animate($nodes, {
++          opacity: (el, i) => res[i].dim,
++          scale: (el, i) => res[i].scale,
++          duration: 520,
++          delay: stagger(35),
++          ease: "inOut(2)",
++        });
++        animate(stage, { height, duration: 620, ease: "inOut(2.2)" });
++      };
++
++      measure();
++      applyView(viewRef.current, false);
++
++      if (!reduced && !didIntro) {
++        didIntro = true;
++        const dims = rows(viewRef.current).res;
++        utils.set($nodes, { opacity: 0, y: 16 });
++        animate($nodes, {
++          opacity: (el, i) => dims[i].dim,
++          y: 0,
++          duration: 560,
++          delay: stagger(55),
++          ease: "out(2)",
++        });
++      }
++
++      // Swipe the stack sideways to move between All / Experience / Projects.
++      // The x-only draggable leaves vertical page scrolling untouched
++      // (touch-action: pan-y) and rubber-bands back to center on release.
++      if (!reduced) {
++        createDraggable(stage, {
++          x: true,
++          y: false,
++          container: [0, 0, 0, 0],
++          containerFriction: 0.62,
++          releaseContainerFriction: 0.62,
++          releaseStiffness: 180,
++          releaseDamping: 16,
++          cursor: false,
++          onRelease: (drag) => {
++            const dx = drag.x;
++            if (Math.abs(dx) < 26) return;
++            const order = VIEWS.map((entry) => entry.id);
++            const idx = order.indexOf(viewRef.current);
++            const next = order[Math.min(order.length - 1, Math.max(0, idx + (dx < 0 ? 1 : -1)))];
++            if (next !== viewRef.current) selectView(next);
++          },
++        });
++      }
++
++      let lastW = stage.clientWidth;
++      const ro = new ResizeObserver(() => {
++        if (stage.clientWidth === lastW) return;
++        lastW = stage.clientWidth;
++        self.execute(() => {
++          measure();
++          applyView(viewRef.current, false);
++        });
++      });
++      ro.observe(stage);
++
++      self.data.applyView = applyView;
++
++      return () => {
++        ro.disconnect();
++        self.data.applyView = null;
++      };
++    }
++
++    scope.add((self) => {
++      const styler = makeStyler();
++      const els = {
++        $wraps: q("[data-orbit-item]"),
++        $nodes: q("[data-node]"),
++        $hub: stage.querySelector("[data-hub]"),
++        $disc: stage.querySelector("[data-hub-disc]"),
++        $rings: q("[data-ring]"),
++        $hint: root.querySelector("[data-swipe-hint]"),
++      };
++      const teardown = self.matches.isDesktop
++        ? buildDesktop(self, styler, els)
++        : buildMobile(self, styler, els);
++      return () => {
++        if (teardown) teardown();
++        styler.restore();
++      };
++    });
++
++    scope.add("setView", (viewId) => {
++      const applyView = scope.data.applyView;
++      if (applyView) applyView(viewId, true);
++    });
++
++    scopeRef.current = scope;
++    return () => {
++      scopeRef.current = null;
++      scope.revert();
++    };
++  }, []);
++
++  const activeView = VIEWS.find((entry) => entry.id === view) || VIEWS[0];
++
+   return (
+-    <section className="space-y-6" aria-labelledby="experience-title">
+-      <div>
+-        <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted)]">Experience system</p>
+-        <h2 id="experience-title" className="text-4xl font-semibold tracking-tight">
+-          Work and projects
+-        </h2>
++    <section ref={rootRef} className="space-y-6" aria-labelledby="experience-title">
++      <div className="flex flex-wrap items-end justify-between gap-4">
++        <div>
++          <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted)]">Experience system</p>
++          <h2 id="experience-title" className="text-4xl font-semibold tracking-tight">
++            Work and projects
++          </h2>
++        </div>
++        <div
++          role="group"
++          aria-label="Filter work and projects"
++          className="flex rounded-full border border-[var(--line)] bg-[var(--surface)] p-1"
++        >
++          {VIEWS.map((entry) => (
++            <button
++              key={entry.id}
++              type="button"
++              aria-pressed={view === entry.id}
++              onClick={() => selectView(entry.id)}
++              className={`rounded-full px-4 py-1.5 text-sm transition-colors ${
++                view === entry.id
++                  ? "bg-[var(--foreground)] text-[var(--background)]"
++                  : "text-[var(--muted)] hover:text-[var(--foreground)]"
++              }`}
++            >
++              {entry.label}
++            </button>
++          ))}
++        </div>
+       </div>
+-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3" data-experience-system>
++
++      <div
++        ref={stageRef}
++        data-experience-system
++        className="grid select-none grid-cols-2 gap-3 md:grid-cols-3"
++      >
++        <div
++          data-ring
++          aria-hidden="true"
++          className="pointer-events-none absolute z-0 hidden rounded-full border border-dashed border-[var(--line)]"
++        />
++        <div
++          data-ring
++          aria-hidden="true"
++          className="pointer-events-none absolute z-0 hidden rounded-full border border-dashed border-[var(--line)]"
++        />
++        <div
++          data-hub
++          aria-hidden="true"
++          className="pointer-events-none absolute left-0 top-0 z-10 hidden h-40 w-40 items-center justify-center rounded-full border border-[var(--line)] bg-[var(--surface)]"
++        >
++          <div data-hub-disc className="flex h-full w-full flex-col items-center justify-center gap-1 rounded-full text-center">
++            <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--muted)]">Selected</span>
++            <strong className="text-base leading-tight">{activeView.hubLabel}</strong>
++            <span className="text-xs text-[var(--muted)]">{activeView.hubCount}</span>
++          </div>
++        </div>
+         {items.map((item) => (
+-          <button
+-            className="min-h-28 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4 text-left"
+-            data-kind={item.type}
+-            key={item.id}
+-          >
+-            <span className="text-sm text-[var(--muted)]">{item.type}</span>
+-            <strong className="mt-2 block">{item.label}</strong>
+-          </button>
++          <div key={item.id} data-orbit-item className="will-change-transform">
++            <button
++              data-node
++              data-kind={item.type}
++              className="block min-h-28 w-full rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4 text-left"
++            >
++              <span className="text-sm text-[var(--muted)]">{item.type}</span>
++              <strong className="mt-2 block">{item.label}</strong>
++            </button>
++          </div>
+         ))}
+       </div>
++
++      <p data-swipe-hint className="hidden text-center text-xs text-[var(--muted)] md:hidden">
++        Swipe the list left or right to switch sections
++      </p>
+     </section>
+   );
+ }

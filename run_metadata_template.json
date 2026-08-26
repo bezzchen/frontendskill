@@ -1,0 +1,46 @@
+{
+  "run_id": "",
+  "date_time": "",
+  "condition": "baseline_no_skill | with_skill",
+  "eval_id": "",
+  "repetition": 1,
+  "fixture_name": "",
+  "fixture_revision": "",
+  "model": "",
+  "model_version_or_snapshot": "",
+  "agent_product": "Claude Code | Codex | other",
+  "agent_version": "",
+  "reasoning_or_effort_setting": "",
+  "temperature_or_sampling_settings_if_exposed": "",
+  "skill_revision": "N/A for baseline",
+  "other_installed_skills": [],
+  "environment_notes": "",
+  "tokens_input": null,
+  "tokens_output": null,
+  "duration_seconds": null,
+  "build_result": "",
+  "notes": "",
+  "design_director_loaded": "none | skill name + pinned revision",
+  "specialist_skills_consulted": [],
+  "reference_calibration_used": "none | references/landing_love_calibration.md | other",
+  "component_catalogs_checked": [],
+  "catalog_primitives_adopted": [
+    {
+      "primitive": "",
+      "source": "",
+      "fit_class": "adopt|adapt|reference-only",
+      "reason": ""
+    }
+  ],
+  "catalog_primitives_rejected": [
+    {
+      "primitive": "",
+      "source": "",
+      "reason": ""
+    }
+  ],
+  "renderer_ownership": "e.g. Motion=component state; GSAP=scroll narrative; R3F=hero scene",
+  "screenshots_path": "",
+  "motion_recording_path": "",
+  "choreography_script": "none | evals/choreography/<id>.choreography.json"
+}

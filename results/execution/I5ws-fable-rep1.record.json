@@ -1,0 +1,35 @@
+{
+ "run": "I5ws-fable-rep1",
+ "date": "2026-08-25",
+ "condition": "with_skill_v1 (evals/withskill_protocol.md)",
+ "model": "claude-fable-5",
+ "fixture": "next-tailwind-base edf3be4 (pristine copy verified)",
+ "interruptions": "none - single 61-minute run",
+ "implementation": "Register S declared (bounded 500-node realtime system as the section's structural core; rest of page Q). Custom system on the pinned pixi.js@8.19.0 (exact; only dep change - verified). ParticleContainer with single atlas TextureSource, one batched draw; deterministic layouts. THE BASELINE TRAP CLOSED ONE LAYER DEEPER: Ticker.shared stopped AND v8 SchedulerSystem's GC listener on the autostarting Ticker.system gated to the run state; EventSystem detached in favor of native pointer events. Auto-sleep design: loop stops itself after ~45 settled frames. Agent verified scroll-out pause under the actual condition (dframes=0 over 900ms) and hidden->visible resume; honest caveat repeated re producing visible->hidden events in automation. Catalog gate cited from training knowledge (no live sweep this rep): React Bits/SmoothUI/Fancy reference-only, custom on pinned substrate. Fixed a real hover-repulsion bug found only by testing. 9 files, 1572 insertions.",
+ "measurements": {
+  "m6_static": "PASS overall (build, no interval loops); cleanup-path NOT_MEASURED = the checker's documented cross-file blind spot (engine.js owns the loop; destroy() verified by agent under StrictMode remount)",
+  "m1_gpu_system_chrome": "PASS both profiles - desktop p50 14.6ms, mobile p50 14.7ms (120Hz display; 0% hitches)",
+  "m2_offscreen": "MOBILE: TRUE PASS ratio 0.00 (section fully exits viewport; first binding scroll-out pass in the I-series; baseline I5 was 1/3). DESKTOP: NOT_MEASURABLE_BY_GEOMETRY (tall section, 62% visible after scroll-away; observed 1.0 = visible-canvas artifact; agent's IO gate requires full exit, verified by agent under real scroll).",
+  "m2b_hidden_pause": "PASS both profiles - ratio 0.00, clean resume",
+  "m3_reduced_motion": "DESKTOP PASS ratio 0.00 full parity. MOBILE FAIL ratio 0.358 (43 rAF/s during the 3s sample vs threshold 0.2) with parity TRUE - first with-skill measurement failure in the program. Root cause now OBSERVED (results/execution/I5ws-rep1-M3-DECAY.json): consecutive 2s windows under reduced motion read 94.5, 0, 0, 0, 0, 0, 0, 0 rAF/s - activity is confined to the first ~2s and then exactly zero for 14s. It is settle latency, not continuing motion; the 3s M3 window opens at scroll-in and catches the tail. Recorded as FAIL per the frozen threshold, not excused - the page does animate for ~1.5-2s after a reduced-motion load.",
+  "m5_accessible_parallel": "PASS both profiles (500-item semantic list + chips + live region)",
+  "m4_teardown": "PASS - glContexts stable [3,3,3] per load (includes renderer capability probes), no growth",
+  "console_errors": "fixture-level favicon 404 only (desktop); mobile clean"
+ },
+ "pause_discipline_verdict": "PASS - mobile M2 true 0.00 (binding) + M2b 0.00 both profiles; desktop scroll-out geometry-gated with agent-verified IO gate",
+ "m3_flag": "mobile reduced-motion stop latency breaches threshold - counts against the Accessibility/Reduced-Motion dimension per rubric gating",
+ "artifacts": {
+  "diff": "results/execution/I5ws-fable-rep1.diff (9 files, 1572 insertions)",
+  "source_snapshot": "results/execution/I5ws-fable-rep1-source.zip (+ safety copy in ~/Documents)",
+  "measurements": "results/execution/I5ws-fable-rep1.json",
+  "screenshots": "results/execution/screenshots/I5ws-fable-rep1-*.png"
+ },
+ "cost": {
+  "tokens": 313330,
+  "duration_ms": 3666410,
+  "duration_min": 61.1,
+  "convention": "tokens = total context tokens reported by the orchestrating harness (same convention as results/rep1_runs.json), NOT cumulative spend",
+  "backfilled": "2026-08-25 from orchestrator notifications, per the recording-gap recommendation in results/CRITERION_D_ACCOUNTING.md",
+  "caveat": "uninterrupted"
+ }
+}

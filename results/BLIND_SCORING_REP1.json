@@ -1,0 +1,214 @@
+{
+  "method": {
+    "scope": "12 valid clean rep-1 routing proposals only; coached wave excluded",
+    "reviewer_count": 1,
+    "blinding": "proposal filenames randomized A/B within each eval before scoring; model mapping revealed only after scores were assigned",
+    "limitations": [
+      "Single reviewer; not an independent panel.",
+      "Reviewer had prior familiarity with the eval design, though model labels were hidden during scoring.",
+      "Only rep 1 exists; these scores do not estimate run-to-run variance."
+    ]
+  },
+  "summary": {
+    "Fable": {
+      "valid_clean_runs_scored": 6,
+      "load_bearing_median": 3.833,
+      "load_bearing_range": [
+        3,
+        4
+      ],
+      "applicable_dimension_median": 3.938
+    },
+    "Opus": {
+      "valid_clean_runs_scored": 6,
+      "load_bearing_median": 4.0,
+      "load_bearing_range": [
+        3.667,
+        4
+      ],
+      "applicable_dimension_median": 3.938
+    }
+  },
+  "runs": [
+    {
+      "model_arm": "Fable",
+      "eval_id": "E1",
+      "conceptual_fit": 4,
+      "architectural_restraint": 3,
+      "existing_stack_respect": 4,
+      "tool_depth": null,
+      "performance": 4,
+      "accessibility": 4,
+      "responsive_mobile": 4,
+      "design_coherence": 3,
+      "load_bearing_composite": 3.667,
+      "applicable_dimension_mean": 3.714,
+      "critical_failures": []
+    },
+    {
+      "model_arm": "Fable",
+      "eval_id": "E2",
+      "conceptual_fit": 4,
+      "architectural_restraint": 3,
+      "existing_stack_respect": 4,
+      "tool_depth": 4,
+      "performance": 4,
+      "accessibility": 4,
+      "responsive_mobile": 4,
+      "design_coherence": 4,
+      "load_bearing_composite": 3.667,
+      "applicable_dimension_mean": 3.875,
+      "critical_failures": []
+    },
+    {
+      "model_arm": "Fable",
+      "eval_id": "E3",
+      "conceptual_fit": 4,
+      "architectural_restraint": 4,
+      "existing_stack_respect": 4,
+      "tool_depth": null,
+      "performance": 4,
+      "accessibility": 4,
+      "responsive_mobile": 4,
+      "design_coherence": 4,
+      "load_bearing_composite": 4,
+      "applicable_dimension_mean": 4,
+      "critical_failures": []
+    },
+    {
+      "model_arm": "Fable",
+      "eval_id": "E4",
+      "conceptual_fit": 4,
+      "architectural_restraint": 4,
+      "existing_stack_respect": 4,
+      "tool_depth": 4,
+      "performance": 4,
+      "accessibility": 4,
+      "responsive_mobile": 4,
+      "design_coherence": 4,
+      "load_bearing_composite": 4,
+      "applicable_dimension_mean": 4,
+      "critical_failures": []
+    },
+    {
+      "model_arm": "Fable",
+      "eval_id": "E5",
+      "conceptual_fit": 4,
+      "architectural_restraint": 4,
+      "existing_stack_respect": 4,
+      "tool_depth": 4,
+      "performance": 4,
+      "accessibility": 4,
+      "responsive_mobile": 4,
+      "design_coherence": 4,
+      "load_bearing_composite": 4,
+      "applicable_dimension_mean": 4,
+      "critical_failures": []
+    },
+    {
+      "model_arm": "Fable",
+      "eval_id": "E6",
+      "conceptual_fit": 3,
+      "architectural_restraint": 2,
+      "existing_stack_respect": 4,
+      "tool_depth": 3,
+      "performance": 3,
+      "accessibility": 4,
+      "responsive_mobile": 3,
+      "design_coherence": 4,
+      "load_bearing_composite": 3,
+      "applicable_dimension_mean": 3.25,
+      "critical_failures": []
+    },
+    {
+      "model_arm": "Opus",
+      "eval_id": "E1",
+      "conceptual_fit": 4,
+      "architectural_restraint": 3,
+      "existing_stack_respect": 4,
+      "tool_depth": null,
+      "performance": 4,
+      "accessibility": 4,
+      "responsive_mobile": 4,
+      "design_coherence": 4,
+      "load_bearing_composite": 3.667,
+      "applicable_dimension_mean": 3.857,
+      "critical_failures": []
+    },
+    {
+      "model_arm": "Opus",
+      "eval_id": "E2",
+      "conceptual_fit": 4,
+      "architectural_restraint": 4,
+      "existing_stack_respect": 4,
+      "tool_depth": 4,
+      "performance": 4,
+      "accessibility": 4,
+      "responsive_mobile": 4,
+      "design_coherence": 4,
+      "load_bearing_composite": 4,
+      "applicable_dimension_mean": 4,
+      "critical_failures": []
+    },
+    {
+      "model_arm": "Opus",
+      "eval_id": "E3",
+      "conceptual_fit": 4,
+      "architectural_restraint": 3,
+      "existing_stack_respect": 4,
+      "tool_depth": null,
+      "performance": 4,
+      "accessibility": 4,
+      "responsive_mobile": 4,
+      "design_coherence": 4,
+      "load_bearing_composite": 3.667,
+      "applicable_dimension_mean": 3.857,
+      "critical_failures": []
+    },
+    {
+      "model_arm": "Opus",
+      "eval_id": "E4",
+      "conceptual_fit": 4,
+      "architectural_restraint": 4,
+      "existing_stack_respect": 4,
+      "tool_depth": 3,
+      "performance": 4,
+      "accessibility": 4,
+      "responsive_mobile": 4,
+      "design_coherence": 4,
+      "load_bearing_composite": 4,
+      "applicable_dimension_mean": 3.875,
+      "critical_failures": []
+    },
+    {
+      "model_arm": "Opus",
+      "eval_id": "E5",
+      "conceptual_fit": 4,
+      "architectural_restraint": 4,
+      "existing_stack_respect": 4,
+      "tool_depth": 4,
+      "performance": 4,
+      "accessibility": 4,
+      "responsive_mobile": 4,
+      "design_coherence": 4,
+      "load_bearing_composite": 4,
+      "applicable_dimension_mean": 4,
+      "critical_failures": []
+    },
+    {
+      "model_arm": "Opus",
+      "eval_id": "E6",
+      "conceptual_fit": 4,
+      "architectural_restraint": 4,
+      "existing_stack_respect": 4,
+      "tool_depth": null,
+      "performance": 4,
+      "accessibility": 4,
+      "responsive_mobile": 4,
+      "design_coherence": 4,
+      "load_bearing_composite": 4,
+      "applicable_dimension_mean": 4,
+      "critical_failures": []
+    }
+  ]
+}

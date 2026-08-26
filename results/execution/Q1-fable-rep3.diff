@@ -1,0 +1,459 @@
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..c9e5c6d 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -7,6 +7,7 @@
+   --muted: #6b6b66;
+   --surface: #ffffff;
+   --line: #deded8;
++  --danger: #b42318;
+ }
+ 
+ @media (prefers-color-scheme: dark) {
+@@ -16,6 +17,7 @@
+     --muted: #a0a099;
+     --surface: #181817;
+     --line: #31312f;
++    --danger: #f97066;
+   }
+ }
+ 
+@@ -24,3 +26,27 @@ html { background: var(--background); color: var(--foreground); }
+ body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
+ a { color: inherit; }
+ button, input { font: inherit; }
++
++/* One consistent, high-contrast keyboard focus ring across the site. */
++:focus-visible {
++  outline: 2px solid var(--foreground);
++  outline-offset: 2px;
++}
++
++/* Micro-appearance for inline status and validation messages. */
++@keyframes settings-fade-in {
++  from { opacity: 0; transform: translateY(-2px); }
++  to { opacity: 1; transform: translateY(0); }
++}
++
++/* Reduced motion: state changes still happen, just instantly. */
++@media (prefers-reduced-motion: reduce) {
++  *,
++  *::before,
++  *::after {
++    animation-duration: 0.01ms !important;
++    animation-iteration-count: 1 !important;
++    transition-duration: 0.01ms !important;
++    scroll-behavior: auto !important;
++  }
++}
+diff --git a/components/SettingsPanel.jsx b/components/SettingsPanel.jsx
+index 3cd24b9..b1d3a0c 100644
+--- a/components/SettingsPanel.jsx
++++ b/components/SettingsPanel.jsx
+@@ -1,68 +1,362 @@
+ "use client";
+ 
+-import { useState } from "react";
++import { useEffect, useId, useRef, useState } from "react";
++
++const INITIAL_VALUES = {
++  name: "Jordan Lee",
++  email: "jordan@example.com",
++  password: "",
++  emailNotifications: true,
++  productUpdates: false,
++};
++
++const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
++const FIELD_ORDER = ["name", "email", "password"];
++const APPEAR = "animate-[settings-fade-in_120ms_ease-out]";
++
++function validateField(field, values) {
++  if (field === "name") {
++    return values.name.trim() ? null : "Enter your name.";
++  }
++  if (field === "email") {
++    const email = values.email.trim();
++    if (!email) return "Enter your email address.";
++    if (!EMAIL_PATTERN.test(email)) {
++      return "Enter a valid email address, like name@example.com.";
++    }
++    return null;
++  }
++  if (field === "password") {
++    if (values.password && values.password.length < 8) {
++      return "Use at least 8 characters.";
++    }
++    return null;
++  }
++  return null;
++}
++
++function FieldError({ id, children }) {
++  return (
++    <p className={`flex items-center gap-1.5 text-sm text-[var(--danger)] ${APPEAR}`} id={id}>
++      <svg aria-hidden="true" className="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 16 16">
++        <circle cx="8" cy="8" r="6.25" stroke="currentColor" strokeWidth="1.5" />
++        <path d="M8 4.75v3.75" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5" />
++        <circle cx="8" cy="11.25" fill="currentColor" r="0.875" />
++      </svg>
++      {children}
++    </p>
++  );
++}
++
++function TextField({ id, label, error, hint, inputRef, trailing, ...inputProps }) {
++  const errorId = `${id}-error`;
++  const hintId = `${id}-hint`;
++
++  return (
++    <div className="grid max-w-md gap-1.5">
++      <label className="text-sm font-medium" htmlFor={id}>
++        {label}
++      </label>
++      <div className="relative">
++        <input
++          aria-describedby={error ? errorId : hint ? hintId : undefined}
++          aria-invalid={error ? true : undefined}
++          className={`h-10 w-full rounded-md border bg-[var(--surface)] px-3 transition-colors duration-150 ${
++            trailing ? "pr-16" : ""
++          } ${
++            error
++              ? "border-[var(--danger)]"
++              : "border-[var(--line)] hover:border-[var(--muted)]"
++          }`}
++          id={id}
++          ref={inputRef}
++          {...inputProps}
++        />
++        {trailing}
++      </div>
++      {error ? (
++        <FieldError id={errorId}>{error}</FieldError>
++      ) : hint ? (
++        <p className="text-sm text-[var(--muted)]" id={hintId}>
++          {hint}
++        </p>
++      ) : null}
++    </div>
++  );
++}
++
++function ToggleRow({ checked, description, id, name, onChange, title }) {
++  const titleId = `${id}-title`;
++  const descriptionId = `${id}-description`;
++
++  return (
++    <label className="flex cursor-pointer items-center justify-between gap-4 px-4 py-3.5 transition-colors duration-150 hover:bg-[color-mix(in_srgb,var(--foreground)_4%,transparent)]">
++      <span className="grid gap-0.5">
++        <span className="text-sm font-medium" id={titleId}>
++          {title}
++        </span>
++        <span className="text-sm text-[var(--muted)]" id={descriptionId}>
++          {description}
++        </span>
++      </span>
++      <span className="relative inline-flex h-5 w-9 shrink-0">
++        <input
++          aria-describedby={descriptionId}
++          aria-labelledby={titleId}
++          checked={checked}
++          className="peer absolute inset-0 h-full w-full cursor-pointer appearance-none rounded-full opacity-0"
++          id={id}
++          name={name}
++          onChange={onChange}
++          role="switch"
++          type="checkbox"
++        />
++        <span
++          aria-hidden="true"
++          className="absolute inset-0 rounded-full border border-black/10 bg-[var(--line)] transition-colors duration-150 ease-out peer-checked:border-transparent peer-checked:bg-[var(--foreground)] peer-focus-visible:outline-2 peer-focus-visible:outline-solid peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[var(--foreground)] dark:border-white/10"
++        />
++        <span
++          aria-hidden="true"
++          className="pointer-events-none absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition duration-150 ease-out peer-checked:translate-x-4 peer-checked:bg-[var(--background)]"
++        />
++      </span>
++    </label>
++  );
++}
+ 
+ export function SettingsPanel() {
+-  const [notifications, setNotifications] = useState(true);
+-  const [saved, setSaved] = useState(false);
++  const uid = useId();
++  const [values, setValues] = useState(INITIAL_VALUES);
++  const [baseline, setBaseline] = useState(INITIAL_VALUES);
++  const [errors, setErrors] = useState({});
++  const [touched, setTouched] = useState({});
++  const [status, setStatus] = useState("idle"); // "idle" | "saving" | "saved"
++  const [showPassword, setShowPassword] = useState(false);
++  const saveTimeout = useRef(null);
++  const nameRef = useRef(null);
++  const emailRef = useRef(null);
++  const passwordRef = useRef(null);
++  const fieldRefs = { name: nameRef, email: emailRef, password: passwordRef };
++
++  useEffect(() => () => clearTimeout(saveTimeout.current), []);
++
++  const dirty =
++    values.name !== baseline.name ||
++    values.email !== baseline.email ||
++    values.password !== "" ||
++    values.emailNotifications !== baseline.emailNotifications ||
++    values.productUpdates !== baseline.productUpdates;
++
++  const saving = status === "saving";
++  const canSave = dirty && !saving;
++
++  function updateField(field, value) {
++    const next = { ...values, [field]: value };
++    setValues(next);
++    if (!touched[field]) {
++      setTouched((prev) => ({ ...prev, [field]: true }));
++    }
++    // Reward early: clear an existing error as soon as the fix is typed.
++    if (errors[field]) {
++      setErrors((prev) => ({ ...prev, [field]: validateField(field, next) }));
++    }
++  }
++
++  function handleBlur(field) {
++    // Punish late: only validate on blur once the field has been edited,
++    // so tabbing through the form stays quiet.
++    if (!touched[field]) return;
++    setErrors((prev) => ({ ...prev, [field]: validateField(field, values) }));
++  }
++
++  function handleSubmit(event) {
++    event.preventDefault();
++    if (!canSave) return;
++
++    const nextErrors = {};
++    for (const field of FIELD_ORDER) {
++      nextErrors[field] = validateField(field, values);
++    }
++    setErrors(nextErrors);
++
++    const firstInvalid = FIELD_ORDER.find((field) => nextErrors[field]);
++    if (firstInvalid) {
++      fieldRefs[firstInvalid].current?.focus();
++      return;
++    }
++
++    const submitted = values;
++    setStatus("saving");
++    saveTimeout.current = setTimeout(() => {
++      setBaseline({ ...submitted, password: "" });
++      // Clear the password field unless the user retyped it mid-save.
++      setValues((current) => ({
++        ...current,
++        password: current.password === submitted.password ? "" : current.password,
++      }));
++      setShowPassword(false);
++      setStatus("saved");
++    }, 600);
++  }
+ 
+   return (
+-    <form
+-      className="space-y-8"
+-      onSubmit={(event) => {
+-        event.preventDefault();
+-        setSaved(true);
+-      }}
+-    >
+-      <section className="space-y-3">
+-        <h2 className="text-lg font-semibold">Profile</h2>
+-        <label className="grid gap-2">
+-          <span>Name</span>
+-          <input
+-            className="rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 py-2"
+-            defaultValue="Jordan Lee"
++    <form className="space-y-8" noValidate onSubmit={handleSubmit}>
++      <section className="space-y-5">
++        <div className="space-y-1">
++          <h3 className="text-lg font-semibold">Profile</h3>
++          <p className="text-sm text-[var(--muted)]">How your account appears on the site.</p>
++        </div>
++        <div className="space-y-4">
++          <TextField
++            autoComplete="name"
++            error={errors.name}
++            id={`${uid}-name`}
++            inputRef={nameRef}
++            label="Name"
+             name="name"
++            onBlur={() => handleBlur("name")}
++            onChange={(event) => updateField("name", event.target.value)}
++            required
++            value={values.name}
+           />
+-        </label>
+-        <label className="grid gap-2">
+-          <span>Email</span>
+-          <input
+-            className="rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 py-2"
+-            defaultValue="jordan@example.com"
++          <TextField
++            autoCapitalize="none"
++            autoComplete="email"
++            error={errors.email}
++            id={`${uid}-email`}
++            inputMode="email"
++            inputRef={emailRef}
++            label="Email"
+             name="email"
++            onBlur={() => handleBlur("email")}
++            onChange={(event) => updateField("email", event.target.value)}
++            required
++            spellCheck={false}
+             type="email"
++            value={values.email}
+           />
+-        </label>
++        </div>
+       </section>
+ 
+-      <section className="space-y-3">
+-        <h2 className="text-lg font-semibold">Notifications</h2>
+-        <label className="flex items-center justify-between gap-4 rounded-lg border border-[var(--line)] p-4">
+-          <span>Email notifications</span>
+-          <input
+-            checked={notifications}
+-            onChange={(event) => setNotifications(event.target.checked)}
+-            type="checkbox"
++      <section className="space-y-5 border-t border-[var(--line)] pt-8">
++        <div className="space-y-1">
++          <h3 className="text-lg font-semibold" id={`${uid}-notifications-heading`}>
++            Notifications
++          </h3>
++          <p className="text-sm text-[var(--muted)]">Choose which emails you receive.</p>
++        </div>
++        <div
++          aria-labelledby={`${uid}-notifications-heading`}
++          className="divide-y divide-[var(--line)] overflow-hidden rounded-lg border border-[var(--line)] bg-[var(--surface)]"
++          role="group"
++        >
++          <ToggleRow
++            checked={values.emailNotifications}
++            description="Replies, mentions, and account activity."
++            id={`${uid}-email-notifications`}
++            name="email-notifications"
++            onChange={(event) => updateField("emailNotifications", event.target.checked)}
++            title="Email notifications"
++          />
++          <ToggleRow
++            checked={values.productUpdates}
++            description="Occasional news about new features."
++            id={`${uid}-product-updates`}
++            name="product-updates"
++            onChange={(event) => updateField("productUpdates", event.target.checked)}
++            title="Product updates"
+           />
+-        </label>
++        </div>
+       </section>
+ 
+-      <section className="space-y-3">
+-        <h2 className="text-lg font-semibold">Password</h2>
+-        <input
+-          className="w-full rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 py-2"
+-          placeholder="New password"
+-          type="password"
++      <section className="space-y-5 border-t border-[var(--line)] pt-8">
++        <div className="space-y-1">
++          <h3 className="text-lg font-semibold">Password</h3>
++          <p className="text-sm text-[var(--muted)]">
++            Set a new password, or leave this blank to keep your current one.
++          </p>
++        </div>
++        <TextField
++          autoComplete="new-password"
++          error={errors.password}
++          hint="At least 8 characters."
++          id={`${uid}-password`}
++          inputRef={passwordRef}
++          label="New password"
++          name="new-password"
++          onBlur={() => handleBlur("password")}
++          onChange={(event) => updateField("password", event.target.value)}
++          trailing={
++            <button
++              aria-label={showPassword ? "Hide password" : "Show password"}
++              className="absolute inset-y-1 right-1 inline-flex cursor-pointer items-center rounded-sm px-2.5 text-sm font-medium text-[var(--muted)] transition-colors duration-150 hover:text-[var(--foreground)]"
++              onClick={() => setShowPassword((current) => !current)}
++              type="button"
++            >
++              {showPassword ? "Hide" : "Show"}
++            </button>
++          }
++          type={showPassword ? "text" : "password"}
++          value={values.password}
+         />
+       </section>
+ 
+-      <div className="flex items-center gap-3">
+-        <button className="rounded-md bg-[var(--foreground)] px-4 py-2 text-[var(--background)]" type="submit">
++      <div className="flex flex-col gap-3 border-t border-[var(--line)] pt-6 sm:flex-row sm:items-center sm:gap-4">
++        <button
++          aria-disabled={!canSave}
++          className={`h-10 w-full rounded-md bg-[var(--foreground)] px-4 text-sm font-medium text-[var(--background)] transition duration-150 sm:w-auto ${
++            saving
++              ? "cursor-wait opacity-70"
++              : canSave
++                ? "cursor-pointer hover:opacity-90 active:translate-y-px"
++                : "opacity-40"
++          }`}
++          type="submit"
++        >
+           Save changes
+         </button>
+-        <span aria-live="polite" className="text-sm text-[var(--muted)]">
+-          {saved ? "Saved" : ""}
+-        </span>
++        <div
++          aria-live="polite"
++          className="flex min-h-5 items-center text-sm text-[var(--muted)]"
++          role="status"
++        >
++          {saving ? (
++            <span className={`flex items-center gap-1.5 ${APPEAR}`} key="saving">
++              <svg
++                aria-hidden="true"
++                className="h-3.5 w-3.5 animate-spin motion-reduce:hidden"
++                fill="none"
++                viewBox="0 0 16 16"
++              >
++                <circle cx="8" cy="8" opacity="0.25" r="6.25" stroke="currentColor" strokeWidth="1.5" />
++                <path
++                  d="M14.25 8A6.25 6.25 0 0 0 8 1.75"
++                  stroke="currentColor"
++                  strokeLinecap="round"
++                  strokeWidth="1.5"
++                />
++              </svg>
++              Saving…
++            </span>
++          ) : dirty ? (
++            <span className={APPEAR} key="dirty">
++              Unsaved changes
++            </span>
++          ) : status === "saved" ? (
++            <span className={`flex items-center gap-1.5 ${APPEAR}`} key="saved">
++              <svg aria-hidden="true" className="h-3.5 w-3.5" fill="none" viewBox="0 0 16 16">
++                <path
++                  d="M3.25 8.75 6.5 12l6.25-7.5"
++                  stroke="currentColor"
++                  strokeLinecap="round"
++                  strokeLinejoin="round"
++                  strokeWidth="1.5"
++                />
++              </svg>
++              Changes saved
++            </span>
++          ) : null}
++        </div>
+       </div>
+     </form>
+   );

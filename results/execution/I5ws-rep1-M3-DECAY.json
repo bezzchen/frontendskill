@@ -1,0 +1,18 @@
+{
+ "investigation": "I5ws-rep1 mobile M3 (reduced-motion) flag: settle latency vs persistent motion",
+ "date": "2026-08-25",
+ "method": "scripts/investigations/decay_probe.mjs - mobile profile + prefers-reduced-motion, section scrolled into view, then 8 consecutive 2s rAF windows. Latency decays to zero; a genuine failure plateaus.",
+ "series_rafPerSec": [
+  94.5,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0
+ ],
+ "observed_conclusion": "SETTLE LATENCY, OBSERVED. Activity is confined to the first ~2s window and is then EXACTLY ZERO for the following 14s. The harness M3 sample is a single 3s window opening right after the section enters view, so it captures the settle tail: ~1.4s of activity averaged across 3s reproduces the measured 43 rAF/s (ratio 0.358).",
+ "verdict_unchanged": "The M3 FAIL stands as measured against the frozen threshold - the page does keep animating for ~1.5-2s after a reduced-motion load, which is a real behavior, and thresholds are not renegotiated after the fact. What changes is the DIAGNOSIS, now observed rather than hypothesized: nothing runs forever.",
+ "consequence": "Directly supports skill v1.1 candidate #3 - 'paused means promptly; a sleep that takes seconds to settle still reads as running.' Also a candidate instrument note for a future harness revision (not applied): M3 could report a decay series alongside the single-window ratio, distinguishing latency from persistence mechanically."
+}

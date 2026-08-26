@@ -1,0 +1,231 @@
+{
+  "snapshot_date": "2026-08-12",
+  "purpose": "Creative asset discovery registry. The architect uses this to decide whether a proven visual primitive can supply most of an effect before commissioning a custom renderer. Components are ingredients, never the art direction.",
+  "fit_policy": {
+    "excellent_fit": "adopt the source, then restyle/tune it deeply to the committed design world",
+    "good_foundation": "use as implementation substrate, but change material/timing/composition enough that it belongs to the project",
+    "reference_only": "study the effect or implementation pattern; custom-build the final system",
+    "poor_fit": "skip and route to a custom specialist",
+    "anti_pattern": "do not stack recognizable effects just because the catalog makes them easy",
+    "license_gate": "check license class before adoption (React Bits and Animate UI are MIT+Commons-Clause, not plain MIT; ShaderGradient ships no license file)",
+    "staleness_recheck": "re-verify maintenance signal at use time; registry snapshots rot",
+    "dependency_coherence": "do not adopt a primitive whose engine conflicts with the page's motion owner (gsap-based primitive into a Motion-owned page etc.) - one-owner-per-concern extends into the catalog layer",
+    "ingestion_preference": "prefer catalogs with machine-readable ingestion (llms.txt, shadcn registry JSON, MCP, vendor skill) over copy-paste galleries"
+  },
+  "active_query_tier": [
+    {
+      "name": "React Bits",
+      "source": "https://reactbits.dev/",
+      "agent_source": "https://pro.reactbits.dev/docs/agent-kit/agent-skill",
+      "strengths": [
+        "animated backgrounds",
+        "text effects",
+        "cursor effects",
+        "3D/shader primitives",
+        "creative hero ingredients"
+      ],
+      "best_for": [
+        "portfolio and marketing surfaces",
+        "signature background/material",
+        "single expressive interaction primitive"
+      ],
+      "avoid": [
+        "routine product UI unless a primitive has a direct UX role",
+        "multi-effect component soup"
+      ],
+      "notes": "Free catalog is broad and open; Pro has vendor skill/AI-ready distribution. Prefer vendor skill if available.",
+      "agent_readiness": "dual llms.txt with agent notes + shadcn registry + Pro vendor skill (npx shadcn add @reactbits-starter/skill); pushed 2026-08-12"
+    },
+    {
+      "name": "Aceternity UI",
+      "source": "https://ui.aceternity.com/",
+      "strengths": [
+        "polished landing sections",
+        "3D/illustrative interactions",
+        "animated beams/maps/cards",
+        "hero compositions"
+      ],
+      "best_for": [
+        "marketing section composition",
+        "visual illustration blocks"
+      ],
+      "avoid": [
+        "using a full block as identity without redesign",
+        "bento-by-default"
+      ],
+      "caveat": "no public repo - maintenance opaque; llms.txt + per-component registry JSON verified working"
+    },
+    {
+      "name": "Magic UI",
+      "source": "https://magicui.design/",
+      "strengths": [
+        "150+ animated/effect primitives",
+        "particles/grids/globes",
+        "text effects",
+        "Motion/shadcn-friendly marketing components"
+      ],
+      "best_for": [
+        "lightweight spectacle",
+        "marketing flourishes",
+        "single visual primitive"
+      ],
+      "avoid": [
+        "assembling a page from unrelated attention effects"
+      ],
+      "agent_source": "official MCP server @magicuidesign/mcp 2.0.0 + llms.txt + full registry"
+    },
+    {
+      "name": "Motion Primitives",
+      "source": "https://motion-primitives.com/docs",
+      "strengths": [
+        "high-quality Motion primitives",
+        "morphing/magnetic/progressive blur",
+        "real-world interaction patterns"
+      ],
+      "best_for": [
+        "product/marketing interaction details",
+        "polished Motion behavior"
+      ],
+      "avoid": [
+        "replacing a bespoke visual world with a generic kit"
+      ],
+      "caveat": "site 429-blocks non-browser fetchers; registry JSON available in-repo on GitHub; beta, Mar 2026"
+    },
+    {
+      "name": "Fancy Components",
+      "source": "https://fancycomponents.dev/",
+      "strengths": [
+        "dead-center creative-effects genre",
+        "MIT",
+        "llms.txt + shadcn registry"
+      ],
+      "best_for": [
+        "text/scroll/pointer effects",
+        "expressive hero ingredients"
+      ],
+      "notes": "Biggest miss of the prior registry; added by R3 sweep"
+    },
+    {
+      "name": "SmoothUI",
+      "source": "https://smoothui.dev/",
+      "strengths": [
+        "animated React/shadcn components",
+        "Motion + GSAP"
+      ],
+      "agent_readiness": "best-in-genre: llms.txt + llms-full + llms-components.json + its own installable Claude SKILL.md; pushed 2026-08-12",
+      "notes": "promoted from awareness tier by R3 sweep"
+    }
+  ],
+  "awareness_tier": [
+    {
+      "name": "Cult UI",
+      "source": "https://www.cult-ui.com/",
+      "strengths": [
+        "niche animated shadcn components",
+        "metal/dither/canvas effects"
+      ]
+    },
+    {
+      "name": "Animate UI",
+      "source": "https://animate-ui.com/docs",
+      "strengths": [
+        "accessible Motion-powered primitives",
+        "animated product UI",
+        "open source-distribution model"
+      ],
+      "best_for": [
+        "Q1/Operate register",
+        "dialogs/tabs/menus/forms where motion supports state"
+      ],
+      "avoid": [
+        "using it as the spectacle engine"
+      ],
+      "demotion_note": "2026-08-12: repo ~7.5 months stale; license is MIT+Commons-Clause"
+    },
+    {
+      "name": "ui-layouts",
+      "source": "https://www.ui-layouts.com/"
+    },
+    {
+      "name": "Kokonut UI",
+      "source": "https://kokonutui.com/"
+    },
+    {
+      "name": "Skiper UI",
+      "source": "https://skiper-ui.com/",
+      "notes": "closed-source; @skiper-ui/* namespaced registry"
+    },
+    {
+      "name": "21st.dev",
+      "source": "https://21st.dev/",
+      "notes": "component marketplace + Magic MCP"
+    },
+    {
+      "name": "Eldora UI",
+      "source": "https://www.eldoraui.site/"
+    },
+    {
+      "name": "tsParticles",
+      "source": "https://particles.js.org/"
+    },
+    {
+      "name": "ShaderGradient",
+      "source": "https://www.shadergradient.co/",
+      "notes": "no license file - license gate applies"
+    },
+    {
+      "name": "Inspira UI",
+      "source": "https://inspira-ui.com/",
+      "notes": "Vue equivalent of the genre"
+    },
+    {
+      "name": "Codrops",
+      "source": "https://tympanus.net/codrops/",
+      "notes": "technique articles/demos; reference-only class"
+    }
+  ],
+  "routing_rule": [
+    "Start from a committed interaction/visual thesis, never from catalog browsing.",
+    "Search Tier-1 catalogs before building a common effect from scratch when an existing primitive could satisfy most of the visual requirement.",
+    "If the chosen primitive defines the page's identity unchanged, the design is under-authored; transform it or build custom.",
+    "One strong adapted primitive plus bespoke composition is normally better than many recognizable library effects.",
+    "If adopting a component requires rewriting its renderer/lifecycle/material/interaction architecture, treat it as reference-only and route custom."
+  ],
+  "verification": "2026-08-12 independent R3 sweep (results/research/R3_component_libraries.md): all 7 prior entries real; corrections applied; agent-readiness assessed",
+  "npm_substrate_tier": [
+    {
+      "name": "Paper Shaders",
+      "source": "https://github.com/paper-design/shaders",
+      "package": "@paper-design/shaders-react",
+      "license": "Apache-2.0",
+      "notes": "installable shader backgrounds; pushed 2026-08-12",
+      "license_source": "npm registry field @paper-design/shaders-react v0.0.80, checked 2026-08-14 (rechecked after external correction claim; npm confirms Apache-2.0)"
+    },
+    {
+      "name": "pmndrs drei + postprocessing",
+      "source": "https://github.com/pmndrs/drei",
+      "notes": "3D primitive substrate once R3F is chosen"
+    },
+    {
+      "name": "GSAP (now fully free incl. all plugins)",
+      "source": "https://gsap.com/",
+      "notes": "substrate note: SplitText/MorphSVG etc. no longer paywalled"
+    }
+  ],
+  "rejected": [
+    "HeroUI (plain UI kit)",
+    "DaisyUI (plain UI kit)",
+    "Park UI (semi-dormant, chakra org)",
+    "HyperUI (static kit)",
+    "Tailark (marketing blocks, wrong genre)",
+    "PaceUI (dashboard toolkit)",
+    "uiverse.io (no coherent ingestion)",
+    "Vanta (dead)"
+  ],
+  "fact_policy": "License and maintenance facts are source-backed snapshots (source + date recorded) and must be rechecked before adoption. Popularity metrics live only in results/research/R3.",
+  "tier_semantics": {
+    "active_query_tier": "Component CATALOGS - copy-in effect/primitive sources (React Bits, SmoothUI, Fancy Components...). Searched at build time; restyled to the design world; never the art direction.",
+    "npm_substrate_tier": "Technical SUBSTRATES - installed packages that render/compute (Paper Shaders, drei, GSAP). Chosen by the tech router as infrastructure, not browsed as effects.",
+    "architect_note": "This catalog-vs-substrate distinction is an explicit architect concept (see ARCHITECTURE_V2.md ownership rules): catalogs pass the component-fit gate; substrates pass the renderer-routing decision."
+  }
+}

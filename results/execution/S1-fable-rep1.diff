@@ -1,0 +1,685 @@
+diff --git a/README.md b/README.md
+index 15e09ae..a4e9f84 100644
+--- a/README.md
++++ b/README.md
+@@ -2,7 +2,14 @@
+ 
+ Launch page for Meridian, a timeline-based motion editor for the web.
+ 
+-Built with Next.js, React, and Tailwind CSS.
++The page is built as one 24-second composition: **scroll is the playhead**.
++A raw-WebGL2 particle field (one instanced draw call, positions a pure
++function of time — perfectly scrubbable), a persistent timeline HUD with
++live SMPTE timecode, and two working instruments (a master easing-curve
++editor and a spring lab) whose values re-choreograph the field live and
++ship verbatim in the final export block.
++
++Built with Next.js, React, and Tailwind CSS. No animation or 3D libraries.
+ 
+ ## Development
+ 
+@@ -10,3 +17,23 @@ Built with Next.js, React, and Tailwind CSS.
+ npm install
+ npm run dev
+ ```
++
++## Structure
++
++- `lib/engine.js` — the playhead engine: scroll→time, playback (K),
++  visibility/intersection/idle pausing, act measurement
++- `lib/field.js` — WebGL2 renderer: five scenes blended by playhead,
++  master-ease + spring + pointer uniforms, capability tiers
++- `lib/motion.js` — bezier solver, spring integrator, timecode
++- `components/Experience.jsx` — the five acts, choreography, export, form
++- `components/{Hud,BezierEditor,SpringLab}.jsx` — the instruments
++
++## Accessibility & performance notes
++
++- Reduced motion (OS setting or the HUD toggle) switches to a static
++  storyboard layout: natural flow, single deterministic field frames,
++  timing shown as dot-spacing and step-response plots instead of movement.
++- Rendering pauses when the tab is hidden, the canvas leaves the viewport,
++  or after 90 s without input; an adaptive governor sheds particle density
++  if frames run long. Mobile gets a no-pinning layout, lower density, and
++  a 1.5 DPR cap.
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..36bfd70 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -1,26 +1,521 @@
+ @import "tailwindcss";
+ 
++/* ── Meridian design tokens ─────────────────────────────────────────────
++   A grading-suite dark whose temperature follows the composition's solar
++   arc (dawn blue → meridian gold). Act 04 inverts to "solar noon" paper.
++   Display: Archivo (wide). Body: Instrument Sans. Utility: IBM Plex Mono. */
++
+ :root {
+-  color-scheme: light dark;
+-  --background: #f5f5f3;
+-  --foreground: #161616;
+-  --muted: #6b6b66;
+-  --surface: #ffffff;
+-  --line: #deded8;
+-}
+-
+-@media (prefers-color-scheme: dark) {
+-  :root {
+-    --background: #111110;
+-    --foreground: #f5f5f2;
+-    --muted: #a0a099;
+-    --surface: #181817;
+-    --line: #31312f;
+-  }
++  color-scheme: dark;
++  --ink: #090b11;
++  --ink-2: #0e1220;
++  --line: #232a3e;
++  --text: #eef1f8;
++  --muted: #9aa4bb;
++  --gold: #ffb03a;
++  --blue: #5e8bff;
++  --ember: #ff5c39;
++
++  --noon: #f3ead9;
++  --noon-ink: #221a0e;
++  --noon-line: #d9cbae;
++
++  --page-ease: cubic-bezier(0.22, 1, 0.36, 1); /* rewritten live by Act 02 */
++
++  --f-display: var(--font-display), "Archivo", "Arial Black", sans-serif;
++  --f-body: var(--font-body), "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
++  --f-mono: var(--font-mono), "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+ }
+ 
+ * { box-sizing: border-box; }
+-html { background: var(--background); color: var(--foreground); }
+-body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
++
++html {
++  background: var(--ink);
++  color: var(--text);
++  scroll-padding-top: 76px;
++  scroll-padding-bottom: 96px;
++}
++html[data-motion="full"] { scroll-behavior: smooth; }
++
++body {
++  margin: 0;
++  font-family: var(--f-body);
++  font-size: 16px;
++  line-height: 1.55;
++  background: var(--ink);
++  color: var(--text);
++  -webkit-font-smoothing: antialiased;
++}
++
+ a { color: inherit; }
+ button, input { font: inherit; }
++
++::selection { background: var(--gold); color: #241503; }
++
++:focus-visible {
++  outline: 2px solid var(--gold);
++  outline-offset: 3px;
++  border-radius: 2px;
++}
++
++.sr-only {
++  position: absolute; width: 1px; height: 1px;
++  margin: -1px; padding: 0; border: 0;
++  clip: rect(0 0 0 0); overflow: hidden; white-space: nowrap;
++}
++
++.skip-link {
++  position: fixed; top: -60px; left: 16px; z-index: 100;
++  padding: 10px 16px; background: var(--gold); color: #241503;
++  font-family: var(--f-mono); font-size: 0.8rem; letter-spacing: 0.08em;
++  border-radius: 0 0 8px 8px; text-decoration: none;
++  transition: top 160ms var(--page-ease);
++}
++.skip-link:focus-visible { top: 0; }
++
++/* ── shared type roles ── */
++.tag {
++  font-family: var(--f-mono);
++  font-size: 0.68rem;
++  font-weight: 500;
++  letter-spacing: 0.14em;
++  text-transform: uppercase;
++  color: var(--muted);
++}
++.mono-readout {
++  font-family: var(--f-mono);
++  font-size: 0.8rem;
++  color: var(--gold);
++  font-variant-numeric: tabular-nums;
++}
++.display-xl {
++  font-family: var(--f-display);
++  font-stretch: 125%;
++  font-weight: 830;
++  font-size: clamp(3.1rem, 9.5vw, 7.6rem);
++  line-height: 0.94;
++  letter-spacing: -0.015em;
++  text-transform: uppercase;
++  margin: 0.35em 0 0.3em;
++  text-shadow: 0 2px 40px rgb(4 6 12 / 0.65);
++}
++.display-l {
++  font-family: var(--f-display);
++  font-stretch: 118%;
++  font-weight: 780;
++  font-size: clamp(2rem, 4.6vw, 3.7rem);
++  line-height: 1.02;
++  letter-spacing: -0.01em;
++  margin: 0.5em 0 0.45em;
++}
++.lede {
++  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
++  max-width: 34em;
++  color: var(--text);
++  margin: 0 0 1.6em;
++}
++.body-copy { max-width: 36em; margin: 0 0 1em; color: var(--text); }
++.dim, .body-copy.dim { color: var(--muted); }
++
++/* ── fixed chrome ── */
++.site-head {
++  position: fixed; inset: 0 0 auto 0; z-index: 30;
++  display: flex; justify-content: space-between; align-items: center;
++  padding: 18px 26px;
++  pointer-events: none;
++  transition: color 400ms var(--page-ease);
++}
++.site-head > * { pointer-events: auto; }
++.wordmark {
++  position: relative;
++  font-family: var(--f-display);
++  font-stretch: 125%; font-weight: 830; font-size: 1.02rem;
++  letter-spacing: 0.14em; text-decoration: none;
++}
++.wordmark::after {
++  /* the wordmark is a miniature timeline: this is its playhead */
++  content: ""; position: absolute; top: -22%; bottom: -22%;
++  left: calc(var(--wp, 0) * 100%);
++  width: 2px; background: var(--gold);
++  box-shadow: 0 0 8px rgb(255 176 58 / 0.8);
++}
++html[data-act="4"] .site-head { color: var(--noon-ink); }
++
++/* ── the stage (WebGL field) ── */
++.stage { position: fixed; inset: 0; z-index: 0; background: var(--ink); }
++.stage-canvas { width: 100%; height: 100%; display: block; }
++.stage-poster { position: absolute; inset: 0; width: 100%; height: 100%; }
++html[data-webgl="off"] .stage-canvas { display: none; }
++
++main { position: relative; z-index: 1; }
++
++/* ── acts: default = readable static document (no JS / reduced) ── */
++.act { position: relative; }
++.act-stage { width: 100%; }
++.act-inner {
++  width: min(1180px, calc(100% - 48px));
++  margin: 0 auto;
++  padding: 88px 0 72px;
++}
++
++/* full-motion layout: tall acts + pinned stages (native scroll, no hijack) */
++html[data-motion="full"] .act { height: var(--act-h, 200vh); }
++html[data-motion="full"] .act-hero { --act-h: 170vh; }
++html[data-motion="full"] #act-tracks { --act-h: 195vh; }
++html[data-motion="full"] #act-curves { --act-h: 225vh; }
++html[data-motion="full"] #act-physics { --act-h: 225vh; }
++html[data-motion="full"] .act-ship { height: auto; }
++html[data-motion="full"] .act-stage {
++  position: sticky; top: 0;
++  height: 100vh; height: 100svh;
++  display: flex; align-items: center;
++  overflow: hidden;
++}
++html[data-motion="full"] .act-inner { padding: 76px 0 96px; }
++
++/* playhead-driven choreography (scrub-reversible, transform+opacity only).
++   Applies only where stages actually pin — on small screens acts flow
++   naturally, so content must never be opacity-gated by the playhead. */
++@media (min-width: 901px) {
++  html[data-motion="full"] .act:not(.act-ship) .act-inner > * {
++    opacity: var(--vis, 1);
++  }
++  html[data-motion="full"] .act:not(.act-ship) .act-inner > *:nth-child(1) {
++    transform: translateY(calc((1 - var(--vis, 1)) * 14px));
++  }
++  html[data-motion="full"] .act:not(.act-ship) .act-inner > *:nth-child(2) {
++    transform: translateY(calc((1 - var(--vis, 1)) * 26px));
++  }
++  html[data-motion="full"] .act:not(.act-ship) .act-inner > *:nth-child(3) {
++    transform: translateY(calc((1 - var(--vis, 1)) * 40px));
++  }
++  html[data-motion="full"] .act:not(.act-ship) .act-inner > *:nth-child(4) {
++    transform: translateY(calc((1 - var(--vis, 1)) * 54px));
++  }
++}
++
++.act-hero .act-stage {
++  cursor: crosshair;
++  background: radial-gradient(62% 62% at 40% 46%, rgb(9 11 17 / 0.5), transparent 72%);
++}
++
++.slate {
++  display: flex; flex-wrap: wrap; gap: 10px 22px;
++  align-items: baseline; justify-content: space-between;
++  border-top: 1px solid var(--line);
++  border-bottom: 1px solid var(--line);
++  padding: 9px 2px;
++  margin: 0 0 1em;
++}
++.slate-tc { color: var(--gold); font-variant-numeric: tabular-nums; }
++
++.cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; }
++.scroll-hint { max-width: 30em; line-height: 1.8; }
++[data-reduced-only] { display: none; }
++html[data-motion="reduced"] [data-reduced-only] { display: block; }
++html[data-motion="reduced"] [data-reduced-hidden] { display: none; }
++
++.btn-primary {
++  display: inline-block;
++  background: var(--gold); color: #241503;
++  font-weight: 650; font-size: 0.95rem; letter-spacing: 0.01em;
++  padding: 13px 24px; border: none; border-radius: 9px;
++  text-decoration: none; cursor: pointer;
++  transition: transform 220ms var(--page-ease), filter 220ms var(--page-ease);
++}
++.btn-primary:hover { transform: translateY(-2px); filter: brightness(1.08); }
++.btn-primary:active { transform: translateY(0); }
++
++.link-btn {
++  background: none; border: none; padding: 0;
++  color: inherit; text-decoration: underline; cursor: pointer;
++}
++
++/* ── act grids ── */
++.act-grid {
++  display: grid;
++  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
++  gap: clamp(24px, 4vw, 64px);
++  align-items: center;
++}
++.act-grid-rev { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
++.act-grid-rev .act-copy { order: 2; }
++.act-grid-rev .instrument { order: 1; }
++
++.act-copy {
++  background: linear-gradient(180deg, rgb(9 11 17 / 0.78), rgb(9 11 17 / 0.62));
++  border: 1px solid rgb(35 42 62 / 0.75);
++  border-radius: 14px;
++  padding: clamp(20px, 3vw, 34px);
++}
++
++/* ── instruments ── */
++.instrument {
++  background: linear-gradient(180deg, rgb(14 18 32 / 0.92), rgb(11 14 26 / 0.86));
++  border: 1px solid var(--line);
++  border-radius: 14px;
++  padding: clamp(16px, 2.2vw, 24px);
++  box-shadow: 0 30px 80px rgb(0 0 0 / 0.45);
++}
++.instrument-head {
++  display: flex; justify-content: space-between; align-items: baseline;
++  gap: 14px; margin-bottom: 14px; flex-wrap: wrap;
++}
++.instrument-note {
++  font-size: 0.8rem; color: var(--muted);
++  margin: 10px 0 0; max-width: 32em;
++}
++
++/* bezier editor */
++.bezier-svg { width: 100%; height: auto; display: block; touch-action: none; }
++.bz-box { fill: none; stroke: var(--line); }
++.bz-grid { stroke: var(--line); stroke-dasharray: 2 5; }
++.bz-axis { fill: var(--muted); font: 500 9px var(--f-mono); }
++.bz-curve {
++  fill: none; stroke: var(--gold); stroke-width: 2.6; stroke-linecap: round;
++  filter: drop-shadow(0 0 7px rgb(255 176 58 / 0.55));
++}
++.bz-arm { stroke-width: 1.3; }
++.bz-arm-a { stroke: rgb(255 176 58 / 0.55); }
++.bz-arm-b { stroke: rgb(94 139 255 / 0.65); }
++.bz-anchor { fill: var(--text); }
++.bz-hit { fill: transparent; cursor: grab; }
++.bz-handle { cursor: grab; stroke-width: 2.2; }
++.bz-handle-a { fill: var(--ink-2); stroke: var(--gold); }
++.bz-handle-b { fill: var(--ink-2); stroke: var(--blue); }
++.bz-handle:focus-visible {
++  outline: none; stroke-width: 4.5;
++  filter: drop-shadow(0 0 6px rgb(255 255 255 / 0.7));
++}
++.bz-strip { stroke: var(--line); }
++.bz-trace { fill: var(--blue); }
++.bz-dot { fill: var(--gold); }
++html[data-motion="reduced"] .bz-dot { display: none; }
++
++.preset-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
++.chip {
++  font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.06em;
++  padding: 7px 12px; border-radius: 999px;
++  border: 1px solid var(--line); background: transparent; color: var(--muted);
++  cursor: pointer;
++  transition: color 160ms var(--page-ease), border-color 160ms var(--page-ease);
++}
++.chip:hover { color: var(--text); border-color: var(--muted); }
++.chip[aria-pressed="true"] { color: #241503; background: var(--gold); border-color: var(--gold); }
++
++/* spring lab */
++.spring-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 18px; }
++.puck-arena {
++  position: relative; min-height: 240px;
++  border: 1px dashed var(--line); border-radius: 14px;
++  display: grid; place-items: center;
++  background: radial-gradient(circle at center, rgb(94 139 255 / 0.09), transparent 65%);
++  touch-action: none; overflow: hidden;
++}
++.puck-target {
++  position: absolute; width: 16px; height: 16px;
++  border: 1px solid var(--muted); border-radius: 50%; opacity: 0.7;
++}
++.puck-target::before, .puck-target::after {
++  content: ""; position: absolute; background: var(--line);
++}
++.puck-target::before { left: -12px; right: -12px; top: 50%; height: 1px; }
++.puck-target::after { top: -12px; bottom: -12px; left: 50%; width: 1px; }
++.puck {
++  width: 62px; height: 62px; border-radius: 50%; border: none;
++  display: grid; place-items: center; font-size: 20px; color: #2c1a03;
++  background: radial-gradient(circle at 34% 30%, #ffd894, var(--gold) 58%, #c67a12);
++  box-shadow: 0 10px 34px rgb(255 176 58 / 0.4);
++  cursor: grab; touch-action: none; will-change: transform;
++}
++.puck:active { cursor: grabbing; }
++.puck-hint { position: absolute; bottom: 12px; pointer-events: none; }
++
++.spring-controls { min-width: 0; }
++.slider-row {
++  display: grid; grid-template-columns: 82px minmax(0, 1fr) 58px;
++  align-items: center; gap: 10px; margin-bottom: 12px;
++}
++.slider-row output { text-align: right; }
++input[type="range"] {
++  accent-color: var(--gold);
++  width: 100%; height: 22px; background: transparent; cursor: pointer;
++}
++
++.response-figure { margin: 6px 0 0; }
++.response-svg {
++  width: 100%; height: auto; display: block;
++  background: rgb(0 0 0 / 0.3);
++  border: 1px solid var(--line); border-radius: 9px;
++}
++.rs-line { stroke: var(--blue); stroke-width: 2; fill: none; }
++.rs-target { stroke: var(--gold); stroke-dasharray: 3 4; opacity: 0.75; }
++.rs-zero { stroke: var(--line); }
++
++/* track readout */
++.tracks-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
++.tracks-table td {
++  padding: 8px 10px; border-top: 1px solid var(--line);
++  color: var(--text);
++}
++.tracks-table td:first-child { width: 42px; color: var(--blue); }
++.tracks-table td:last-child { text-align: right; }
++
++/* ── Act 04: solar noon slab ── */
++.act-ship { position: relative; z-index: 5; }
++.ship-slab {
++  --line: var(--noon-line);
++  --muted: #6d5d3f;
++  --gold: #8a5c06;
++  background: var(--noon);
++  color: var(--noon-ink);
++  border-top: 3px solid #ffb03a;
++  box-shadow: 0 -60px 160px rgb(255 176 58 / 0.16);
++  padding-bottom: 110px;
++}
++.ship-slab .act-inner { padding: clamp(72px, 10vh, 120px) 0 0; }
++.ship-slab .slate { border-color: var(--noon-line); }
++.ship-slab .slate-tc { color: #8a5c06; }
++.ship-slab .body-copy { color: #44371a; }
++.ship-slab ::selection { background: #221a0e; color: var(--noon); }
++.ship-slab :focus-visible { outline-color: #8a5c06; }
++
++.export-panel { margin: 34px 0 10px; max-width: 720px; }
++.export-code {
++  margin: 0; padding: 18px 20px;
++  background: #161006; color: #f5e3bb;
++  font-family: var(--f-mono); font-size: 0.8rem; line-height: 1.65;
++  border-radius: 12px; border: 1px solid #33270f;
++  overflow-x: auto;
++}
++.export-panel .chip { border-color: #b39b6b; color: #443714; }
++.export-panel .chip:hover { color: #221a0e; border-color: #221a0e; }
++
++.access { margin: 30px 0 40px; max-width: 720px; }
++.access-form label { display: block; margin-bottom: 8px; color: #6d5d3f; }
++.access-row { display: flex; flex-wrap: wrap; gap: 12px; }
++.access-row input {
++  flex: 1 1 260px; height: 48px; padding: 0 16px;
++  border: 1px solid #b39b6b; border-radius: 9px;
++  background: #fffdf6; color: #221a0e;
++}
++.access-row input::placeholder { color: #9c8a63; }
++.access-done {
++  font-size: 1.05rem; color: #221a0e;
++  border: 1px solid #b39b6b; border-radius: 10px;
++  padding: 18px 20px; background: #fffdf6; max-width: 34em;
++}
++
++.site-foot {
++  margin-top: 46px; padding-top: 22px;
++  border-top: 1px solid var(--noon-line);
++  font-size: 0.9rem; color: #443714;
++}
++.site-foot .dim { color: #6d5d3f; }
++.site-foot a { color: inherit; }
++
++/* ── HUD ── */
++.hud {
++  position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 40;
++  display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
++  gap: 16px; align-items: center;
++  padding: 9px 14px;
++  background: rgb(11 14 24 / 0.94);
++  border: 1px solid var(--line);
++  border-radius: 12px;
++}
++.hud-left { display: flex; align-items: center; gap: 12px; }
++.hud-play {
++  width: 36px; height: 36px; border-radius: 8px;
++  border: 1px solid var(--line); background: transparent; color: var(--text);
++  cursor: pointer; font-size: 0.72rem; display: grid; place-items: center;
++  transition: border-color 160ms var(--page-ease), color 160ms var(--page-ease);
++}
++.hud-play:hover { border-color: var(--gold); color: var(--gold); }
++.hud-play[aria-pressed="true"] { background: var(--gold); color: #241503; border-color: var(--gold); }
++html[data-motion="reduced"] .hud-play { display: none; }
++.hud-clock { margin: 0; display: grid; line-height: 1.25; }
++.hud-timecode {
++  font-family: var(--f-mono); font-weight: 600; font-size: 0.95rem;
++  color: var(--gold); font-variant-numeric: tabular-nums; letter-spacing: 0.04em;
++}
++.hud-meta { font-family: var(--f-mono); font-size: 0.6rem; color: var(--muted); letter-spacing: 0.1em; }
++
++.hud-strip { position: relative; display: flex; gap: 4px; height: 40px; min-width: 0; }
++.hud-clip {
++  position: relative; min-width: 54px; overflow: hidden;
++  border: 1px solid var(--line); border-radius: 7px;
++  background: rgb(94 139 255 / 0.08);
++  color: var(--muted); cursor: pointer; text-align: left;
++  padding: 4px 9px; display: flex; flex-direction: column; justify-content: center;
++  transition: border-color 160ms var(--page-ease), color 160ms var(--page-ease), background 160ms var(--page-ease);
++}
++.hud-clip:hover { color: var(--text); border-color: var(--muted); }
++.hud-clip[aria-current="true"] {
++  color: var(--text); border-color: var(--gold);
++  background: rgb(255 176 58 / 0.13);
++}
++.hud-clip-no { font-family: var(--f-mono); font-size: 0.55rem; letter-spacing: 0.12em; opacity: 0.8; }
++.hud-clip-name {
++  font-family: var(--f-mono); font-size: 0.7rem; letter-spacing: 0.1em;
++  white-space: nowrap; text-overflow: ellipsis; overflow: hidden;
++}
++.hud-playhead {
++  position: absolute; top: -5px; bottom: -5px; left: 0; width: 2px;
++  background: var(--gold); box-shadow: 0 0 10px rgb(255 176 58 / 0.9);
++  pointer-events: none;
++}
++.hud-right { display: flex; align-items: center; gap: 10px; }
++.hud-key {
++  font-family: var(--f-mono); font-size: 0.62rem; color: var(--muted);
++  border: 1px solid var(--line); border-radius: 5px; padding: 3px 7px;
++}
++.hud-motion {
++  font-family: var(--f-mono); font-size: 0.7rem; letter-spacing: 0.05em;
++  background: transparent; border: 1px solid var(--line); border-radius: 7px;
++  color: var(--muted); padding: 8px 12px; cursor: pointer;
++  transition: color 160ms var(--page-ease), border-color 160ms var(--page-ease);
++}
++.hud-motion:hover { color: var(--text); border-color: var(--muted); }
++.hud-motion strong { color: var(--text); font-weight: 600; }
++
++/* ── responsive recipe ── */
++@media (max-width: 900px) {
++  .act-grid, .act-grid-rev { grid-template-columns: 1fr; }
++  .act-grid-rev .act-copy { order: 1; }
++  .act-grid-rev .instrument { order: 2; }
++  .spring-grid { grid-template-columns: 1fr; }
++  .puck-arena { min-height: 210px; }
++  /* mobile recipe: same field, HUD and instruments, but no pinning —
++     acts flow naturally so touch scrolling never nests */
++  html[data-motion="full"] .act { height: auto; }
++  html[data-motion="full"] .act-stage {
++    position: static; height: auto; display: block; overflow: visible;
++  }
++  html[data-motion="full"] .act-inner { padding: 96px 0 64px; }
++  html[data-motion="full"] .act-hero .act-inner { min-height: 88svh; display: flex; flex-direction: column; justify-content: center; }
++}
++
++@media (max-width: 760px) {
++  .hud { gap: 10px; padding: 8px 10px; }
++  .hud-meta, .hud-key, .hud-clip-name { display: none; }
++  .hud-clip { padding: 4px 6px; align-items: center; min-width: 0; }
++  .hud-clip-no { font-size: 0.62rem; }
++  .hud-timecode { font-size: 0.8rem; }
++  .hud-motion { padding: 7px 9px; font-size: 0.62rem; }
++  .site-head { padding: 14px 16px; }
++  .slate { flex-direction: column; gap: 4px; }
++}
++
++/* very short viewports: give pinned stages breathing room */
++@media (max-height: 620px) {
++  html[data-motion="full"] .act-stage { align-items: flex-start; overflow-y: auto; }
++}
++
++/* ── no-JS / reduced-motion safety net via media query ── */
++@media (prefers-reduced-motion: reduce) {
++  html:not([data-motion="full"]) * {
++    animation-duration: 0.001s !important;
++    transition-duration: 0.001s !important;
++  }
++}
+diff --git a/app/layout.jsx b/app/layout.jsx
+index 35fc217..3050e5a 100644
+--- a/app/layout.jsx
++++ b/app/layout.jsx
+@@ -1,14 +1,49 @@
+ import "./globals.css";
++import { Archivo, Instrument_Sans, IBM_Plex_Mono } from "next/font/google";
++
++const display = Archivo({
++  subsets: ["latin"],
++  variable: "--font-display",
++  axes: ["wdth"],
++  display: "swap",
++});
++
++const body = Instrument_Sans({
++  subsets: ["latin"],
++  variable: "--font-body",
++  display: "swap",
++});
++
++const mono = IBM_Plex_Mono({
++  subsets: ["latin"],
++  weight: ["400", "500", "600"],
++  variable: "--font-mono",
++  display: "swap",
++});
+ 
+ export const metadata = {
+-  title: "Meridian",
+-  description: "Meridian is a timeline-based motion editor for the web. Design animation visually, ship production code.",
++  title: "Meridian — time is a material",
++  description:
++    "Meridian is a timeline-based motion editor for the web. Design animation visually — keyframes, curves, springs — and ship production code. This launch page is one 24-second composition: scroll is the playhead.",
+ };
+ 
++export const viewport = {
++  themeColor: "#090b11",
++  colorScheme: "dark",
++};
++
++// Set the motion mode before first paint so the reduced-motion layout
++// never flashes. No JS at all ⇒ no data-motion attribute ⇒ the CSS
++// defaults to the fully readable static document.
++const MOTION_BOOT = `(function(){try{var s=localStorage.getItem("meridian-motion");var r=s?s==="reduced":matchMedia("(prefers-reduced-motion: reduce)").matches;document.documentElement.setAttribute("data-motion",r?"reduced":"full");}catch(e){document.documentElement.setAttribute("data-motion","full");}})();`;
++
+ export default function RootLayout({ children }) {
+   return (
+-    <html lang="en">
+-      <body>{children}</body>
++    <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
++      <body>
++        <script dangerouslySetInnerHTML={{ __html: MOTION_BOOT }} />
++        {children}
++      </body>
+     </html>
+   );
+ }
+diff --git a/app/page.jsx b/app/page.jsx
+index 6f15aef..a213eeb 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -1,31 +1,5 @@
+-export default function Home() {
+-  return (
+-    <main className="mx-auto max-w-3xl space-y-16 px-6 py-24">
+-      <section className="space-y-4">
+-        <h1 className="text-4xl font-semibold">Meridian</h1>
+-        <p className="text-lg text-[var(--muted)]">
+-          A timeline-based motion editor for the web. Design animation visually, ship production code.
+-        </p>
+-        <a
+-          className="inline-block rounded-md bg-[var(--foreground)] px-4 py-2 text-[var(--background)]"
+-          href="#get-access"
+-        >
+-          Get early access
+-        </a>
+-      </section>
+-
+-      <section className="space-y-6">
+-        <h2 className="text-2xl font-semibold">What it does</h2>
+-        <ul className="space-y-4 text-[var(--muted)]">
+-          <li>Visual timeline editing for springs, keyframes, and gesture-driven motion.</li>
+-          <li>One-click export to production JavaScript and CSS with no runtime lock-in.</li>
+-          <li>Live preview across breakpoints, with reduced-motion variants built in.</li>
+-        </ul>
+-      </section>
++import Experience from "../components/Experience";
+ 
+-      <footer className="border-t border-[var(--line)] pt-8 text-sm text-[var(--muted)]" id="get-access">
+-        <p>Meridian is in private beta. hello@meridian.tools</p>
+-      </footer>
+-    </main>
+-  );
++export default function Home() {
++  return <Experience />;
+ }

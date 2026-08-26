@@ -1,0 +1,108 @@
+{
+  "run_id": "SMOKE-badactor-positive-control",
+  "url": "http://localhost:3112",
+  "section_selector": "[data-experience-system]",
+  "measured_at": "2026-08-11T18:56:18.552Z",
+  "protocol": "rubrics/execution_measurement.md (pre-registered 2026-08-11)",
+  "desktop": {
+    "profile": "desktop",
+    "thresholds": {
+      "p50": 18,
+      "p95": 26,
+      "hitchPct": 1
+    },
+    "m1": {
+      "samples": 133,
+      "p50": 33.30000000000018,
+      "p95": 34.30000000000018,
+      "p99": 34.399999999999636,
+      "hitchPct": 0,
+      "onscreenRafPerSec": 33.25,
+      "pass": false
+    },
+    "hasContinuousAnimation": true,
+    "m2": {
+      "onscreenRafPerSec": 33.25,
+      "offscreenRafPerSec": 33.333333333333336,
+      "ratio": 1.0025062656641606,
+      "pass": false
+    },
+    "m5": {
+      "accessibleNameCount": 6,
+      "focusableCount": 6,
+      "pass": true
+    },
+    "m3": {
+      "reducedMotionRafPerSec": 33.333333333333336,
+      "ratio": 1.0025062656641606,
+      "accessibleNameCount": 6,
+      "contentParity": true,
+      "motionStops": false,
+      "pass": false,
+      "scope": "full",
+      "criticalFailure": null
+    },
+    "consoleErrors": [],
+    "status": "MEASURED"
+  },
+  "mobile": {
+    "profile": "mobile",
+    "thresholds": {
+      "p50": 22,
+      "p95": 34,
+      "hitchPct": 2
+    },
+    "m1": {
+      "samples": 133,
+      "p50": 33.30000000000018,
+      "p95": 34.29999999999973,
+      "p99": 34.30000000000018,
+      "hitchPct": 0,
+      "onscreenRafPerSec": 33.25,
+      "pass": false
+    },
+    "hasContinuousAnimation": true,
+    "m2": {
+      "onscreenRafPerSec": 33.25,
+      "offscreenRafPerSec": 33.333333333333336,
+      "ratio": 1.0025062656641606,
+      "pass": false
+    },
+    "m5": {
+      "accessibleNameCount": 6,
+      "focusableCount": 6,
+      "pass": true
+    },
+    "m3": {
+      "reducedMotionRafPerSec": 33.333333333333336,
+      "ratio": 1.0025062656641606,
+      "accessibleNameCount": 6,
+      "contentParity": true,
+      "motionStops": false,
+      "pass": false,
+      "scope": "full",
+      "criticalFailure": null
+    },
+    "consoleErrors": [],
+    "status": "MEASURED"
+  },
+  "m4_teardown": {
+    "glContextsPerCycle": [
+      0,
+      0,
+      0
+    ],
+    "note": "Full-navigation cycles reset page state, so this bounds per-load context creation only. In-app mount/unmount teardown requires an app-specific route pair and is reported NOT_MEASURED unless supplied.",
+    "status": "PARTIAL",
+    "consoleErrors": [],
+    "pass": true
+  },
+  "summary": {
+    "m1_desktop": false,
+    "m1_mobile": false,
+    "m2_offscreen_pause": false,
+    "m3_reduced_motion": false,
+    "m5_accessible_parallel": true,
+    "critical": []
+  }
+}

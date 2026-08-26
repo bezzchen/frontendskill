@@ -1,0 +1,9 @@
+{
+  "do_not_open_until_ranks_are_recorded": false,
+  "mapping": {
+    "candidate-C": "W1-fable-rep1",
+    "candidate-A": "W1-fable-rep2",
+    "candidate-B": "W1-fable-rep3"
+  },
+  "unsealed": "2026-08-12 after ranks recorded"
+}

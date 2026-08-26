@@ -1,0 +1,965 @@
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..ae1d887 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -24,3 +24,36 @@ html { background: var(--background); color: var(--foreground); }
+ body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
+ a { color: inherit; }
+ button, input { font: inherit; }
++
++/* ---------------------------------------------------------------------------
++   Experience system — progressive enhancement hooks.
++   Without JavaScript the section stays a plain responsive grid (see the
++   component); once the desktop scope boots it flips the stage into an
++   absolutely-positioned orbital canvas. All motion values live in JS —
++   these rules only describe the enhanced structure.
++--------------------------------------------------------------------------- */
++[data-experience-system] .orb-hit { cursor: inherit; }
++[data-experience-system] .orb-card { transition: box-shadow 180ms ease; }
++[data-experience-system] .orb-item.is-grabbed .orb-card {
++  box-shadow: 0 16px 44px rgb(0 0 0 / 0.16);
++}
++
++@media (min-width: 1024px) {
++  [data-experience-system][data-enhanced] {
++    display: block;
++    height: 42rem;
++  }
++  [data-experience-system][data-enhanced] .orb-item {
++    position: absolute;
++    top: 0;
++    left: 0;
++    margin: 0;
++    will-change: transform;
++  }
++  [data-experience-system][data-enhanced] .orb-drag {
++    will-change: transform;
++  }
++  [data-experience-system][data-enhanced] .orb-ring {
++    display: block;
++  }
++}
+diff --git a/components/ExperienceSystem.jsx b/components/ExperienceSystem.jsx
+index 0b2e08c..e65c4f8 100644
+--- a/components/ExperienceSystem.jsx
++++ b/components/ExperienceSystem.jsx
+@@ -1,34 +1,897 @@
+ "use client";
+ 
+-const items = [
+-  { id: "exp-1", label: "Company A", type: "experience" },
+-  { id: "exp-2", label: "Company B", type: "experience" },
+-  { id: "exp-3", label: "Research Lab", type: "experience" },
+-  { id: "project-1", label: "Project Atlas", type: "project" },
+-  { id: "project-2", label: "Project Vector", type: "project" },
+-  { id: "project-3", label: "Project Field", type: "project" },
++/**
++ * ExperienceSystem — a living arrangement of work + projects.
++ *
++ * Registers (creative-frontend-architect): Expressive (W) with a living-system
++ * core on large screens. Spectacle-via-GPU was weighed and declined: the brief
++ * pins the engine to Anime.js v4 over the same semantic DOM, and the fixture's
++ * language is quiet/editorial.
++ *
++ * Three arrangements, one set of DOM nodes (nothing remounts across modes):
++ *   "all"        — desktop: every card orbits the featured project;
++ *                  mobile: the plain responsive grid (identical to no-JS).
++ *   "experience" — desktop: experience cards dock into a left column, projects
++ *                  keep orbiting; mobile: experience becomes a full-width list,
++ *                  projects collapse into a flickable shelf.
++ *   "projects"   — the mirror image.
++ *
++ * Ownership (one owner per concern):
++ *   - The orbit driver (an Anime.js timer) is the only writer of the outer
++ *     <li> transforms on desktop. It renders lerp(structuredSlot, orbitSlot)
++ *     per item; mode changes only tween the per-item `blend` and slot values.
++ *   - Anime.js `createDraggable` owns the inner .orb-drag transforms: an
++ *     elastic tether (container [0,0,0,0] + containerFriction) so every card
++ *     can be pulled and springs home on release.
++ *   - Anime.js `createLayout` (AutoLayout, FLIP) owns the mobile
++ *     reorganisation, where layout is real document flow.
++ *   - `createScope` owns lifecycle: media queries (breakpoint +
++ *     prefers-reduced-motion) revert and rebuild the whole system; unmount
++ *     reverts everything.
++ *
++ * Ambient-motion policy: the orbit timer pauses when the stage leaves the
++ * viewport (IntersectionObserver) and the Anime.js engine itself suspends
++ * when the document is hidden (engine.pauseOnDocumentHidden, default true in
++ * v4.5.0). Under prefers-reduced-motion the timer never runs: the same
++ * compositions render as static layouts, mode switches apply instantly, and
++ * drag releases settle immediately instead of springing.
++ */
++
++import { useEffect, useLayoutEffect, useRef, useState } from "react";
++import { flushSync } from "react-dom";
++import {
++  animate,
++  createDraggable,
++  createLayout,
++  createScope,
++  createTimer,
++  stagger,
++  utils,
++} from "animejs";
++
++/* ----------------------------- content (fixture) ---------------------------- */
++
++const ITEMS = [
++  {
++    id: "exp-1",
++    kind: "experience",
++    label: "Company A",
++    meta: "Senior engineer · 2022 — now",
++    blurb:
++      "Realtime collaboration infrastructure and interface systems for distributed teams.",
++  },
++  {
++    id: "exp-2",
++    kind: "experience",
++    label: "Company B",
++    meta: "Engineer · 2019 — 2022",
++    blurb:
++      "Data-dense dashboards and a component system shared across four product lines.",
++  },
++  {
++    id: "exp-3",
++    kind: "experience",
++    label: "Research Lab",
++    meta: "Research engineer · 2017 — 2019",
++    blurb:
++      "Prototyped computational design tools; published work on generative layout.",
++  },
++  {
++    id: "project-0",
++    kind: "project",
++    core: true,
++    label: "Project Meridian",
++    meta: "Featured · Layout engine · 2024",
++    blurb:
++      "A small spatial engine that treats interface elements as orbiting bodies — the system arranging this page.",
++  },
++  {
++    id: "project-1",
++    kind: "project",
++    label: "Project Atlas",
++    meta: "Systems mapping · 2023",
++    blurb: "A visual editor that turns distributed systems into navigable maps.",
++  },
++  {
++    id: "project-2",
++    kind: "project",
++    label: "Project Vector",
++    meta: "Motion sketching · 2022",
++    blurb: "Pen-first sketches of interface motion, exported as spring curves.",
++  },
++  {
++    id: "project-3",
++    kind: "project",
++    label: "Project Field",
++    meta: "Type specimen · 2021",
++    blurb: "A generative specimen growing reading layouts from recorded data.",
++  },
+ ];
+ 
++const MODE_OF = { experience: "experience", project: "projects" };
++const SET_NAME = { experience: "work experience", project: "projects" };
++
++/* ------------------------------ desktop metrics ----------------------------- */
++
++const REV = (Math.PI * 2) / 110; // one full revolution ≈ 110s
++const SAT = { w: 200, h: 144 }; // satellite (orbiting) card
++const STRUCT = { w: 320, h: 196 }; // structured (docked) card
++const CORE_ALL = { w: 300, h: 196 }; // featured project, overview
++const CORE_FOCUS = { w: 248, h: 156 }; // featured project, focused modes
++const COL_X = 6;
++const COL_GAP = 14;
++
++/* --------------------------------- helpers ---------------------------------- */
++
++const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
++
++// deterministic per-id pseudo-random in [0, 1) so layouts are stable
++const rand = (id, salt) => {
++  let h = 2166136261 ^ (salt * 2654435761);
++  for (let i = 0; i < id.length; i++) h = Math.imul(h ^ id.charCodeAt(i), 16777619);
++  return ((h >>> 0) % 1000) / 1000;
++};
++
++const useIsoLayoutEffect =
++  typeof window === "undefined" ? useEffect : useLayoutEffect;
++
++/* -------------------------------- component --------------------------------- */
++
+ export function ExperienceSystem() {
+-  return (
+-    <section className="space-y-6" aria-labelledby="experience-title">
+-      <div>
+-        <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted)]">Experience system</p>
+-        <h2 id="experience-title" className="text-4xl font-semibold tracking-tight">
+-          Work and projects
+-        </h2>
++  const [mode, setMode] = useState("all");
++
++  const rootRef = useRef(null);
++  const stageRef = useRef(null);
++  const apiRef = useRef(null); // imperative bridge into the active scope
++  const modeRef = useRef("all");
++  const enteredRef = useRef(false); // desktop entrance plays once per page life
++  const pointerRef = useRef(null); // drag-vs-click disambiguation
++
++  /* ------------------------------ scope lifecycle --------------------------- */
++
++  useIsoLayoutEffect(() => {
++    /* ============================ desktop system =========================== */
++    const buildDesktop = (self) => {
++      const reduce = self.matches.reduce;
++      const stage = stageRef.current;
++      if (!stage) return;
++
++      const pick = (li) => ({
++        li,
++        dragEl: li.querySelector(".orb-drag"),
++        card: li.querySelector(".orb-card"),
++        blurb: li.querySelector(".orb-blurb"),
++      });
++
++      const byId = new Map();
++      stage
++        .querySelectorAll("li[data-orb-item]")
++        .forEach((li) => byId.set(li.dataset.id, pick(li)));
++
++      const coreData = ITEMS.find((i) => i.core);
++      const expData = ITEMS.filter((i) => i.kind === "experience");
++      const projData = ITEMS.filter((i) => i.kind === "project" && !i.core);
++
++      // interleave kinds so any single-kind subset stays evenly spaced
++      const satData = [];
++      for (let i = 0; i < Math.max(expData.length, projData.length); i++) {
++        if (expData[i]) satData.push(expData[i]);
++        if (projData[i]) satData.push(projData[i]);
++      }
++      const countOf = (kind) =>
++        (kind === "experience" ? expData : projData).length;
++
++      const sats = satData.map((item, i) => {
++        const s1 = rand(item.id, 1);
++        const s2 = rand(item.id, 2);
++        const s3 = rand(item.id, 3);
++        return {
++          item,
++          ...byId.get(item.id),
++          order: (item.kind === "experience" ? expData : projData).indexOf(item),
++          baseAngle:
++            -Math.PI / 2 +
++            (i * (Math.PI * 2)) / satData.length +
++            (s1 - 0.5) * 0.12,
++          ring: i % 2,
++          swayFreq: 0.24 + s1 * 0.14,
++          swayPhase: s2 * Math.PI * 2,
++          breathFreq: 0.38 + s2 * 0.22,
++          breathPhase: s3 * Math.PI * 2,
++          tiltFreq: 0.5 + s3 * 0.25,
++          tiltPhase: s1 * Math.PI * 2,
++          structured: false,
++          state: { blend: 1, sx: 0, sy: 0 },
++        };
++      });
++      const core = { item: coreData, ...byId.get(coreData.id) };
++      const ringEls = Array.from(stage.querySelectorAll(".orb-ring"));
++
++      /* geometry ----------------------------------------------------------- */
++
++      const geo = {
++        cx: 0,
++        cy: 0,
++        rx1: 0,
++        ry1: 0,
++        rx2: 0,
++        ry2: 0,
++        ringOpacity: 0,
++        coreW: CORE_ALL.w,
++        coreH: CORE_ALL.h,
++      };
++
++      const geoTargets = (m) => {
++        const W = stage.clientWidth;
++        const H = stage.clientHeight;
++        const focused = m !== "all";
++        const colEdge = focused ? COL_X + STRUCT.w + 24 : 0;
++        const cx = focused ? colEdge + (W - colEdge) * 0.52 : W * 0.5;
++        const cy = H * 0.52;
++        const roomX = Math.min(cx - colEdge, W - cx);
++        const rx2 = clamp(roomX - SAT.w / 2 - 14, 130, 340);
++        const ry2 = clamp(Math.min(cy, H - cy) - SAT.h / 2 - 16, 110, 240);
++        return {
++          cx,
++          cy,
++          rx2,
++          ry2,
++          rx1: rx2 * 0.92,
++          ry1: ry2 * 0.8,
++          ringOpacity: focused ? 0.4 : 0.65,
++          coreW: focused ? CORE_FOCUS.w : CORE_ALL.w,
++          coreH: focused ? CORE_FOCUS.h : CORE_ALL.h,
++        };
++      };
++
++      const slotFor = (order, kind) => {
++        const H = stage.clientHeight;
++        const n = countOf(kind);
++        const total = n * STRUCT.h + (n - 1) * COL_GAP;
++        const top = Math.max(16, (H - total) / 2);
++        return [COL_X, top + order * (STRUCT.h + COL_GAP)];
++      };
++
++      const zFor = (it) => (it === core ? "8" : it.structured ? "20" : "12");
++
++      /* render pipeline (sole writer of outer transforms) ------------------- */
++
++      let lastRing = "";
++      let lastCore = "";
++      const render = (tMs) => {
++        const t = tMs / 1000;
++
++        const ringKey = `${geo.cx | 0}|${geo.cy | 0}|${geo.rx1 | 0}|${geo.ry1 | 0}|${geo.rx2 | 0}|${geo.ry2 | 0}|${geo.ringOpacity.toFixed(2)}`;
++        if (ringKey !== lastRing) {
++          lastRing = ringKey;
++          const radii = [
++            [geo.rx1, geo.ry1],
++            [geo.rx2, geo.ry2],
++          ];
++          ringEls.forEach((el, i) => {
++            const [rx, ry] = radii[i] || radii[0];
++            el.style.width = `${rx * 2}px`;
++            el.style.height = `${ry * 2}px`;
++            el.style.opacity = String(geo.ringOpacity);
++            el.style.transform = `translate3d(${geo.cx - rx}px, ${geo.cy - ry}px, 0)`;
++          });
++        }
++
++        const coreKey = `${geo.coreW | 0}|${geo.coreH | 0}`;
++        if (coreKey !== lastCore) {
++          lastCore = coreKey;
++          core.card.style.width = `${geo.coreW}px`;
++          core.card.style.height = `${geo.coreH}px`;
++        }
++        const cbx = Math.sin(t * 0.32 + 1.4) * 6;
++        const cby = Math.cos(t * 0.27) * 7;
++        core.li.style.transform = `translate3d(${(geo.cx - geo.coreW / 2 + cbx).toFixed(2)}px, ${(geo.cy - geo.coreH / 2 + cby).toFixed(2)}px, 0)`;
++
++        for (const it of sats) {
++          const b = it.state.blend;
++          const angle =
++            it.baseAngle +
++            t * REV +
++            Math.sin(t * it.swayFreq + it.swayPhase) * 0.055;
++          const breath = Math.sin(t * it.breathFreq + it.breathPhase);
++          const rx = (it.ring ? geo.rx2 : geo.rx1) + breath * 9;
++          const ry = (it.ring ? geo.ry2 : geo.ry1) + breath * 7;
++          const ox = geo.cx + Math.cos(angle) * rx - SAT.w / 2;
++          const oy = geo.cy + Math.sin(angle) * ry - SAT.h / 2;
++          const x = it.state.sx + (ox - it.state.sx) * b;
++          const y = it.state.sy + (oy - it.state.sy) * b;
++          const tilt = Math.sin(t * it.tiltFreq + it.tiltPhase) * 1.5 * b;
++          const scale = 1 - 0.12 * b;
++          it.li.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) rotate(${tilt.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
++        }
++      };
++
++      /* ambient clock — pauses offscreen; engine pauses it when doc hidden -- */
++
++      const timer = createTimer({
++        autoplay: false,
++        onUpdate: (t) => render(t.currentTime),
++      });
++      const tNow = () => timer.currentTime;
++      const renderTick = () => {
++        if (timer.paused) render(tNow());
++      };
++
++      const io = new IntersectionObserver(
++        (entries) => {
++          const visible = entries[0]?.isIntersecting ?? true;
++          if (reduce) return; // never run ambient motion under reduced motion
++          if (visible) timer.resume();
++          else timer.pause();
++        },
++        { threshold: 0 }
++      );
++      io.observe(stage);
++
++      let roTimeout;
++      let roFirst = true;
++      const ro = new ResizeObserver(() => {
++        if (roFirst) {
++          roFirst = false;
++          return;
++        }
++        clearTimeout(roTimeout);
++        roTimeout = setTimeout(() => {
++          Object.assign(geo, geoTargets(modeRef.current));
++          sats.forEach((it) => {
++            if (it.structured) {
++              const [sx, sy] = slotFor(it.order, it.item.kind);
++              it.state.sx = sx;
++              it.state.sy = sy;
++            }
++          });
++          lastRing = "";
++          lastCore = "";
++          render(tNow());
++        }, 120);
++      });
++      ro.observe(stage);
++
++      /* draggables — elastic tether to the (moving) home slot ---------------- */
++
++      const tether = (it, isCore) =>
++        createDraggable(it.dragEl, {
++          container: [0, 0, 0, 0],
++          containerFriction: () => (isCore ? 0.5 : it.structured ? 0.66 : 0.34),
++          releaseStiffness: isCore ? 90 : 120,
++          releaseDamping: isCore ? 14 : 12,
++          velocityMultiplier: 1.1,
++          cursor: false,
++          onGrab: () => {
++            it.li.classList.add("is-grabbed");
++            it.li.style.zIndex = "40";
++          },
++          onRelease: (d) => {
++            if (reduce) {
++              // direct manipulation stays, springy travel does not
++              d.stop();
++              d.reset();
++              it.li.classList.remove("is-grabbed");
++              it.li.style.zIndex = zFor(it);
++            }
++          },
++          onSettle: () => {
++            it.li.classList.remove("is-grabbed");
++            it.li.style.zIndex = zFor(it);
++          },
++        });
++
++      sats.forEach((it) => {
++        it.drag = tether(it, false);
++      });
++      core.drag = tether(core, true);
++
++      /* mode application ----------------------------------------------------- */
++
++      const applyInstant = (m) => {
++        Object.assign(geo, geoTargets(m));
++        sats.forEach((it) => {
++          const structured = MODE_OF[it.item.kind] === m;
++          it.structured = structured;
++          it.state.blend = structured ? 0 : 1;
++          if (structured) {
++            const [sx, sy] = slotFor(it.order, it.item.kind);
++            it.state.sx = sx;
++            it.state.sy = sy;
++          }
++          it.card.style.width = `${structured ? STRUCT.w : SAT.w}px`;
++          it.card.style.height = `${structured ? STRUCT.h : SAT.h}px`;
++          it.blurb.style.opacity = structured ? "1" : "0";
++          it.li.style.opacity = "1";
++          it.li.style.zIndex = zFor(it);
++          it.drag.refresh();
++        });
++        core.li.style.opacity = "1";
++        core.li.style.zIndex = zFor(core);
++        core.blurb.style.opacity = m === "all" ? "1" : "0";
++        core.drag.refresh();
++        lastRing = "";
++        lastCore = "";
++        render(tNow());
++      };
++
++      const desktopSwitch = (next) => {
++        animate(geo, {
++          ...geoTargets(next),
++          duration: 850,
++          ease: "inOutQuint",
++          onUpdate: renderTick,
++        });
++        animate(core.blurb, {
++          opacity: next === "all" ? 1 : 0,
++          duration: 260,
++          ease: "outQuad",
++          delay: next === "all" ? 320 : 0,
++        });
++        sats.forEach((it) => {
++          const willStructure = MODE_OF[it.item.kind] === next;
++          if (willStructure && !it.structured) {
++            it.structured = true;
++            const [sx, sy] = slotFor(it.order, it.item.kind);
++            it.state.sx = sx;
++            it.state.sy = sy;
++            const d = 80 + it.order * 90;
++            it.li.style.zIndex = "26";
++            animate(it.state, {
++              blend: 0,
++              duration: 800,
++              ease: "inOutQuint",
++              delay: d,
++              onUpdate: renderTick,
++              onComplete: () => {
++                it.li.style.zIndex = zFor(it);
++              },
++            });
++            animate(it.card, {
++              width: STRUCT.w,
++              height: STRUCT.h,
++              duration: 460,
++              ease: "outQuint",
++              delay: d + 260,
++            });
++            animate(it.blurb, {
++              opacity: 1,
++              duration: 300,
++              ease: "outQuad",
++              delay: d + 420,
++            });
++            it.drag.refresh();
++          } else if (!willStructure && it.structured) {
++            it.structured = false;
++            const d = it.order * 70;
++            it.li.style.zIndex = "26";
++            animate(it.state, {
++              blend: 1,
++              duration: 740,
++              ease: "inOutQuint",
++              delay: d,
++              onUpdate: renderTick,
++              onComplete: () => {
++                it.li.style.zIndex = zFor(it);
++              },
++            });
++            animate(it.card, {
++              width: SAT.w,
++              height: SAT.h,
++              duration: 400,
++              ease: "outQuint",
++              delay: d,
++            });
++            animate(it.blurb, { opacity: 0, duration: 160, ease: "outQuad" });
++            it.drag.refresh();
++          }
++        });
++      };
++
++      /* boot ------------------------------------------------------------------ */
++
++      stage.setAttribute("data-enhanced", "");
++      applyInstant(modeRef.current);
++
++      if (!reduce && !enteredRef.current) {
++        const satLis = sats.map((it) => it.li);
++        utils.set([core.li, ...satLis], { opacity: 0 });
++        animate(core.li, { opacity: 1, duration: 500, ease: "outQuad", delay: 80 });
++        animate(satLis, {
++          opacity: 1,
++          duration: 550,
++          ease: "outQuad",
++          delay: stagger(75, { start: 200 }),
++        });
++      }
++      enteredRef.current = true;
++
++      apiRef.current = {
++        layout: "desktop",
++        reduce,
++        applyInstant,
++        switch: desktopSwitch,
++      };
++
++      /* cleanup — return the stage to its unenhanced document state ---------- */
++      return () => {
++        io.disconnect();
++        ro.disconnect();
++        clearTimeout(roTimeout);
++        utils.remove([geo]);
++        stage.removeAttribute("data-enhanced");
++        [...sats, core].forEach((it) => {
++          if (it.state) utils.remove([it.state]);
++          utils.remove([it.li, it.card, it.blurb]);
++          it.li.classList.remove("is-grabbed");
++          it.li.style.transform = "";
++          it.li.style.zIndex = "";
++          it.li.style.opacity = "";
++          it.card.style.width = "";
++          it.card.style.height = "";
++          it.blurb.style.opacity = "";
++        });
++        ringEls.forEach((el) => {
++          el.style.cssText = "";
++        });
++        apiRef.current = null;
++        // draggables, the timer and any running tweens were created inside
++        // the scope and are reverted by the scope itself.
++      };
++    };
++
++    /* ============================ mobile system ============================ */
++    const buildMobile = (self) => {
++      const reduce = self.matches.reduce;
++      const stage = stageRef.current;
++      if (!stage) return;
++
++      const layout = createLayout(stage, { children: ".orb-item" });
++      const blurbs = Array.from(stage.querySelectorAll(".orb-blurb"));
++      let shelfDrag = null;
++      let shelfUl = null;
++
++      const shelfKindFor = (m) =>
++        m === "experience" ? "project" : m === "projects" ? "experience" : null;
++
++      const revertShelf = () => {
++        if (shelfDrag) shelfDrag.revert();
++        shelfDrag = null;
++        shelfUl = null;
++      };
++
++      const buildShelf = (m) => {
++        revertShelf();
++        const kind = shelfKindFor(m);
++        if (!kind) return;
++        const ul = stage.querySelector(`ul[data-kind-list="${kind}"]`);
++        if (!ul) return;
++        shelfUl = ul;
++        const lis = Array.from(ul.querySelectorAll("li[data-orb-item]"));
++        const ulLeft = ul.offsetLeft || 0;
++        const offsets = lis.map((li) =>
++          li.offsetParent === ul ? li.offsetLeft : li.offsetLeft - ulLeft
++        );
++        const minX = Math.min(0, stage.clientWidth - ul.scrollWidth);
++        const snaps = offsets.map((off) => clamp(-off, minX, 0));
++        shelfDrag = createDraggable(ul, {
++          container: [0, 0, 0, minX],
++          containerFriction: 0.26,
++          releaseStiffness: 160,
++          releaseDamping: 20,
++          velocityMultiplier: 1.15,
++          cursor: false,
++          y: false,
++          x: { snap: snaps },
++          onRelease: (d) => {
++            if (reduce) {
++              d.stop();
++              const nearest = snaps.reduce(
++                (best, s) => (Math.abs(s - d.x) < Math.abs(best - d.x) ? s : best),
++                0
++              );
++              d.setX(nearest);
++            }
++          },
++        });
++      };
++
++      // keep keyboard focus reachable inside the clipped shelf
++      const onFocusIn = (e) => {
++        if (!shelfDrag || !shelfUl) return;
++        const li = e.target?.closest?.("li[data-orb-item]");
++        if (!li || !shelfUl.contains(li)) return;
++        const ulLeft = shelfUl.offsetLeft || 0;
++        const off =
++          li.offsetParent === shelfUl ? li.offsetLeft : li.offsetLeft - ulLeft;
++        const minX = shelfDrag.containerBounds[3];
++        shelfDrag.setX(clamp(-off + 12, minX, 0));
++      };
++      stage.addEventListener("focusin", onFocusIn);
++
++      const applyInstant = (m) => {
++        blurbs.forEach((b) => {
++          b.style.opacity = "";
++        });
++        buildShelf(m);
++      };
++
++      const mobileSwitch = (next, mutate) => {
++        let hasReveal = false;
++        const tl = layout.update(
++          () => {
++            revertShelf(); // record() has run: old state keeps the drag offset
++            mutate(); // flushSync class swap — same nodes, new arrangement
++            if (next !== "all") {
++              const kind = next === "experience" ? "experience" : "project";
++              const revealed = stage.querySelectorAll(
++                `li[data-kind="${kind}"] .orb-blurb`
++              );
++              hasReveal = revealed.length > 0;
++              revealed.forEach((b) => {
++                b.style.opacity = "0";
++              });
++            }
++          },
++          {
++            duration: 500,
++            ease: "inOutQuint",
++            delay: (_, i) => i * 26,
++          }
++        );
++        if (hasReveal) {
++          // AutoLayout restores the inline styles it recorded (opacity 0) when
++          // its timeline completes, so the reveal must start strictly after it
++          // to keep a single owner on the property at any moment.
++          tl.then(() =>
++            requestAnimationFrame(() => {
++              if (modeRef.current !== next) return; // superseded switch
++              const kind = next === "experience" ? "experience" : "project";
++              const blurbs2 = Array.from(
++                stage.querySelectorAll(`li[data-kind="${kind}"] .orb-blurb`)
++              );
++              blurbs2.forEach((b) => {
++                if (b.style.opacity === "") b.style.opacity = "0";
++              });
++              animate(blurbs2, {
++                opacity: 1,
++                duration: 300,
++                ease: "outQuad",
++                delay: stagger(40),
++                onComplete: () => {
++                  blurbs2.forEach((b) => {
++                    b.style.opacity = "";
++                  });
++                },
++              });
++            })
++          );
++        }
++        buildShelf(next);
++      };
++
++      buildShelf(modeRef.current);
++
++      apiRef.current = {
++        layout: "mobile",
++        reduce,
++        applyInstant,
++        switch: mobileSwitch,
++      };
++
++      return () => {
++        stage.removeEventListener("focusin", onFocusIn);
++        revertShelf();
++        utils.remove(blurbs);
++        blurbs.forEach((b) => {
++          b.style.opacity = "";
++        });
++        apiRef.current = null;
++        // AutoLayout + tweens created in-scope are reverted by the scope.
++      };
++    };
++
++    const scope = createScope({
++      root: rootRef,
++      mediaQueries: {
++        lg: "(min-width: 1024px)",
++        reduce: "(prefers-reduced-motion: reduce)",
++      },
++    }).add((self) => (self.matches.lg ? buildDesktop(self) : buildMobile(self)));
++
++    return () => scope.revert();
++  }, []);
++
++  /* --------------------------------- actions -------------------------------- */
++
++  const applyMode = (next) => {
++    modeRef.current = next;
++    const api = apiRef.current;
++    if (!api) {
++      setMode(next);
++      return;
++    }
++    if (api.layout === "desktop") {
++      flushSync(() => setMode(next));
++      if (api.reduce) api.applyInstant(next);
++      else api.switch(next);
++    } else if (api.reduce) {
++      flushSync(() => setMode(next));
++      api.applyInstant(next);
++    } else {
++      api.switch(next, () => flushSync(() => setMode(next)));
++    }
++  };
++
++  const toggleSet = (m) => applyMode(mode === m ? "all" : m);
++
++  const onItemActivate = (item, e) => {
++    if (e.detail !== 0) {
++      // pointer click: ignore if this gesture was actually a drag
++      const p = pointerRef.current;
++      if (p && p.id === item.id) {
++        const dx = (e.clientX ?? p.x) - p.x;
++        const dy = (e.clientY ?? p.y) - p.y;
++        if (dx * dx + dy * dy > 100) return;
++      }
++    }
++    toggleSet(MODE_OF[item.kind]);
++  };
++
++  /* ---------------------------------- render --------------------------------- */
++
++  const isActive = (kind) => mode === MODE_OF[kind];
++  const isShelf = (kind) => mode !== "all" && !isActive(kind);
++
++  const tabClass = (on) =>
++    "rounded-full border px-4 py-1.5 text-sm transition-colors " +
++    (on
++      ? "border-transparent bg-[var(--foreground)] text-[var(--background)]"
++      : "border-[var(--line)] bg-[var(--surface)] text-[var(--foreground)] hover:border-[var(--muted)]");
++
++  const ulClass = (kind) =>
++    isShelf(kind)
++      ? "max-lg:col-span-full max-lg:row-start-1 max-lg:flex max-lg:w-max max-lg:items-stretch max-lg:gap-3 lg:contents"
++      : "contents";
++
++  const liClass = (item) => {
++    const parts = ["orb-item", "relative"];
++    if (isShelf(item.kind)) parts.push("max-lg:w-56", "max-lg:shrink-0");
++    else if (isActive(item.kind) || item.core) parts.push("max-lg:col-span-full");
++    return parts.join(" ");
++  };
++
++  const blurbClass = (item) =>
++    "orb-blurb mt-2 text-sm leading-6 text-[var(--muted)] " +
++    (isActive(item.kind) ? "" : "max-lg:hidden");
++
++  const hitLabel = (item) =>
++    isActive(item.kind)
++      ? `${item.label} — show everything again`
++      : `${item.label} — show ${SET_NAME[item.kind]} as a list`;
++
++  const announce =
++    mode === "all"
++      ? "Showing everything, gathered around the featured project."
++      : mode === "experience"
++        ? "Work experience arranged as a list; projects set aside."
++        : "Projects arranged as a list; work experience set aside.";
++
++  const renderItem = (item) => (
++    <li
++      key={item.id}
++      data-orb-item=""
++      data-id={item.id}
++      data-kind={item.kind}
++      {...(item.core ? { "data-core": "" } : {})}
++      className={liClass(item)}
++      onPointerDownCapture={(e) => {
++        pointerRef.current = { id: item.id, x: e.clientX, y: e.clientY };
++      }}
++    >
++      <div className="orb-drag h-full lg:cursor-grab lg:select-none lg:active:cursor-grabbing">
++        <article className="orb-card relative flex h-full min-h-28 flex-col overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4 text-left">
++          <span className="text-sm text-[var(--muted)]">
++            {item.core ? "featured project" : item.kind}
++          </span>
++          <strong className="mt-2 block leading-snug">{item.label}</strong>
++          <span className="mt-1 block text-xs uppercase tracking-[0.12em] text-[var(--muted)]">
++            {item.meta}
++          </span>
++          <p className={blurbClass(item)}>{item.blurb}</p>
++          <button
++            type="button"
++            className="orb-hit absolute inset-0 z-10 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)]"
++            aria-pressed={isActive(item.kind)}
++            onClick={(e) => onItemActivate(item, e)}
++          >
++            <span className="sr-only">{hitLabel(item)}</span>
++          </button>
++        </article>
+       </div>
+-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3" data-experience-system>
+-        {items.map((item) => (
++    </li>
++  );
++
++  return (
++    <section ref={rootRef} className="space-y-6" aria-labelledby="experience-title">
++      <div className="flex flex-wrap items-end justify-between gap-4">
++        <div>
++          <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted)]">
++            Experience system
++          </p>
++          <h2
++            id="experience-title"
++            className="text-4xl font-semibold tracking-tight"
++          >
++            Work and projects
++          </h2>
++        </div>
++        <div
++          role="group"
++          aria-label="Arrange work and projects"
++          className="flex flex-wrap items-center gap-2"
++        >
++          <button
++            type="button"
++            onClick={() => toggleSet("experience")}
++            aria-pressed={mode === "experience"}
++            className={tabClass(mode === "experience")}
++          >
++            Experience
++          </button>
+           <button
+-            className="min-h-28 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4 text-left"
+-            data-kind={item.type}
+-            key={item.id}
++            type="button"
++            onClick={() => toggleSet("projects")}
++            aria-pressed={mode === "projects"}
++            className={tabClass(mode === "projects")}
+           >
+-            <span className="text-sm text-[var(--muted)]">{item.type}</span>
+-            <strong className="mt-2 block">{item.label}</strong>
++            Projects
+           </button>
+-        ))}
++        </div>
++      </div>
++
++      <p className="hidden text-xs text-[var(--muted)] lg:block">
++        The cards drift. Drag one around, or press it to pin its set as a list —
++        press again to let everything float.
++      </p>
++      <p className="text-xs text-[var(--muted)] lg:hidden">
++        Tap a card to focus its set; the other set becomes a shelf you can flick
++        sideways.
++      </p>
++      <p className="sr-only" role="status">
++        {announce}
++      </p>
++
++      <div
++        ref={stageRef}
++        data-experience-system=""
++        data-mode={mode}
++        className="relative grid grid-cols-2 gap-3 md:grid-cols-3 max-lg:overflow-x-clip"
++      >
++        <div
++          aria-hidden="true"
++          className="orb-ring pointer-events-none absolute left-0 top-0 hidden rounded-full border border-dashed border-[var(--line)]"
++        />
++        <div
++          aria-hidden="true"
++          className="orb-ring pointer-events-none absolute left-0 top-0 hidden rounded-full border border-dashed border-[var(--line)]"
++        />
++        <ul
++          role="list"
++          aria-label="Work experience"
++          data-kind-list="experience"
++          className={ulClass("experience")}
++        >
++          {ITEMS.filter((i) => i.kind === "experience").map(renderItem)}
++        </ul>
++        <ul
++          role="list"
++          aria-label="Selected projects"
++          data-kind-list="project"
++          className={ulClass("project")}
++        >
++          {ITEMS.filter((i) => i.kind === "project").map(renderItem)}
++        </ul>
+       </div>
+     </section>
+   );

@@ -1,0 +1,1348 @@
+diff --git a/app/colophon/page.jsx b/app/colophon/page.jsx
+new file mode 100644
+index 0000000..9521852
+--- /dev/null
++++ b/app/colophon/page.jsx
+@@ -0,0 +1,47 @@
++import Link from "next/link";
++
++export const metadata = {
++  title: "Colophon - Jordan Lee",
++  description: "How the experience constellation is built.",
++};
++
++export default function Colophon() {
++  return (
++    <main className="mx-auto max-w-2xl space-y-8 px-6 py-16">
++      <header className="space-y-3">
++        <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted)]">Colophon</p>
++        <h1 className="text-4xl font-semibold tracking-tight">
++          How the constellation is built
++        </h1>
++      </header>
++
++      <div className="space-y-4 leading-7 text-[var(--muted)]">
++        <p>
++          The experience constellation draws 500 marks with{" "}
++          <strong className="text-[var(--foreground)]">PixiJS 8</strong> inside
++          a single bounded canvas; the rest of this site is ordinary
++          server-rendered React. Every badge lives on one texture atlas, so the
++          whole field renders as a single batched draw call.
++        </p>
++        <p>
++          The simulation pauses when the section scrolls out of view or the
++          tab is hidden. With reduced motion enabled it stops entirely and
++          renders single frames on demand, keeping filtering, regrouping, and
++          selection fully usable. Touch devices get a lighter profile: fewer
++          marks, a capped pixel ratio, and a 30fps ceiling.
++        </p>
++        <p>
++          Every mark on the canvas is also a plain button in the browse list,
++          so keyboard and screen-reader users work with the same data through
++          real DOM.
++        </p>
++      </div>
++
++      <p>
++        <Link className="underline underline-offset-4" href="/">
++          Back to the portfolio
++        </Link>
++      </p>
++    </main>
++  );
++}
+diff --git a/app/page.jsx b/app/page.jsx
+index 52f37fd..4b7f1bb 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -1,5 +1,6 @@
+ import { SettingsPanel } from "@/components/SettingsPanel";
+ import { ProjectGrid } from "@/components/ProjectGrid";
++import { ExperienceConstellation } from "@/components/constellation/ExperienceConstellation";
+ 
+ export default function Home() {
+   return (
+@@ -14,6 +15,8 @@ export default function Home() {
+ 
+       <ProjectGrid />
+ 
++      <ExperienceConstellation />
++
+       <section className="max-w-2xl space-y-6" aria-labelledby="settings-title">
+         <h2 id="settings-title" className="text-3xl font-semibold">Account settings</h2>
+         <SettingsPanel />
+diff --git a/components/ConstellationData.js b/components/ConstellationData.js
+index 7304001..98b154a 100644
+--- a/components/ConstellationData.js
++++ b/components/ConstellationData.js
+@@ -1,5 +1,63 @@
+-export const constellationItems = Array.from({ length: 500 }, (_, index) => ({
+-  id: index,
+-  label: `Node ${index + 1}`,
+-  category: ["engineering", "research", "design", "math"][index % 4],
+-}));
++// Deterministic dataset for the experience constellation.
++// Everything here is seeded so server and client render identical markup.
++
++export const constellationCategories = [
++  { id: "engineering", label: "Engineering", color: "#5B9DFF", dim: "#274066" },
++  { id: "research", label: "Research", color: "#4CC38A", dim: "#1F4A38" },
++  { id: "design", label: "Design", color: "#F5A455", dim: "#5C4026" },
++  { id: "math", label: "Math", color: "#B08DF5", dim: "#443261" },
++];
++
++const CATEGORY_IDS = constellationCategories.map((c) => c.id);
++
++function mulberry32(seed) {
++  let a = seed >>> 0;
++  return function next() {
++    a |= 0;
++    a = (a + 0x6d2b79f5) | 0;
++    let t = Math.imul(a ^ (a >>> 15), 1 | a);
++    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
++    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
++  };
++}
++
++const PRE = [
++  "Nova", "Quen", "Halo", "Vera", "Osti", "Lume", "Arc", "Pell",
++  "Sable", "Ryn", "Calla", "Ferro", "Iso", "Mira", "Tarn", "Eido",
++  "Brill", "Corva", "Delta", "Hollow",
++];
++
++const MID = [
++  "grid", "form", "fold", "line", "ware", "field", "loop", "craft",
++  "scope", "cell", "frame", "graph", "wave", "byte", "point", "trace",
++  "shape", "range", "stack", "gate", "mark", "path", "root", "span", "kite",
++];
++
++const SUFFIX = {
++  engineering: ["Systems", "Works", "Forge", "Infra"],
++  research: ["Lab", "Institute", "Observatory", "Research"],
++  design: ["Studio", "Atelier", "Type", "Form Co"],
++  math: ["Theory", "Group", "Prime", "Fold"],
++};
++
++export const constellationItems = Array.from({ length: 500 }, (_, index) => {
++  const category = CATEGORY_IDS[index % 4];
++  const rand = mulberry32((index + 1) * 2654435761);
++  const pre = PRE[index % PRE.length];
++  const mid = MID[Math.floor(index / PRE.length) % MID.length];
++  const suffix = SUFFIX[category][Math.floor(rand() * SUFFIX[category].length)];
++  return {
++    id: index,
++    label: `${pre}${mid} ${suffix}`,
++    monogram: `${pre[0]}${mid[0].toUpperCase()}`,
++    category,
++    year: 2014 + Math.floor(rand() * 12),
++    engagements: 1 + Math.floor(rand() * 14),
++    // Stable per-item randomness reused by the canvas engine (size, drift phase, motif).
++    seed: rand(),
++  };
++});
++
++export const categoryById = Object.fromEntries(
++  constellationCategories.map((c) => [c.id, c])
++);
+diff --git a/components/constellation/ExperienceConstellation.jsx b/components/constellation/ExperienceConstellation.jsx
+new file mode 100644
+index 0000000..1f0078c
+--- /dev/null
++++ b/components/constellation/ExperienceConstellation.jsx
+@@ -0,0 +1,297 @@
++"use client";
++
++import Link from "next/link";
++import { useEffect, useMemo, useRef, useState } from "react";
++import {
++  constellationItems,
++  constellationCategories,
++  categoryById,
++} from "@/components/ConstellationData";
++import { createConstellationEngine } from "@/components/constellation/engine";
++
++// React owns every piece of DOM here (controls, status, list); the Pixi
++// engine owns the canvas and the render loop. Selection state round-trips
++// through the engine so canvas clicks and list buttons stay in sync.
++export function ExperienceConstellation() {
++  const hostRef = useRef(null);
++  const engineRef = useRef(null);
++
++  const [mode, setMode] = useState("field");
++  const [filter, setFilter] = useState(null);
++  const [selected, setSelected] = useState(null);
++  const [hovered, setHovered] = useState(null);
++  const [clusters, setClusters] = useState(null);
++  const [reduceMotion, setReduceMotion] = useState(false);
++  const [canvasNodes, setCanvasNodes] = useState(constellationItems.length);
++
++  const counts = useMemo(() => {
++    const c = {};
++    for (const item of constellationItems) {
++      c[item.category] = (c[item.category] ?? 0) + 1;
++    }
++    return c;
++  }, []);
++
++  const grouped = useMemo(
++    () =>
++      constellationCategories.map((cat) => ({
++        cat,
++        items: constellationItems.filter((i) => i.category === cat.id),
++      })),
++    []
++  );
++
++  // Mount the engine once. Guarded for strict-mode double-invoke: destroy()
++  // is safe before, during, and after the engine's async init.
++  useEffect(() => {
++    const host = hostRef.current;
++    if (!host) return undefined;
++
++    // A zero innerWidth means the tab has no layout yet (background or
++    // prerendered load) - only a real, positive narrow width counts as mobile.
++    const coarse =
++      window.matchMedia("(pointer: coarse)").matches ||
++      (window.innerWidth > 0 && window.innerWidth < 768);
++    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
++    setReduceMotion(media.matches);
++
++    const engine = createConstellationEngine(host, {
++      items: constellationItems,
++      categories: constellationCategories,
++      mobile: coarse,
++      reducedMotion: media.matches,
++      onHover: setHovered,
++      onSelect: (item) => setSelected(item),
++      onClusters: setClusters,
++    });
++    engineRef.current = engine;
++    setCanvasNodes(engine.nodesDrawn);
++
++    // Follow OS-level changes live; the user toggle below writes the same state.
++    const onMedia = (e) => setReduceMotion(e.matches);
++    media.addEventListener("change", onMedia);
++
++    return () => {
++      media.removeEventListener("change", onMedia);
++      engineRef.current = null;
++      engine.destroy();
++    };
++  }, []);
++
++  useEffect(() => { engineRef.current?.setMode(mode); }, [mode]);
++  useEffect(() => { engineRef.current?.setFilter(filter); }, [filter]);
++  useEffect(() => { engineRef.current?.setReducedMotion(reduceMotion); }, [reduceMotion]);
++
++  const select = (id) => engineRef.current?.setSelected(id);
++
++  const filterLabel = filter ? categoryById[filter].label : "all disciplines";
++  const canvasLabel =
++    `Constellation map of ${constellationItems.length} engagements` +
++    (mode === "category" ? ", grouped by discipline" : "") +
++    `, showing ${filterLabel}. The same items are available in the browse list below.`;
++
++  return (
++    <section aria-labelledby="constellation-title" className="space-y-6">
++      <div className="max-w-3xl space-y-3">
++        <h2 id="constellation-title" className="text-3xl font-semibold">
++          Experience constellation
++        </h2>
++        <p className="text-[var(--muted)]">
++          {`Ten years of tools, collaborations, and engagements — ${constellationItems.length} in total — drawn as one field. Hover to stir it, click a mark to inspect it, or regroup everything by discipline.`}
++        </p>
++      </div>
++
++      {/* Control surface: plain buttons, mirrored onto the canvas engine. */}
++      <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
++        <div role="group" aria-label="Layout" className="flex overflow-hidden rounded-lg border border-[var(--line)]">
++          {[
++            ["field", "Constellation"],
++            ["category", "By discipline"],
++          ].map(([value, label]) => (
++            <button
++              key={value}
++              type="button"
++              aria-pressed={mode === value}
++              onClick={() => setMode(value)}
++              className={`px-3 py-1.5 text-sm ${
++                mode === value
++                  ? "bg-[var(--foreground)] text-[var(--background)]"
++                  : "bg-[var(--surface)] text-[var(--muted)]"
++              }`}
++            >
++              {label}
++            </button>
++          ))}
++        </div>
++
++        <div role="group" aria-label="Filter by discipline" className="flex flex-wrap gap-2">
++          <button
++            type="button"
++            aria-pressed={filter === null}
++            onClick={() => setFilter(null)}
++            className={`rounded-full border px-3 py-1 text-sm ${
++              filter === null
++                ? "border-[var(--foreground)] bg-[var(--foreground)] text-[var(--background)]"
++                : "border-[var(--line)] bg-[var(--surface)] text-[var(--muted)]"
++            }`}
++          >
++            All {constellationItems.length}
++          </button>
++          {constellationCategories.map((cat) => (
++            <button
++              key={cat.id}
++              type="button"
++              aria-pressed={filter === cat.id}
++              onClick={() => setFilter(filter === cat.id ? null : cat.id)}
++              className={`flex items-center gap-2 rounded-full border px-3 py-1 text-sm ${
++                filter === cat.id
++                  ? "border-[var(--foreground)] bg-[var(--foreground)] text-[var(--background)]"
++                  : "border-[var(--line)] bg-[var(--surface)] text-[var(--muted)]"
++              }`}
++            >
++              <span
++                aria-hidden="true"
++                className="h-2.5 w-2.5 rounded-full"
++                style={{ backgroundColor: cat.color }}
++              />
++              {cat.label} {counts[cat.id]}
++            </button>
++          ))}
++        </div>
++
++        <label className="flex cursor-pointer items-center gap-2 text-sm text-[var(--muted)]">
++          <input
++            type="checkbox"
++            checked={reduceMotion}
++            onChange={(e) => setReduceMotion(e.target.checked)}
++          />
++          Reduce motion
++        </label>
++      </div>
++
++      {/* The bounded spectacle. Everything inside the panel is canvas or
++          decorative overlay; semantics live in the controls and the list. */}
++      <div
++        className="relative overflow-hidden rounded-2xl border border-[var(--line)]"
++        style={{
++          background:
++            "radial-gradient(120% 90% at 28% -12%, #1b2334 0%, #0d1017 52%, #0a0c12 100%)",
++        }}
++      >
++        <div
++          ref={hostRef}
++          role="img"
++          aria-label={canvasLabel}
++          className="h-[420px] w-full md:h-[560px]"
++        />
++        {mode === "category" &&
++          clusters?.map((c) => (
++            <span
++              key={c.id}
++              aria-hidden="true"
++              className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/15 bg-black/45 px-3 py-1 text-xs font-medium tracking-wide text-white/85 backdrop-blur-sm"
++              style={{
++                left: `${c.x * 100}%`,
++                top: `${(c.labelY ?? c.y) * 100}%`,
++              }}
++            >
++              {c.label}
++            </span>
++          ))}
++        <p className="pointer-events-none absolute bottom-3 left-4 text-xs text-white/45">
++          {canvasNodes} of {constellationItems.length} marks drawn
++          {canvasNodes < constellationItems.length ? " (touch profile)" : ""}
++        </p>
++        <p
++          aria-hidden="true"
++          className="pointer-events-none absolute bottom-3 right-4 text-xs text-white/45"
++        >
++          {hovered ? hovered.label : " "}
++        </p>
++      </div>
++
++      {/* Selection status + detail card (announced politely). */}
++      <div aria-live="polite" className="min-h-24">
++        {selected ? (
++          <div className="flex flex-wrap items-start justify-between gap-4 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4">
++            <div className="flex items-start gap-3">
++              <span
++                aria-hidden="true"
++                className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-lg text-sm font-bold text-white"
++                style={{ backgroundColor: categoryById[selected.category].color }}
++              >
++                {selected.monogram}
++              </span>
++              <div>
++                <h3 className="font-semibold">{selected.label}</h3>
++                <p className="text-sm text-[var(--muted)]">
++                  {categoryById[selected.category].label} &middot; since{" "}
++                  {selected.year} &middot; {selected.engagements}{" "}
++                  {selected.engagements === 1 ? "engagement" : "engagements"}
++                </p>
++              </div>
++            </div>
++            <button
++              type="button"
++              onClick={() => select(null)}
++              className="rounded-md border border-[var(--line)] px-3 py-1.5 text-sm text-[var(--muted)]"
++            >
++              Clear selection
++            </button>
++          </div>
++        ) : (
++          <p className="text-sm text-[var(--muted)]">
++            Nothing selected. Click a mark on the map or pick from the list
++            below.
++          </p>
++        )}
++      </div>
++
++      {/* Full semantic representation of the same items, outside the canvas. */}
++      <details className="rounded-xl border border-[var(--line)] bg-[var(--surface)]">
++        <summary className="cursor-pointer px-4 py-3 font-medium">
++          Browse all {constellationItems.length} engagements as a list
++        </summary>
++        <div className="grid gap-6 border-t border-[var(--line)] p-4 md:grid-cols-2">
++          {grouped.map(({ cat, items }) => (
++            <section key={cat.id} aria-labelledby={`cat-${cat.id}`}>
++              <h3 id={`cat-${cat.id}`} className="mb-2 flex items-center gap-2 font-semibold">
++                <span
++                  aria-hidden="true"
++                  className="h-2.5 w-2.5 rounded-full"
++                  style={{ backgroundColor: cat.color }}
++                />
++                {cat.label} ({items.length})
++              </h3>
++              <ul className="max-h-72 space-y-0.5 overflow-y-auto pr-2">
++                {items.map((item) => (
++                  <li key={item.id}>
++                    <button
++                      type="button"
++                      aria-pressed={selected?.id === item.id}
++                      onClick={() => select(item.id)}
++                      className={`w-full rounded px-2 py-1 text-left text-sm ${
++                        selected?.id === item.id
++                          ? "bg-[var(--foreground)] text-[var(--background)]"
++                          : "text-[var(--muted)] hover:bg-[var(--background)]"
++                      }`}
++                    >
++                      {item.label}
++                      <span className="opacity-60"> &middot; {item.year}</span>
++                    </button>
++                  </li>
++                ))}
++              </ul>
++            </section>
++          ))}
++        </div>
++      </details>
++
++      <p className="text-sm text-[var(--muted)]">
++        <Link className="underline underline-offset-4" href="/colophon">
++          How this visualization is built
++        </Link>
++      </p>
++    </section>
++  );
++}
+diff --git a/components/constellation/engine.js b/components/constellation/engine.js
+new file mode 100644
+index 0000000..635afd0
+--- /dev/null
++++ b/components/constellation/engine.js
+@@ -0,0 +1,699 @@
++// PixiJS engine for the experience constellation.
++//
++// Ownership: this module owns the canvas, the only render loop, and all GPU
++// resources. React (ExperienceConstellation.jsx) owns every piece of DOM and
++// calls the handle's setters; the engine reports back through callbacks.
++//
++// Architecture notes (verified against the installed pixi.js@8.19.0 source):
++// - One texture atlas (a single CanvasSource) backs every node sprite, so the
++//   whole field batches into a single draw call; the two highlight rings are
++//   a second (Graphics) batch.
++// - Pixi's EventSystem is disabled (`eventFeatures` all false) and detached
++//   via `setTargetElement(null)`, which removes EventsTicker from
++//   `Ticker.system`; with zero listeners that ticker cancels its rAF
++//   (Ticker.remove -> _cancelIfNeeded). Interaction is three DOM listeners
++//   owned here, with manual nearest-node picking - no 500 interactive
++//   display objects.
++// - The app ticker is private (sharedTicker defaults to false) and is the
++//   only loop. It stops when the section leaves the viewport
++//   (IntersectionObserver), when the document is hidden (visibilitychange),
++//   and under reduced motion, where the scene renders once per state change
++//   instead ("render on demand").
++
++const TAU = Math.PI * 2;
++const GOLDEN = Math.PI * (3 - Math.sqrt(5));
++
++function hashUnit(seed, salt) {
++  const x = Math.sin(seed * 127.1 + salt * 311.7) * 43758.5453;
++  return x - Math.floor(x);
++}
++
++export function createConstellationEngine(host, opts) {
++  const {
++    items,
++    categories,
++    mobile,
++    onHover,
++    onSelect,
++    onClusters,
++  } = opts;
++
++  // ---- profile: lower-cost mobile/touch mode ------------------------------
++  const profile = mobile
++    ? {
++        // Balanced half: alternating groups of four keep all categories
++        // (the dataset cycles categories by index, so plain i % 2 would
++        // drop two categories entirely).
++        items: items.filter((_, i) => i % 8 < 4),
++        dprCap: 1.5,
++        maxFPS: 30,
++        proximity: false, // no hover displacement on touch
++        antialias: false,
++        driftAmp: 2.5,
++        sizeMin: 15,
++        sizeMax: 23,
++      }
++    : {
++        items,
++        dprCap: 2,
++        maxFPS: 0, // uncapped -> display refresh
++        proximity: true,
++        antialias: true,
++        driftAmp: 4.5,
++        sizeMin: 17,
++        sizeMax: 28,
++      };
++
++  const catIndex = Object.fromEntries(categories.map((c, i) => [c.id, i]));
++
++  const state = {
++    destroyed: false,
++    app: null,
++    PIXI: null,
++    nodes: [],
++    ring: null,
++    hoverRing: null,
++    atlasSource: null,
++    mode: "field", // 'field' | 'category'
++    filter: null, // category id or null
++    selectedId: null,
++    hoverId: null,
++    reducedMotion: !!opts.reducedMotion,
++    pointer: { x: 0, y: 0, active: false },
++    inView: true,
++    docVisible: typeof document === "undefined" ? true : !document.hidden,
++    dirty: false,
++    time: 0,
++    frames: 0,
++    lastPauseReason: null,
++    width: 0,
++    height: 0,
++    io: null,
++    ro: null,
++    removeDom: null,
++  };
++
++  // ---- texture atlas ------------------------------------------------------
++  // One 2D canvas holds every "logo" badge; every sprite's Texture is a
++  // sub-frame of the same TextureSource, so the sprite batcher emits one
++  // draw call for the whole field.
++  function buildAtlas(PIXI) {
++    const cell = 80;
++    const cols = Math.ceil(Math.sqrt(profile.items.length));
++    const rows = Math.ceil(profile.items.length / cols);
++    const canvas = document.createElement("canvas");
++    canvas.width = cols * cell;
++    canvas.height = rows * cell;
++    const ctx = canvas.getContext("2d");
++
++    profile.items.forEach((item, i) => {
++      const cx = (i % cols) * cell;
++      const cy = Math.floor(i / cols) * cell;
++      const cat = categories[catIndex[item.category]];
++      const h1 = hashUnit(item.seed, 1);
++      const pad = 6;
++      const size = cell - pad * 2;
++      const r = 18;
++
++      ctx.save();
++      ctx.translate(cx + pad, cy + pad);
++
++      // Badge: two-tone vertical gradient in the category hue.
++      const g = ctx.createLinearGradient(0, 0, 0, size);
++      g.addColorStop(0, shade(cat.color, 0.12 + h1 * 0.1));
++      g.addColorStop(1, shade(cat.color, -0.28 + h1 * 0.08));
++      roundRect(ctx, 0, 0, size, size, r);
++      ctx.fillStyle = g;
++      ctx.fill();
++
++      // Motif variety behind the monogram.
++      ctx.globalAlpha = 0.22;
++      ctx.strokeStyle = "#ffffff";
++      ctx.fillStyle = "#ffffff";
++      ctx.lineWidth = 5;
++      const motif = Math.floor(hashUnit(item.seed, 2) * 4);
++      if (motif === 0) {
++        ctx.beginPath();
++        ctx.arc(size / 2, size / 2, size * 0.34, 0, TAU);
++        ctx.stroke();
++      } else if (motif === 1) {
++        ctx.beginPath();
++        ctx.moveTo(size * 0.16, size * 0.84);
++        ctx.lineTo(size * 0.84, size * 0.16);
++        ctx.stroke();
++      } else if (motif === 2) {
++        ctx.beginPath();
++        ctx.arc(size * 0.72, size * 0.3, size * 0.16, 0, TAU);
++        ctx.fill();
++      } // motif 3: plain
++      ctx.globalAlpha = 1;
++
++      // Monogram.
++      ctx.fillStyle = "rgba(255,255,255,0.94)";
++      ctx.font = `700 ${Math.round(size * 0.42)}px system-ui, -apple-system, 'Segoe UI', sans-serif`;
++      ctx.textAlign = "center";
++      ctx.textBaseline = "middle";
++      ctx.fillText(item.monogram, size / 2, size / 2 + 1);
++      ctx.restore();
++    });
++
++    const source = new PIXI.CanvasSource({ resource: canvas });
++    const textures = profile.items.map(
++      (_, i) =>
++        new PIXI.Texture({
++          source,
++          frame: new PIXI.Rectangle(
++            (i % cols) * cell,
++            Math.floor(i / cols) * cell,
++            cell,
++            cell
++          ),
++        })
++    );
++    return { source, textures };
++  }
++
++  function roundRect(ctx, x, y, w, h, r) {
++    ctx.beginPath();
++    ctx.moveTo(x + r, y);
++    ctx.arcTo(x + w, y, x + w, y + h, r);
++    ctx.arcTo(x + w, y + h, x, y + h, r);
++    ctx.arcTo(x, y + h, x, y, r);
++    ctx.arcTo(x, y, x + w, y, r);
++    ctx.closePath();
++  }
++
++  function shade(hex, amount) {
++    const n = parseInt(hex.slice(1), 16);
++    const ch = (v) =>
++      Math.max(0, Math.min(255, Math.round(v + amount * 255)))
++        .toString(16)
++        .padStart(2, "0");
++    return `#${ch(n >> 16)}${ch((n >> 8) & 255)}${ch(n & 255)}`;
++  }
++
++  // ---- layouts ------------------------------------------------------------
++  function layoutField() {
++    const { width: w, height: h } = state;
++    const padX = 44;
++    const padY = 40;
++    const n = state.nodes.length;
++    for (let i = 0; i < n; i++) {
++      const node = state.nodes[i];
++      const t = (i + 0.5) / n;
++      const rr = Math.sqrt(t);
++      const th = i * GOLDEN;
++      const jx = (hashUnit(node.item.seed, 3) - 0.5) * 26;
++      const jy = (hashUnit(node.item.seed, 4) - 0.5) * 26;
++      node.lx = w / 2 + Math.cos(th) * rr * (w / 2 - padX) + jx;
++      node.ly = h / 2 + Math.sin(th) * rr * (h / 2 - padY) + jy;
++    }
++    return null; // no cluster labels in field mode
++  }
++
++  function layoutCategory() {
++    const { width: w, height: h } = state;
++    const twoByTwo = w < 700;
++    const colCount = twoByTwo ? 2 : 4;
++    const spacing = twoByTwo
++      ? Math.min(w / 2, h / 2) / 16
++      : Math.min(w / 4, h) / 12.5;
++    const totals = {};
++    for (const node of state.nodes) {
++      totals[node.item.category] = (totals[node.item.category] ?? 0) + 1;
++    }
++    const centers = categories.map((c, i) => {
++      const y = twoByTwo ? (Math.floor(i / colCount) + 0.5) / 2 : 0.54;
++      const rMax = spacing * Math.sqrt((totals[c.id] ?? 1) + 0.6);
++      return {
++        id: c.id,
++        label: c.label,
++        x: ((i % colCount) + 0.5) / colCount,
++        y,
++        labelY: Math.max(0.06, y - (rMax * (twoByTwo ? 1 : 0.86) + 24) / h),
++      };
++    });
++    const counts = {};
++    for (const node of state.nodes) {
++      const k = (counts[node.item.category] =
++        (counts[node.item.category] ?? 0) + 1) - 1;
++      const c = centers[catIndex[node.item.category]];
++      const rr = spacing * Math.sqrt(k + 0.6);
++      const th = k * GOLDEN + catIndex[node.item.category] * 1.7;
++      node.lx = c.x * w + Math.cos(th) * rr;
++      node.ly = c.y * h + Math.sin(th) * rr * (twoByTwo ? 1 : 0.86);
++    }
++    return centers;
++  }
++
++  function relayout() {
++    if (!state.width || !state.height) return;
++    const centers = state.mode === "category" ? layoutCategory() : layoutField();
++    onClusters?.(centers);
++  }
++
++  // ---- per-frame simulation ----------------------------------------------
++  function targetsFor(node) {
++    const filtered = state.filter && node.item.category !== state.filter;
++    const selected = node.item.id === state.selectedId;
++    const hovered = node.item.id === state.hoverId;
++    // Dimmed nodes get a dark tint as well as low alpha: the tint caps the
++    // brightness that stacked translucent sprites can re-accumulate in
++    // dense cluster cores (measured ~0.5x without it).
++    let alpha = filtered ? 0.22 : 1;
++    let scale = filtered ? 0.7 : 1;
++    let tint = filtered ? 0x565c6b : 0xffffff;
++    if (hovered && !filtered) scale *= 1.3;
++    if (selected) {
++      scale *= 1.25;
++      alpha = 1;
++      tint = 0xffffff;
++    }
++    return { alpha, scale, tint };
++  }
++
++  function tick(ticker) {
++    const dt = Math.min(ticker.deltaMS, 50) / 1000;
++    state.time += dt;
++    state.frames++;
++
++    const ease = 1 - Math.exp(-6 * dt);
++    const easeFast = 1 - Math.exp(-10 * dt);
++    const { pointer } = state;
++    const proxR = 120;
++    const drift = state.reducedMotion ? 0 : profile.driftAmp;
++
++    // Hover pick once per frame, not per pointermove event.
++    if (profile.proximity && pointer.active) pickHover(pointer.x, pointer.y);
++
++    for (const node of state.nodes) {
++      const s1 = node.item.seed * 977;
++      let dx =
++        drift *
++        Math.sin(state.time * node.w1 + s1) *
++        (0.6 + hashUnit(node.item.seed, 5));
++      let dy = drift * Math.cos(state.time * node.w2 + s1 * 1.7);
++
++      if (profile.proximity && pointer.active && !state.reducedMotion) {
++        const px = node.x - pointer.x;
++        const py = node.y - pointer.y;
++        if (Math.abs(px) < proxR && Math.abs(py) < proxR) {
++          const d = Math.hypot(px, py);
++          if (d < proxR && d > 0.001) {
++            const f = (1 - d / proxR) ** 2 * 30;
++            dx += (px / d) * f;
++            dy += (py / d) * f;
++          }
++        }
++      }
++
++      node.x += (node.lx + dx - node.x) * ease;
++      node.y += (node.ly + dy - node.y) * ease;
++
++      const t = targetsFor(node);
++      node.alpha += (t.alpha - node.alpha) * easeFast;
++      node.scaleMul += (t.scale - node.scaleMul) * easeFast;
++
++      node.sprite.position.set(node.x, node.y);
++      node.sprite.alpha = node.alpha;
++      node.sprite.tint = t.tint;
++      const px2 = node.size * node.scaleMul;
++      node.sprite.width = px2;
++      node.sprite.height = px2;
++    }
++    syncRings();
++  }
++
++  // Reduced-motion path: place everything at its target and render one frame.
++  function settle() {
++    for (const node of state.nodes) {
++      node.x = node.lx;
++      node.y = node.ly;
++      const t = targetsFor(node);
++      node.alpha = t.alpha;
++      node.scaleMul = t.scale;
++      node.sprite.position.set(node.x, node.y);
++      node.sprite.alpha = node.alpha;
++      node.sprite.tint = t.tint;
++      const px = node.size * node.scaleMul;
++      node.sprite.width = px;
++      node.sprite.height = px;
++    }
++    syncRings();
++  }
++
++  function syncRings() {
++    const sel = state.nodes.find((n) => n.item.id === state.selectedId);
++    const hov =
++      state.hoverId != null && state.hoverId !== state.selectedId
++        ? state.nodes.find((n) => n.item.id === state.hoverId)
++        : null;
++    updateRing(state.ring, sel, 0xffffff, 2);
++    updateRing(state.hoverRing, hov, 0xffffff, 1.2);
++  }
++
++  function updateRing(ring, node, color, widthPx) {
++    if (!ring) return;
++    if (!node) {
++      ring.visible = false;
++      return;
++    }
++    const r = (node.size * node.scaleMul) / 2 + 5;
++    ring.visible = true;
++    ring.position.set(node.x, node.y);
++    if (Math.abs(ring.__r - r) > 0.5) {
++      ring.__r = r;
++      ring.clear();
++      ring.circle(0, 0, r).stroke({ color, width: widthPx, alpha: 0.9 });
++    }
++  }
++
++  // ---- picking (manual; Pixi events disabled) -----------------------------
++  function pickAt(x, y, radius) {
++    let best = null;
++    let bestD = radius * radius;
++    for (const node of state.nodes) {
++      const dx = node.x - x;
++      const dy = node.y - y;
++      const d = dx * dx + dy * dy;
++      if (d < bestD) {
++        bestD = d;
++        best = node;
++      }
++    }
++    return best;
++  }
++
++  function pickHover(x, y) {
++    const hit = pickAt(x, y, 26);
++    const id = hit ? hit.item.id : null;
++    if (id !== state.hoverId) {
++      state.hoverId = id;
++      state.app.canvas.style.cursor = hit ? "pointer" : "default";
++      onHover?.(hit ? hit.item : null);
++      markDirty();
++    }
++  }
++
++  // ---- run/pause management ----------------------------------------------
++  function shouldRun() {
++    return (
++      !state.destroyed &&
++      !!state.app &&
++      state.inView &&
++      state.docVisible &&
++      !state.reducedMotion
++    );
++  }
++
++  function syncRunning() {
++    if (!state.app) return;
++    const run = shouldRun();
++    const ticker = state.app.ticker;
++    // Pixi's SchedulerSystem keeps a listener on Ticker.system by default
++    // (it drives periodic GPU-resource GC). Pause that library ticker in
++    // lockstep with ours; this page is the only Pixi consumer. Ticker
++    // autoStart semantics revive it for any future listener, and
++    // app.destroy() removes the scheduler listener entirely.
++    const system = state.PIXI?.Ticker.system;
++    if (run) {
++      state.lastPauseReason = null;
++      if (system && !system.started) system.start();
++      if (!ticker.started) ticker.start();
++    } else {
++      state.lastPauseReason = state.destroyed
++        ? "destroyed"
++        : !state.inView
++          ? "offscreen"
++          : !state.docVisible
++            ? "document-hidden"
++            : "reduced-motion";
++      if (ticker.started) ticker.stop();
++      if (system?.started) system.stop();
++      if (state.dirty) flushDirty();
++    }
++  }
++
++  function markDirty() {
++    if (shouldRun()) return; // the loop will paint it
++    state.dirty = true;
++    flushDirty();
++  }
++
++  function flushDirty() {
++    // Never render while offscreen or hidden; the flag is flushed on return.
++    if (!state.app || !state.inView || !state.docVisible) return;
++    state.dirty = false;
++    if (state.reducedMotion) settle();
++    state.onDemandRenders = (state.onDemandRenders ?? 0) + 1;
++    state.app.render();
++  }
++
++  // ---- init ---------------------------------------------------------------
++  async function init() {
++    const PIXI = await import("pixi.js");
++    if (state.destroyed) return;
++    state.PIXI = PIXI;
++
++    const rect = host.getBoundingClientRect();
++    state.width = Math.max(320, rect.width);
++    state.height = Math.max(280, rect.height);
++
++    const app = new PIXI.Application();
++    const dpr = Math.min(
++      profile.dprCap,
++      (typeof window !== "undefined" && window.devicePixelRatio) || 1
++    );
++    await app.init({
++      width: state.width,
++      height: state.height,
++      backgroundAlpha: 0,
++      antialias: profile.antialias,
++      resolution: dpr,
++      autoDensity: true,
++      preference: "webgl",
++      autoStart: false,
++      eventFeatures: { move: false, globalMove: false, click: false, wheel: false },
++    });
++    if (state.destroyed) {
++      // Unmounted while awaiting init (e.g. React strict-mode dev remount).
++      app.destroy({ removeView: true }, { children: true, texture: true, textureSource: true });
++      return;
++    }
++    state.app = app;
++
++    // Fully detach Pixi's event system: removes its DOM listeners and takes
++    // EventsTicker off Ticker.system, whose rAF then cancels (verified in
++    // pixi 8.19.0: Ticker.remove -> _cancelIfNeeded when the queue empties).
++    app.renderer.events.setTargetElement(null);
++    if (profile.maxFPS > 0) app.ticker.maxFPS = profile.maxFPS;
++
++    // Scene ---------------------------------------------------------------
++    const { source, textures } = buildAtlas(PIXI);
++    state.atlasSource = source;
++    const field = new PIXI.Container();
++    app.stage.addChild(field);
++
++    state.nodes = profile.items.map((item, i) => {
++      const sprite = new PIXI.Sprite(textures[i]);
++      sprite.anchor.set(0.5);
++      const size =
++        profile.sizeMin +
++        hashUnit(item.seed, 6) * (profile.sizeMax - profile.sizeMin);
++      sprite.width = size;
++      sprite.height = size;
++      field.addChild(sprite);
++      return {
++        item,
++        sprite,
++        size,
++        x: state.width / 2,
++        y: state.height / 2,
++        lx: state.width / 2,
++        ly: state.height / 2,
++        alpha: 0,
++        scaleMul: 1,
++        w1: 0.25 + hashUnit(item.seed, 7) * 0.3,
++        w2: 0.2 + hashUnit(item.seed, 8) * 0.3,
++      };
++    });
++
++    state.hoverRing = new PIXI.Graphics();
++    state.hoverRing.__r = -1;
++    state.ring = new PIXI.Graphics();
++    state.ring.__r = -1;
++    app.stage.addChild(state.hoverRing, state.ring);
++
++    host.appendChild(app.canvas);
++    app.canvas.setAttribute("aria-hidden", "true");
++    relayout();
++    if (state.reducedMotion) settle();
++    app.ticker.add(tick);
++
++    // Interaction: three DOM listeners, engine-owned ------------------------
++    const canvas = app.canvas;
++    const onMove = (e) => {
++      state.pointer.x = e.offsetX;
++      state.pointer.y = e.offsetY;
++      state.pointer.active = e.pointerType !== "touch";
++      // While the loop is paused (reduced motion), pick per event instead.
++      if (state.pointer.active && !shouldRun()) {
++        pickHover(e.offsetX, e.offsetY);
++      }
++    };
++    const onLeave = () => {
++      state.pointer.active = false;
++      if (state.hoverId != null) {
++        state.hoverId = null;
++        canvas.style.cursor = "default";
++        onHover?.(null);
++        markDirty();
++      }
++    };
++    const onClick = (e) => {
++      const hit = pickAt(e.offsetX, e.offsetY, mobile ? 30 : 22);
++      setSelected(hit ? hit.item.id : null, true);
++    };
++    canvas.addEventListener("pointermove", onMove, { passive: true });
++    canvas.addEventListener("pointerleave", onLeave, { passive: true });
++    canvas.addEventListener("click", onClick);
++    state.removeDom = () => {
++      canvas.removeEventListener("pointermove", onMove);
++      canvas.removeEventListener("pointerleave", onLeave);
++      canvas.removeEventListener("click", onClick);
++    };
++
++    // Pause when offscreen / hidden ----------------------------------------
++    state.io = new IntersectionObserver(
++      (entries) => {
++        state.inView = entries[0]?.isIntersecting ?? true;
++        syncRunning();
++      },
++      { rootMargin: "48px", threshold: 0 }
++    );
++    state.io.observe(host);
++
++    document.addEventListener("visibilitychange", onVisibility);
++
++    state.ro = new ResizeObserver((entries) => {
++      const box = entries[0]?.contentRect;
++      if (!box || box.width < 10 || box.height < 10 || !state.app) return;
++      if (
++        Math.abs(box.width - state.width) < 1 &&
++        Math.abs(box.height - state.height) < 1
++      )
++        return;
++      state.width = box.width;
++      state.height = box.height;
++      state.app.renderer.resize(box.width, box.height);
++      relayout();
++      markDirty();
++    });
++    state.ro.observe(host);
++
++    // Debug/verification hook (tiny, removed on destroy).
++    if (typeof window !== "undefined") {
++      window.__constellationDebug = {
++        get frames() { return state.frames; },
++        get onDemandRenders() { return state.onDemandRenders ?? 0; },
++        get dirty() { return state.dirty; },
++        get running() { return !!state.app?.ticker.started; },
++        get inView() { return state.inView; },
++        get docVisible() { return state.docVisible; },
++        get reducedMotion() { return state.reducedMotion; },
++        get lastPauseReason() { return state.lastPauseReason; },
++        get nodeCount() { return state.nodes.length; },
++        get mobileProfile() { return !!mobile; },
++        get systemTickerListeners() { return PIXI.Ticker.system.count; },
++        get systemTickerStarted() { return PIXI.Ticker.system.started; },
++        get sharedTickerStarted() { return PIXI.Ticker.shared.started; },
++        get renderer() { return state.app?.renderer.name; },
++        // Times the real per-frame path (sim tick + Pixi render) on the CPU.
++        // Timestamps continue from the ticker's own clock so repeated calls
++        // stay monotonic (earlier calls leave lastTime in the future).
++        benchmark(n = 120) {
++          if (!state.app) return null;
++          const ticker = state.app.ticker;
++          const base = Math.max(performance.now(), ticker.lastTime);
++          const t0 = performance.now();
++          for (let i = 0; i < n; i++) {
++            ticker.update(base + (i + 1) * (1000 / 60));
++          }
++          return (performance.now() - t0) / n;
++        },
++      };
++    }
++
++    syncRunning();
++    markDirty(); // paint the first frame even when starting paused
++  }
++
++  function onVisibility() {
++    state.docVisible = !document.hidden;
++    syncRunning();
++  }
++
++  // ---- handle -------------------------------------------------------------
++  function setMode(mode) {
++    if (mode === state.mode) return;
++    state.mode = mode;
++    relayout();
++    markDirty();
++  }
++
++  function setFilter(filter) {
++    if (filter === state.filter) return;
++    state.filter = filter;
++    markDirty();
++  }
++
++  function setSelected(id, fromCanvas = false) {
++    if (id === state.selectedId) return;
++    state.selectedId = id;
++    const node = state.nodes.find((n) => n.item.id === id);
++    onSelect?.(node ? node.item : null, { fromCanvas });
++    markDirty();
++  }
++
++  function setReducedMotion(reduced) {
++    if (reduced === state.reducedMotion) return;
++    state.reducedMotion = reduced;
++    syncRunning();
++    markDirty();
++  }
++
++  function destroy() {
++    if (state.destroyed) return;
++    state.destroyed = true;
++    state.io?.disconnect();
++    state.ro?.disconnect();
++    document.removeEventListener("visibilitychange", onVisibility);
++    state.removeDom?.();
++    if (typeof window !== "undefined" && window.__constellationDebug) {
++      delete window.__constellationDebug;
++    }
++    if (state.app) {
++      state.app.ticker.remove(tick);
++      // Removes the canvas, destroys the stage tree, all node textures and
++      // the shared atlas TextureSource, and releases the GL context.
++      state.app.destroy(
++        { removeView: true },
++        { children: true, texture: true, textureSource: true }
++      );
++      state.app = null;
++    }
++    state.nodes = [];
++    state.atlasSource = null;
++  }
++
++  init();
++
++  return {
++    setMode,
++    setFilter,
++    setSelected,
++    setReducedMotion,
++    destroy,
++    nodesDrawn: profile.items.length,
++  };
++}
+diff --git a/package-lock.json b/package-lock.json
+index fccc1dc..0288494 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -9,6 +9,7 @@
+       "version": "1.0.0",
+       "dependencies": {
+         "next": "16.2.12",
++        "pixi.js": "8.19.0",
+         "react": "19.2.8",
+         "react-dom": "19.2.8"
+       },
+@@ -690,6 +691,12 @@
+         "node": ">= 10"
+       }
+     },
++    "node_modules/@pixi/colord": {
++      "version": "2.9.6",
++      "resolved": "https://registry.npmjs.org/@pixi/colord/-/colord-2.9.6.tgz",
++      "integrity": "sha512-nezytU2pw587fQstUu1AsJZDVEynjskwOL+kibwcdxsMBFqPsFFNA7xl0ii/gXuDi6M0xj3mfRJj8pBSc2jCfA==",
++      "license": "MIT"
++    },
+     "node_modules/@swc/helpers": {
+       "version": "0.5.15",
+       "resolved": "https://registry.npmjs.org/@swc/helpers/-/helpers-0.5.15.tgz",
+@@ -1036,6 +1043,27 @@
+         "tailwindcss": "4.3.3"
+       }
+     },
++    "node_modules/@types/earcut": {
++      "version": "3.0.0",
++      "resolved": "https://registry.npmjs.org/@types/earcut/-/earcut-3.0.0.tgz",
++      "integrity": "sha512-k/9fOUGO39yd2sCjrbAJvGDEQvRwRnQIZlBz43roGwUZo5SHAmyVvSFyaVVZkicRVCaDXPKlbxrUcBuJoSWunQ==",
++      "license": "MIT"
++    },
++    "node_modules/@webgpu/types": {
++      "version": "0.1.72",
++      "resolved": "https://registry.npmjs.org/@webgpu/types/-/types-0.1.72.tgz",
++      "integrity": "sha512-0cF7RFM2edNoiIS1ODJp0/Gzv4/xSXhwoR0YCza+OWpJWtn4wmo9DvK91aLlH9+uUnwIriP7ZiC3WitmyhuzBw==",
++      "license": "BSD-3-Clause"
++    },
++    "node_modules/@xmldom/xmldom": {
++      "version": "0.8.15",
++      "resolved": "https://registry.npmjs.org/@xmldom/xmldom/-/xmldom-0.8.15.tgz",
++      "integrity": "sha512-/5NV/vDALVFDXgLmfsy9TRCBlKwO2LNBFzpzvb9iIj+jR+eSc6DLYYvVOdivT/jm7MtU6TebYuRmzEOI7w40UA==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=10.0.0"
++      }
++    },
+     "node_modules/baseline-browser-mapping": {
+       "version": "2.11.13",
+       "resolved": "https://registry.npmjs.org/baseline-browser-mapping/-/baseline-browser-mapping-2.11.13.tgz",
+@@ -1084,6 +1112,12 @@
+         "node": ">=8"
+       }
+     },
++    "node_modules/earcut": {
++      "version": "3.2.3",
++      "resolved": "https://registry.npmjs.org/earcut/-/earcut-3.2.3.tgz",
++      "integrity": "sha512-vnS4AVwp1KHAF13i1vp1/2D5evWy3k5u/iW/B81QVsUZtV8cv2tU0b2VNFlqvh4kYwrFMDdjPCfAmfyJW9y14Q==",
++      "license": "ISC"
++    },
+     "node_modules/enhanced-resolve": {
+       "version": "5.24.5",
+       "resolved": "https://registry.npmjs.org/enhanced-resolve/-/enhanced-resolve-5.24.5.tgz",
+@@ -1098,6 +1132,21 @@
+         "node": ">=10.13.0"
+       }
+     },
++    "node_modules/eventemitter3": {
++      "version": "5.0.4",
++      "resolved": "https://registry.npmjs.org/eventemitter3/-/eventemitter3-5.0.4.tgz",
++      "integrity": "sha512-mlsTRyGaPBjPedk6Bvw+aqbsXDtoAyAzm5MO7JgU+yVRyMQ5O8bD4Kcci7BS85f93veegeCPkL8R4GLClnjLFw==",
++      "license": "MIT"
++    },
++    "node_modules/gifuct-js": {
++      "version": "2.1.2",
++      "resolved": "https://registry.npmjs.org/gifuct-js/-/gifuct-js-2.1.2.tgz",
++      "integrity": "sha512-rI2asw77u0mGgwhV3qA+OEgYqaDn5UNqgs+Bx0FGwSpuqfYn+Ir6RQY5ENNQ8SbIiG/m5gVa7CD5RriO4f4Lsg==",
++      "license": "MIT",
++      "dependencies": {
++        "js-binary-schema-parser": "^2.0.3"
++      }
++    },
+     "node_modules/graceful-fs": {
+       "version": "4.2.11",
+       "resolved": "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.11.tgz",
+@@ -1105,6 +1154,12 @@
+       "dev": true,
+       "license": "ISC"
+     },
++    "node_modules/ismobilejs": {
++      "version": "1.1.1",
++      "resolved": "https://registry.npmjs.org/ismobilejs/-/ismobilejs-1.1.1.tgz",
++      "integrity": "sha512-VaFW53yt8QO61k2WJui0dHf4SlL8lxBofUuUmwBo0ljPk0Drz2TiuDW4jo3wDcv41qy/SxrJ+VAzJ/qYqsmzRw==",
++      "license": "MIT"
++    },
+     "node_modules/jiti": {
+       "version": "2.7.0",
+       "resolved": "https://registry.npmjs.org/jiti/-/jiti-2.7.0.tgz",
+@@ -1115,6 +1170,12 @@
+         "jiti": "lib/jiti-cli.mjs"
+       }
+     },
++    "node_modules/js-binary-schema-parser": {
++      "version": "2.0.3",
++      "resolved": "https://registry.npmjs.org/js-binary-schema-parser/-/js-binary-schema-parser-2.0.3.tgz",
++      "integrity": "sha512-xezGJmOb4lk/M1ZZLTR/jaBHQ4gG/lqQnJqdIv4721DMggsa1bDVlHXNeHYogaIEHD9vCRv0fcL4hMA+Coarkg==",
++      "license": "MIT"
++    },
+     "node_modules/lightningcss": {
+       "version": "1.32.0",
+       "resolved": "https://registry.npmjs.org/lightningcss/-/lightningcss-1.32.0.tgz",
+@@ -1485,12 +1546,44 @@
+         "node": "^10 || ^12 || >=14"
+       }
+     },
++    "node_modules/parse-svg-path": {
++      "version": "0.2.0",
++      "resolved": "https://registry.npmjs.org/parse-svg-path/-/parse-svg-path-0.2.0.tgz",
++      "integrity": "sha512-Tf7FFIrguPKQwzD4pWnYkR2VOv3raoHeKED80Bm+BYHI3KxC8KsgsGC5+fSMzAGDA6UEk4bHvmi+RsjmL3khpg==",
++      "license": "MIT"
++    },
+     "node_modules/picocolors": {
+       "version": "1.1.1",
+       "resolved": "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz",
+       "integrity": "sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==",
+       "license": "ISC"
+     },
++    "node_modules/pixi.js": {
++      "version": "8.19.0",
++      "resolved": "https://registry.npmjs.org/pixi.js/-/pixi.js-8.19.0.tgz",
++      "integrity": "sha512-pq1O6emA/GFjjeF+8d3Pb5t7knD8FsnfWGqQcRjYjsqFZ7QdzG1XgjLDUu0DFJRbafjV5+g8iNLFBx0b9649lg==",
++      "license": "MIT",
++      "workspaces": [
++        "examples",
++        "playground"
++      ],
++      "dependencies": {
++        "@pixi/colord": "^2.9.6",
++        "@types/earcut": "^3.0.0",
++        "@webgpu/types": "^0.1.69",
++        "@xmldom/xmldom": "^0.8.13",
++        "earcut": "^3.0.2",
++        "eventemitter3": "^5.0.1",
++        "gifuct-js": "^2.1.2",
++        "ismobilejs": "^1.1.1",
++        "parse-svg-path": "^0.2.0",
++        "tiny-lru": "^11.4.7"
++      },
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/pixijs"
++      }
++    },
+     "node_modules/postcss": {
+       "version": "8.5.26",
+       "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.5.26.tgz",
+@@ -1658,6 +1751,15 @@
+         "url": "https://opencollective.com/webpack"
+       }
+     },
++    "node_modules/tiny-lru": {
++      "version": "11.4.7",
++      "resolved": "https://registry.npmjs.org/tiny-lru/-/tiny-lru-11.4.7.tgz",
++      "integrity": "sha512-w/Te7uMUVeH0CR8vZIjr+XiN41V+30lkDdK+NRIDCUYKKuL9VcmaUEmaPISuwGhLlrTGh5yu18lENtR9axSxYw==",
++      "license": "BSD-3-Clause",
++      "engines": {
++        "node": ">=12"
++      }
++    },
+     "node_modules/tslib": {
+       "version": "2.8.1",
+       "resolved": "https://registry.npmjs.org/tslib/-/tslib-2.8.1.tgz",
+diff --git a/package.json b/package.json
+index e93a0fb..533551d 100644
+--- a/package.json
++++ b/package.json
+@@ -9,11 +9,12 @@
+   },
+   "dependencies": {
+     "next": "16.2.12",
++    "pixi.js": "8.19.0",
+     "react": "19.2.8",
+     "react-dom": "19.2.8"
+   },
+   "devDependencies": {
+-    "tailwindcss": "4.3.3",
+-    "@tailwindcss/postcss": "4.3.3"
++    "@tailwindcss/postcss": "4.3.3",
++    "tailwindcss": "4.3.3"
+   }
+ }

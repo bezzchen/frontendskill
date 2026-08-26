@@ -1,0 +1,108 @@
+{
+  "run_id": "S1-fable-rep1",
+  "url": "http://localhost:3201",
+  "section_selector": "canvas",
+  "measured_at": "2026-08-21T02:04:49.521Z",
+  "protocol": "rubrics/execution_measurement.md (pre-registered 2026-08-11)",
+  "desktop": {
+    "profile": "desktop",
+    "thresholds": {
+      "p50": 18,
+      "p95": 26,
+      "hitchPct": 1
+    },
+    "m1": {
+      "samples": 53,
+      "p50": 149.89999999999964,
+      "p95": 233.5,
+      "p99": 667.4000000000001,
+      "hitchPct": 100,
+      "onscreenRafPerSec": 6.625,
+      "pass": false
+    },
+    "hasContinuousAnimation": true,
+    "m2": {
+      "onscreenRafPerSec": 6.625,
+      "offscreenRafPerSec": 7.333333333333333,
+      "ratio": 1.1069182389937107,
+      "pass": false
+    },
+    "m5": {
+      "accessibleNameCount": 20,
+      "focusableCount": 27,
+      "pass": true
+    },
+    "m3": {
+      "reducedMotionRafPerSec": 0,
+      "ratio": 0,
+      "accessibleNameCount": 20,
+      "contentParity": true,
+      "motionStops": true,
+      "pass": true,
+      "scope": "full",
+      "criticalFailure": null
+    },
+    "consoleErrors": [],
+    "status": "MEASURED"
+  },
+  "mobile": {
+    "profile": "mobile",
+    "thresholds": {
+      "p50": 22,
+      "p95": 34,
+      "hitchPct": 2
+    },
+    "m1": {
+      "samples": 65,
+      "p50": 116.70000000000073,
+      "p95": 133.40000000000055,
+      "p99": 199.90000000000146,
+      "hitchPct": 100,
+      "onscreenRafPerSec": 8.125,
+      "pass": false
+    },
+    "hasContinuousAnimation": true,
+    "m2": {
+      "onscreenRafPerSec": 8.125,
+      "offscreenRafPerSec": 8.333333333333334,
+      "ratio": 1.0256410256410258,
+      "pass": false
+    },
+    "m5": {
+      "accessibleNameCount": 20,
+      "focusableCount": 27,
+      "pass": true
+    },
+    "m3": {
+      "reducedMotionRafPerSec": 0,
+      "ratio": 0,
+      "accessibleNameCount": 20,
+      "contentParity": true,
+      "motionStops": true,
+      "pass": true,
+      "scope": "full",
+      "criticalFailure": null
+    },
+    "consoleErrors": [],
+    "status": "MEASURED"
+  },
+  "m4_teardown": {
+    "glContextsPerCycle": [
+      1,
+      1,
+      1
+    ],
+    "note": "Full-navigation cycles reset page state, so this bounds per-load context creation only. In-app mount/unmount teardown requires an app-specific route pair and is reported NOT_MEASURED unless supplied.",
+    "status": "PARTIAL",
+    "consoleErrors": [],
+    "pass": true
+  },
+  "summary": {
+    "m1_desktop": false,
+    "m1_mobile": false,
+    "m2_offscreen_pause": false,
+    "m3_reduced_motion": true,
+    "m5_accessible_parallel": true,
+    "critical": []
+  }
+}

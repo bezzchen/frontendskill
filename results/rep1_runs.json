@@ -1,0 +1,205 @@
+{
+  "note": "Consolidated run records for rep 1, both fixture variants. Fields follow run_metadata_template.json; per-run PROPOSAL.md files are the primary artifacts (results/proposals/). Subagent token counts are total context tokens reported by the orchestrating harness. Opus arm added 2026-08-10: same prompts/fixtures/method, model=claude-opus-5 (explicit Agent model override).",
+  "shared": {
+    "date": "2026-08-10",
+    "condition": "baseline_no_skill",
+    "model": "claude-fable-5 (inherited by subagents)",
+    "agent_product": "Claude Code",
+    "agent_version": "2.1.222 (desktop app)",
+    "reasoning_or_effort_setting": "default",
+    "temperature_or_sampling_settings_if_exposed": "not exposed",
+    "skill_revision": "N/A (baseline)",
+    "other_installed_skills": "environment includes frontend-design, ui-ux-pro-max, superpowers, everything-claude-code suite; none were reported as invoked in any run",
+    "environment_notes": "Runs executed as fresh-context subagents; dispatch prompt = verbatim eval prompt + neutral instruction to write PROPOSAL.md and summarize. Wave 'coached' used v1.2 fixtures as shipped (instrumented READMEs/copy, revisions 72f37fc/744aaba). Wave 'clean' used de-instrumented fixtures (neutral README/copy/metadata, squashed history, revisions edf3be4/6f5dcaa). Four clean-wave runs hit server-side API errors: E1 died after writing its proposal (salvaged); E2/E5/E6 were relaunched on pristine copies."
+  },
+  "runs": [
+    {
+      "eval_id": "E1",
+      "variant": "coached",
+      "outcome": "completed",
+      "architecture": "CSS-only settings polish; component decomposition; form state machine",
+      "dependencies_added": [],
+      "critical_failure_signals": [],
+      "tokens": 81449,
+      "duration_ms": 377566
+    },
+    {
+      "eval_id": "E2",
+      "variant": "coached",
+      "outcome": "completed",
+      "architecture": "Anime.js v4 (createLayout FLIP, createDraggable, createScope+mediaQueries); npm ci to enumerate installed API",
+      "dependencies_added": [],
+      "critical_failure_signals": [],
+      "tokens": 102441,
+      "duration_ms": 634434
+    },
+    {
+      "eval_id": "E3",
+      "variant": "coached",
+      "outcome": "completed",
+      "architecture": "Zero-dep sticky-pin + rAF scrub + declarative cue table; reduced-motion = stacked sections",
+      "dependencies_added": [],
+      "critical_failure_signals": [],
+      "tokens": 99212,
+      "duration_ms": 444868
+    },
+    {
+      "eval_id": "E4",
+      "variant": "coached",
+      "outcome": "completed",
+      "architecture": "Raw WebGL2 shared overlay canvas, DOM untouched; ogl named as sanctioned swap-in",
+      "dependencies_added": [],
+      "critical_failure_signals": [],
+      "tokens": 76489,
+      "duration_ms": 330320
+    },
+    {
+      "eval_id": "E5",
+      "variant": "coached",
+      "outcome": "completed",
+      "architecture": "Canvas 2D + sprite atlas + typed-array SoA engine; rejected PixiJS/three; quality governor",
+      "dependencies_added": [],
+      "critical_failure_signals": [],
+      "tokens": 81355,
+      "duration_ms": 393328
+    },
+    {
+      "eval_id": "E6",
+      "variant": "coached",
+      "outcome": "completed",
+      "architecture": "Diagnose-first; constellation hero from dormant dataset; CSS reveal system; open questions asked",
+      "dependencies_added": [],
+      "critical_failure_signals": [],
+      "tokens": 74420,
+      "duration_ms": 293847
+    },
+    {
+      "eval_id": "E1",
+      "variant": "clean",
+      "outcome": "api_error_after_artifact (proposal salvaged)",
+      "architecture": "CSS-only; Tailwind 4 primitives (peer, starting:, motion-safe, @theme); form state machine; a11y fixes",
+      "dependencies_added": [],
+      "critical_failure_signals": [],
+      "tokens": null,
+      "duration_ms": null
+    },
+    {
+      "eval_id": "E2",
+      "variant": "clean",
+      "outcome": "completed (retry after api_error)",
+      "architecture": "Anime.js v4 (createDraggable owns x/y, createScope+mediaQueries, createTimer orbit, seeded RNG); npm ci to verify API; rejected GSAP/Motion/matter-js",
+      "dependencies_added": [],
+      "critical_failure_signals": [],
+      "tokens": 94845,
+      "duration_ms": 572999
+    },
+    {
+      "eval_id": "E3",
+      "variant": "clean",
+      "outcome": "completed",
+      "architecture": "Zero-dep sticky + rAF + CSS custom property channels; reduced-motion = plain document; rejected GSAP/Motion/native scroll timeline/Lenis",
+      "dependencies_added": [],
+      "critical_failure_signals": [],
+      "tokens": 86112,
+      "duration_ms": 2070494
+    },
+    {
+      "eval_id": "E4",
+      "variant": "clean",
+      "outcome": "completed",
+      "architecture": "Shared WebGL2 overlay via OGL micro-library; ping-pong flowmap refraction; DOM byte-identical; called curtains.js unmaintained",
+      "dependencies_added": [
+        "ogl"
+      ],
+      "critical_failure_signals": [],
+      "tokens": 78338,
+      "duration_ms": 2129223
+    },
+    {
+      "eval_id": "E5",
+      "variant": "clean",
+      "outcome": "completed (retry after api_error)",
+      "architecture": "Canvas 2D + atlas + typed arrays + phyllotaxis regrouping; three quality tiers + frame-time governor; rejected PixiJS/three/d3-force with revisit thresholds",
+      "dependencies_added": [],
+      "critical_failure_signals": [],
+      "tokens": 84650,
+      "duration_ms": 428826
+    },
+    {
+      "eval_id": "E6",
+      "variant": "clean",
+      "outcome": "completed (retry after api_error)",
+      "architecture": "Ran the site (dev server, dark+light); diagnose-first; constellation hero from dormant dataset; generative SVG thumbnails; next/font; IA fix flagged as open question",
+      "dependencies_added": [],
+      "critical_failure_signals": [],
+      "tokens": 84599,
+      "duration_ms": 466481
+    },
+    {
+      "eval_id": "E1",
+      "variant": "opus",
+      "outcome": "completed (retry after api_error)",
+      "architecture": "0 deps; CSS-only + React 19 server actions/useActionState; ran app, measured DOM (found 1.35:1 border contrast, 13px target)",
+      "dependencies_added": [],
+      "critical_failure_signals": [],
+      "tokens": 94400,
+      "duration_ms": 840666,
+      "model": "claude-opus-5"
+    },
+    {
+      "eval_id": "E2",
+      "variant": "opus",
+      "outcome": "completed (retry after api_error)",
+      "architecture": "0 deps; Anime.js v4 (grid-as-truth + influence scalar, 3-node ownership split); read version from package-lock, checked API against official docs",
+      "dependencies_added": [],
+      "critical_failure_signals": [],
+      "tokens": 100469,
+      "duration_ms": 922873,
+      "model": "claude-opus-5"
+    },
+    {
+      "eval_id": "E3",
+      "variant": "opus",
+      "outcome": "completed",
+      "architecture": "0 deps; sticky track + single CSS custom property per frame; rejected GSAP/Framer/Lenis",
+      "dependencies_added": [],
+      "critical_failure_signals": [],
+      "tokens": 89508,
+      "duration_ms": 474875,
+      "model": "claude-opus-5"
+    },
+    {
+      "eval_id": "E4",
+      "variant": "opus",
+      "outcome": "completed",
+      "architecture": "0 deps; raw WebGL2 overlay canvas from DOM rects; rejected three/r3f, OGL (close call), per-card canvases",
+      "dependencies_added": [],
+      "critical_failure_signals": [],
+      "tokens": 89647,
+      "duration_ms": 489839,
+      "model": "claude-opus-5"
+    },
+    {
+      "eval_id": "E5",
+      "variant": "opus",
+      "outcome": "completed",
+      "architecture": "0 deps; Canvas 2D + sprite atlas + critically-damped springs; rejected Pixi/three/ogl/d3-force",
+      "dependencies_added": [],
+      "critical_failure_signals": [],
+      "tokens": 86571,
+      "duration_ms": 428931,
+      "model": "claude-opus-5"
+    },
+    {
+      "eval_id": "E6",
+      "variant": "opus",
+      "outcome": "completed",
+      "architecture": "0 deps; ran site and measured; content-model-first diagnosis; declined 500-node particle background",
+      "dependencies_added": [],
+      "critical_failure_signals": [],
+      "tokens": 87674,
+      "duration_ms": 447591,
+      "model": "claude-opus-5"
+    }
+  ]
+}

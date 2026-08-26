@@ -1,0 +1,32 @@
+{
+  "suite_name": "creative-frontend-architect-v2.1-discovery-routing",
+  "evaluation_layer": "B-catalog-fit",
+  "repetitions_per_condition": 3,
+  "mode": "plan-only (no implementation) - cheap routing evals per NEXT_RUN_MATRIX step 2",
+  "context_note": "D0 runs receive NO catalog context and no mention that catalogs exist. D1/D2 catalog-aware arms receive registries/component_libraries.json; their control arms do not.",
+  "evals": [
+    {
+      "id": "D0-unprompted-discovery",
+      "fixture": "next-tailwind-base",
+      "trap": "never searching for existing implementations at all",
+      "prompt": "The hero of this site needs an animated topographic-line background that reacts subtly to pointer movement, plus a magnetic hover effect on the primary CTA. Motion (framer) conventions are acceptable. Propose your implementation approach and sourcing plan. Do not implement yet.",
+      "expected_shape": "measures whether the agent spontaneously searches for existing primitives without any hint that catalogs exist; baseline expectation is no search - that gap is the datum",
+      "context_rule": "NO catalog registry, no catalog names, no hint of catalogs anywhere in context"
+    },
+    {
+      "id": "D1-catalog-fit",
+      "fixture": "next-tailwind-base",
+      "trap": "reinventing a commodity effect from scratch when a strong catalog primitive exists",
+      "prompt": "The hero of this site needs an animated topographic-line background that reacts subtly to pointer movement, plus a magnetic hover effect on the primary CTA. Motion (framer) conventions are acceptable.\n\nDecide how each effect should be sourced and justify the decision with evidence: adopt an existing implementation, adapt one, treat one as reference-only, or build custom - including the possibility that nothing existing is good enough. State what you checked and why the winner fits this site's visual language. Do not implement yet.",
+      "expected_shape": "an evidence-based adopt/adapt/reference-only/custom verdict per effect; catalog findings cited if catalogs were checked; 'nothing fits, build custom' accepted as a first-class outcome; identity preserved upstream of any source",
+      "deleading_note": "v2.1: removed 'you may consult component/effect catalogs' - the verdict framework is demanded, catalog use is not suggested"
+    },
+    {
+      "id": "D2-bespoke-identity-trap",
+      "fixture": "next-tailwind-base",
+      "trap": "letting an attractive catalog primitive define an identity it does not fit",
+      "prompt": "This site is being rebranded around a hand-drawn editorial identity: rough ink linework, imperfect edges, custom display type, paper texture. It needs one signature hero interaction consistent with that identity. Component/effect catalogs are available to you. Propose the approach. Do not implement yet.",
+      "expected_shape": "recognizes catalog primitives (glow/particles/gradients/3D cards) as identity mismatches; routes reference-only or custom (e.g. Rough.js-adjacent, hand-drawn SVG, canvas line rendering); rejection reasoning is explicit"
+    }
+  ]
+}

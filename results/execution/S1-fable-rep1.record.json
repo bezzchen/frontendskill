@@ -1,0 +1,37 @@
+{
+  "run": "S1-fable-rep1",
+  "date": "2026-08-21",
+  "condition": "baseline_no_skill",
+  "model": "claude-fable-5",
+  "fixture": "launch-page-base 3543ef9",
+  "interruptions": "spend-limit kill (no work), spend-limit fail (no work), machine sleep mid-build (resumed from transcript), completed on final resume; run dir verified pristine before first real work",
+  "implementation": "Raw WebGL2 instanced field (15k streak quads, stateless vertex positions from (seed, playhead)); 24s scroll-scrubbed 5-act composition; working bezier master-ease editor (rewrites field + CSS var + export); damped-spring lab; solar-noon theme inversion; timeline HUD with SMPTE timecode + K-key playback; ZERO dependencies added; 2348 first-party lines",
+  "measurements": {
+    "m6_static": "PASS (build, cleanup paths, no interval loops)",
+    "m1_headless_shell": "FAIL artifact - p50 149.9ms @ ~6.6 rAF/s = SwiftShader software WebGL; recorded, not valid",
+    "m1_gpu_retest_system_chrome": "PASS - desktop p50 17.2ms p95 21.7ms hitch 0%; mobile p50 17.3ms p95 22.6ms hitch 0% (~58 rAF/s)",
+    "m2_offscreen": "NOT_MEASURABLE_BY_GEOMETRY - canvas is a viewport-fixed backdrop that never exits view via scrolling (ratio ~0.99 reflects visible canvas, not a pause failure); page's pause paths are visibilitychange + 90s idle per agent verification; probe lacks a document.hidden variant - protocol gap queued",
+    "m3_reduced_motion": "PASS both browsers - ratio 0.00, content parity true (input-driven storyboard variant)",
+    "m5_accessible_parallel": "PASS",
+    "console_errors": 0
+  },
+  "artifacts": {
+    "diff": "results/execution/S1-fable-rep1.diff",
+    "measurements": [
+      "results/execution/S1-fable-rep1.json (headless-shell)",
+      "results/execution/S1-fable-rep1-gpu.json (valid M1)"
+    ],
+    "screenshots": "results/execution/screenshots/S1-fable-rep1-*.png",
+    "motion_recording": "results/execution/motion/S1-fable-rep1.webm (86s, 10.3MB, pre-registered choreography)"
+  },
+  "instrument_learnings": [
+    "WebGL-heavy pages must be measured with a GPU-capable browser; chrome-headless-shell software-rasterizes WebGL (~7fps artifact)",
+    "M2's scroll-out method cannot exercise viewport-fixed canvases; add a document.hidden / visibilitychange variant"
+  ],
+  "scoring": "spectacle_fit.md scoring is the owner's, from the motion recording + screenshots; rubric caps do not apply (recording exists)",
+  "SOURCE_LOSS_2026_08_21": {
+    "what": "After the battery completed, macOS tmp cleanup destroyed the rep1 working directory AND the agent transcript; the tracked diff survives but the untracked components (engine core) were never diffable. Full source is unrecoverable.",
+    "still_valid": "All scoring artifacts were captured before the loss and live in the v2.3+ zips: 86s choreographed recording, screenshots, GPU measurement JSONs, this record. Rep1 remains fully SCOREABLE under spectacle_fit; it is no longer servable or re-measurable.",
+    "lesson_applied": "From rep2 onward, a full source snapshot is archived into results/ at battery time for every implementation run."
+  }
+}
