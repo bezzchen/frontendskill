@@ -1,5 +1,43 @@
 # Changelog
 
+## v3.4 — 2026-08-27
+
+**Section E, register arm (criterion F) — six with-skill runs. Instrument-clean; the timidity
+risk did not materialise; two honest problems recorded.**
+
+- **Q1 with-skill ×3:** register Q named unprompted, spectacle explicitly declined, **zero
+  dependencies in all three**, no ambient animation, M3/M5 pass, zero criticals — the same
+  pattern all three Q1 baselines produced. Notably the catalog fit gate ran even on a toggle
+  switch and produced *reference-only → custom native control* every time, with stated grounds.
+- **W1 with-skill ×3:** register W in all three, spectacle weighed and WebGL declined on
+  **product** grounds rather than caution; outputs are ambitious and materially divergent in art
+  direction (scrubbable 7-track timeline driving the hero; 24s scroll-as-playhead composition
+  with working transport; hero as its own 120-frame dope sheet with variable-font width-axis
+  choreography). Zero critical failures across the arm — criterion F.2's measurable clause met.
+- **The harness and the skill covered for each other.** W1ws-rep2 verified a genuine
+  `document.hidden` flip once, could not re-induce it, and refused to fake a proxy; the M2b probe
+  then measured the pause independently (9.7 → 0 rAF/s, ratio 0.00). Strongest validation yet of
+  building M2b in v2.6.
+- **Recorded problem 1 — cross-run contamination.** W1ws-rep3 found rep2's leftover dev server on
+  a stray port and used it as a negative example to steer its art direction away. Independence
+  broken in the *divergence* direction. Orchestrator error (builds were serialized, stray servers
+  were not); standing fix applied. **Owner decision required** on whether rep3 counts, counts
+  flagged, or is re-run.
+- **Recorded problem 2 — W1ws-rep3 M1 desktop FAIL** (hitch 3.92% vs ≤1%), stated as measured
+  with the threshold untouched. Diagnosis alongside: p50/p95 well inside budget, p99 one 118ms
+  frame, and a demand-driven 6.4 rAF/s page yields only 51 samples in the fixed 8s window, so two
+  long frames read as 3.92% where a continuous page would read ~0.4%.
+- **Instrument blind spot noted for the W register:** pages that idle at rest report N/A for
+  M1/M2/M2b because the battery samples without interacting; it cannot separate "no idle loop by
+  design" from "no animation". Two of three W1 baselines measure the same way, so comparisons
+  stay like-for-like.
+- **First strictly condition-blind set built:** `results/execution/blind_ranking_w1_pooled/` —
+  six candidates, three baseline and three with-skill, mixed and undisclosed, sealed mapping plus
+  fill-in template. Every previous ranking pooled same-condition artifacts only.
+- Findings: `results/CRITERION_F_REGISTER_FINDINGS.md`. Criterion F is neither passed nor failed
+  until the owner scores it.
+
+
 ## v3.3 — 2026-08-26
 
 - **`results/I4_PIN_DOSSIER.md`** — closes the research half of the I4 deferral, open since v1.8.

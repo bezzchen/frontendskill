@@ -1,0 +1,1700 @@
+diff --git a/app/components/CurveEditor.jsx b/app/components/CurveEditor.jsx
+new file mode 100644
+index 0000000..2b8480a
+--- /dev/null
++++ b/app/components/CurveEditor.jsx
+@@ -0,0 +1,198 @@
++"use client";
++import { useEffect, useRef, useState } from "react";
++
++// Plot geometry: progress 0..1 maps to x, value -0.5..1.5 visible (overshoot room)
++const W = 560, H = 560, PX0 = 40, PXW = 480, PY0 = 396, PYH = 240;
++const px = (x) => PX0 + x * PXW;
++const py = (v) => PY0 - v * PYH;
++const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
++const fmt = (n) => String(Math.round(n * 100) / 100);
++
++const PRESETS = [
++  { name: "Glide", v: [0.22, 1, 0.36, 1] },
++  { name: "Snap", v: [0.7, 0, 0.16, 1] },
++  { name: "Overshoot", v: [0.34, 1.56, 0.64, 1] },
++  { name: "Anticipate", v: [0.55, -0.42, 0.6, 1] },
++];
++
++const XS = [0, 0.25, 0.5, 0.75, 1];
++const VS = [-0.5, -0.25, 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5];
++
++export default function CurveEditor() {
++  const [pts, setPts] = useState({ x1: 0.34, y1: 1.56, x2: 0.64, y2: 1 });
++  const [copied, setCopied] = useState(false);
++  const svgRef = useRef(null);
++  const dragRef = useRef(null);
++  const chipRef = useRef(null);
++  const trackRef = useRef(null);
++  const animRef = useRef(null);
++  const tRef = useRef(null);
++
++  const css = `cubic-bezier(${fmt(pts.x1)}, ${fmt(pts.y1)}, ${fmt(pts.x2)}, ${fmt(pts.y2)})`;
++
++  const toLocal = (e) => {
++    const r = svgRef.current.getBoundingClientRect();
++    const sx = ((e.clientX - r.left) / r.width) * W;
++    const sy = ((e.clientY - r.top) / r.height) * H;
++    return { x: clamp((sx - PX0) / PXW, 0, 1), y: clamp((PY0 - sy) / PYH, -0.6, 1.6) };
++  };
++  const apply = (which, p) =>
++    setPts((prev) => (which === 1 ? { ...prev, x1: p.x, y1: p.y } : { ...prev, x2: p.x, y2: p.y }));
++  const startDrag = (which) => (e) => {
++    if (e.pointerType === "mouse" && e.button !== 0) return;
++    dragRef.current = which;
++    svgRef.current.setPointerCapture(e.pointerId);
++    apply(which, toLocal(e));
++  };
++  const onMove = (e) => {
++    if (dragRef.current) apply(dragRef.current, toLocal(e));
++  };
++  const onUp = () => {
++    dragRef.current = null;
++  };
++
++  const keyFor = (which) => (e) => {
++    const dx = e.shiftKey ? 0.1 : 0.02;
++    const dy = e.shiftKey ? 0.25 : 0.05;
++    const m = { ArrowLeft: [-dx, 0], ArrowRight: [dx, 0], ArrowUp: [0, dy], ArrowDown: [0, -dy] }[e.key];
++    if (!m) return;
++    e.preventDefault();
++    setPts((prev) => {
++      const [kx, ky] = which === 1 ? ["x1", "y1"] : ["x2", "y2"];
++      return { ...prev, [kx]: clamp(prev[kx] + m[0], 0, 1), [ky]: clamp(prev[ky] + m[1], -0.6, 1.6) };
++    });
++  };
++
++  // Finite, user-initiated preview (WAAPI) — allowed under reduced motion because it is explicitly requested.
++  const run = () => {
++    const chip = chipRef.current;
++    const track = trackRef.current;
++    if (!chip || !track) return;
++    animRef.current?.cancel();
++    const dist = Math.max(0, track.clientWidth - 40);
++    animRef.current = chip.animate(
++      [{ transform: "translateX(0px)" }, { transform: `translateX(${dist}px)` }],
++      { duration: 900, easing: css, fill: "forwards" }
++    );
++  };
++
++  const copy = async () => {
++    try {
++      await navigator.clipboard.writeText(css);
++      setCopied(true);
++      clearTimeout(tRef.current);
++      tRef.current = setTimeout(() => setCopied(false), 1600);
++    } catch {
++      /* clipboard unavailable — the code is selectable */
++    }
++  };
++
++  useEffect(
++    () => () => {
++      clearTimeout(tRef.current);
++      animRef.current?.cancel();
++    },
++    []
++  );
++
++  const handle = (which, cx, cy, color, label) => (
++    <g
++      className="handle"
++      tabIndex={0}
++      role="slider"
++      aria-label={label}
++      aria-valuemin={0}
++      aria-valuemax={100}
++      aria-valuenow={Math.round((which === 1 ? pts.x1 : pts.x2) * 100)}
++      aria-valuetext={`x ${fmt(which === 1 ? pts.x1 : pts.x2)}, y ${fmt(which === 1 ? pts.y1 : pts.y2)}`}
++      onPointerDown={startDrag(which)}
++      onKeyDown={keyFor(which)}
++    >
++      <circle className="focusring" cx={cx} cy={cy} r={15} fill="none" stroke="var(--color-ink)" strokeDasharray="3 3" />
++      <circle cx={cx} cy={cy} r={17} fill="transparent" />
++      <circle cx={cx} cy={cy} r={8} fill="var(--color-sheet)" stroke={color} strokeWidth={3.5} />
++    </g>
++  );
++
++  return (
++    <div>
++      <div className="cel-card p-3 sm:p-4">
++        <svg
++          ref={svgRef}
++          className="curve-svg"
++          viewBox={`0 0 ${W} ${H}`}
++          onPointerMove={onMove}
++          onPointerUp={onUp}
++          onPointerCancel={onUp}
++          role="img"
++          aria-label={`Easing curve editor, currently ${css}`}
++        >
++          {/* construction grid */}
++          {XS.map((x) => (
++            <line key={`x${x}`} x1={px(x)} y1={py(1.5)} x2={px(x)} y2={py(-0.5)} stroke="var(--color-line)" strokeWidth="1" />
++          ))}
++          {VS.map((v) => (
++            <line key={`v${v}`} x1={px(0)} y1={py(v)} x2={px(1)} y2={py(v)} stroke="var(--color-line)" strokeWidth="1" />
++          ))}
++          {/* the 0..1 box */}
++          <rect x={px(0)} y={py(1)} width={PXW} height={PYH} fill="none" stroke="var(--color-line2)" strokeWidth="1.5" />
++          <text x={px(0) - 14} y={py(0) + 4} fontSize="10" fill="var(--color-ink2)" fontFamily="var(--font-mono)" textAnchor="end">0</text>
++          <text x={px(0) - 14} y={py(1) + 4} fontSize="10" fill="var(--color-ink2)" fontFamily="var(--font-mono)" textAnchor="end">1</text>
++          <text x={px(1)} y={py(-0.5) + 26} fontSize="10" fill="var(--color-ink2)" fontFamily="var(--font-mono)" textAnchor="end" letterSpacing="2">TIME →</text>
++          <text x={px(0) - 26} y={py(1.5) + 40} fontSize="10" fill="var(--color-ink2)" fontFamily="var(--font-mono)" letterSpacing="2" transform={`rotate(-90 ${px(0) - 26} ${py(1.5) + 40})`} textAnchor="end">VALUE ↑</text>
++
++          {/* stems */}
++          <line x1={px(0)} y1={py(0)} x2={px(pts.x1)} y2={py(pts.y1)} stroke="var(--color-cyan)" strokeWidth="1.5" />
++          <line x1={px(1)} y1={py(1)} x2={px(pts.x2)} y2={py(pts.y2)} stroke="var(--color-signal)" strokeWidth="1.5" />
++
++          {/* the curve */}
++          <path
++            d={`M ${px(0)} ${py(0)} C ${px(pts.x1)} ${py(pts.y1)}, ${px(pts.x2)} ${py(pts.y2)}, ${px(1)} ${py(1)}`}
++            fill="none"
++            stroke="var(--color-ink)"
++            strokeWidth="3"
++            strokeLinecap="round"
++          />
++
++          {/* anchors */}
++          <rect x={px(0) - 4.5} y={py(0) - 4.5} width="9" height="9" fill="var(--color-ink)" />
++          <rect x={px(1) - 4.5} y={py(1) - 4.5} width="9" height="9" fill="var(--color-ink)" />
++
++          {handle(1, px(pts.x1), py(pts.y1), "var(--color-cyan)", "Control point 1 — drag or use arrow keys")}
++          {handle(2, px(pts.x2), py(pts.y2), "var(--color-signal)", "Control point 2 — drag or use arrow keys")}
++        </svg>
++      </div>
++
++      <div className="mt-5 flex flex-wrap items-center gap-2">
++        {PRESETS.map((p) => (
++          <button
++            key={p.name}
++            type="button"
++            className="btn-ghost btn-sm font-mono text-[10px] uppercase tracking-[0.12em]"
++            onClick={() => setPts({ x1: p.v[0], y1: p.v[1], x2: p.v[2], y2: p.v[3] })}
++          >
++            {p.name}
++          </button>
++        ))}
++      </div>
++
++      <div className="mt-4 flex flex-wrap items-center gap-3">
++        <code className="rounded border border-line bg-sheet px-3 py-2 font-mono text-[11.5px] text-ink">{css}</code>
++        <button type="button" className="btn-ghost btn-sm" onClick={copy}>
++          {copied ? "Copied ✓" : "Copy"}
++        </button>
++        <span aria-live="polite" className="sr-only">{copied ? "Copied to clipboard" : ""}</span>
++      </div>
++
++      <div className="mt-5">
++        <div ref={trackRef} className="relative h-11 rounded border border-line bg-wash/40">
++          <div ref={chipRef} className="absolute left-[6px] top-[6px] size-7 rounded-[3px] bg-ink" aria-hidden="true" />
++        </div>
++        <div className="mt-3 flex flex-wrap items-center gap-3">
++          <button type="button" className="btn btn-sm" onClick={run}>Run preview</button>
++          <span className="u-label text-ink2/80">Runs once, on your cue — with the curve above</span>
++        </div>
++      </div>
++    </div>
++  );
++}
+diff --git a/app/components/Reveal.jsx b/app/components/Reveal.jsx
+new file mode 100644
+index 0000000..df51b45
+--- /dev/null
++++ b/app/components/Reveal.jsx
+@@ -0,0 +1,28 @@
++"use client";
++import { useEffect } from "react";
++import { prmNow } from "../lib/usePrm";
++
++/** One-shot scroll reveals for [data-reveal] elements (finite — not governed). */
++export default function Reveal() {
++  useEffect(() => {
++    const els = Array.from(document.querySelectorAll("[data-reveal]"));
++    if (prmNow()) {
++      els.forEach((el) => el.classList.add("is-in"));
++      return;
++    }
++    const io = new IntersectionObserver(
++      (entries) => {
++        for (const e of entries) {
++          if (e.isIntersecting) {
++            e.target.classList.add("is-in");
++            io.unobserve(e.target);
++          }
++        }
++      },
++      { threshold: 0.12, rootMargin: "0px 0px -6% 0px" }
++    );
++    els.forEach((el) => io.observe(el));
++    return () => io.disconnect();
++  }, []);
++  return null;
++}
+diff --git a/app/components/TopBar.jsx b/app/components/TopBar.jsx
+new file mode 100644
+index 0000000..af237d5
+--- /dev/null
++++ b/app/components/TopBar.jsx
+@@ -0,0 +1,65 @@
++"use client";
++import { useEffect, useRef } from "react";
++import { smpte } from "./hero/score";
++
++/**
++ * Sticky header. The timecode reads the scroll position (600px = 1s),
++ * so the whole page reads as footage you scrub by scrolling.
++ * Event-driven only: no work happens while the page is idle.
++ */
++export default function TopBar() {
++  const tcRef = useRef(null);
++  const barRef = useRef(null);
++
++  useEffect(() => {
++    let scheduled = false;
++    const update = () => {
++      scheduled = false;
++      const doc = document.documentElement;
++      const max = Math.max(1, doc.scrollHeight - window.innerHeight);
++      const y = window.scrollY;
++      if (barRef.current) barRef.current.style.transform = `scaleX(${Math.min(1, y / max)})`;
++      if (tcRef.current) tcRef.current.textContent = smpte(y / 600);
++    };
++    const onScroll = () => {
++      if (!scheduled) {
++        scheduled = true;
++        requestAnimationFrame(update);
++      }
++    };
++    update();
++    window.addEventListener("scroll", onScroll, { passive: true });
++    window.addEventListener("resize", onScroll, { passive: true });
++    return () => {
++      window.removeEventListener("scroll", onScroll);
++      window.removeEventListener("resize", onScroll);
++    };
++  }, []);
++
++  const link = "u-label text-ink2 hover:text-ink no-underline";
++
++  return (
++    <header className="sticky top-0 z-50 border-b border-line bg-cel/85 backdrop-blur-md">
++      <div className="mx-auto flex max-w-6xl items-center gap-6 px-5 py-3">
++        <a href="#top" className="no-underline text-ink font-mono text-[13px] font-[600] tracking-[0.18em]">
++          MERIDIAN<span className="text-signal">°</span>
++        </a>
++        <nav aria-label="Sections" className="hidden items-center gap-5 md:flex">
++          <a className={link} href="#shot-01">Timeline</a>
++          <a className={link} href="#curves">Curves</a>
++          <a className={link} href="#workflow">Workflow</a>
++          <a className={link} href="#access">Access</a>
++        </nav>
++        <p className="tc ml-auto" aria-hidden="true">
++          SCRL <output ref={tcRef} aria-live="off">00:00:00:00</output>
++        </p>
++      </div>
++      <div
++        ref={barRef}
++        aria-hidden="true"
++        className="absolute bottom-[-1px] left-0 h-[2px] w-full origin-left bg-signal"
++        style={{ transform: "scaleX(0)" }}
++      />
++    </header>
++  );
++}
+diff --git a/app/components/Waitlist.jsx b/app/components/Waitlist.jsx
+new file mode 100644
+index 0000000..e6ee428
+--- /dev/null
++++ b/app/components/Waitlist.jsx
+@@ -0,0 +1,57 @@
++"use client";
++import { useRef, useState } from "react";
++
++export default function Waitlist() {
++  const inputRef = useRef(null);
++  const [state, setState] = useState("idle"); // idle | error | done
++
++  const submit = (e) => {
++    e.preventDefault();
++    const input = inputRef.current;
++    if (!input.value || !input.checkValidity()) {
++      setState("error");
++      input.focus();
++      return;
++    }
++    setState("done");
++  };
++
++  if (state === "done") {
++    return (
++      <p role="status" className="chip font-mono text-[12px] tracking-[0.08em] text-ink">
++        <span aria-hidden="true" className="inline-block size-2 rounded-full bg-cyan" />
++        SLATED — you are on the call sheet. One email when your seat is ready.
++      </p>
++    );
++  }
++
++  return (
++    <form onSubmit={submit} noValidate className="flex max-w-xl flex-col gap-3 sm:flex-row">
++      <div className="flex-1">
++        <label htmlFor="wl-email" className="u-label mb-2 block text-ink2">
++          Email
++        </label>
++        <input
++          ref={inputRef}
++          id="wl-email"
++          name="email"
++          type="email"
++          required
++          autoComplete="email"
++          placeholder="you@studio.tld"
++          className="input"
++          aria-describedby={state === "error" ? "wl-err" : undefined}
++          onChange={() => state === "error" && setState("idle")}
++        />
++        {state === "error" && (
++          <p id="wl-err" role="alert" className="mt-2 font-mono text-[11px] tracking-[0.05em] text-signal">
++            Enter a valid email so we can cue you.
++          </p>
++        )}
++      </div>
++      <button type="submit" className="btn self-start sm:mt-[26px]">
++        Request access
++      </button>
++    </form>
++  );
++}
+diff --git a/app/components/hero/Hero.jsx b/app/components/hero/Hero.jsx
+new file mode 100644
+index 0000000..470bec7
+--- /dev/null
++++ b/app/components/hero/Hero.jsx
+@@ -0,0 +1,519 @@
++"use client";
++import { useEffect, useRef, useState } from "react";
++import gsap from "gsap";
++import { useGSAP } from "@gsap/react";
++import { TRACKS, DUR, FPS, FRAMES, LOOP, smpte, frameOf } from "./score";
++import { governLoop } from "../../lib/governor";
++import { usePrm, prmNow } from "../../lib/usePrm";
++
++gsap.registerPlugin(useGSAP);
++
++const WORDS = ["Take", "your", "time."];
++const pct = (t) => `${(t / DUR) * 100}%`;
++
++function HeroLine({ ghost }) {
++  return WORDS.map((w, i) => (
++    <span key={i}>
++      <span className="mask">
++        <span className={`${ghost ? "wordg" : "word"}${w === "time." ? " js-time" : ""}`}>{w}</span>
++      </span>
++      {i < WORDS.length - 1 ? " " : ""}
++    </span>
++  ));
++}
++
++const IconPlay = (
++  <svg viewBox="0 0 14 14" width="12" height="12" aria-hidden="true">
++    <path d="M3.5 2l9 5-9 5z" fill="currentColor" />
++  </svg>
++);
++const IconPause = (
++  <svg viewBox="0 0 14 14" width="12" height="12" aria-hidden="true">
++    <rect x="3" y="2" width="3" height="10" fill="currentColor" />
++    <rect x="8.4" y="2" width="3" height="10" fill="currentColor" />
++  </svg>
++);
++const IconStart = (
++  <svg viewBox="0 0 14 14" width="12" height="12" aria-hidden="true">
++    <rect x="2.6" y="2" width="1.6" height="10" fill="currentColor" />
++    <path d="M11.8 2L5.6 7l6.2 5z" fill="currentColor" />
++  </svg>
++);
++const IconStepB = (
++  <svg viewBox="0 0 14 14" width="12" height="12" aria-hidden="true">
++    <path d="M10 2L4.6 7 10 12z" fill="currentColor" />
++    <rect x="3" y="2" width="1.4" height="10" fill="currentColor" />
++  </svg>
++);
++const IconStepF = (
++  <svg viewBox="0 0 14 14" width="12" height="12" aria-hidden="true">
++    <path d="M4 2l5.4 5L4 12z" fill="currentColor" />
++    <rect x="9.6" y="2" width="1.4" height="10" fill="currentColor" />
++  </svg>
++);
++
++export default function Hero() {
++  const stageRef = useRef(null);
++  const fieldRef = useRef(null);
++  const rulerRef = useRef(null);
++  const playheadRef = useRef(null);
++  const flagRef = useRef(null);
++  const tcRef = useRef(null);
++
++  const tlRef = useRef(null);
++  const loopTweenRef = useRef(null);
++  const govRef = useRef(null);
++  const heldRef = useRef(null); // "main" | "loop" | null — what the governor suspended
++  const pendingStartRef = useRef(null);
++  const scrubbingRef = useRef(false);
++  const fieldWRef = useRef(1);
++  const lastFRef = useRef(-1);
++
++  const [playing, setPlaying] = useState(false);
++  const [loopOn, setLoopOn] = useState(true);
++  const loopOnRef = useRef(true);
++  loopOnRef.current = loopOn;
++  const prm = usePrm();
++
++  /* ---------- playhead / readout sync (driven by the timeline itself) ---------- */
++  const sync = () => {
++    const tl = tlRef.current;
++    if (!tl) return;
++    const t = tl.time();
++    if (playheadRef.current)
++      playheadRef.current.style.transform = `translate3d(${(t / DUR) * fieldWRef.current}px,0,0)`;
++    if (flagRef.current) {
++      const flip = t / DUR > 0.86;
++      flagRef.current.style.left = flip ? "auto" : "5px";
++      flagRef.current.style.right = flip ? "5px" : "auto";
++    }
++    const f = frameOf(t);
++    if (f !== lastFRef.current) {
++      lastFRef.current = f;
++      const fs = String(f).padStart(3, "0");
++      if (flagRef.current) flagRef.current.textContent = `F${fs}`;
++      if (tcRef.current) tcRef.current.textContent = `${smpte(t)} · F${fs}/${FRAMES}`;
++      const r = rulerRef.current;
++      if (r) {
++        r.setAttribute("aria-valuenow", String(f));
++        r.setAttribute("aria-valuetext", `frame ${f} of ${FRAMES} — ${smpte(t)}`);
++      }
++    }
++  };
++
++  const killLoop = () => {
++    if (loopTweenRef.current) {
++      loopTweenRef.current.kill();
++      loopTweenRef.current = null;
++    }
++  };
++
++  const startRegionLoop = () => {
++    killLoop();
++    loopTweenRef.current = tlRef.current.tweenFromTo(LOOP[0], LOOP[1], { repeat: -1, ease: "none" });
++  };
++
++  /* Route every start through the governor so nothing can run while occluded. */
++  const requestStart = (fn) => {
++    const g = govRef.current;
++    if (!g) return;
++    if (g.state().running) fn();
++    else {
++      pendingStartRef.current = fn;
++      g.setWants(true);
++    }
++  };
++
++  const stopAll = () => {
++    killLoop();
++    pendingStartRef.current = null;
++    tlRef.current?.pause();
++    govRef.current?.setWants(false);
++    setPlaying(false);
++  };
++
++  const seek = (t) => {
++    const tl = tlRef.current;
++    if (!tl) return;
++    tl.time(Math.max(0, Math.min(DUR, t)), true);
++    sync();
++  };
++
++  /* ---------- transport ---------- */
++  const togglePlay = () => {
++    if (playing) {
++      stopAll();
++      return;
++    }
++    requestStart(() => {
++      const tl = tlRef.current;
++      if (tl.progress() >= 0.999) tl.play(0);
++      else tl.play();
++    });
++    setPlaying(true);
++  };
++
++  const restart = () => {
++    killLoop();
++    requestStart(() => tlRef.current.play(0));
++    setPlaying(true);
++  };
++
++  const step = (df) => {
++    const tl = tlRef.current;
++    if (!tl) return;
++    stopAll();
++    seek(tl.time() + df / FPS);
++  };
++
++  const toggleLoop = () => {
++    const nv = !loopOnRef.current;
++    if (!nv) {
++      if (loopTweenRef.current || heldRef.current === "loop") {
++        killLoop();
++        heldRef.current = null;
++        govRef.current?.setWants(false);
++        setPlaying(false);
++      }
++    } else {
++      const tl = tlRef.current;
++      if (tl && !tl.isActive() && !loopTweenRef.current && tl.progress() >= 0.999 && !prmNow()) {
++        requestStart(startRegionLoop);
++        setPlaying(true);
++      }
++    }
++    setLoopOn(nv);
++  };
++
++  /* ---------- scrub (pointer) ---------- */
++  const timeAt = (clientX) => {
++    const r = fieldRef.current.getBoundingClientRect();
++    return ((clientX - r.left) / Math.max(1, r.width)) * DUR;
++  };
++  const onDown = (e) => {
++    if (e.pointerType === "mouse" && e.button !== 0) return;
++    stopAll();
++    scrubbingRef.current = true;
++    e.currentTarget.setPointerCapture(e.pointerId);
++    seek(timeAt(e.clientX));
++  };
++  const onMove = (e) => {
++    if (scrubbingRef.current) seek(timeAt(e.clientX));
++  };
++  const onUp = () => {
++    scrubbingRef.current = false;
++  };
++
++  /* ---------- keyboard (playhead is a slider) ---------- */
++  const onKey = (e) => {
++    const tl = tlRef.current;
++    if (!tl) return;
++    const nudge = (df) => {
++      stopAll();
++      seek(tl.time() + df / FPS);
++    };
++    switch (e.key) {
++      case "ArrowLeft": nudge(e.shiftKey ? -10 : -1); break;
++      case "ArrowRight": nudge(e.shiftKey ? 10 : 1); break;
++      case "PageUp": nudge(30); break;
++      case "PageDown": nudge(-30); break;
++      case "Home": stopAll(); seek(0); break;
++      case "End": stopAll(); seek(DUR); break;
++      case " ": case "k": case "Enter": togglePlay(); break;
++      default: return;
++    }
++    e.preventDefault();
++  };
++
++  /* ---------- build the timeline from the score ---------- */
++  useGSAP(
++    () => {
++      const stage = stageRef.current;
++      const S = (sel) => stage.querySelectorAll(sel);
++
++      const tl = gsap.timeline({
++        paused: true,
++        defaults: { ease: "power3.out" },
++        onUpdate: sync,
++        onComplete: () => {
++          if (loopOnRef.current && !prmNow()) {
++            startRegionLoop();
++          } else {
++            govRef.current?.setWants(false);
++            setPlaying(false);
++          }
++        },
++      });
++
++      // Reveal the word masks on the timeline's first render (the CSS gate hides
++      // them pre-hydration; transforms stay exclusively GSAP-owned).
++      tl.set(S(".mask"), { opacity: 1 }, 0);
++
++      // Track 1 — construction grid
++      tl.fromTo(S('[data-a="fade"]'), { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power1.inOut" }, 0)
++        .fromTo(S("[data-reg]"), { scale: 0 }, { scale: 1, duration: 0.35, stagger: 0.05, ease: "back.out(2.5)" }, 0.1)
++        // Track 2 — kicker
++        .fromTo(S('[data-a="kicker"]'), { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5 }, 0.25)
++        // Track 3 — headline words rise out of their masks
++        .fromTo(S(".word"), { yPercent: 130 }, { yPercent: 0, duration: 0.7, stagger: 0.18, ease: "power4.out" }, 0.5)
++        // Track 4 — retime: the word "time." is literally time-stretched (wdth 62 -> 125)
++        .fromTo(stage, { "--wdthTime": "62%" }, { "--wdthTime": "125%", duration: 0.85, ease: "back.out(1.4)" }, 1.35)
++        // Track 5 — onion-skin ghosts converge
++        .fromTo(S(".ghost-cyan"), { opacity: 0 }, { opacity: 0.44, duration: 0.9, ease: "power2.out" }, 1.6)
++        .fromTo(S(".ghost-red"), { opacity: 0 }, { opacity: 0.4, duration: 0.9, ease: "power2.out" }, 1.6)
++        .fromTo(stage, { "--gxc": "-0.34em" }, { "--gxc": "-0.05em", duration: 0.9, ease: "power2.out" }, 1.6)
++        .fromTo(stage, { "--gxr": "0.34em" }, { "--gxr": "0.05em", duration: 0.9, ease: "power2.out" }, 1.6)
++        // Track 6 — subhead
++        .fromTo(S('[data-a="sub"]'), { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, 2.2)
++        // Track 7 — actions
++        .fromTo(S('[data-a="cta"]'), { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.12 }, 2.5)
++        // Track 8 — picture lock stamp
++        .fromTo(
++          S('[data-a="stamp"]'),
++          { opacity: 0, scale: 1.7, rotation: -9 },
++          { opacity: 1, scale: 1, rotation: -3, duration: 0.3, ease: "back.out(3)" },
++          2.9
++        )
++        // Loop-region content (3.2 -> 4.0): ghost drift, seamless at both ends
++        .to(stage, { keyframes: [
++          { "--gxc": "-0.095em", duration: 0.4, ease: "sine.inOut" },
++          { "--gxc": "-0.05em", duration: 0.4, ease: "sine.inOut" },
++        ] }, LOOP[0])
++        .to(stage, { keyframes: [
++          { "--gxr": "0.095em", duration: 0.4, ease: "sine.inOut" },
++          { "--gxr": "0.05em", duration: 0.4, ease: "sine.inOut" },
++        ] }, LOOP[0]);
++
++      tlRef.current = tl;
++
++      // Reduced motion: settle the finished frame before first paint. Content intact.
++      if (prmNow()) {
++        tl.progress(1, true);
++      }
++      sync();
++    },
++    { scope: stageRef }
++  );
++
++  /* ---------- governor + measurements + debug registry ---------- */
++  useEffect(() => {
++    const gov = governLoop("hero", stageRef.current, {
++      onPlay: () => {
++        const pend = pendingStartRef.current;
++        if (pend) {
++          pendingStartRef.current = null;
++          heldRef.current = null;
++          pend();
++          return;
++        }
++        if (heldRef.current === "loop") loopTweenRef.current?.resume();
++        else if (heldRef.current === "main") tlRef.current?.play();
++        heldRef.current = null;
++      },
++      onPause: () => {
++        if (loopTweenRef.current?.isActive()) {
++          heldRef.current = "loop";
++          loopTweenRef.current.pause();
++        } else if (tlRef.current?.isActive()) {
++          heldRef.current = "main";
++          tlRef.current.pause();
++        } else {
++          heldRef.current = null;
++        }
++      },
++    });
++    govRef.current = gov;
++
++    const measure = () => {
++      fieldWRef.current = fieldRef.current?.clientWidth || 1;
++      sync();
++    };
++    measure();
++    const ro = new ResizeObserver(measure);
++    ro.observe(fieldRef.current);
++
++    const w = (window.__meridian ||= { loops: {} });
++    w.prm = prmNow();
++    w.hero = {
++      time: () => tlRef.current?.time() ?? 0,
++      frame: () => frameOf(tlRef.current?.time() ?? 0),
++      active: () => !!(tlRef.current?.isActive() || loopTweenRef.current?.isActive()),
++      mode: () => (loopTweenRef.current?.isActive() ? "loop" : tlRef.current?.isActive() ? "main" : "idle"),
++      tick: () => gsap.ticker.frame, // advances only while GSAP's rAF ticker is awake
++    };
++
++    return () => {
++      killLoop();
++      ro.disconnect();
++      gov.dispose();
++      govRef.current = null;
++    };
++    // eslint-disable-next-line react-hooks/exhaustive-deps
++  }, []);
++
++  /* ---------- autoplay once fonts are in (skipped under reduced motion) ---------- */
++  useEffect(() => {
++    if (prmNow()) return;
++    let cancelled = false;
++    const kick = () => {
++      if (cancelled || !tlRef.current || scrubbingRef.current) return;
++      requestStart(() => tlRef.current.play(0));
++      setPlaying(true);
++    };
++    const ready = document.fonts?.ready ?? Promise.resolve();
++    const t0 = new Promise((r) => setTimeout(r, 900));
++    let timer;
++    Promise.race([ready, t0]).then(() => {
++      if (!cancelled) timer = setTimeout(kick, 200);
++    });
++    return () => {
++      cancelled = true;
++      clearTimeout(timer);
++    };
++    // eslint-disable-next-line react-hooks/exhaustive-deps
++  }, []);
++
++  /* ---------- live change of the reduced-motion preference ---------- */
++  useEffect(() => {
++    if (window.__meridian) window.__meridian.prm = prm ?? prmNow();
++    if (prm === true && tlRef.current) {
++      stopAll();
++      tlRef.current.progress(1, true);
++      sync();
++    }
++    // eslint-disable-next-line react-hooks/exhaustive-deps
++  }, [prm]);
++
++  /* ================================================================ */
++  return (
++    <section id="top" ref={stageRef} aria-labelledby="hero-h1" className="relative scroll-mt-16 overflow-hidden">
++      {/* the light table */}
++      <div data-a="fade" aria-hidden="true" className="construction construction-fade pointer-events-none absolute inset-0">
++        <span data-reg className="reg left-[3%] top-[10%]" />
++        <span data-reg className="reg right-[5%] top-[16%]" />
++        <span data-reg className="reg left-[38%] top-[6%]" />
++        <span data-reg className="reg left-[7%] top-[64%]" />
++        <span data-reg className="reg right-[24%] top-[58%]" />
++      </div>
++
++      <div className="relative mx-auto max-w-6xl px-5 pb-10 pt-14 sm:pt-20">
++        <p data-a="kicker" className="chip u-label">
++          <span className="inline-block size-2 rounded-full bg-signal" aria-hidden="true" />
++          Shot 01 · a motion editor for the web · private beta
++        </p>
++
++        <div className="relative mt-8 max-w-[15ch]">
++          <p className="ghost ghost-cyan hero-h1" aria-hidden="true"><HeroLine ghost /></p>
++          <p className="ghost ghost-red hero-h1" aria-hidden="true"><HeroLine ghost /></p>
++          <h1 id="hero-h1" className="hero-h1 relative z-[1]"><HeroLine /></h1>
++        </div>
++
++        <p data-a="sub" className="mt-7 max-w-[56ch] text-[17px] leading-relaxed text-ink2 sm:text-lg">
++          Meridian is a timeline-based motion editor for the web. Block the shot on real
++          tracks, bend every curve by hand, and ship the exact code you previewed —
++          CSS, Web Animations, or your framework.
++        </p>
++
++        <div className="mt-9 flex flex-wrap items-center gap-4">
++          <a data-a="cta" className="btn" href="#access">Request early access</a>
++          <a data-a="cta" className="btn-ghost" href="#shot-01">Scrub the timeline ↓</a>
++        </div>
++
++        <div data-a="stamp" className="stamp absolute right-6 top-16 hidden lg:block" aria-hidden="true">
++          PICTURE LOCK ★ TAKE 07
++        </div>
++      </div>
++
++      {/* ---------- the dope sheet: this page's own entrance, scrubbable ---------- */}
++      <div className="relative mx-auto max-w-6xl px-5 pb-16">
++        <div id="shot-01" className="panel scroll-mt-24" role="group" aria-label="Shot 01 — the hero entrance timeline (live)">
++          <div className="transport">
++            <span className="u-label text-ink2">Shot 01 · hero entrance</span>
++            <div className="ml-auto flex items-center gap-1.5 sm:ml-6" role="group" aria-label="Transport">
++              <button type="button" className="tbtn" aria-label="Back to start" onClick={restart}>{IconStart}</button>
++              <button type="button" className="tbtn" aria-label="Step back one frame" onClick={() => step(-1)}>{IconStepB}</button>
++              <button type="button" className="tbtn" aria-label={playing ? "Pause" : "Play"} aria-pressed={playing} onClick={togglePlay}>
++                {playing ? IconPause : IconPlay}
++              </button>
++              <button type="button" className="tbtn" aria-label="Step forward one frame" onClick={() => step(1)}>{IconStepF}</button>
++              <button
++                type="button"
++                className="tbtn tbtn-wide font-mono text-[9px] tracking-[0.1em]"
++                aria-label="Loop the preview region"
++                aria-pressed={loopOn}
++                onClick={toggleLoop}
++              >
++                LOOP
++              </button>
++            </div>
++            <output ref={tcRef} className="tc" aria-live="off">00:00:00:00 · F000/120</output>
++            <span className="u-label hidden text-ink2/70 xl:inline">space plays · ← → steps 1f · ⇧ 10f</span>
++          </div>
++
++          <div className="flex px-3 pb-3 sm:px-4 sm:pb-4">
++            <div className="flex w-[74px] shrink-0 flex-col sm:w-[150px]">
++              <div className="h-[34px]" aria-hidden="true" />
++              {TRACKS.map((t) => (
++                <div key={t.id} className="trklabel h-[27px] border-t border-line/70">
++                  <span className="hidden sm:inline">{t.label}</span>
++                  <span className="sm:hidden">{t.abbr}</span>
++                </div>
++              ))}
++            </div>
++
++            <div
++              ref={fieldRef}
++              className="field flex-1"
++              onPointerDown={onDown}
++              onPointerMove={onMove}
++              onPointerUp={onUp}
++              onPointerCancel={onUp}
++            >
++              <div
++                ref={rulerRef}
++                className="ruler"
++                role="slider"
++                tabIndex={0}
++                aria-label="Playhead — scrub the hero entrance"
++                aria-orientation="horizontal"
++                aria-valuemin={0}
++                aria-valuemax={FRAMES}
++                aria-valuenow={0}
++                aria-valuetext="frame 0 of 120"
++                onKeyDown={onKey}
++              >
++                <div className="loopregion" style={{ left: pct(LOOP[0]), width: pct(LOOP[1] - LOOP[0]) }} aria-hidden="true">
++                  <span className="looptag">LOOP</span>
++                </div>
++                {[0, 1, 2, 3].map((s) => (
++                  <span key={s} className="ruler-sec" style={{ left: pct(s) }} aria-hidden="true">{s}s</span>
++                ))}
++                <div className="ruler-ticks" aria-hidden="true" />
++              </div>
++
++              {TRACKS.map((t) => (
++                <div key={t.id} className="lane">
++                  {t.clips.map((c, i) => (
++                    <span key={i} className="clip" style={{ left: pct(c.at), width: pct(c.dur) }} aria-hidden="true">
++                      <i className="key key-a" />
++                      <em className="clipname hidden md:block">{c.name}</em>
++                      <i className="key key-b" />
++                    </span>
++                  ))}
++                </div>
++              ))}
++
++              <div ref={playheadRef} className="playhead" aria-hidden="true">
++                <span ref={flagRef} className="phflag">F000</span>
++              </div>
++            </div>
++          </div>
++        </div>
++
++        <p className="u-label mt-4 text-ink2/80">
++          The panel is live — drag the playhead. Your scrub, not a video.
++        </p>
++      </div>
++    </section>
++  );
++}
+diff --git a/app/components/hero/score.js b/app/components/hero/score.js
+new file mode 100644
+index 0000000..f816e13
+--- /dev/null
++++ b/app/components/hero/score.js
+@@ -0,0 +1,29 @@
++// The single source of truth for Shot 01 — the hero's own entrance.
++// The GSAP timeline and the visible dope sheet are both built from this data,
++// so the panel can never drift from the motion it claims to show.
++
++export const FPS = 30;
++export const DUR = 4.0;
++export const FRAMES = Math.round(DUR * FPS); // 120
++export const LOOP = [3.2, 4.0]; // preview loop region — contains only loop-safe clips
++
++export const TRACKS = [
++  { id: "grid", label: "Construction", abbr: "GRID", clips: [{ at: 0.0, dur: 0.6, name: "fade up" }] },
++  { id: "kicker", label: "Kicker", abbr: "KICK", clips: [{ at: 0.25, dur: 0.5, name: "rise" }] },
++  { id: "headline", label: "Headline", abbr: "HEAD", clips: [{ at: 0.5, dur: 1.15, name: "mask rise ×3" }] },
++  { id: "retime", label: "Retime · wdth", abbr: "WDTH", clips: [{ at: 1.35, dur: 0.85, name: "62 → 125" }] },
++  { id: "ghosts", label: "Onion skin", abbr: "GHST", clips: [{ at: 1.6, dur: 0.9, name: "converge" }, { at: 3.2, dur: 0.8, name: "drift (loop)" }] },
++  { id: "subhead", label: "Subhead", abbr: "SUB", clips: [{ at: 2.2, dur: 0.6, name: "rise" }] },
++  { id: "actions", label: "Actions", abbr: "CTA", clips: [{ at: 2.5, dur: 0.62, name: "rise ×2" }] },
++  { id: "lock", label: "Picture lock", abbr: "LOCK", clips: [{ at: 2.9, dur: 0.3, name: "stamp" }] },
++];
++
++const p2 = (n) => String(n).padStart(2, "0");
++
++/** SMPTE-style timecode at 30fps: 00:MM:SS:FF */
++export function smpte(sec) {
++  const s = Math.max(0, sec);
++  return `00:${p2(Math.floor(s / 60))}:${p2(Math.floor(s % 60))}:${p2(Math.floor((s * FPS) % FPS))}`;
++}
++
++export const frameOf = (sec) => Math.max(0, Math.min(FRAMES, Math.round(sec * FPS)));
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..bacc964 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -1,26 +1,255 @@
+ @import "tailwindcss";
+ 
+-:root {
+-  color-scheme: light dark;
+-  --background: #f5f5f3;
+-  --foreground: #161616;
+-  --muted: #6b6b66;
+-  --surface: #ffffff;
+-  --line: #deded8;
+-}
+-
+-@media (prefers-color-scheme: dark) {
+-  :root {
+-    --background: #111110;
+-    --foreground: #f5f5f2;
+-    --muted: #a0a099;
+-    --surface: #181817;
+-    --line: #31312f;
++@theme {
++  --color-cel: #eef3f6;
++  --color-sheet: #fbfdfe;
++  --color-ink: #101820;
++  --color-ink2: #47555f;
++  --color-line: #c2d7e4;
++  --color-line2: #8fb3ca;
++  --color-wash: #dfeaf1;
++  --color-cyan: #0d9ec0;
++  --color-signal: #e93820;
++  --font-sans: "Archivo Variable", Archivo, ui-sans-serif, system-ui, sans-serif;
++  --font-mono: "Martian Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
++}
++
++:root { color-scheme: light; }
++
++html { background: var(--color-cel); color: var(--color-ink); scroll-behavior: smooth; }
++body { margin: 0; font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
++
++::selection { background: #c7ecf5; color: var(--color-ink); }
++:focus-visible { outline: 2px solid var(--color-ink); outline-offset: 2px; }
++
++/* ---------- utilities ---------- */
++.u-label {
++  font-family: var(--font-mono);
++  font-size: 10px;
++  font-weight: 500;
++  letter-spacing: 0.14em;
++  text-transform: uppercase;
++}
++
++.skip {
++  position: fixed; left: 12px; top: -60px; z-index: 100;
++  background: var(--color-ink); color: var(--color-cel);
++  padding: 10px 14px; border-radius: 3px; text-decoration: none;
++  font-family: var(--font-mono); font-size: 12px;
++}
++.skip:focus-visible { top: 12px; }
++
++/* the light table: non-photo blue construction grid */
++.construction {
++  background-image:
++    linear-gradient(color-mix(in srgb, var(--color-line) 62%, transparent) 1px, transparent 1px),
++    linear-gradient(90deg, color-mix(in srgb, var(--color-line) 62%, transparent) 1px, transparent 1px);
++  background-size: 44px 44px;
++}
++.construction-fade { mask-image: linear-gradient(#000 70%, transparent); }
++
++/* registration mark (+) */
++.reg { position: absolute; width: 13px; height: 13px; color: var(--color-line2); }
++.reg::before, .reg::after { content: ""; position: absolute; background: currentColor; }
++.reg::before { left: 6px; top: 0; bottom: 0; width: 1px; }
++.reg::after { top: 6px; left: 0; right: 0; height: 1px; }
++
++/* ---------- hero type ---------- */
++.hero-h1 {
++  font-weight: 840;
++  font-stretch: 112%;
++  letter-spacing: -0.03em;
++  line-height: 0.94;
++  font-size: clamp(3rem, 9.2vw, 8.2rem);
++  margin: 0;
++}
++.js-time { font-stretch: var(--wdthTime, 125%); }
++.mask { display: inline-block; overflow: clip; padding-bottom: 0.15em; margin-bottom: -0.15em; }
++.word, .wordg { display: inline-block; }
++.word { will-change: transform; }
++
++.ghost {
++  position: absolute; inset: 0; z-index: 0;
++  pointer-events: none; user-select: none;
++  mix-blend-mode: multiply;
++}
++.ghost-cyan { color: var(--color-cyan); transform: translateX(var(--gxc, -0.05em)); opacity: 0.44; }
++.ghost-red { color: var(--color-signal); transform: translateX(var(--gxr, 0.05em)); opacity: 0.4; }
++
++.stamp {
++  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.12em;
++  border: 1.5px solid var(--color-ink); color: var(--color-ink);
++  padding: 8px 11px; border-radius: 2px; transform: rotate(-3deg);
++  background: color-mix(in srgb, var(--color-sheet) 60%, transparent);
++}
++
++.chip {
++  display: inline-flex; align-items: center; gap: 8px;
++  border: 1px solid var(--color-line2);
++  background: color-mix(in srgb, var(--color-sheet) 72%, transparent);
++  border-radius: 999px; padding: 7px 13px; color: var(--color-ink2);
++}
++
++/* ---------- buttons ---------- */
++.btn, .btn-ghost {
++  display: inline-flex; align-items: center; gap: 8px;
++  padding: 13px 20px; border-radius: 4px; cursor: pointer;
++  font: inherit; font-weight: 640; font-size: 15px;
++  text-decoration: none;
++}
++.btn { background: var(--color-ink); color: var(--color-cel); border: 1.5px solid var(--color-ink); }
++.btn:hover { background: #223140; }
++.btn-ghost { background: transparent; color: var(--color-ink); border: 1.5px solid var(--color-line2); }
++.btn-ghost:hover { border-color: var(--color-ink); background: color-mix(in srgb, var(--color-sheet) 60%, transparent); }
++
++/* ---------- timeline panel (the dope sheet) ---------- */
++.panel {
++  background: var(--color-sheet);
++  border: 1px solid var(--color-line);
++  border-radius: 6px;
++  box-shadow:
++    0 1px 0 color-mix(in srgb, var(--color-ink) 4%, transparent),
++    0 14px 34px -20px color-mix(in srgb, var(--color-ink) 30%, transparent);
++}
++.transport {
++  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
++  padding: 10px 12px; border-bottom: 1px solid var(--color-line);
++}
++.tbtn {
++  display: inline-flex; align-items: center; justify-content: center;
++  width: 32px; height: 28px; padding: 0; cursor: pointer;
++  border: 1px solid var(--color-line2); border-radius: 3px;
++  background: var(--color-sheet); color: var(--color-ink);
++}
++.tbtn:hover { border-color: var(--color-ink); }
++.tbtn[aria-pressed="true"] { background: var(--color-ink); color: var(--color-cel); border-color: var(--color-ink); }
++.tc {
++  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.06em;
++  color: var(--color-ink2); font-variant-numeric: tabular-nums; white-space: nowrap;
++}
++
++.trklabel {
++  font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.1em;
++  color: var(--color-ink2); text-transform: uppercase;
++  display: flex; align-items: center;
++  padding-right: 10px; justify-content: flex-end; text-align: right;
++}
++.field { position: relative; cursor: ew-resize; touch-action: none; }
++.ruler { position: relative; height: 34px; }
++.ruler-ticks {
++  position: absolute; left: 0; right: 0; bottom: 0; height: 9px;
++  background-image: linear-gradient(90deg, var(--color-line2) 1px, transparent 1px);
++  background-size: calc(100% / 40) 100%;
++}
++.ruler-sec {
++  position: absolute; top: 4px; transform: translateX(2px);
++  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: 0.08em; color: var(--color-ink2);
++}
++.loopregion {
++  position: absolute; top: 0; bottom: 0;
++  background: color-mix(in srgb, var(--color-cyan) 9%, transparent);
++  border-left: 1px dashed color-mix(in srgb, var(--color-cyan) 55%, transparent);
++  border-right: 1px dashed color-mix(in srgb, var(--color-cyan) 55%, transparent);
++}
++.looptag {
++  position: absolute; top: 3px; left: 4px;
++  font-family: var(--font-mono); font-size: 7.5px; letter-spacing: 0.12em; color: var(--color-cyan);
++}
++.lane { position: relative; height: 27px; border-top: 1px solid color-mix(in srgb, var(--color-line) 70%, transparent); }
++.clip {
++  position: absolute; top: 5px; bottom: 5px;
++  background: var(--color-wash); border: 1px solid var(--color-line2); border-radius: 3px;
++  display: flex; align-items: center; overflow: visible;
++}
++.key {
++  position: absolute; width: 7px; height: 7px; background: var(--color-ink);
++  transform: rotate(45deg); top: 50%; margin-top: -3.5px; border-radius: 1px;
++}
++.key-a { left: -3.5px; } .key-b { right: -3.5px; }
++.clipname {
++  font-family: var(--font-mono); font-style: normal; font-size: 8.5px; letter-spacing: 0.05em;
++  color: var(--color-ink2); padding-left: 10px; white-space: nowrap; overflow: hidden; max-width: 100%;
++}
++.playhead {
++  position: absolute; top: 0; bottom: 0; left: 0; width: 1.5px;
++  background: var(--color-signal); z-index: 3; pointer-events: none; will-change: transform;
++}
++.playhead::before {
++  content: ""; position: absolute; top: 0; left: -4.6px;
++  border: 5px solid transparent; border-top: 7px solid var(--color-signal);
++}
++.phflag {
++  position: absolute; top: 13px; left: 5px;
++  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: 0.06em;
++  color: var(--color-signal); white-space: nowrap;
++  background: color-mix(in srgb, var(--color-sheet) 85%, transparent);
++  padding: 1px 3px; border-radius: 2px;
++}
++
++/* ---------- cards, forms, code ---------- */
++.cel-card {
++  position: relative; background: var(--color-sheet);
++  border: 1px solid var(--color-line); border-radius: 6px; padding: 26px;
++}
++.input {
++  font: inherit; background: var(--color-sheet);
++  border: 1.5px solid var(--color-line2); border-radius: 4px;
++  padding: 12px 14px; color: var(--color-ink); min-width: 0; width: 100%;
++}
++.input:focus-visible { outline: 2px solid var(--color-ink); outline-offset: 1px; border-color: var(--color-ink); }
++.input::placeholder { color: color-mix(in srgb, var(--color-ink2) 70%, transparent); }
++
++.codeblock {
++  font-family: var(--font-mono); font-size: 11.5px; line-height: 1.75;
++  background: var(--color-ink); color: #dbe8f0;
++  border-radius: 6px; padding: 18px 20px; overflow-x: auto; margin: 0;
++}
++.codeblock .c1 { color: #7fa8c4; }
++.codeblock .c2 { color: #67d5e8; }
++.codeblock .c3 { color: #ffb3a6; }
++
++/* ---------- curve editor ---------- */
++.curve-svg { touch-action: none; display: block; width: 100%; height: auto; }
++.handle { cursor: grab; outline: none; }
++.handle:active { cursor: grabbing; }
++.handle .focusring { opacity: 0; }
++.handle:focus-visible .focusring { opacity: 1; }
++
++/* ---------- motion gates (only when motion is allowed) ---------- */
++@media not (prefers-reduced-motion: reduce) {
++  html.js:not(.prm-force) [data-reveal] {
++    opacity: 0; transform: translateY(16px);
++    transition:
++      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
++      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
++    transition-delay: var(--rd, 0ms);
++  }
++  html.js:not(.prm-force) [data-reveal].is-in { opacity: 1; transform: none; }
++
++  html.js:not(.prm-force) [data-a="fade"],
++  html.js:not(.prm-force) [data-a="kicker"],
++  html.js:not(.prm-force) [data-a="sub"],
++  html.js:not(.prm-force) [data-a="cta"],
++  html.js:not(.prm-force) [data-a="stamp"] { opacity: 0; }
++  html.js:not(.prm-force) .mask { opacity: 0; }
++  html.js:not(.prm-force) .ghost { opacity: 0; }
++
++  .cel-card { transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s; }
++  .cel-card:hover { transform: translateY(-3px); box-shadow: 0 16px 30px -22px color-mix(in srgb, var(--color-ink) 35%, transparent); }
++  .btn, .btn-ghost, .tbtn { transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease; }
++}
++
++@media (prefers-reduced-motion: reduce) {
++  html { scroll-behavior: auto; }
++  *, *::before, *::after {
++    animation-duration: 0.001s !important;
++    animation-iteration-count: 1 !important;
++    transition-duration: 0.001s !important;
+   }
+ }
++html.prm-force { scroll-behavior: auto; }
+ 
+-* { box-sizing: border-box; }
+-html { background: var(--background); color: var(--foreground); }
+-body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
+-a { color: inherit; }
+-button, input { font: inherit; }
++/* size variants (custom classes are unlayered, so utilities can't override them) */
++.btn-sm { padding: 9px 14px; font-size: 13.5px; }
++.tbtn-wide { width: auto; padding: 0 9px; }
++.codeblock-sm { font-size: 10px; line-height: 1.8; }
+diff --git a/app/layout.jsx b/app/layout.jsx
+index 35fc217..06b4b73 100644
+--- a/app/layout.jsx
++++ b/app/layout.jsx
+@@ -1,14 +1,32 @@
++import "@fontsource-variable/archivo/wdth.css";
++import "@fontsource-variable/martian-mono/index.css";
+ import "./globals.css";
+ 
+ export const metadata = {
+-  title: "Meridian",
+-  description: "Meridian is a timeline-based motion editor for the web. Design animation visually, ship production code.",
++  title: "Meridian — Take your time",
++  description:
++    "Meridian is a timeline-based motion editor for the web. Block the shot on real tracks, bend every curve by hand, and ship production-ready code.",
++  icons: {
++    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23eef3f6'/><path d='M9 5h14l-7 9z' fill='%23e93820'/><rect x='14.75' y='5' width='2.5' height='23' fill='%23e93820'/></svg>",
++  },
++};
++
++export const viewport = {
++  themeColor: "#eef3f6",
+ };
+ 
+ export default function RootLayout({ children }) {
+   return (
+     <html lang="en">
+-      <body>{children}</body>
++      <body>
++        <script
++          dangerouslySetInnerHTML={{
++            __html:
++              "document.documentElement.classList.add('js');try{if(new URLSearchParams(location.search).has('prm')){document.documentElement.classList.add('prm-force')}}catch(e){}",
++          }}
++        />
++        {children}
++      </body>
+     </html>
+   );
+ }
+diff --git a/app/lib/governor.js b/app/lib/governor.js
+new file mode 100644
+index 0000000..53dd885
+--- /dev/null
++++ b/app/lib/governor.js
+@@ -0,0 +1,55 @@
++// Loop governor: any continuous/ambient animation registers here.
++// It is force-paused whenever its surface leaves the viewport or the
++// document is hidden, and resumed when both conditions clear.
++// State is published on window.__meridian.loops for verification.
++
++export function governLoop(id, el, { onPlay, onPause }) {
++  const s = { id, wants: false, hidden: document.hidden, offscreen: false, running: false };
++
++  const publish = () => {
++    const w = (window.__meridian ||= { loops: {} });
++    (w.loops ||= {})[id] = { ...s };
++  };
++
++  const apply = () => {
++    const ok = s.wants && !s.hidden && !s.offscreen;
++    if (ok && !s.running) {
++      s.running = true;
++      onPlay();
++    } else if (!ok && s.running) {
++      s.running = false;
++      onPause();
++    }
++    publish();
++  };
++
++  const io = new IntersectionObserver(
++    (entries) => {
++      for (const e of entries) s.offscreen = !e.isIntersecting;
++      apply();
++    },
++    { threshold: 0 }
++  );
++  io.observe(el);
++
++  const vis = () => {
++    s.hidden = document.hidden;
++    apply();
++  };
++  document.addEventListener("visibilitychange", vis);
++  publish();
++
++  return {
++    setWants(v) {
++      if (s.wants !== v) {
++        s.wants = v;
++        apply();
++      }
++    },
++    state: () => ({ ...s }),
++    dispose() {
++      io.disconnect();
++      document.removeEventListener("visibilitychange", vis);
++    },
++  };
++}
+diff --git a/app/lib/usePrm.js b/app/lib/usePrm.js
+new file mode 100644
+index 0000000..b625b0a
+--- /dev/null
++++ b/app/lib/usePrm.js
+@@ -0,0 +1,23 @@
++"use client";
++import { useEffect, useState } from "react";
++
++/** Synchronous check — safe to call in effects only. */
++export function prmNow() {
++  return (
++    window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
++    document.documentElement.classList.contains("prm-force")
++  );
++}
++
++/** Reactive prefers-reduced-motion. `null` until known (client-only). */
++export function usePrm() {
++  const [prm, setPrm] = useState(null);
++  useEffect(() => {
++    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
++    const compute = () => setPrm(prmNow());
++    compute();
++    mq.addEventListener("change", compute);
++    return () => mq.removeEventListener("change", compute);
++  }, []);
++  return prm;
++}
+diff --git a/app/page.jsx b/app/page.jsx
+index 6f15aef..1f8f7f3 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -1,31 +1,240 @@
++import TopBar from "./components/TopBar";
++import Hero from "./components/hero/Hero";
++import CurveEditor from "./components/CurveEditor";
++import Waitlist from "./components/Waitlist";
++import Reveal from "./components/Reveal";
++
++const h2 = "mt-4 text-4xl font-[770] leading-[1.02] tracking-[-0.02em] sm:text-[44px]";
++
++function Kicker({ children }) {
++  return <p className="u-label text-ink2">{children}</p>;
++}
++
++function CardRegs() {
++  return (
++    <span aria-hidden="true">
++      <span className="reg left-[-6px] top-[-6px]" />
++      <span className="reg right-[-6px] bottom-[-6px]" />
++    </span>
++  );
++}
++
+ export default function Home() {
+   return (
+-    <main className="mx-auto max-w-3xl space-y-16 px-6 py-24">
+-      <section className="space-y-4">
+-        <h1 className="text-4xl font-semibold">Meridian</h1>
+-        <p className="text-lg text-[var(--muted)]">
+-          A timeline-based motion editor for the web. Design animation visually, ship production code.
+-        </p>
+-        <a
+-          className="inline-block rounded-md bg-[var(--foreground)] px-4 py-2 text-[var(--background)]"
+-          href="#get-access"
+-        >
+-          Get early access
+-        </a>
+-      </section>
+-
+-      <section className="space-y-6">
+-        <h2 className="text-2xl font-semibold">What it does</h2>
+-        <ul className="space-y-4 text-[var(--muted)]">
+-          <li>Visual timeline editing for springs, keyframes, and gesture-driven motion.</li>
+-          <li>One-click export to production JavaScript and CSS with no runtime lock-in.</li>
+-          <li>Live preview across breakpoints, with reduced-motion variants built in.</li>
+-        </ul>
+-      </section>
+-
+-      <footer className="border-t border-[var(--line)] pt-8 text-sm text-[var(--muted)]" id="get-access">
+-        <p>Meridian is in private beta. hello@meridian.tools</p>
++    <>
++      <a href="#main" className="skip">Skip to content</a>
++      <TopBar />
++
++      <main id="main">
++        <Hero />
++
++        {/* ---------------- SHEET 02 · capabilities ---------------- */}
++        <section id="table" aria-labelledby="h-table" className="scroll-mt-16 border-t border-line">
++          <div className="mx-auto max-w-6xl px-5 py-24">
++            <div data-reveal>
++              <Kicker>Sheet 02 · Capabilities</Kicker>
++              <h2 id="h-table" className={h2} style={{ fontStretch: "106%" }}>
++                On the light table
++              </h2>
++              <p className="mt-5 max-w-[58ch] text-[16px] leading-relaxed text-ink2">
++                Everything you sketch stays in non-photo blue until you ship it. Then it
++                becomes ink — real code, not an approximation of your intent.
++              </p>
++            </div>
++
++            <div className="mt-12 grid gap-5 md:grid-cols-3">
++              <article className="cel-card" data-reveal>
++                <CardRegs />
++                <svg viewBox="0 0 240 88" className="w-full" aria-hidden="true">
++                  <line x1="0" y1="24" x2="240" y2="24" stroke="var(--color-line)" />
++                  <line x1="0" y1="56" x2="240" y2="56" stroke="var(--color-line)" />
++                  <rect x="18" y="14" width="92" height="20" rx="3" fill="var(--color-wash)" stroke="var(--color-line2)" />
++                  <rect x="14.5" y="20.5" width="7" height="7" fill="var(--color-ink)" transform="rotate(45 18 24)" />
++                  <rect x="106.5" y="20.5" width="7" height="7" fill="var(--color-ink)" transform="rotate(45 110 24)" />
++                  <rect x="70" y="46" width="120" height="20" rx="3" fill="var(--color-wash)" stroke="var(--color-line2)" />
++                  <rect x="66.5" y="52.5" width="7" height="7" fill="var(--color-ink)" transform="rotate(45 70 56)" />
++                  <path d="M127 4h10l-5 7z" fill="var(--color-signal)" />
++                  <line x1="132" y1="4" x2="132" y2="84" stroke="var(--color-signal)" strokeWidth="1.5" />
++                </svg>
++                <h3 className="mt-5 text-xl font-[680]">Tracks, not stylesheets</h3>
++                <p className="mt-2 text-[15px] leading-relaxed text-ink2">
++                  Clips, keyframes, and a playhead you can trust. Nudge a cue by one
++                  frame, retime a whole scene by the handful.
++                </p>
++              </article>
++
++              <article className="cel-card" data-reveal style={{ "--rd": "90ms" }}>
++                <CardRegs />
++                <svg viewBox="0 0 240 88" className="w-full" aria-hidden="true">
++                  <line x1="16" y1="14" x2="16" y2="76" stroke="var(--color-line)" />
++                  <line x1="16" y1="76" x2="224" y2="76" stroke="var(--color-line)" />
++                  <line x1="16" y1="16" x2="224" y2="16" stroke="var(--color-line)" strokeDasharray="3 4" />
++                  <line x1="16" y1="76" x2="104" y2="76" stroke="var(--color-cyan)" strokeWidth="1.5" />
++                  <line x1="224" y1="16" x2="128" y2="6" stroke="var(--color-signal)" strokeWidth="1.5" />
++                  <path d="M16 76 C 104 76, 128 6, 224 16" fill="none" stroke="var(--color-ink)" strokeWidth="2.5" />
++                  <circle cx="104" cy="76" r="5" fill="var(--color-sheet)" stroke="var(--color-cyan)" strokeWidth="2.5" />
++                  <circle cx="128" cy="6" r="5" fill="var(--color-sheet)" stroke="var(--color-signal)" strokeWidth="2.5" />
++                </svg>
++                <h3 className="mt-5 text-xl font-[680]">Curves you can grab</h3>
++                <p className="mt-2 text-[15px] leading-relaxed text-ink2">
++                  Overshoot, anticipation, spring-fit — sculpted by hand in a real curve
++                  editor and previewed before you commit.
++                </p>
++              </article>
++
++              <article className="cel-card" data-reveal style={{ "--rd": "180ms" }}>
++                <CardRegs />
++                <pre className="codeblock codeblock-sm" aria-label="Example of exported CSS">
++{`.headline { animation: rise .7s
++    cubic-bezier(.22,1,.36,1) both; }
++@keyframes rise { from {
++    translate: 0 130%; } }`}
++                </pre>
++                <h3 className="mt-5 text-xl font-[680]">Ink that ships</h3>
++                <p className="mt-2 text-[15px] leading-relaxed text-ink2">
++                  Export CSS, Web Animations, or framework-native code. Readable,
++                  diffable, yours — no runtime lock-in.
++                </p>
++              </article>
++            </div>
++          </div>
++        </section>
++
++        {/* ---------------- SHEET 03 · the curve room ---------------- */}
++        <section id="curves" aria-labelledby="h-curves" className="scroll-mt-16 border-t border-line bg-sheet/60">
++          <div className="mx-auto grid max-w-6xl gap-12 px-5 py-24 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
++            <div data-reveal>
++              <Kicker>Sheet 03 · The curve room</Kicker>
++              <h2 id="h-curves" className={h2} style={{ fontStretch: "106%" }}>
++                Easing, by hand
++              </h2>
++              <p className="mt-5 max-w-[52ch] text-[16px] leading-relaxed text-ink2">
++                Motion gets its character from the curve, so Meridian gives the curve a
++                room of its own. Grab a handle — the cyan one eases you out of the start,
++                the red one lands you at the end. Pull above the box for overshoot,
++                below it for anticipation.
++              </p>
++              <p className="mt-4 max-w-[52ch] text-[16px] leading-relaxed text-ink2">
++                This is the actual editor control, embedded — not a video of it. Copy the
++                curve out when it feels inevitable.
++              </p>
++              <p className="u-label mt-6 text-ink2/80">
++                Same colors as the onion skin above: cyan sketches, red lands.
++              </p>
++            </div>
++            <div data-reveal style={{ "--rd": "90ms" }}>
++              <CurveEditor />
++            </div>
++          </div>
++        </section>
++
++        {/* ---------------- SHEET 04 · workflow ---------------- */}
++        <section id="workflow" aria-labelledby="h-flow" className="scroll-mt-16 border-t border-line">
++          <div className="mx-auto max-w-6xl px-5 py-24">
++            <div data-reveal>
++              <Kicker>Sheet 04 · Workflow</Kicker>
++              <h2 id="h-flow" className={h2} style={{ fontStretch: "106%" }}>
++                Blue pencil to ink
++              </h2>
++            </div>
++
++            <ol className="mt-12 grid list-none gap-5 p-0 md:grid-cols-3">
++              <li className="cel-card" data-reveal>
++                <p className="u-label text-cyan">01 · Block</p>
++                <p className="mt-3 text-[15px] leading-relaxed text-ink2">
++                  Rough the shot in on tracks — entrances, holds, exits. Twelve frames
++                  here, eight there, the way an editor blocks a scene.
++                </p>
++              </li>
++              <li className="cel-card" data-reveal style={{ "--rd": "90ms" }}>
++                <p className="u-label text-cyan">02 · Tune</p>
++                <p className="mt-3 text-[15px] leading-relaxed text-ink2">
++                  Open the curve room. Bend the easing until the motion has weight, and
++                  watch the preview loop until it feels inevitable.
++                </p>
++              </li>
++              <li className="cel-card" data-reveal style={{ "--rd": "180ms" }}>
++                <p className="u-label text-cyan">03 · Ship</p>
++                <p className="mt-3 text-[15px] leading-relaxed text-ink2">
++                  Export ink. Meridian writes the code you previewed — same frames, same
++                  curves, ready for review.
++                </p>
++              </li>
++            </ol>
++
++            <figure className="mt-12" data-reveal>
++              <figcaption className="u-label mb-3 text-ink2">
++                Export · Shot 01 — the hero you just scrubbed
++              </figcaption>
++              <pre className="codeblock">
++{`// hero.entrance.meridian → export/timeline.js
++`}<span className="c2">{`export const entrance`}</span>{` = timeline([
++  clip(`}<span className="c3">{`"headline"`}</span>{`, maskRise(),                   { at: `}<span className="c3">0.50</span>{`, dur: `}<span className="c3">1.15</span>{`, stagger: `}<span className="c3">0.18</span>{` }),
++  clip(`}<span className="c3">{`"retime"`}</span>{`,   fontStretch([`}<span className="c3">62</span>{`, `}<span className="c3">125</span>{`]),      { at: `}<span className="c3">1.35</span>{`, ease: overshoot(`}<span className="c3">1.4</span>{`) }),
++  clip(`}<span className="c3">{`"ghosts"`}</span>{`,   onionSkin({ prev: `}<span className="c3">{`"cyan"`}</span>{`, next: `}<span className="c3">{`"red"`}</span>{` }), { at: `}<span className="c3">1.60</span>{` }),
++  clip(`}<span className="c3">{`"lock"`}</span>{`,     stamp(),                      { at: `}<span className="c3">2.90</span>{`, ease: back(`}<span className="c3">3</span>{`) }),
++])
++`}<span className="c1">{`// 120 frames @ 30fps — byte-for-byte the entrance at the top of this page`}</span>
++              </pre>
++            </figure>
++          </div>
++        </section>
++
++        {/* ---------------- SHEET 05 · access ---------------- */}
++        <section id="access" aria-labelledby="h-access" className="scroll-mt-16 border-t border-line bg-sheet/60">
++          <div className="mx-auto max-w-6xl px-5 py-24">
++            <div data-reveal>
++              <Kicker>Sheet 05 · Access</Kicker>
++              <h2 id="h-access" className={h2} style={{ fontStretch: "106%" }}>
++                Get on the call sheet
++              </h2>
++              <p className="mt-5 max-w-[54ch] text-[16px] leading-relaxed text-ink2">
++                Meridian is in private beta while we finish the export pipeline. Seats
++                open in small batches — designers and the engineers they ship with first.
++              </p>
++            </div>
++            <div className="mt-10" data-reveal style={{ "--rd": "90ms" }}>
++              <Waitlist />
++              <p className="u-label mt-5 text-ink2/70">
++                No spam — one email when your seat is ready · hello@meridian.tools
++              </p>
++            </div>
++          </div>
++        </section>
++      </main>
++
++      {/* ---------------- footer: the ink ---------------- */}
++      <footer className="bg-ink text-cel">
++        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 md:grid-cols-3">
++          <div>
++            <p className="font-mono text-[13px] font-[600] tracking-[0.18em]">
++              MERIDIAN<span className="text-signal">°</span>
++            </p>
++            <p className="mt-3 text-[15px] text-cel/80">Motion, on the record.</p>
++          </div>
++          <p className="m-0 font-mono text-[11px] leading-[2] text-cel/60">
++            Drawn in non-photo blue. Shipped in ink.
++            <br />
++            Set in Archivo and Martian Mono.
++            <br />
++            The hero up top is a real timeline — go scrub it.
++          </p>
++          <div className="font-mono text-[11px] leading-[2] text-cel/60 md:text-right">
++            <a href="mailto:hello@meridian.tools" className="text-cel/80 no-underline hover:text-cel">
++              hello@meridian.tools
++            </a>
++            <br />© 2026 Meridian
++          </div>
++        </div>
++        <div className="border-t border-cel/15">
++          <div className="u-label mx-auto flex max-w-6xl items-center justify-between px-5 py-4 text-cel/45">
++            <span>— End of reel —</span>
++            <span>TC 00:00:04:00 · F120</span>
++          </div>
++        </div>
+       </footer>
+-    </main>
++
++      <Reveal />
++    </>
+   );
+ }
+diff --git a/package-lock.json b/package-lock.json
+index 0a1babc..f35629d 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -8,6 +8,10 @@
+       "name": "meridian-launch",
+       "version": "1.0.0",
+       "dependencies": {
++        "@fontsource-variable/archivo": "^5.3.0",
++        "@fontsource-variable/martian-mono": "^5.3.0",
++        "@gsap/react": "^2.1.2",
++        "gsap": "^3.15.0",
+         "next": "16.2.12",
+         "react": "19.2.8",
+         "react-dom": "19.2.8"
+@@ -40,6 +44,34 @@
+         "tslib": "^2.4.0"
+       }
+     },
++    "node_modules/@fontsource-variable/archivo": {
++      "version": "5.3.0",
++      "resolved": "https://registry.npmjs.org/@fontsource-variable/archivo/-/archivo-5.3.0.tgz",
++      "integrity": "sha512-HogK8FJelrD1o7TlZlkIVtHgc20bO5PZRWE7mUeUTdMN055alznQV6/00J00IBeu8FQAH4s3zW9UJNvKExXf+g==",
++      "license": "OFL-1.1",
++      "funding": {
++        "url": "https://github.com/sponsors/ayuhito"
++      }
++    },
++    "node_modules/@fontsource-variable/martian-mono": {
++      "version": "5.3.0",
++      "resolved": "https://registry.npmjs.org/@fontsource-variable/martian-mono/-/martian-mono-5.3.0.tgz",
++      "integrity": "sha512-0wVODx9ILwNnaYC4XCuSaFRYtj1Prd89MRVaSuv2ng6zLiQkS4SepaWEPefs7vqCZS8sbEOA8jb/4F5KNMnGdg==",
++      "license": "OFL-1.1",
++      "funding": {
++        "url": "https://github.com/sponsors/ayuhito"
++      }
++    },
++    "node_modules/@gsap/react": {
++      "version": "2.1.2",
++      "resolved": "https://registry.npmjs.org/@gsap/react/-/react-2.1.2.tgz",
++      "integrity": "sha512-JqliybO1837UcgH2hVOM4VO+38APk3ECNrsuSM4MuXp+rbf+/2IG2K1YJiqfTcXQHH7XlA0m3ykniFYstfq0Iw==",
++      "license": "SEE LICENSE AT https://gsap.com/standard-license",
++      "peerDependencies": {
++        "gsap": "^3.12.5",
++        "react": ">=17"
++      }
++    },
+     "node_modules/@img/colour": {
+       "version": "1.1.0",
+       "resolved": "https://registry.npmjs.org/@img/colour/-/colour-1.1.0.tgz",
+@@ -1105,6 +1137,12 @@
+       "dev": true,
+       "license": "ISC"
+     },
++    "node_modules/gsap": {
++      "version": "3.15.0",
++      "resolved": "https://registry.npmjs.org/gsap/-/gsap-3.15.0.tgz",
++      "integrity": "sha512-dMW4CWBTUK1AEEDeZc1g4xpPGIrSf9fJF960qbTZmN/QwZIWY5wgliS6JWl9/25fpTGJrMRtSjGtOmPnfjZB+A==",
++      "license": "Standard 'no charge' license: https://gsap.com/standard-license."
++    },
+     "node_modules/jiti": {
+       "version": "2.7.0",
+       "resolved": "https://registry.npmjs.org/jiti/-/jiti-2.7.0.tgz",
+diff --git a/package.json b/package.json
+index 22c9199..004d580 100644
+--- a/package.json
++++ b/package.json
+@@ -8,12 +8,16 @@
+     "start": "next start"
+   },
+   "dependencies": {
++    "@fontsource-variable/archivo": "^5.3.0",
++    "@fontsource-variable/martian-mono": "^5.3.0",
++    "@gsap/react": "^2.1.2",
++    "gsap": "^3.15.0",
+     "next": "16.2.12",
+     "react": "19.2.8",
+     "react-dom": "19.2.8"
+   },
+   "devDependencies": {
+-    "tailwindcss": "4.3.3",
+-    "@tailwindcss/postcss": "4.3.3"
++    "@tailwindcss/postcss": "4.3.3",
++    "tailwindcss": "4.3.3"
+   }
+ }

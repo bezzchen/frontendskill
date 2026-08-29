@@ -1,0 +1,32 @@
+{
+ "run": "Q1ws-fable-rep2",
+ "date": "2026-08-27",
+ "condition": "with_skill_v1 (evals/withskill_protocol.md)",
+ "model": "claude-fable-5 (explicit Agent model override, matching the baseline arm)",
+ "fixture": "next-tailwind-base edf3be4 (pristine copy verified)",
+ "interruptions": "none - single 21-minute run",
+ "implementation": "Register Q named up front, spectacle weighed and explicitly declined ('the brief says polish, not spectacle'). ZERO dependencies (package.json untouched). Catalog fit gate on the toggle switch: React Bits (showcase catalog, not a form-control source) and SmoothUI (no switch; ships on Motion+GSAP = dependency and identity mismatch) -> reference-only -> custom native input[type=checkbox][role=switch], ~20 lines of Tailwind. 3 files, 349 insertions. Motion inventory stated in full: switch 200ms, input/button 150ms, save spinner only while a save is pending. Verified document.getAnimations().length === 0 at idle - i.e. proved the absence of ambient animation rather than asserting it. Reduced motion verified under emulateMedia (actual condition). Added one new token (--danger) with contrast computed numerically (5.96-7.6:1).",
+ "measurements": {
+  "m6_static": "PASS (build, no interval loops); cleanup-path NOT_MEASURED = no loop owner exists, correct for this register",
+  "m1": "N_A_NO_CONTINUOUS_ANIMATION both profiles",
+  "m2_offscreen": "N_A_NO_CONTINUOUS_ANIMATION",
+  "m2b_hidden_pause": "N_A_NO_CONTINUOUS_ANIMATION",
+  "m3_reduced_motion": "PASS both profiles, full content parity",
+  "m5_accessible_parallel": "PASS both profiles",
+  "console_errors": "zero (agent-verified)"
+ },
+ "register_verdict": "Instrument-side clean; identical N/A + PASS pattern to all three Q1 baselines. Register fit is human-scored (worksheet section 3).",
+ "over_design_flags_observed_by_instrument": "none - zero dependencies, no ambient animation (proved at idle), no scroll-reveal, no parallax, no glass/glow; motion strictly interaction-scoped",
+ "artifacts": {
+  "diff": "results/execution/Q1ws-fable-rep2.diff (3 files, 349 insertions)",
+  "source_snapshot": "results/execution/Q1ws-fable-rep2-source.zip (+ safety copy in ~/Documents)",
+  "measurements": "results/execution/Q1ws-fable-rep2.json",
+  "screenshots": "results/execution/screenshots/Q1ws-fable-rep2-*.png"
+ },
+ "cost": {
+  "tokens": 155591,
+  "duration_ms": 1243155,
+  "duration_min": 20.7,
+  "convention": "tokens = total context tokens reported by the orchestrating harness"
+ }
+}

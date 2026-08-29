@@ -1,0 +1,442 @@
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..e51c68b 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -24,3 +24,20 @@ html { background: var(--background); color: var(--foreground); }
+ body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
+ a { color: inherit; }
+ button, input { font: inherit; }
++
++/* Feedback color for validation. Verified >= 4.5:1 against --background and --surface in both schemes. */
++:root {
++  --danger: #b3271e;
++}
++
++@media (prefers-color-scheme: dark) {
++  :root {
++    --danger: #f5837b;
++  }
++}
++
++/* One consistent, high-contrast focus ring across the site (16:1 against the page background). */
++:focus-visible {
++  outline: 2px solid var(--foreground);
++  outline-offset: 2px;
++}
+diff --git a/app/page.jsx b/app/page.jsx
+index 52f37fd..c8245c8 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -15,7 +15,12 @@ export default function Home() {
+       <ProjectGrid />
+ 
+       <section className="max-w-2xl space-y-6" aria-labelledby="settings-title">
+-        <h2 id="settings-title" className="text-3xl font-semibold">Account settings</h2>
++        <div className="space-y-2">
++          <h2 id="settings-title" className="text-3xl font-semibold">Account settings</h2>
++          <p className="text-[var(--muted)]">
++            Your profile, notifications, and the password you sign in with.
++          </p>
++        </div>
+         <SettingsPanel />
+       </section>
+     </main>
+diff --git a/components/SettingsPanel.jsx b/components/SettingsPanel.jsx
+index 3cd24b9..2f60f7f 100644
+--- a/components/SettingsPanel.jsx
++++ b/components/SettingsPanel.jsx
+@@ -1,68 +1,341 @@
+ "use client";
+ 
+-import { useState } from "react";
++import { useRef, useState } from "react";
+ 
+-export function SettingsPanel() {
+-  const [notifications, setNotifications] = useState(true);
+-  const [saved, setSaved] = useState(false);
++const initialValues = {
++  name: "Jordan Lee",
++  email: "jordan@example.com",
++  password: "",
++  notifyActivity: true,
++  notifyDigest: false,
++  notifyNewDevice: true,
++};
++
++const notificationOptions = [
++  {
++    key: "notifyActivity",
++    label: "Email notifications",
++    description: "Messages and activity on your projects.",
++  },
++  {
++    key: "notifyDigest",
++    label: "Weekly digest",
++    description: "A summary of views and mentions, sent on Mondays.",
++  },
++  {
++    key: "notifyNewDevice",
++    label: "New sign-in alerts",
++    description: "An email when your account signs in on a new device.",
++  },
++];
++
++const cardClass = "rounded-xl border border-[var(--line)] bg-[var(--surface)]";
++const cardHeaderClass = "border-b border-[var(--line)] px-5 py-4";
++const labelClass = "text-sm font-medium";
++const hintClass = "text-sm text-[var(--muted)]";
++const errorClass = "text-sm text-[var(--danger)]";
++const inputBaseClass =
++  "w-full rounded-md border bg-[var(--background)] px-3 py-2 transition-colors duration-150 motion-reduce:transition-none";
++const inputToneClass = "border-[var(--line)] hover:border-[var(--muted)]";
++const inputInvalidToneClass = "border-[var(--danger)]";
++const primaryButtonClass =
++  "inline-flex items-center gap-2 rounded-md bg-[var(--foreground)] px-4 py-2 text-sm font-medium text-[var(--background)] transition-colors duration-150 hover:bg-[color-mix(in_srgb,var(--foreground)_85%,var(--background))] aria-disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:hover:bg-[var(--foreground)] motion-reduce:transition-none";
++const switchClass =
++  "relative h-6 w-10 shrink-0 cursor-pointer appearance-none rounded-full border border-transparent bg-[var(--line)] transition-colors duration-200 ease-out hover:bg-[color-mix(in_srgb,var(--line)_75%,var(--muted))] checked:bg-[var(--foreground)] checked:hover:bg-[var(--foreground)] before:absolute before:left-[2px] before:top-[2px] before:h-[18px] before:w-[18px] before:rounded-full before:bg-[var(--surface)] before:shadow-sm before:transition-transform before:duration-200 before:ease-out before:content-[''] checked:before:translate-x-4 checked:before:bg-[var(--background)] dark:before:bg-[var(--muted)] dark:checked:before:bg-[var(--background)] motion-reduce:transition-none motion-reduce:before:transition-none";
++
++function validate(values) {
++  const errors = {};
++  if (!values.name.trim()) {
++    errors.name = "Enter your name.";
++  }
++  if (!values.email.trim()) {
++    errors.email = "Enter your email address.";
++  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim())) {
++    errors.email = "Enter a valid email address, like name@example.com.";
++  }
++  if (values.password && values.password.length < 8) {
++    errors.password = "Use at least 8 characters.";
++  }
++  return errors;
++}
+ 
++function SpinnerIcon() {
+   return (
+-    <form
+-      className="space-y-8"
+-      onSubmit={(event) => {
+-        event.preventDefault();
+-        setSaved(true);
+-      }}
++    <svg aria-hidden="true" className="h-4 w-4 animate-spin motion-reduce:hidden" fill="none" viewBox="0 0 24 24">
++      <circle className="opacity-25" cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2.5" />
++      <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeLinecap="round" strokeWidth="2.5" />
++    </svg>
++  );
++}
++
++function CheckIcon() {
++  return (
++    <svg aria-hidden="true" className="h-3.5 w-3.5" fill="none" viewBox="0 0 20 20">
++      <path
++        d="m4.5 10.5 3.5 3.5 7.5-8.5"
++        stroke="currentColor"
++        strokeLinecap="round"
++        strokeLinejoin="round"
++        strokeWidth="1.8"
++      />
++    </svg>
++  );
++}
++
++function EyeIcon({ hidden }) {
++  return (
++    <svg
++      aria-hidden="true"
++      className="h-[18px] w-[18px]"
++      fill="none"
++      stroke="currentColor"
++      strokeLinecap="round"
++      strokeLinejoin="round"
++      strokeWidth="1.7"
++      viewBox="0 0 24 24"
+     >
+-      <section className="space-y-3">
+-        <h2 className="text-lg font-semibold">Profile</h2>
+-        <label className="grid gap-2">
+-          <span>Name</span>
+-          <input
+-            className="rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 py-2"
+-            defaultValue="Jordan Lee"
+-            name="name"
+-          />
+-        </label>
+-        <label className="grid gap-2">
+-          <span>Email</span>
+-          <input
+-            className="rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 py-2"
+-            defaultValue="jordan@example.com"
+-            name="email"
+-            type="email"
+-          />
+-        </label>
++      {hidden ? (
++        <>
++          <path d="M4 4l16 16" />
++          <path d="M10.6 5.7A9.8 9.8 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a17.6 17.6 0 0 1-3 3.9M6.4 6.8A16.9 16.9 0 0 0 2.5 12S6 18.5 12 18.5a9.6 9.6 0 0 0 3.5-.7" />
++          <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" />
++        </>
++      ) : (
++        <>
++          <path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" />
++          <circle cx="12" cy="12" r="3" />
++        </>
++      )}
++    </svg>
++  );
++}
++
++function Switch({ checked, describedBy, id, onChange }) {
++  return (
++    <input
++      aria-describedby={describedBy}
++      checked={checked}
++      className={switchClass}
++      id={id}
++      onChange={onChange}
++      role="switch"
++      type="checkbox"
++    />
++  );
++}
++
++export function SettingsPanel() {
++  const [values, setValues] = useState(initialValues);
++  const [savedValues, setSavedValues] = useState(initialValues);
++  const [touched, setTouched] = useState({});
++  const [submitAttempted, setSubmitAttempted] = useState(false);
++  const [status, setStatus] = useState("idle"); // idle | saving | saved
++  const [showPassword, setShowPassword] = useState(false);
++
++  const nameRef = useRef(null);
++  const emailRef = useRef(null);
++  const passwordRef = useRef(null);
++  const fieldRefs = { name: nameRef, email: emailRef, password: passwordRef };
++
++  const errors = validate(values);
++  const dirty = Object.keys(initialValues).some((key) => values[key] !== savedValues[key]);
++  const saving = status === "saving";
++  const canSave = dirty && !saving;
++
++  const setField = (key, value) => setValues((current) => ({ ...current, [key]: value }));
++  const markTouched = (key) => setTouched((current) => ({ ...current, [key]: true }));
++  const showError = (key) => Boolean(errors[key]) && (touched[key] || submitAttempted);
++
++  async function handleSubmit(event) {
++    event.preventDefault();
++    if (saving || !dirty) return;
++
++    setSubmitAttempted(true);
++    const currentErrors = validate(values);
++    const firstInvalid = ["name", "email", "password"].find((key) => currentErrors[key]);
++    if (firstInvalid) {
++      fieldRefs[firstInvalid].current?.focus();
++      return;
++    }
++
++    setStatus("saving");
++    // Stands in for the real request; keeps the pending state honest and brief.
++    await new Promise((resolve) => setTimeout(resolve, 700));
++    const persisted = { ...values, password: "" };
++    setSavedValues(persisted);
++    setValues(persisted);
++    setShowPassword(false);
++    setTouched({});
++    setSubmitAttempted(false);
++    setStatus("saved");
++  }
++
++  const passwordDescribedBy = [showError("password") ? "password-error" : null, "password-hint"]
++    .filter(Boolean)
++    .join(" ");
++
++  return (
++    <form className="space-y-6" noValidate onSubmit={handleSubmit}>
++      <section aria-labelledby="profile-heading" className={cardClass}>
++        <header className={cardHeaderClass}>
++          <h3 className="text-base font-semibold" id="profile-heading">
++            Profile
++          </h3>
++          <p className={`mt-1 ${hintClass}`}>How you appear across this site.</p>
++        </header>
++        <div className="space-y-4 px-5 py-5">
++          <div className="space-y-2">
++            <label className={labelClass} htmlFor="settings-name">
++              Name
++            </label>
++            <input
++              aria-describedby={showError("name") ? "name-error" : undefined}
++              aria-invalid={showError("name") ? true : undefined}
++              autoComplete="name"
++              className={`${inputBaseClass} ${showError("name") ? inputInvalidToneClass : inputToneClass}`}
++              id="settings-name"
++              name="name"
++              onBlur={() => markTouched("name")}
++              onChange={(event) => setField("name", event.target.value)}
++              ref={nameRef}
++              required
++              type="text"
++              value={values.name}
++            />
++            {showError("name") ? (
++              <p className={errorClass} id="name-error">
++                {errors.name}
++              </p>
++            ) : null}
++          </div>
++          <div className="space-y-2">
++            <label className={labelClass} htmlFor="settings-email">
++              Email
++            </label>
++            <input
++              aria-describedby={showError("email") ? "email-error" : undefined}
++              aria-invalid={showError("email") ? true : undefined}
++              autoComplete="email"
++              className={`${inputBaseClass} ${showError("email") ? inputInvalidToneClass : inputToneClass}`}
++              id="settings-email"
++              inputMode="email"
++              name="email"
++              onBlur={() => markTouched("email")}
++              onChange={(event) => setField("email", event.target.value)}
++              ref={emailRef}
++              required
++              spellCheck={false}
++              type="email"
++              value={values.email}
++            />
++            {showError("email") ? (
++              <p className={errorClass} id="email-error">
++                {errors.email}
++              </p>
++            ) : null}
++          </div>
++        </div>
+       </section>
+ 
+-      <section className="space-y-3">
+-        <h2 className="text-lg font-semibold">Notifications</h2>
+-        <label className="flex items-center justify-between gap-4 rounded-lg border border-[var(--line)] p-4">
+-          <span>Email notifications</span>
+-          <input
+-            checked={notifications}
+-            onChange={(event) => setNotifications(event.target.checked)}
+-            type="checkbox"
+-          />
+-        </label>
++      <section aria-labelledby="notifications-heading" className={cardClass}>
++        <header className={cardHeaderClass}>
++          <h3 className="text-base font-semibold" id="notifications-heading">
++            Notifications
++          </h3>
++          <p className={`mt-1 ${hintClass}`}>Choose what lands in your inbox.</p>
++        </header>
++        <ul className="divide-y divide-[var(--line)]">
++          {notificationOptions.map((option) => (
++            <li className="flex items-center justify-between gap-6 px-5 py-4" key={option.key}>
++              <div className="min-w-0">
++                <label className={labelClass} htmlFor={`switch-${option.key}`}>
++                  {option.label}
++                </label>
++                <p className={`mt-0.5 ${hintClass}`} id={`switch-${option.key}-desc`}>
++                  {option.description}
++                </p>
++              </div>
++              <Switch
++                checked={values[option.key]}
++                describedBy={`switch-${option.key}-desc`}
++                id={`switch-${option.key}`}
++                onChange={(event) => setField(option.key, event.target.checked)}
++              />
++            </li>
++          ))}
++        </ul>
+       </section>
+ 
+-      <section className="space-y-3">
+-        <h2 className="text-lg font-semibold">Password</h2>
+-        <input
+-          className="w-full rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 py-2"
+-          placeholder="New password"
+-          type="password"
+-        />
++      <section aria-labelledby="password-heading" className={cardClass}>
++        <header className={cardHeaderClass}>
++          <h3 className="text-base font-semibold" id="password-heading">
++            Password
++          </h3>
++          <p className={`mt-1 ${hintClass}`}>Change the password you sign in with.</p>
++        </header>
++        <div className="space-y-2 px-5 py-5">
++          <label className={labelClass} htmlFor="settings-password">
++            New password
++          </label>
++          <div className="relative">
++            <input
++              aria-describedby={passwordDescribedBy}
++              aria-invalid={showError("password") ? true : undefined}
++              autoComplete="new-password"
++              className={`${inputBaseClass} pr-11 ${showError("password") ? inputInvalidToneClass : inputToneClass}`}
++              id="settings-password"
++              name="new-password"
++              onBlur={() => markTouched("password")}
++              onChange={(event) => setField("password", event.target.value)}
++              ref={passwordRef}
++              type={showPassword ? "text" : "password"}
++              value={values.password}
++            />
++            <button
++              aria-controls="settings-password"
++              aria-label={showPassword ? "Hide password" : "Show password"}
++              aria-pressed={showPassword}
++              className="absolute right-1.5 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-md text-[var(--muted)] transition-colors duration-150 hover:text-[var(--foreground)] motion-reduce:transition-none"
++              onClick={() => setShowPassword((current) => !current)}
++              type="button"
++            >
++              <EyeIcon hidden={showPassword} />
++            </button>
++          </div>
++          {showError("password") ? (
++            <p className={errorClass} id="password-error">
++              {errors.password}
++            </p>
++          ) : null}
++          <p className={hintClass} id="password-hint">
++            At least 8 characters. Leave blank to keep your current password.
++          </p>
++        </div>
+       </section>
+ 
+-      <div className="flex items-center gap-3">
+-        <button className="rounded-md bg-[var(--foreground)] px-4 py-2 text-[var(--background)]" type="submit">
+-          Save changes
+-        </button>
+-        <span aria-live="polite" className="text-sm text-[var(--muted)]">
+-          {saved ? "Saved" : ""}
+-        </span>
++      <div className="sticky bottom-0 z-10 -mx-6 border-t border-[var(--line)] bg-[var(--background)]/90 px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-sm sm:static sm:mx-0 sm:border-t-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
++        <div className="flex items-center gap-4">
++          <button aria-disabled={!canSave} className={primaryButtonClass} type="submit">
++            {saving ? (
++              <>
++                <SpinnerIcon />
++                Saving…
++              </>
++            ) : (
++              "Save changes"
++            )}
++          </button>
++          <p className={`flex items-center gap-1.5 ${hintClass}`} role="status">
++            {saving ? null : dirty ? (
++              "Unsaved changes"
++            ) : status === "saved" ? (
++              <>
++                <CheckIcon />
++                Changes saved
++              </>
++            ) : null}
++          </p>
++        </div>
+       </div>
+     </form>
+   );

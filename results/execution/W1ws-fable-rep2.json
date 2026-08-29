@@ -1,0 +1,137 @@
+{
+  "run_id": "W1ws-fable-rep2",
+  "url": "http://localhost:3245",
+  "section_selector": "main",
+  "measured_at": "2026-08-29T01:29:18.941Z",
+  "protocol": "rubrics/execution_measurement.md (pre-registered 2026-08-11; M2 geometry gate + M2b amendment 2026-08-24)",
+  "desktop": {
+    "profile": "desktop",
+    "thresholds": {
+      "p50": 18,
+      "p95": 26,
+      "hitchPct": 1
+    },
+    "m1": {
+      "samples": 0,
+      "p50": null,
+      "p95": null,
+      "p99": null,
+      "hitchPct": null,
+      "onscreenRafPerSec": 0,
+      "pass": "N_A_NO_CONTINUOUS_ANIMATION"
+    },
+    "hasContinuousAnimation": false,
+    "m2": {
+      "onscreenRafPerSec": 0,
+      "offscreenRafPerSec": 59.666666666666664,
+      "ratio": null,
+      "geometryAfterScrollAway": {
+        "visibleFractionOfElement": 0.23764042857791182,
+        "visibleFractionOfViewport": 1
+      },
+      "pass": "N_A_NO_CONTINUOUS_ANIMATION"
+    },
+    "m2b": {
+      "method": "synthetic document.hidden/visibilityState override + visibilitychange dispatch; page remains actually visible so native hidden-tab rAF throttling cannot mask app behavior",
+      "baselineRafPerSec": 9.666666666666666,
+      "hiddenRafPerSec": 0,
+      "resumedRafPerSec": 0,
+      "ratio": 0,
+      "resumes": false,
+      "pass": true,
+      "caveat": "paused under hidden but did not resume on visibility restore — inspect manually"
+    },
+    "m5": {
+      "accessibleNameCount": 12,
+      "focusableCount": 13,
+      "pass": true
+    },
+    "m3": {
+      "reducedMotionRafPerSec": 0,
+      "ratio": null,
+      "accessibleNameCount": 12,
+      "contentParity": true,
+      "motionStops": true,
+      "pass": true,
+      "scope": "content-parity-only (no continuous animation present)",
+      "criticalFailure": null
+    },
+    "consoleErrors": [],
+    "status": "MEASURED"
+  },
+  "mobile": {
+    "profile": "mobile",
+    "thresholds": {
+      "p50": 22,
+      "p95": 34,
+      "hitchPct": 2
+    },
+    "m1": {
+      "samples": 2,
+      "p50": 31,
+      "p95": 31,
+      "p99": 31,
+      "hitchPct": 0,
+      "onscreenRafPerSec": 0.25,
+      "pass": "N_A_NO_CONTINUOUS_ANIMATION"
+    },
+    "hasContinuousAnimation": false,
+    "m2": {
+      "onscreenRafPerSec": 0.25,
+      "offscreenRafPerSec": 56.666666666666664,
+      "ratio": 226.66666666666666,
+      "geometryAfterScrollAway": {
+        "visibleFractionOfElement": 0.1302369177262805,
+        "visibleFractionOfViewport": 1
+      },
+      "pass": "N_A_NO_CONTINUOUS_ANIMATION"
+    },
+    "m2b": {
+      "method": "synthetic document.hidden/visibilityState override + visibilitychange dispatch; page remains actually visible so native hidden-tab rAF throttling cannot mask app behavior",
+      "baselineRafPerSec": 11,
+      "hiddenRafPerSec": 0,
+      "resumedRafPerSec": 0,
+      "ratio": 0,
+      "resumes": false,
+      "pass": true,
+      "caveat": "paused under hidden but did not resume on visibility restore — inspect manually"
+    },
+    "m5": {
+      "accessibleNameCount": 12,
+      "focusableCount": 13,
+      "pass": true
+    },
+    "m3": {
+      "reducedMotionRafPerSec": 0,
+      "ratio": 0,
+      "accessibleNameCount": 12,
+      "contentParity": true,
+      "motionStops": true,
+      "pass": true,
+      "scope": "content-parity-only (no continuous animation present)",
+      "criticalFailure": null
+    },
+    "consoleErrors": [],
+    "status": "MEASURED"
+  },
+  "m4_teardown": {
+    "glContextsPerCycle": [
+      0,
+      0,
+      0
+    ],
+    "note": "Full-navigation cycles reset page state, so this bounds per-load context creation only. In-app mount/unmount teardown requires an app-specific route pair and is reported NOT_MEASURED unless supplied.",
+    "status": "PARTIAL",
+    "consoleErrors": [],
+    "pass": true
+  },
+  "summary": {
+    "m1_desktop": "N_A_NO_CONTINUOUS_ANIMATION",
+    "m1_mobile": "N_A_NO_CONTINUOUS_ANIMATION",
+    "m2_offscreen_pause": "N_A_NO_CONTINUOUS_ANIMATION",
+    "m2b_hidden_pause": true,
+    "m3_reduced_motion": true,
+    "m5_accessible_parallel": true,
+    "critical": []
+  }
+}

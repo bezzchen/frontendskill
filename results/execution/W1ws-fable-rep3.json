@@ -1,0 +1,137 @@
+{
+  "run_id": "W1ws-fable-rep3",
+  "url": "http://localhost:3246",
+  "section_selector": "main",
+  "measured_at": "2026-08-29T02:30:16.552Z",
+  "protocol": "rubrics/execution_measurement.md (pre-registered 2026-08-11; M2 geometry gate + M2b amendment 2026-08-24)",
+  "desktop": {
+    "profile": "desktop",
+    "thresholds": {
+      "p50": 18,
+      "p95": 26,
+      "hitchPct": 1
+    },
+    "m1": {
+      "samples": 51,
+      "p50": 16.699999999999818,
+      "p95": 18.799999999999955,
+      "p99": 118,
+      "hitchPct": 3.9215686274509802,
+      "onscreenRafPerSec": 6.375,
+      "pass": false
+    },
+    "hasContinuousAnimation": true,
+    "m2": {
+      "onscreenRafPerSec": 6.375,
+      "offscreenRafPerSec": 60,
+      "ratio": 9.411764705882353,
+      "geometryAfterScrollAway": {
+        "visibleFractionOfElement": 0.20774884366853982,
+        "visibleFractionOfViewport": 0.9505555555555556
+      },
+      "pass": "NOT_MEASURABLE_BY_GEOMETRY"
+    },
+    "m2b": {
+      "method": "synthetic document.hidden/visibilityState override + visibilitychange dispatch; page remains actually visible so native hidden-tab rAF throttling cannot mask app behavior",
+      "baselineRafPerSec": 15.666666666666666,
+      "hiddenRafPerSec": 0,
+      "resumedRafPerSec": 0,
+      "ratio": 0,
+      "resumes": false,
+      "pass": true,
+      "caveat": "paused under hidden but did not resume on visibility restore — inspect manually"
+    },
+    "m5": {
+      "accessibleNameCount": 21,
+      "focusableCount": 25,
+      "pass": true
+    },
+    "m3": {
+      "reducedMotionRafPerSec": 0,
+      "ratio": 0,
+      "accessibleNameCount": 21,
+      "contentParity": true,
+      "motionStops": true,
+      "pass": true,
+      "scope": "full",
+      "criticalFailure": null
+    },
+    "consoleErrors": [],
+    "status": "MEASURED"
+  },
+  "mobile": {
+    "profile": "mobile",
+    "thresholds": {
+      "p50": 22,
+      "p95": 34,
+      "hitchPct": 2
+    },
+    "m1": {
+      "samples": 48,
+      "p50": 16.699999999999818,
+      "p95": 17.799999999999955,
+      "p99": 18.59999999999991,
+      "hitchPct": 0,
+      "onscreenRafPerSec": 6,
+      "pass": true
+    },
+    "hasContinuousAnimation": true,
+    "m2": {
+      "onscreenRafPerSec": 6,
+      "offscreenRafPerSec": 58.333333333333336,
+      "ratio": 9.722222222222223,
+      "geometryAfterScrollAway": {
+        "visibleFractionOfElement": 0.11242939626852679,
+        "visibleFractionOfViewport": 0.9325757575757576
+      },
+      "pass": "NOT_MEASURABLE_BY_GEOMETRY"
+    },
+    "m2b": {
+      "method": "synthetic document.hidden/visibilityState override + visibilitychange dispatch; page remains actually visible so native hidden-tab rAF throttling cannot mask app behavior",
+      "baselineRafPerSec": 17.666666666666668,
+      "hiddenRafPerSec": 0,
+      "resumedRafPerSec": 0,
+      "ratio": 0,
+      "resumes": false,
+      "pass": true,
+      "caveat": "paused under hidden but did not resume on visibility restore — inspect manually"
+    },
+    "m5": {
+      "accessibleNameCount": 21,
+      "focusableCount": 25,
+      "pass": true
+    },
+    "m3": {
+      "reducedMotionRafPerSec": 0,
+      "ratio": 0,
+      "accessibleNameCount": 21,
+      "contentParity": true,
+      "motionStops": true,
+      "pass": true,
+      "scope": "full",
+      "criticalFailure": null
+    },
+    "consoleErrors": [],
+    "status": "MEASURED"
+  },
+  "m4_teardown": {
+    "glContextsPerCycle": [
+      0,
+      0,
+      0
+    ],
+    "note": "Full-navigation cycles reset page state, so this bounds per-load context creation only. In-app mount/unmount teardown requires an app-specific route pair and is reported NOT_MEASURED unless supplied.",
+    "status": "PARTIAL",
+    "consoleErrors": [],
+    "pass": true
+  },
+  "summary": {
+    "m1_desktop": false,
+    "m1_mobile": true,
+    "m2_offscreen_pause": "NOT_MEASURABLE_BY_GEOMETRY",
+    "m2b_hidden_pause": true,
+    "m3_reduced_motion": true,
+    "m5_accessible_parallel": true,
+    "critical": []
+  }
+}

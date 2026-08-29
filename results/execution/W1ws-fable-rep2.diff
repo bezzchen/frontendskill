@@ -1,0 +1,2112 @@
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..39df8ac 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -1,26 +1,784 @@
+ @import "tailwindcss";
+ 
++/* ------------------------------------------------------------------
++   MERIDIAN — launch film
++   Register: expressive (W). One idea: the page is a 24s composition.
++   Palette: paper / ink / vermilion. Drafting-table film aesthetic.
++------------------------------------------------------------------- */
++
+ :root {
+-  color-scheme: light dark;
+-  --background: #f5f5f3;
+-  --foreground: #161616;
+-  --muted: #6b6b66;
+-  --surface: #ffffff;
+-  --line: #deded8;
++  color-scheme: light; /* deliberate single look: paper */
++  --paper: #f2eee3;
++  --paper-2: #eae5d5;
++  --surface: #f9f6ec;
++  --ink: #1a1610;
++  --ink-2: #57503f;
++  --line: rgb(26 22 16 / 0.16);
++  --line-2: rgb(26 22 16 / 0.42);
++  --verm: #e8490f;
++  --verm-2: #c23a08;
++  --tl-h: 92px;
++  --top-h: 54px;
++  --ff-display: var(--font-serif, "Iowan Old Style"), Georgia, "Times New Roman", serif;
++  --ff-sans: var(--font-sans, "Helvetica Neue"), Arial, sans-serif;
++  --ff-mono: var(--font-mono, "SF Mono"), Menlo, Consolas, monospace;
+ }
+ 
+-@media (prefers-color-scheme: dark) {
+-  :root {
+-    --background: #111110;
+-    --foreground: #f5f5f2;
+-    --muted: #a0a099;
+-    --surface: #181817;
+-    --line: #31312f;
+-  }
++* { box-sizing: border-box; }
++
++html {
++  background: var(--paper);
++  color: var(--ink);
++  scroll-behavior: smooth;
++  scroll-padding-top: calc(var(--top-h) + 24px);
++  scroll-padding-bottom: calc(var(--tl-h) + 24px);
++}
++
++body {
++  margin: 0;
++  font-family: var(--ff-sans);
++  font-size: 1.0625rem;
++  line-height: 1.55;
++  overflow-x: clip;
++  background: var(--paper);
++}
++
++/* film grain — static texture, zero animation */
++body::before {
++  content: "";
++  position: fixed;
++  inset: 0;
++  z-index: 90;
++  pointer-events: none;
++  opacity: 0.05;
++  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+ }
+ 
+-* { box-sizing: border-box; }
+-html { background: var(--background); color: var(--foreground); }
+-body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
+ a { color: inherit; }
+-button, input { font: inherit; }
++button, input { font: inherit; color: inherit; }
++::selection { background: var(--verm); color: var(--paper); }
++
++:focus-visible {
++  outline: 2px solid var(--verm);
++  outline-offset: 3px;
++  border-radius: 1px;
++}
++
++.skip-link {
++  position: fixed;
++  top: 8px; left: 8px;
++  z-index: 200;
++  padding: 10px 16px;
++  background: var(--ink); color: var(--paper);
++  font-family: var(--ff-mono); font-size: 12px;
++  transform: translateY(-64px);
++  transition: transform 160ms ease;
++}
++.skip-link:focus-visible { transform: translateY(0); }
++
++/* ---------- typography ---------- */
++
++.mono-label {
++  font-family: var(--ff-mono);
++  font-size: 11px;
++  font-weight: 500;
++  letter-spacing: 0.14em;
++  text-transform: uppercase;
++  color: var(--ink-2);
++  font-variant-numeric: tabular-nums;
++}
++
++.h-display {
++  font-family: var(--ff-display);
++  font-weight: 400;
++  font-size: clamp(3.4rem, 9.6vw, 8.75rem);
++  line-height: 0.92;
++  letter-spacing: -0.015em;
++  margin: 0;
++  text-wrap: balance;
++}
++
++.h-scene {
++  font-family: var(--ff-display);
++  font-weight: 400;
++  font-size: clamp(2.5rem, 5.6vw, 4.9rem);
++  line-height: 0.98;
++  letter-spacing: -0.012em;
++  margin: 0;
++  text-wrap: balance;
++}
++
++.accent-i { font-style: italic; color: var(--verm); }
++
++.lede {
++  font-size: clamp(1.1rem, 1.6vw, 1.3rem);
++  line-height: 1.5;
++  color: var(--ink-2);
++  max-width: 34em;
++}
++
++.body-note { color: var(--ink-2); max-width: 38em; }
++
++/* ---------- buttons ---------- */
++
++.btn {
++  display: inline-flex;
++  align-items: center;
++  gap: 0.55em;
++  padding: 0.72em 1.35em;
++  font-family: var(--ff-mono);
++  font-size: 13px;
++  font-weight: 500;
++  letter-spacing: 0.08em;
++  text-transform: uppercase;
++  text-decoration: none;
++  border: 1.5px solid var(--ink);
++  border-radius: 2px;
++  background: transparent;
++  color: var(--ink);
++  cursor: pointer;
++  box-shadow: 3px 3px 0 0 var(--ink);
++  transition: transform 140ms ease, box-shadow 140ms ease, background-color 140ms ease;
++}
++.btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 0 var(--ink); }
++.btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 0 var(--ink); }
++.btn-primary { background: var(--verm); }
++.btn-primary:hover { background: var(--verm); }
++.btn .tri { font-size: 0.85em; }
++
++/* ---------- fixed chrome: topbar ---------- */
++
++.topbar {
++  position: fixed;
++  top: 0; left: 0; right: 0;
++  z-index: 100;
++  height: var(--top-h);
++  display: flex;
++  align-items: center;
++  gap: 20px;
++  padding: 0 20px;
++  background: var(--paper);
++  border-bottom: 1px solid var(--line-2);
++}
++.wordmark {
++  display: flex; align-items: center; gap: 9px;
++  font-family: var(--ff-sans);
++  font-weight: 650;
++  font-size: 15px;
++  letter-spacing: 0.22em;
++  text-decoration: none;
++}
++.wordmark .dia { color: var(--verm); font-size: 13px; }
++.top-meta { margin-right: auto; }
++.top-tc {
++  font-family: var(--ff-mono);
++  font-size: 13px;
++  font-weight: 500;
++  font-variant-numeric: tabular-nums;
++  padding: 4px 10px;
++  border: 1px solid var(--line-2);
++  border-radius: 2px;
++  background: var(--surface);
++  white-space: nowrap;
++}
++.top-tc .tc-live { color: var(--verm); }
++.btn-play {
++  display: inline-flex; align-items: center; gap: 8px;
++  height: 34px; padding: 0 14px;
++  font-family: var(--ff-mono); font-size: 12px; font-weight: 500;
++  letter-spacing: 0.1em; text-transform: uppercase;
++  border: 1.5px solid var(--ink); border-radius: 2px;
++  background: var(--surface); cursor: pointer;
++  transition: background-color 140ms ease;
++}
++.btn-play:hover { background: var(--paper-2); }
++.btn-play[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
++.btn-top-cta {
++  display: inline-flex; align-items: center;
++  height: 34px; padding: 0 14px;
++  font-family: var(--ff-mono); font-size: 12px; font-weight: 500;
++  letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none;
++  border: 1.5px solid var(--ink); border-radius: 2px;
++  background: var(--verm); color: var(--ink);
++  box-shadow: 2px 2px 0 0 var(--ink);
++  transition: transform 140ms ease, box-shadow 140ms ease;
++}
++.btn-top-cta:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 0 var(--ink); }
++
++/* ---------- fixed chrome: bottom timeline ---------- */
++
++.tl-bar {
++  position: fixed;
++  bottom: 0; left: 0; right: 0;
++  z-index: 100;
++  height: var(--tl-h);
++  background: var(--paper);
++  border-top: 2px solid var(--ink);
++  user-select: none;
++  touch-action: none;
++  cursor: ew-resize;
++}
++.tl-track { position: relative; height: 100%; }
++
++.tl-ruler {
++  position: relative;
++  height: 26px;
++  border-bottom: 1px solid var(--line);
++}
++.tl-tick {
++  position: absolute;
++  bottom: 0;
++  width: 1px; height: 7px;
++  background: var(--line-2);
++}
++.tl-tick.major { height: 12px; background: var(--ink); }
++.tl-tick-label {
++  position: absolute;
++  bottom: 10px;
++  transform: translateX(3px);
++  font-family: var(--ff-mono);
++  font-size: 9.5px;
++  letter-spacing: 0.06em;
++  color: var(--ink-2);
++  font-variant-numeric: tabular-nums;
++}
++
++.tl-scenes { display: flex; height: calc(100% - 26px); }
++.tl-block {
++  position: relative;
++  display: flex;
++  flex-direction: column;
++  justify-content: center;
++  gap: 2px;
++  padding: 0 12px;
++  min-width: 0;
++  border: 0;
++  border-right: 1px solid var(--line-2);
++  background: var(--surface);
++  text-align: left;
++  cursor: pointer;
++  overflow: hidden;
++}
++.tl-block:last-child { border-right: 0; }
++.tl-block .fill {
++  position: absolute;
++  inset: 0 auto 0 0;
++  width: 0;
++  background: rgb(232 73 15 / 0.13);
++  pointer-events: none;
++}
++.tl-block .num {
++  position: relative;
++  font-family: var(--ff-mono);
++  font-size: 9.5px;
++  letter-spacing: 0.12em;
++  color: var(--verm);
++}
++.tl-block .name {
++  position: relative;
++  font-family: var(--ff-mono);
++  font-size: 12px;
++  font-weight: 500;
++  letter-spacing: 0.14em;
++  text-transform: uppercase;
++  white-space: nowrap;
++  overflow: hidden;
++  text-overflow: ellipsis;
++}
++.tl-block:hover { background: var(--paper-2); }
++
++.tl-key {
++  position: absolute;
++  top: 26px;
++  width: 9px; height: 9px;
++  margin-left: -4.5px; margin-top: -4.5px;
++  transform: rotate(45deg);
++  background: var(--paper);
++  border: 1.5px solid var(--ink);
++  z-index: 3;
++  pointer-events: none;
++}
++.tl-key.lit { background: var(--verm); border-color: var(--ink); }
++
++.tl-playhead {
++  position: absolute;
++  top: 0; left: 0;
++  height: 100%;
++  width: 0;
++  z-index: 4;
++  pointer-events: none;
++  will-change: transform;
++}
++.tl-playhead .line {
++  position: absolute;
++  top: 0; left: -1px;
++  width: 2px; height: 100%;
++  background: var(--verm);
++}
++.tl-playhead .head {
++  position: absolute;
++  top: 0; left: -7px;
++  width: 0; height: 0;
++  border-left: 7px solid transparent;
++  border-right: 7px solid transparent;
++  border-top: 9px solid var(--verm);
++}
++
++.tl-slider {
++  position: absolute;
++  width: 1px; height: 1px;
++  padding: 0; border: 0; margin: -1px;
++  clip-path: inset(50%);
++  overflow: hidden;
++  white-space: nowrap;
++}
++.tl-slider:focus-visible ~ .tl-focus-ring {
++  position: absolute; inset: 2px;
++  outline: 2px solid var(--verm);
++  outline-offset: -2px;
++  pointer-events: none;
++  z-index: 5;
++}
++
++html.scrubbing { cursor: ew-resize; }
++html.scrubbing .tl-block:hover { background: var(--surface); }
++
++/* ---------- page structure ---------- */
++
++main { display: block; }
++
++.scene {
++  position: relative;
++  padding: 96px 6vw calc(var(--tl-h) * 0.5 + 64px);
++}
++.scene-inner { max-width: 1280px; margin: 0 auto; }
++
++.scene-head {
++  display: flex;
++  align-items: baseline;
++  gap: 16px;
++  padding-bottom: 14px;
++  margin-bottom: clamp(28px, 5vh, 56px);
++  border-bottom: 1px solid var(--line-2);
++}
++.scene-head .rule { flex: 1; border-bottom: 1px dashed var(--line); transform: translateY(-4px); }
++
++/* hero */
++.scene-open {
++  min-height: calc(100svh - var(--tl-h));
++  display: flex;
++  align-items: center;
++  padding-top: calc(var(--top-h) + 48px);
++}
++.hero-grid {
++  display: grid;
++  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
++  gap: clamp(28px, 4vw, 64px);
++  align-items: center;
++  width: 100%;
++  max-width: 1360px;
++  margin: 0 auto;
++}
++.hero-copy { display: flex; flex-direction: column; gap: 28px; }
++.hero-ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
++.hint-space { font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; color: var(--ink-2); }
++.hint-space kbd {
++  font-family: inherit;
++  border: 1px solid var(--line-2);
++  border-bottom-width: 2px;
++  border-radius: 3px;
++  padding: 1px 6px;
++  background: var(--surface);
++}
++
++/* corner registration marks */
++.reg-marks { position: absolute; inset: 18px; pointer-events: none; }
++.reg-marks i {
++  position: absolute;
++  width: 14px; height: 14px;
++  border: 0 solid var(--line-2);
++}
++.reg-marks i:nth-child(1) { top: 0; left: 0; border-top-width: 1px; border-left-width: 1px; }
++.reg-marks i:nth-child(2) { top: 0; right: 0; border-top-width: 1px; border-right-width: 1px; }
++.reg-marks i:nth-child(3) { bottom: 0; left: 0; border-bottom-width: 1px; border-left-width: 1px; }
++.reg-marks i:nth-child(4) { bottom: 0; right: 0; border-bottom-width: 1px; border-right-width: 1px; }
++
++/* ---------- stage (hero viewport) ---------- */
++
++.stage {
++  border: 1.5px solid var(--ink);
++  border-radius: 3px;
++  background: var(--surface);
++  box-shadow: 6px 6px 0 0 rgb(26 22 16 / 0.9);
++}
++.stage-head {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  gap: 12px;
++  padding: 8px 12px;
++  border-bottom: 1px solid var(--line-2);
++}
++.stage-dots { display: flex; gap: 5px; }
++.stage-dots i { width: 8px; height: 8px; border: 1px solid var(--ink); border-radius: 50%; }
++.stage-dots i:first-child { background: var(--verm); }
++.stage-canvas { display: block; width: 100%; height: auto; }
++.stage-canvas .grid-line { stroke: var(--line); stroke-width: 1; }
++.stage-canvas .mpath {
++  fill: none;
++  stroke: var(--ink-2);
++  stroke-width: 1.5;
++  stroke-dasharray: 2 6;
++  stroke-linecap: round;
++}
++.stage-canvas .kf { fill: var(--surface); stroke: var(--ink); stroke-width: 1.5; }
++.stage-canvas .kf.lit { fill: var(--verm); }
++.stage-canvas .actor-shape { fill: var(--verm); stroke: var(--ink); stroke-width: 1.5; }
++.stage-canvas .actor-core { fill: var(--paper); }
++.stage-readout {
++  display: grid;
++  grid-template-columns: repeat(4, 1fr);
++  border-top: 1px solid var(--line-2);
++}
++.stage-readout > div {
++  padding: 8px 12px;
++  border-right: 1px solid var(--line);
++}
++.stage-readout > div:last-child { border-right: 0; }
++.stage-readout dt {
++  margin: 0;
++  font-family: var(--ff-mono);
++  font-size: 9.5px;
++  letter-spacing: 0.14em;
++  text-transform: uppercase;
++  color: var(--ink-2);
++}
++.stage-readout dd {
++  margin: 2px 0 0;
++  font-family: var(--ff-mono);
++  font-size: 14px;
++  font-weight: 500;
++  font-variant-numeric: tabular-nums;
++  color: var(--verm-2);
++  white-space: nowrap;
++}
++.stage-foot {
++  display: flex;
++  justify-content: space-between;
++  gap: 12px;
++  padding: 7px 12px;
++  border-top: 1px solid var(--line-2);
++}
++
++/* ---------- scene 02: sync panels ---------- */
++
++.sync-grid {
++  display: grid;
++  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
++  gap: clamp(20px, 3vw, 40px);
++  align-items: stretch;
++}
++.panel {
++  border: 1.5px solid var(--ink);
++  border-radius: 3px;
++  background: var(--surface);
++  box-shadow: 6px 6px 0 0 rgb(26 22 16 / 0.9);
++  display: flex;
++  flex-direction: column;
++}
++.panel-head {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  gap: 12px;
++  padding: 9px 14px;
++  border-bottom: 1px solid var(--line-2);
++}
++.inspector-rows { padding: 6px 0; flex: 1; }
++.ins-row {
++  display: grid;
++  grid-template-columns: 1fr auto;
++  align-items: center;
++  gap: 12px;
++  padding: 9px 14px;
++  border-bottom: 1px dashed var(--line);
++}
++.ins-row:last-child { border-bottom: 0; }
++.ins-row .k {
++  font-family: var(--ff-mono);
++  font-size: 11px;
++  letter-spacing: 0.12em;
++  text-transform: uppercase;
++  color: var(--ink-2);
++}
++.ins-row .v {
++  font-family: var(--ff-mono);
++  font-size: 14px;
++  font-weight: 500;
++  font-variant-numeric: tabular-nums;
++  color: var(--verm-2);
++}
++.ins-bar {
++  grid-column: 1 / -1;
++  height: 3px;
++  background: var(--paper-2);
++  position: relative;
++  overflow: hidden;
++}
++.ins-bar i {
++  position: absolute;
++  inset: 0 auto 0 0;
++  width: 50%;
++  background: var(--verm);
++  transform-origin: left center;
++  will-change: transform;
++}
++
++.code-panel { position: relative; }
++.code-body {
++  position: relative;
++  padding: 14px 0;
++  margin: 0;
++  overflow-x: auto;
++  flex: 1;
++  font-family: var(--ff-mono);
++  font-size: 13px;
++  line-height: 1.75;
++  tab-size: 2;
++}
++.code-body code { display: block; min-width: max-content; padding: 0 18px; }
++.code-hl {
++  position: absolute;
++  left: 0; right: 0;
++  top: 14px;
++  height: 1.75em;
++  background: rgb(232 73 15 / 0.12);
++  border-left: 3px solid var(--verm);
++  pointer-events: none;
++  will-change: transform;
++}
++.tok-c { color: var(--ink-2); font-style: italic; }
++.tok-k { color: var(--verm-2); }
++.tok-n { color: var(--ink); font-weight: 500; }
++.tok-live { color: var(--verm-2); font-weight: 500; }
++
++/* ---------- marquee ---------- */
++
++.marquee {
++  overflow: hidden;
++  border-top: 1px solid var(--line-2);
++  border-bottom: 1px solid var(--line-2);
++  padding: 18px 0;
++  margin: 0 -6vw;
++}
++.marquee-track {
++  display: flex;
++  gap: 0.6em;
++  white-space: nowrap;
++  width: max-content;
++  will-change: transform;
++  font-family: var(--ff-display);
++  font-size: clamp(2.6rem, 6vw, 5.2rem);
++  line-height: 1;
++  color: transparent;
++  -webkit-text-stroke: 1.2px var(--ink-2);
++}
++.marquee-track .solid { color: var(--verm); -webkit-text-stroke: 0; font-style: italic; }
++
++/* ---------- scene 03: system cards ---------- */
++
++.cards {
++  display: grid;
++  grid-template-columns: repeat(3, minmax(0, 1fr));
++  gap: clamp(16px, 2.4vw, 28px);
++}
++.card {
++  border: 1.5px solid var(--ink);
++  border-radius: 3px;
++  background: var(--surface);
++  box-shadow: 6px 6px 0 0 rgb(26 22 16 / 0.9);
++  display: flex;
++  flex-direction: column;
++}
++.card-viz { border-bottom: 1px solid var(--line-2); }
++.card-viz svg { display: block; width: 100%; height: auto; }
++.card-body { padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
++.card-body h3 {
++  margin: 0;
++  font-family: var(--ff-display);
++  font-weight: 400;
++  font-size: 1.65rem;
++  line-height: 1.1;
++}
++.card-body p { margin: 0; color: var(--ink-2); font-size: 0.98rem; }
++.card-read {
++  margin-top: auto;
++  padding-top: 12px;
++  font-family: var(--ff-mono);
++  font-size: 11.5px;
++  font-weight: 500;
++  letter-spacing: 0.04em;
++  font-variant-numeric: tabular-nums;
++  color: var(--verm-2);
++}
++.viz-curve .axis { stroke: var(--line-2); stroke-width: 1; }
++.viz-curve .curve { stroke: var(--verm); stroke-width: 2.5; fill: none; }
++.viz-curve .handle-line { stroke: var(--ink-2); stroke-width: 1.25; stroke-dasharray: 3 3; }
++.viz-curve .handle-dot { fill: var(--surface); stroke: var(--ink); stroke-width: 1.5; }
++.viz-curve .end-dot { fill: var(--ink); }
++.viz-spring .wave { stroke: var(--ink-2); stroke-width: 1.5; fill: none; }
++.viz-spring .rider { fill: var(--verm); stroke: var(--ink); stroke-width: 1.5; }
++.viz-spring .rest { stroke: var(--line-2); stroke-width: 1; stroke-dasharray: 4 4; }
++
++.chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 22px 18px; }
++.chip {
++  font-family: var(--ff-mono);
++  font-size: 11.5px;
++  font-weight: 500;
++  letter-spacing: 0.08em;
++  padding: 6px 10px;
++  border: 1px solid var(--ink);
++  border-radius: 2px;
++  background: var(--paper);
++}
++.chip.hot { background: var(--verm); }
++
++/* ---------- scene 04: ship (inverted) ---------- */
++
++.scene-ship {
++  background: var(--ink);
++  color: var(--paper);
++  padding-bottom: 0;
++}
++.scene-ship .scene-head { border-color: rgb(242 238 227 / 0.4); }
++.scene-ship .mono-label { color: rgb(242 238 227 / 0.62); }
++.scene-ship .lede { color: rgb(242 238 227 / 0.78); }
++.scene-ship .h-display .accent-i { color: var(--verm); }
++.ship-inner {
++  max-width: 1280px;
++  margin: 0 auto;
++  padding: 0 0 96px;
++  display: flex;
++  flex-direction: column;
++  gap: 36px;
++}
++.scene-ship .btn { border-color: var(--paper); box-shadow: 3px 3px 0 0 var(--paper); color: var(--ink); }
++.scene-ship .btn:hover { box-shadow: 4px 4px 0 0 var(--paper); }
++.scene-ship .btn-ghost { color: var(--paper); background: transparent; }
++.ship-note { font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.08em; color: rgb(242 238 227 / 0.62); }
++
++.site-foot {
++  border-top: 1px solid rgb(242 238 227 / 0.28);
++  padding: 28px 0 calc(var(--tl-h) + 40px);
++}
++.foot-grid {
++  max-width: 1280px;
++  margin: 0 auto;
++  display: flex;
++  flex-wrap: wrap;
++  gap: 12px 40px;
++  justify-content: space-between;
++  font-family: var(--ff-mono);
++  font-size: 11.5px;
++  letter-spacing: 0.06em;
++  line-height: 1.8;
++  color: rgb(242 238 227 / 0.62);
++}
++.foot-grid a { text-decoration-color: rgb(232 73 15 / 0.7); text-underline-offset: 3px; }
++.foot-grid a:hover { color: var(--paper); }
++
++/* ---------- reveals (IO + CSS only; JS-off = fully visible) ---------- */
++
++html.js .reveal {
++  opacity: 0;
++  transform: translateY(16px);
++  transition: opacity 640ms cubic-bezier(0.22, 1, 0.36, 1), transform 640ms cubic-bezier(0.22, 1, 0.36, 1);
++  transition-delay: var(--reveal-delay, 0ms);
++}
++html.js .reveal.is-in { opacity: 1; transform: none; }
++
++/* ---------- reduced motion ---------- */
++
++@media (prefers-reduced-motion: reduce) {
++  html { scroll-behavior: auto; }
++  html.js .reveal { opacity: 1; transform: none; transition: none; }
++  .btn, .btn-top-cta { transition: none; }
++  .btn:hover, .btn-top-cta:hover { transform: none; }
++  .btn-play, .hint-space { display: none; }
++  .tl-playhead, .code-hl, .ins-bar i, .marquee-track { will-change: auto; }
++}
++
++/* ---------- responsive ---------- */
++
++@media (max-width: 980px) {
++  .hero-grid { grid-template-columns: minmax(0, 1fr); }
++  .sync-grid { grid-template-columns: minmax(0, 1fr); }
++  .cards { grid-template-columns: minmax(0, 1fr); }
++}
++
++@media (max-width: 720px) {
++  :root { --tl-h: 64px; --top-h: 48px; }
++  body { font-size: 1rem; }
++  .scene { padding-left: 5vw; padding-right: 5vw; }
++  .top-meta { display: none; }
++  .top-tc { margin-left: auto; padding: 3px 7px; font-size: 11.5px; }
++  .topbar { gap: 10px; padding: 0 12px; }
++  .btn-play { padding: 0 10px; }
++  .btn-play .lbl { display: none; }
++  .btn-top-cta { padding: 0 10px; font-size: 11px; }
++  .wordmark { font-size: 13px; letter-spacing: 0.18em; }
++  .tl-ruler { height: 20px; }
++  .tl-key { top: 20px; }
++  .tl-scenes { height: calc(100% - 20px); }
++  .tl-block { padding: 0 8px; }
++  .tl-block .name { display: none; }
++  .tl-block .num { font-size: 10px; color: var(--ink); }
++  .stage-readout dd { font-size: 12px; }
++  .marquee { margin: 0 -5vw; }
++  .scene-open { padding-top: calc(var(--top-h) + 32px); }
++}
++
++/* ---------- patches: component-level details ---------- */
++
++.tl-focus-ring { position: absolute; inset: 2px; pointer-events: none; z-index: 5; }
++
++.marquee-track { gap: 0; }
++.marquee-track .seq { display: inline-flex; align-items: center; white-space: nowrap; }
++.marquee-track .sep {
++  color: var(--verm);
++  -webkit-text-stroke: 0;
++  font-size: 0.42em;
++  margin: 0 0.9em;
++  transform: translateY(-0.15em);
++}
++
++.ins-row { grid-template-columns: 1fr auto; }
++.ins-bar i { transform: scaleX(0); width: 100%; }
++
++@media (prefers-reduced-motion: reduce) {
++  .play-cta { display: none; }
++}
++
++/* ---------- pacing: mid scenes get full-frame runway ---------- */
++.scene-mid { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; }
++.scene-mid .scene-inner { width: 100%; }
++
++.tl-block { flex: 1 1 0; }
++
++/* ---------- topbar responsive trims ---------- */
++.top-meta, .top-tc, .btn-top-cta, .wordmark { white-space: nowrap; }
++@media (max-width: 1150px) {
++  .top-meta { display: none; }
++  .top-tc { margin-left: auto; }
++}
++@media (max-width: 600px) {
++  .top-tc { display: none; }
++  .btn-play { margin-left: auto; }
++}
++
++.panel, .card, .stage { min-width: 0; }
++
++.scene-head .mono-label { white-space: nowrap; }
++@media (max-width: 600px) {
++  .scene-head .mono-label:last-of-type { display: none; }
++}
+diff --git a/app/icon.svg b/app/icon.svg
+new file mode 100644
+index 0000000..2cb9808
+--- /dev/null
++++ b/app/icon.svg
+@@ -0,0 +1,4 @@
++<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
++  <rect width="64" height="64" fill="#f2eee3"/>
++  <rect x="20" y="20" width="24" height="24" transform="rotate(45 32 32)" fill="#e8490f" stroke="#1a1610" stroke-width="3"/>
++</svg>
+diff --git a/app/layout.jsx b/app/layout.jsx
+index 35fc217..0308b7c 100644
+--- a/app/layout.jsx
++++ b/app/layout.jsx
+@@ -1,14 +1,46 @@
++import { Instrument_Serif, Instrument_Sans, IBM_Plex_Mono } from "next/font/google";
+ import "./globals.css";
+ 
++const serif = Instrument_Serif({
++  weight: "400",
++  style: ["normal", "italic"],
++  subsets: ["latin"],
++  variable: "--font-serif",
++  display: "swap",
++});
++const sans = Instrument_Sans({
++  subsets: ["latin"],
++  variable: "--font-sans",
++  display: "swap",
++});
++const mono = IBM_Plex_Mono({
++  weight: ["400", "500"],
++  subsets: ["latin"],
++  variable: "--font-mono",
++  display: "swap",
++});
++
+ export const metadata = {
+-  title: "Meridian",
+-  description: "Meridian is a timeline-based motion editor for the web. Design animation visually, ship production code.",
++  title: "Meridian — Motion, composed.",
++  description:
++    "Meridian is a timeline-based motion editor for the web. Design animation on a real timeline, then ship the exact same motion as production code. This launch page is itself a 24-second composition — press play.",
++};
++
++export const viewport = {
++  themeColor: "#f2eee3",
+ };
+ 
+ export default function RootLayout({ children }) {
+   return (
+-    <html lang="en">
+-      <body>{children}</body>
++    <html lang="en" className={`${serif.variable} ${sans.variable} ${mono.variable}`}>
++      <body>
++        <script
++          dangerouslySetInnerHTML={{
++            __html: "document.documentElement.classList.add('js')",
++          }}
++        />
++        {children}
++      </body>
+     </html>
+   );
+ }
+diff --git a/app/page.jsx b/app/page.jsx
+index 6f15aef..235057e 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -1,31 +1,131 @@
++import TimelineChrome from "@/components/TimelineChrome";
++import Stage from "@/components/Stage";
++import SyncPanel from "@/components/SyncPanel";
++import SystemCards from "@/components/SystemCards";
++import Marquee from "@/components/Marquee";
++import RevealInit from "@/components/RevealInit";
++import PlayCta from "@/components/PlayCta";
++
+ export default function Home() {
+   return (
+-    <main className="mx-auto max-w-3xl space-y-16 px-6 py-24">
+-      <section className="space-y-4">
+-        <h1 className="text-4xl font-semibold">Meridian</h1>
+-        <p className="text-lg text-[var(--muted)]">
+-          A timeline-based motion editor for the web. Design animation visually, ship production code.
+-        </p>
+-        <a
+-          className="inline-block rounded-md bg-[var(--foreground)] px-4 py-2 text-[var(--background)]"
+-          href="#get-access"
++    <>
++      <a className="skip-link" href="#scene-open">Skip to content</a>
++      <TimelineChrome />
++      <RevealInit />
++
++      <main>
++        {/* SCENE 01 — OPEN */}
++        <section
++          className="scene scene-open"
++          data-scene="open"
++          id="scene-open"
++          aria-labelledby="h-open"
+         >
+-          Get early access
+-        </a>
+-      </section>
++          <div className="reg-marks" aria-hidden="true"><i /><i /><i /><i /></div>
++          <div className="hero-grid">
++            <div className="hero-copy">
++              <p className="mono-label reveal">
++                Scene 01 · Open — a timeline motion editor for the web
++              </p>
++              <h1 className="h-display reveal" id="h-open" style={{ "--reveal-delay": "60ms" }}>
++                Motion,<br /><em className="accent-i">composed.</em>
++              </h1>
++              <p className="lede reveal" style={{ "--reveal-delay": "120ms" }}>
++                Meridian puts your interface on a real timeline. Keyframe it like film,
++                tune it like an instrument — then ship the exact motion you designed
++                as production code. No handoff. No redlines.
++              </p>
++              <div className="hero-ctas reveal" style={{ "--reveal-delay": "180ms" }}>
++                <a className="btn btn-primary" href="#get-access">Get early access</a>
++                <PlayCta />
++              </div>
++            </div>
++            <Stage />
++          </div>
++        </section>
++
++        {/* SCENE 02 — SYNC */}
++        <section className="scene scene-mid" data-scene="sync" id="scene-sync" aria-labelledby="h-sync">
++          <div className="scene-inner">
++            <div className="scene-head reveal">
++              <span className="mono-label">Scene 02 · Sync</span>
++              <span className="rule" aria-hidden="true" />
++              <span className="mono-label">The claim</span>
++            </div>
++            <h2 className="h-scene reveal" id="h-sync">
++              Scrub here. <em className="accent-i">Ship there.</em>
++            </h2>
++            <p className="lede reveal" style={{ margin: "26px 0 48px", "--reveal-delay": "80ms" }}>
++              The inspector and the export are the same document. Set a keyframe and it
++              exists in code that instant — scrub this page’s timeline and watch both
++              surfaces move in lockstep. What you feel in the editor is what ships,
++              to the frame.
++            </p>
++            <SyncPanel />
++          </div>
++        </section>
+ 
+-      <section className="space-y-6">
+-        <h2 className="text-2xl font-semibold">What it does</h2>
+-        <ul className="space-y-4 text-[var(--muted)]">
+-          <li>Visual timeline editing for springs, keyframes, and gesture-driven motion.</li>
+-          <li>One-click export to production JavaScript and CSS with no runtime lock-in.</li>
+-          <li>Live preview across breakpoints, with reduced-motion variants built in.</li>
+-        </ul>
+-      </section>
++        {/* SCENE 03 — SYSTEM */}
++        <section className="scene scene-mid" data-scene="system" id="scene-system" aria-labelledby="h-system">
++          <Marquee />
++          <div className="scene-inner" style={{ paddingTop: "72px" }}>
++            <div className="scene-head reveal">
++              <span className="mono-label">Scene 03 · System</span>
++              <span className="rule" aria-hidden="true" />
++              <span className="mono-label">The instrument</span>
++            </div>
++            <h2 className="h-scene reveal" id="h-system">
++              Built like an <em className="accent-i">instrument.</em>
++            </h2>
++            <p className="lede reveal" style={{ margin: "26px 0 48px", "--reveal-delay": "80ms" }}>
++              Every control is tactile, every value is inspectable, and nothing hides
++              behind a render button. These three panels are being driven by the same
++              playhead you are scrolling right now.
++            </p>
++            <SystemCards />
++          </div>
++        </section>
+ 
+-      <footer className="border-t border-[var(--line)] pt-8 text-sm text-[var(--muted)]" id="get-access">
+-        <p>Meridian is in private beta. hello@meridian.tools</p>
+-      </footer>
+-    </main>
++        {/* SCENE 04 — SHIP */}
++        <div className="scene scene-ship" data-scene="ship" id="scene-ship">
++          <section className="ship-inner" aria-labelledby="h-ship">
++            <div className="scene-head reveal">
++              <span className="mono-label">Scene 04 · Ship</span>
++              <span className="rule" aria-hidden="true" />
++              <span className="mono-label">TC 00:00:24:00</span>
++            </div>
++            <h2 className="h-display reveal" id="h-ship">
++              Ship <em className="accent-i">the cut.</em>
++            </h2>
++            <p className="lede reveal" style={{ "--reveal-delay": "80ms" }}>
++              Meridian opens this fall to a first crew of motion designers and the
++              engineers who ship their work. Bring a timeline. Leave with production code.
++            </p>
++            <div className="hero-ctas reveal" id="get-access" style={{ "--reveal-delay": "140ms" }}>
++              <a className="btn btn-primary" href="mailto:hello@meridian.tools?subject=Early%20access">
++                Get early access
++              </a>
++              <a className="btn btn-ghost" href="mailto:hello@meridian.tools">hello@meridian.tools</a>
++            </div>
++            <p className="ship-note reveal" style={{ "--reveal-delay": "200ms" }}>
++              Free during the beta · no card · your exports are yours forever
++            </p>
++          </section>
++          <footer className="site-foot">
++            <div className="foot-grid">
++              <span>MERIDIAN © 2026 — drawn to a 24-second timeline</span>
++              <span>
++                This page is itself a Meridian composition.<br />
++                Press play, or scrub the bar below.
++              </span>
++              <span>
++                Set in Instrument Serif, Instrument Sans &amp; IBM Plex Mono<br />
++                No cookies, no trackers · motion rests when you look away
++              </span>
++            </div>
++          </footer>
++        </div>
++      </main>
++    </>
+   );
+ }
+diff --git a/components/Marquee.jsx b/components/Marquee.jsx
+new file mode 100644
+index 0000000..338d095
+--- /dev/null
++++ b/components/Marquee.jsx
+@@ -0,0 +1,65 @@
++"use client";
++
++import { useEffect, useRef } from "react";
++import { engine } from "@/lib/timeline";
++
++const WORDS = ["Keyframe", "Curve", "Spring", "Stagger", "Sequence", "Export"];
++const SOLID = new Set(["Spring", "Export"]);
++
++function Seq() {
++  return (
++    <span className="seq">
++      {WORDS.map((w) => (
++        <span key={w} className={SOLID.has(w) ? "solid" : undefined}>
++          {w}
++          <span className="sep" aria-hidden="true">◆</span>
++        </span>
++      ))}
++    </span>
++  );
++}
++
++export default function Marquee() {
++  const trackRef = useRef(null);
++  const seqWRef = useRef(1);
++  const visibleRef = useRef(false);
++  const rootRef = useRef(null);
++
++  useEffect(() => {
++    engine.init();
++    if (engine.reducedMotion()) return; // static strip under reduced motion
++
++    const measure = () => {
++      const seq = trackRef.current && trackRef.current.firstElementChild;
++      seqWRef.current = seq ? Math.max(1, seq.offsetWidth) : 1;
++    };
++    measure();
++    const ro = new ResizeObserver(measure);
++    if (trackRef.current) ro.observe(trackRef.current);
++
++    const io = new IntersectionObserver(
++      ([en]) => { visibleRef.current = en.isIntersecting; },
++      { threshold: 0 }
++    );
++    if (rootRef.current) io.observe(rootRef.current);
++
++    // Strictly scroll-position-driven: no ticker exists to pause.
++    const off = engine.subscribe((p) => {
++      if (!visibleRef.current || !trackRef.current) return;
++      const shift = p.t * seqWRef.current * 2.2;
++      trackRef.current.style.transform = `translate3d(${(-(shift % seqWRef.current)).toFixed(2)}px,0,0)`;
++    });
++
++    return () => { off(); ro.disconnect(); io.disconnect(); };
++  }, []);
++
++  return (
++    <div className="marquee" aria-hidden="true" ref={rootRef}>
++      <div className="marquee-track" ref={trackRef}>
++        <Seq />
++        <Seq />
++        <Seq />
++      </div>
++    </div>
++  );
++}
+diff --git a/components/PlayCta.jsx b/components/PlayCta.jsx
+new file mode 100644
+index 0000000..0740388
+--- /dev/null
++++ b/components/PlayCta.jsx
+@@ -0,0 +1,14 @@
++"use client";
++
++import { engine } from "@/lib/timeline";
++
++export default function PlayCta() {
++  return (
++    <>
++      <button type="button" className="btn play-cta" onClick={() => engine.play()}>
++        <span className="tri" aria-hidden="true">▸</span> Play this page
++      </button>
++      <span className="hint-space">or press <kbd>space</kbd></span>
++    </>
++  );
++}
+diff --git a/components/RevealInit.jsx b/components/RevealInit.jsx
+new file mode 100644
+index 0000000..a413b9a
+--- /dev/null
++++ b/components/RevealInit.jsx
+@@ -0,0 +1,29 @@
++"use client";
++
++import { useEffect } from "react";
++import { engine } from "@/lib/timeline";
++
++export default function RevealInit() {
++  useEffect(() => {
++    engine.init();
++    const els = Array.from(document.querySelectorAll(".reveal"));
++    if (engine.reducedMotion() || !("IntersectionObserver" in window)) {
++      els.forEach((el) => el.classList.add("is-in"));
++      return;
++    }
++    const io = new IntersectionObserver(
++      (entries) => {
++        for (const en of entries) {
++          if (en.isIntersecting) {
++            en.target.classList.add("is-in");
++            io.unobserve(en.target);
++          }
++        }
++      },
++      { threshold: 0.15, rootMargin: "0px 0px -6% 0px" }
++    );
++    els.forEach((el) => io.observe(el));
++    return () => io.disconnect();
++  }, []);
++  return null;
++}
+diff --git a/components/Stage.jsx b/components/Stage.jsx
+new file mode 100644
+index 0000000..e68defc
+--- /dev/null
++++ b/components/Stage.jsx
+@@ -0,0 +1,147 @@
++"use client";
++
++import { useEffect, useRef } from "react";
++import { engine, easeInOutCubic } from "@/lib/timeline";
++
++const P0 = [64, 316];
++const P1 = [150, 90];
++const P2 = [470, 60];
++const P3 = [566, 170];
++
++function bez(t) {
++  const u = 1 - t;
++  const x = u * u * u * P0[0] + 3 * u * u * t * P1[0] + 3 * u * t * t * P2[0] + t * t * t * P3[0];
++  const y = u * u * u * P0[1] + 3 * u * u * t * P1[1] + 3 * u * t * t * P2[1] + t * t * t * P3[1];
++  return [x, y];
++}
++
++const KF = [0, 0.35, 0.7, 1];
++const KF_PTS = KF.map(bez);
++const GRID_X = [64, 128, 192, 256, 320, 384, 448, 512, 576];
++const GRID_Y = [64, 128, 192, 256, 336];
++const PATH_D = `M ${P0[0]} ${P0[1]} C ${P1[0]} ${P1[1]}, ${P2[0]} ${P2[1]}, ${P3[0]} ${P3[1]}`;
++
++export default function Stage() {
++  const rootRef = useRef(null);
++  const actorRef = useRef(null);
++  const kfRefs = useRef([]);
++  const vRefs = useRef({});
++  const kcountRef = useRef(null);
++  const footRef = useRef(null);
++  const visibleRef = useRef(false);
++
++  useEffect(() => {
++    engine.init();
++    const rm = engine.reducedMotion();
++
++    const draw = (raw, now, bobOn) => {
++      const e = easeInOutCubic(raw);
++      const [x, y] = bez(e);
++      const bob = bobOn ? Math.sin(now * 2.2) * 4 : 0;
++      const wob = bobOn ? Math.sin(now * 1.55 + 1) * 1.4 : 0;
++      const rot = -20 + 120 * e + wob;
++      const sc = 0.8 + 0.35 * e;
++      if (actorRef.current) {
++        actorRef.current.setAttribute(
++          "transform",
++          `translate(${x.toFixed(2)} ${(y + bob).toFixed(2)}) rotate(${rot.toFixed(2)}) scale(${sc.toFixed(3)})`
++        );
++        engine.countStageWrite();
++      }
++      const v = vRefs.current;
++      if (v.x) v.x.textContent = x.toFixed(1);
++      if (v.y) v.y.textContent = y.toFixed(1);
++      if (v.r) v.r.textContent = `${rot.toFixed(1)}°`;
++      if (v.s) v.s.textContent = `×${sc.toFixed(2)}`;
++      let passed = 0;
++      KF.forEach((k, i) => {
++        const lit = e >= k - 0.001;
++        if (lit) passed++;
++        const el = kfRefs.current[i];
++        if (el) el.classList.toggle("lit", lit);
++      });
++      if (kcountRef.current) kcountRef.current.textContent = `K ${passed}/4`;
++    };
++
++    if (rm) {
++      // Reduced motion: park the preview on the finished pose. All data intact.
++      draw(1, 0, false);
++      if (footRef.current) footRef.current.textContent = "preview parked · reduced motion";
++      return;
++    }
++
++    const io = new IntersectionObserver(
++      ([en]) => {
++        visibleRef.current = en.isIntersecting;
++        // The idle preview loop is ambient: it may only keep the rAF loop
++        // alive while the stage is actually on screen.
++        engine.setAmbient("stage", en.isIntersecting);
++      },
++      { threshold: 0.12 }
++    );
++    if (rootRef.current) io.observe(rootRef.current);
++
++    const off = engine.subscribe((p) => {
++      if (!visibleRef.current) return;
++      draw(engine.sceneProgress("open", p.t), p.now, true);
++    });
++
++    return () => {
++      off();
++      io.disconnect();
++      engine.setAmbient("stage", false);
++    };
++  }, []);
++
++  return (
++    <figure className="stage reveal" ref={rootRef} style={{ margin: 0, "--reveal-delay": "120ms" }}>
++      <div className="stage-head">
++        <span className="stage-dots" aria-hidden="true"><i /><i /><i /></span>
++        <span className="mono-label">viewport · launch_film.mer</span>
++        <span className="mono-label" ref={kcountRef}>K 0/4</span>
++      </div>
++      <svg
++        className="stage-canvas"
++        viewBox="0 0 640 400"
++        role="img"
++        aria-label="Editor viewport: a vermilion marker travels a keyframed motion path as the page timeline is scrubbed"
++      >
++        {GRID_X.map((x) => (
++          <line key={`x${x}`} className="grid-line" x1={x} y1="0" x2={x} y2="400" />
++        ))}
++        {GRID_Y.map((y) => (
++          <line key={`y${y}`} className="grid-line" x1="0" y1={y} x2="640" y2={y} />
++        ))}
++        <path className="mpath" d={PATH_D} />
++        {KF_PTS.map(([x, y], i) => (
++          <rect
++            key={i}
++            className="kf"
++            x="-6.5"
++            y="-6.5"
++            width="13"
++            height="13"
++            transform={`translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(45)`}
++            ref={(el) => { kfRefs.current[i] = el; }}
++          />
++        ))}
++        <g ref={actorRef} transform={`translate(${P0[0]} ${P0[1]}) rotate(-20) scale(0.8)`}>
++          <g transform="rotate(45)">
++            <rect className="actor-shape" x="-15" y="-15" width="30" height="30" rx="2" />
++          </g>
++          <circle className="actor-core" r="3.5" />
++        </g>
++      </svg>
++      <dl className="stage-readout">
++        <div><dt>pos x</dt><dd ref={(el) => { vRefs.current.x = el; }}>64.0</dd></div>
++        <div><dt>pos y</dt><dd ref={(el) => { vRefs.current.y = el; }}>316.0</dd></div>
++        <div><dt>rotate</dt><dd ref={(el) => { vRefs.current.r = el; }}>-20.0°</dd></div>
++        <div><dt>scale</dt><dd ref={(el) => { vRefs.current.s = el; }}>×0.80</dd></div>
++      </dl>
++      <figcaption className="stage-foot">
++        <span className="mono-label">scene 01 · track “badge”</span>
++        <span className="mono-label" ref={footRef}>ease · in-out cubic</span>
++      </figcaption>
++    </figure>
++  );
++}
+diff --git a/components/SyncPanel.jsx b/components/SyncPanel.jsx
+new file mode 100644
+index 0000000..98b25ef
+--- /dev/null
++++ b/components/SyncPanel.jsx
+@@ -0,0 +1,121 @@
++"use client";
++
++import { useEffect, useRef } from "react";
++import { engine, formatTimecode, easeInOutCubic } from "@/lib/timeline";
++
++const lerp = (a, b, t) => a + (b - a) * t;
++const CODE_LINES = 12;
++
++export default function SyncPanel() {
++  const rootRef = useRef(null);
++  const visibleRef = useRef(true);
++  const ins = useRef({});
++  const bars = useRef({});
++  const code = useRef({});
++  const hlRef = useRef(null);
++
++  useEffect(() => {
++    engine.init();
++
++    const io = new IntersectionObserver(
++      ([en]) => { visibleRef.current = en.isIntersecting; },
++      { threshold: 0.05 }
++    );
++    if (rootRef.current) io.observe(rootRef.current);
++
++    const off = engine.subscribe((p) => {
++      if (!visibleRef.current) return;
++      const e = easeInOutCubic(engine.sceneProgress("sync", p.t));
++      const x = lerp(-96, 288, e);
++      const y = lerp(140, -48, e);
++      const r = lerp(-6, 14, e);
++      const s = lerp(0.86, 1.12, e);
++
++      const iv = ins.current;
++      if (iv.x) iv.x.textContent = `${x.toFixed(1)} px`;
++      if (iv.y) iv.y.textContent = `${y.toFixed(1)} px`;
++      if (iv.r) iv.r.textContent = `${r.toFixed(1)} deg`;
++      if (iv.s) iv.s.textContent = `× ${s.toFixed(2)}`;
++
++      const bv = bars.current;
++      if (bv.x) bv.x.style.transform = `scaleX(${((x + 96) / 384).toFixed(4)})`;
++      if (bv.y) bv.y.style.transform = `scaleX(${((140 - y) / 188).toFixed(4)})`;
++      if (bv.r) bv.r.style.transform = `scaleX(${((r + 6) / 20).toFixed(4)})`;
++      if (bv.s) bv.s.style.transform = `scaleX(${((s - 0.86) / 0.26).toFixed(4)})`;
++
++      const cv = code.current;
++      if (cv.tc) cv.tc.textContent = formatTimecode(p.seconds);
++      if (cv.x) cv.x.textContent = `${x.toFixed(1)}px`;
++      if (cv.y) cv.y.textContent = `${y.toFixed(1)}px`;
++      if (cv.r) cv.r.textContent = `${r.toFixed(1)}deg`;
++      if (cv.s) cv.s.textContent = s.toFixed(2);
++
++      if (hlRef.current) {
++        const line = Math.round(e * (CODE_LINES - 1));
++        hlRef.current.style.transform = `translateY(${(line * 1.75).toFixed(2)}em)`;
++      }
++    });
++
++    return () => { off(); io.disconnect(); };
++  }, []);
++
++  const R = (key, refset) => (el) => { refset.current[key] = el; };
++
++  return (
++    <div className="sync-grid" ref={rootRef}>
++      <section className="panel reveal" aria-label="Inspector panel — live property values">
++        <div className="panel-head">
++          <span className="mono-label">inspector · track “badge”</span>
++          <span className="mono-label">4 props</span>
++        </div>
++        <div className="inspector-rows">
++          <div className="ins-row">
++            <span className="k">Position X</span>
++            <span className="v" ref={R("x", ins)}>-96.0 px</span>
++            <span className="ins-bar" aria-hidden="true"><i ref={R("x", bars)} /></span>
++          </div>
++          <div className="ins-row">
++            <span className="k">Position Y</span>
++            <span className="v" ref={R("y", ins)}>140.0 px</span>
++            <span className="ins-bar" aria-hidden="true"><i ref={R("y", bars)} /></span>
++          </div>
++          <div className="ins-row">
++            <span className="k">Rotate</span>
++            <span className="v" ref={R("r", ins)}>-6.0 deg</span>
++            <span className="ins-bar" aria-hidden="true"><i ref={R("r", bars)} /></span>
++          </div>
++          <div className="ins-row">
++            <span className="k">Scale</span>
++            <span className="v" ref={R("s", ins)}>× 0.86</span>
++            <span className="ins-bar" aria-hidden="true"><i ref={R("s", bars)} /></span>
++          </div>
++          <div className="ins-row">
++            <span className="k">Ease</span>
++            <span className="v">cubic-bezier(0.22, 1, 0.36, 1)</span>
++          </div>
++        </div>
++      </section>
++
++      <section className="panel code-panel reveal" aria-label="Export panel — the same values as production CSS" style={{ "--reveal-delay": "110ms" }}>
++        <div className="panel-head">
++          <span className="mono-label">export · css</span>
++          <span className="mono-label">css · waapi · react</span>
++        </div>
++        <pre className="code-body"><i className="code-hl" ref={hlRef} aria-hidden="true" /><code>
++<span className="tok-c">{"/* meridian · export/css — launch_film.css */"}</span>{"\n"}
++<span className="tok-c">{"/* track “badge” · scene 02 · one source of truth */"}</span>{"\n"}
++<span className="tok-k">@keyframes</span> <span className="tok-n">badge-flight</span> {"{"}{"\n"}
++{"  0%   { transform: translate(-96px, 140px) rotate(-6deg) scale(0.86); }"}{"\n"}
++{"  100% { transform: translate(288px, -48px) rotate(14deg) scale(1.12); }"}{"\n"}
++{"}"}{"\n"}
++<span className="tok-n">.badge</span> {"{"}{"\n"}
++{"  animation: badge-flight 6s cubic-bezier(0.22, 1, 0.36, 1) both;"}{"\n"}
++{"}"}{"\n"}
++<span className="tok-c">{"/* playhead sample · tc "}<span ref={R("tc", code)}>00:00:00:00</span>{" */"}</span>{"\n"}
++{"transform: translate("}<span className="tok-live" ref={R("x", code)}>-96.0px</span>{", "}<span className="tok-live" ref={R("y", code)}>140.0px</span>{")"}{"\n"}
++{"           rotate("}<span className="tok-live" ref={R("r", code)}>-6.0deg</span>{") scale("}<span className="tok-live" ref={R("s", code)}>0.86</span>{");"}
++</code></pre>
++      </section>
++    </div>
++  );
++}
+diff --git a/components/SystemCards.jsx b/components/SystemCards.jsx
+new file mode 100644
+index 0000000..faa1aeb
+--- /dev/null
++++ b/components/SystemCards.jsx
+@@ -0,0 +1,131 @@
++"use client";
++
++import { useEffect, useRef } from "react";
++import { engine, easeInOutCubic } from "@/lib/timeline";
++
++const lerp = (a, b, t) => a + (b - a) * t;
++const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
++
++// unit-space -> svg-space for the curve card
++const CX = (u) => 30 + u * 260;
++const CY = (v) => 190 - v * 160;
++const CA = { c1: [0.85, 0.12], c2: [0.9, 0.45] };   // hard ease-in
++const CB = { c1: [0.22, 0.9], c2: [0.42, 1.0] };    // confident ease-out
++
++// damped spring trace, precomputed (deterministic, SSR-safe)
++const springY = (u) => 110 - 74 * Math.exp(-3.4 * u) * Math.cos(Math.PI * 2 * 2.6 * u);
++const SX = (u) => 20 + u * 280;
++const SPRING_D =
++  "M " +
++  Array.from({ length: 61 }, (_, i) => {
++    const u = i / 60;
++    return `${SX(u).toFixed(1)} ${springY(u).toFixed(1)}`;
++  }).join(" L ");
++
++export default function SystemCards() {
++  const rootRef = useRef(null);
++  const visibleRef = useRef(true);
++  const r = useRef({});
++
++  useEffect(() => {
++    engine.init();
++    const io = new IntersectionObserver(
++      ([en]) => { visibleRef.current = en.isIntersecting; },
++      { threshold: 0.05 }
++    );
++    if (rootRef.current) io.observe(rootRef.current);
++
++    const off = engine.subscribe((p) => {
++      if (!visibleRef.current) return;
++      const ss = engine.sceneProgress("system", p.t);
++      const el = r.current;
++
++      // curve morph
++      const e = easeInOutCubic(clamp01(ss * 1.5));
++      const c1 = [lerp(CA.c1[0], CB.c1[0], e), lerp(CA.c1[1], CB.c1[1], e)];
++      const c2 = [lerp(CA.c2[0], CB.c2[0], e), lerp(CA.c2[1], CB.c2[1], e)];
++      if (el.curve) {
++        el.curve.setAttribute(
++          "d",
++          `M 30 190 C ${CX(c1[0]).toFixed(1)} ${CY(c1[1]).toFixed(1)}, ${CX(c2[0]).toFixed(1)} ${CY(c2[1]).toFixed(1)}, 290 30`
++        );
++      }
++      if (el.h1) { el.h1.setAttribute("x2", CX(c1[0]).toFixed(1)); el.h1.setAttribute("y2", CY(c1[1]).toFixed(1)); }
++      if (el.h2) { el.h2.setAttribute("x2", CX(c2[0]).toFixed(1)); el.h2.setAttribute("y2", CY(c2[1]).toFixed(1)); }
++      if (el.d1) { el.d1.setAttribute("cx", CX(c1[0]).toFixed(1)); el.d1.setAttribute("cy", CY(c1[1]).toFixed(1)); }
++      if (el.d2) { el.d2.setAttribute("cx", CX(c2[0]).toFixed(1)); el.d2.setAttribute("cy", CY(c2[1]).toFixed(1)); }
++      if (el.bezLabel) {
++        el.bezLabel.textContent = `cubic-bezier(${c1[0].toFixed(2)}, ${c1[1].toFixed(2)}, ${c2[0].toFixed(2)}, ${c2[1].toFixed(2)})`;
++      }
++
++      // spring rider
++      const u = clamp01(ss * 1.2);
++      if (el.rider) {
++        el.rider.setAttribute("cx", SX(u).toFixed(1));
++        el.rider.setAttribute("cy", springY(u).toFixed(1));
++      }
++      if (el.springLabel) {
++        el.springLabel.textContent = `t = ${(u * 1.4).toFixed(2)}s · Δ ${(110 - springY(u)).toFixed(1)}px`;
++      }
++    });
++
++    return () => { off(); io.disconnect(); };
++  }, []);
++
++  const R = (key) => (el) => { r.current[key] = el; };
++
++  return (
++    <div className="cards" ref={rootRef}>
++      <article className="card reveal">
++        <div className="card-viz">
++          <svg className="viz-curve" viewBox="0 0 320 220" role="img" aria-label="Easing curve editor with draggable bezier handles">
++            <line className="axis" x1="30" y1="190" x2="290" y2="190" />
++            <line className="axis" x1="30" y1="190" x2="30" y2="30" />
++            <line className="handle-line" ref={R("h1")} x1="30" y1="190" x2="251" y2="171" />
++            <line className="handle-line" ref={R("h2")} x1="290" y1="30" x2="264" y2="118" />
++            <path className="curve" ref={R("curve")} d="M 30 190 C 251 171, 264 118, 290 30" />
++            <circle className="end-dot" cx="30" cy="190" r="4" />
++            <circle className="end-dot" cx="290" cy="30" r="4" />
++            <circle className="handle-dot" ref={R("d1")} cx="251" cy="171" r="6" />
++            <circle className="handle-dot" ref={R("d2")} cx="264" cy="118" r="6" />
++          </svg>
++        </div>
++        <div className="card-body">
++          <h3>Easing you can hold</h3>
++          <p>A full-size curve editor, not a dropdown. Drag the handles, compare against presets, copy the bezier straight out.</p>
++          <span className="card-read" ref={R("bezLabel")}>cubic-bezier(0.85, 0.12, 0.90, 0.45)</span>
++        </div>
++      </article>
++
++      <article className="card reveal" style={{ "--reveal-delay": "90ms" }}>
++        <div className="card-viz">
++          <svg className="viz-spring" viewBox="0 0 320 220" role="img" aria-label="A damped spring settling toward its rest position">
++            <line className="rest" x1="20" y1="110" x2="300" y2="110" />
++            <path className="wave" d={SPRING_D} />
++            <circle className="rider" ref={R("rider")} cx="20" cy="36" r="7" />
++          </svg>
++        </div>
++        <div className="card-body">
++          <h3>Physics, not guesswork</h3>
++          <p>Stiffness, damping, mass — felt live in the preview. Export a real spring, or a baked track for engines that can’t.</p>
++          <span className="card-read" ref={R("springLabel")}>t = 0.00s · Δ -74.0px</span>
++        </div>
++      </article>
++
++      <article className="card reveal" style={{ "--reveal-delay": "180ms" }}>
++        <div className="chips" aria-label="Export targets">
++          <span className="chip">CSS</span>
++          <span className="chip">WAAPI</span>
++          <span className="chip">FRAMER MOTION</span>
++          <span className="chip">LOTTIE</span>
++          <span className="chip hot">1 : 1</span>
++        </div>
++        <div className="card-body">
++          <h3>Code that matches</h3>
++          <p>CSS, Web Animations, React, Lottie — same curves, same timing, reproducible to the frame. No runtime lock-in.</p>
++          <span className="card-read">byte-identical curves · your code, forever</span>
++        </div>
++      </article>
++    </div>
++  );
++}
+diff --git a/components/TimelineChrome.jsx b/components/TimelineChrome.jsx
+new file mode 100644
+index 0000000..9985a7f
+--- /dev/null
++++ b/components/TimelineChrome.jsx
+@@ -0,0 +1,220 @@
++"use client";
++
++import { useEffect, useRef, useState } from "react";
++import { engine, formatTimecode, FILM_SECONDS } from "@/lib/timeline";
++
++export const SCENES = [
++  { id: "open", num: "01", name: "Open" },
++  { id: "sync", num: "02", name: "Sync" },
++  { id: "system", num: "03", name: "System" },
++  { id: "ship", num: "04", name: "Ship" },
++];
++
++const TICKS = Array.from({ length: FILM_SECONDS + 1 }, (_, s) => s);
++
++export default function TimelineChrome() {
++  const tcRef = useRef(null);
++  const trackRef = useRef(null);
++  const playheadRef = useRef(null);
++  const sliderRef = useRef(null);
++  const endKeyRef = useRef(null);
++  const blockRefs = useRef({});
++  const fillRefs = useRef({});
++  const keyRefs = useRef({});
++  const widthRef = useRef(0);
++  const mvRef = useRef(-1);
++  const scenesRef = useRef([]);
++  const draggingRef = useRef(false);
++  const [playing, setPlaying] = useState(false);
++
++  useEffect(() => {
++    engine.init();
++    const offPlay = engine.onPlayState(setPlaying);
++
++    const track = trackRef.current;
++    const measureTrack = () => {
++      widthRef.current = track ? track.clientWidth : 0;
++    };
++    measureTrack();
++    const ro = new ResizeObserver(measureTrack);
++    if (track) ro.observe(track);
++
++    const off = engine.subscribe((p) => {
++      scenesRef.current = p.scenes;
++      if (tcRef.current) tcRef.current.textContent = formatTimecode(p.seconds);
++      if (playheadRef.current) {
++        const phx = Math.max(1, Math.min(widthRef.current - 1, p.t * widthRef.current));
++        playheadRef.current.style.transform = `translate3d(${phx.toFixed(2)}px,0,0)`;
++      }
++      if (p.mv !== mvRef.current) {
++        mvRef.current = p.mv;
++        for (const sc of p.scenes) {
++          const el = blockRefs.current[sc.id];
++          if (el) el.style.flex = `0 0 ${((sc.endT - sc.startT) * 100).toFixed(3)}%`;
++          const key = keyRefs.current[sc.id];
++          if (key) key.style.left = `${(sc.startT * 100).toFixed(3)}%`;
++        }
++      }
++      for (const sc of p.scenes) {
++        const fill = fillRefs.current[sc.id];
++        if (fill) fill.style.width = `${(engine.sceneProgress(sc.id, p.t) * 100).toFixed(2)}%`;
++        const key = keyRefs.current[sc.id];
++        if (key) key.classList.toggle("lit", p.t >= sc.startT - 1e-6);
++      }
++      if (endKeyRef.current) endKeyRef.current.classList.toggle("lit", p.t > 0.999);
++      const slider = sliderRef.current;
++      if (slider) {
++        if (document.activeElement !== slider) slider.value = p.seconds.toFixed(1);
++        const cur = p.scenes.find((s) => p.t >= s.startT && p.t <= s.endT);
++        const meta = SCENES.find((s) => s.id === (cur && cur.id));
++        slider.setAttribute(
++          "aria-valuetext",
++          `${p.seconds.toFixed(1)} of ${FILM_SECONDS} seconds${meta ? ` — scene ${meta.num}, ${meta.name}` : ""}`
++        );
++      }
++    });
++
++    // Space toggles play/pause anywhere outside interactive elements.
++    const onKey = (e) => {
++      if (e.code !== "Space" || e.defaultPrevented) return;
++      const t = e.target;
++      if (t && t.closest && t.closest("input, textarea, select, button, a, [contenteditable=true]")) return;
++      e.preventDefault();
++      engine.toggle();
++    };
++    window.addEventListener("keydown", onKey);
++
++    return () => {
++      off();
++      offPlay();
++      ro.disconnect();
++      window.removeEventListener("keydown", onKey);
++    };
++  }, []);
++
++  const seekFromEvent = (e) => {
++    const track = trackRef.current;
++    if (!track) return;
++    const r = track.getBoundingClientRect();
++    const t = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
++    engine.pause("scrub");
++    engine.seekT(t, false);
++  };
++
++  const onPointerDown = (e) => {
++    if (e.pointerType === "mouse" && e.button !== 0) return;
++    draggingRef.current = true;
++    e.currentTarget.setPointerCapture(e.pointerId);
++    document.documentElement.classList.add("scrubbing");
++    seekFromEvent(e);
++  };
++  const onPointerMove = (e) => {
++    if (draggingRef.current) seekFromEvent(e);
++  };
++  const endDrag = () => {
++    draggingRef.current = false;
++    document.documentElement.classList.remove("scrubbing");
++  };
++
++  const onBlockClick = (e, id) => {
++    if (e.detail > 0) return; // mouse clicks are handled by the pointer scrub
++    const sc = scenesRef.current.find((s) => s.id === id);
++    if (sc) engine.seekT(sc.startT + 0.0005, true);
++  };
++
++  return (
++    <>
++      <header className="topbar">
++        <a className="wordmark" href="#scene-open">
++          <span className="dia" aria-hidden="true">◆</span>MERIDIAN
++        </a>
++        <span className="mono-label top-meta" aria-hidden="true">
++          launch_film.mer · 24.0s · 60fps
++        </span>
++        <span className="top-tc" aria-hidden="true">
++          TC <span className="tc-live" ref={tcRef}>00:00:00:00</span>
++        </span>
++        <button
++          type="button"
++          className="btn-play"
++          aria-pressed={playing}
++          onClick={() => engine.toggle()}
++        >
++          <span aria-hidden="true">{playing ? "❚❚" : "▸"}</span>
++          <span className="lbl">{playing ? "Pause" : "Play"}</span>
++        </button>
++        <a className="btn-top-cta" href="#get-access">Get access</a>
++      </header>
++
++      <div
++        className="tl-bar"
++        role="group"
++        aria-label="Film timeline — the page is a 24 second composition"
++        onPointerDown={onPointerDown}
++        onPointerMove={onPointerMove}
++        onPointerUp={endDrag}
++        onPointerCancel={endDrag}
++      >
++        <div className="tl-track" ref={trackRef}>
++          <div className="tl-ruler" aria-hidden="true">
++            {TICKS.map((s) => (
++              <span key={s}>
++                <i
++                  className={`tl-tick${s % 4 === 0 ? " major" : ""}`}
++                  style={{ left: `${(s / FILM_SECONDS) * 100}%` }}
++                />
++                {s % 4 === 0 && s < FILM_SECONDS && (
++                  <i className="tl-tick-label" style={{ left: `${(s / FILM_SECONDS) * 100}%` }}>
++                    {s}s
++                  </i>
++                )}
++              </span>
++            ))}
++          </div>
++          <div className="tl-scenes">
++            {SCENES.map((sc) => (
++              <button
++                key={sc.id}
++                type="button"
++                className="tl-block"
++                ref={(el) => { blockRefs.current[sc.id] = el; }}
++                onClick={(e) => onBlockClick(e, sc.id)}
++                aria-label={`Jump to scene ${sc.num}, ${sc.name}`}
++              >
++                <i className="fill" ref={(el) => { fillRefs.current[sc.id] = el; }} aria-hidden="true" />
++                <span className="num">SC {sc.num}</span>
++                <span className="name">{sc.name}</span>
++              </button>
++            ))}
++          </div>
++          {SCENES.map((sc) => (
++            <i
++              key={sc.id}
++              className="tl-key"
++              ref={(el) => { keyRefs.current[sc.id] = el; }}
++              aria-hidden="true"
++            />
++          ))}
++          <i className="tl-key" style={{ left: "100%" }} ref={endKeyRef} aria-hidden="true" />
++          <div className="tl-playhead" ref={playheadRef} aria-hidden="true">
++            <i className="line" />
++            <i className="head" />
++          </div>
++          <input
++            ref={sliderRef}
++            className="tl-slider"
++            type="range"
++            min="0"
++            max={FILM_SECONDS}
++            step="0.1"
++            defaultValue="0"
++            aria-label="Playhead position"
++            onInput={(e) => engine.seekSeconds(parseFloat(e.target.value), false)}
++            onPointerDown={(e) => e.stopPropagation()}
++          />
++          <i className="tl-focus-ring" aria-hidden="true" />
++        </div>
++      </div>
++    </>
++  );
++}
+diff --git a/lib/timeline.js b/lib/timeline.js
+new file mode 100644
+index 0000000..d86b495
+--- /dev/null
++++ b/lib/timeline.js
+@@ -0,0 +1,305 @@
++// ---------------------------------------------------------------
++// Meridian timeline engine.
++// One owner for every per-frame concern on the page.
++//
++// Demand-driven rAF: the loop runs ONLY while one of these holds
++//   - the lerped playhead has not settled on its target
++//   - play mode is advancing the scroll
++//   - an ambient effect is registered AND its surface is on screen
++//     AND the document is visible AND reduced motion is off
++// Otherwise the loop is fully cancelled (verifiable via
++// window.__meridian.frames freezing).
++// ---------------------------------------------------------------
++
++export const FILM_SECONDS = 24;
++export const FILM_FPS = 60;
++
++const isBrowser = typeof window !== "undefined";
++
++const S = {
++  inited: false,
++  target: 0,        // scroll fraction 0..1 (truth from scrollY)
++  current: 0,       // lerped display value handed to subscribers
++  playing: false,
++  playY: 0,         // float scroll position while playing
++  rm: false,        // prefers-reduced-motion
++  raf: 0,
++  running: false,
++  lastTs: 0,
++  now: 0,
++  docH: 1,
++  vh: 1,
++  scrollable: 1,
++  mv: 0,            // measure version (bumped on re-measure)
++  scenes: [],       // { id, el, startT, endT, topY, height }
++  subs: new Set(),
++  ambient: new Set(), // string keys registered by components
++  meter: null,        // window.__meridian instrumentation
++};
++
++function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
++
++function measure() {
++  S.vh = window.innerHeight;
++  S.docH = Math.max(1, document.documentElement.scrollHeight);
++  S.scrollable = Math.max(1, S.docH - S.vh);
++  const els = document.querySelectorAll("[data-scene]");
++  S.scenes = Array.from(els).map((el) => {
++    const r = el.getBoundingClientRect();
++    const topY = r.top + window.scrollY;
++    return {
++      id: el.dataset.scene,
++      el,
++      topY,
++      height: r.height,
++      startT: clamp01(topY / S.docH),
++      endT: clamp01((topY + r.height) / S.docH),
++    };
++  });
++  S.mv++;
++  S.target = clamp01(window.scrollY / S.scrollable);
++}
++
++function ambientAllowed() {
++  return S.ambient.size > 0 && !document.hidden && !S.rm;
++}
++
++function payload() {
++  return {
++    t: S.current,
++    seconds: S.current * FILM_SECONDS,
++    playing: S.playing,
++    now: S.now,
++    scenes: S.scenes,
++    mv: S.mv,
++    rm: S.rm,
++  };
++}
++
++function emit() {
++  const p = payload();
++  S.subs.forEach((fn) => fn(p));
++}
++
++function frame(ts) {
++  const dt = Math.min(0.05, S.lastTs ? (ts - S.lastTs) / 1000 : 1 / 60);
++  S.lastTs = ts;
++  S.now = ts / 1000;
++
++  if (S.playing) {
++    // Live-read the scroll ceiling: cached values can flap during
++    // transient viewport resizes, and a false ceiling must clamp the
++    // playhead, not end the film.
++    const maxY = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
++    S.playY = Math.min(S.playY + (maxY / FILM_SECONDS) * dt, maxY);
++    window.scrollTo({ top: S.playY, behavior: "auto" });
++    S.target = clamp01(S.playY / maxY);
++    if (maxY - S.playY < 0.5) {
++      S.endStreak = (S.endStreak || 0) + 1;
++      if (S.endStreak > 5) {
++        S.playing = false;
++        S.endStreak = 0;
++        if (S.meter) S.meter.lastPause = `film-end @ ${Math.round(performance.now())}`;
++        notifyPlayState();
++      }
++    } else {
++      S.endStreak = 0;
++    }
++  }
++
++  const k = S.rm ? 1 : 1 - Math.exp(-dt * 9.5);
++  S.current += (S.target - S.current) * k;
++  if (Math.abs(S.target - S.current) < 0.00012) S.current = S.target;
++
++  emit();
++
++  if (S.meter) {
++    S.meter.frames++;
++    S.meter.t = S.current;
++    S.meter.playing = S.playing;
++    S.meter.ambient = S.ambient.size;
++    S.meter.running = true;
++  }
++
++  const settled = S.current === S.target && !S.playing;
++  if (!settled || ambientAllowed()) {
++    S.raf = requestAnimationFrame(frame);
++  } else {
++    S.running = false;
++    S.lastTs = 0;
++    if (S.meter) S.meter.running = false;
++  }
++}
++
++function ensure() {
++  if (!isBrowser || S.running) return;
++  S.running = true;
++  S.lastTs = 0;
++  S.raf = requestAnimationFrame(frame);
++}
++
++function halt() {
++  if (S.raf) cancelAnimationFrame(S.raf);
++  S.running = false;
++  S.lastTs = 0;
++  if (S.meter) S.meter.running = false;
++}
++
++const playSubs = new Set();
++function notifyPlayState() {
++  if (S.meter) S.meter.playing = S.playing;
++  playSubs.forEach((fn) => fn(S.playing));
++}
++
++// ---- public api -------------------------------------------------
++
++export const engine = {
++  init() {
++    if (!isBrowser || S.inited) return;
++    S.inited = true;
++
++    const rmq = window.matchMedia("(prefers-reduced-motion: reduce)");
++    S.rm = rmq.matches;
++    rmq.addEventListener("change", () => {
++      S.rm = rmq.matches;
++      if (S.rm && S.playing) engine.pause("rm-change");
++      S.current = S.target;
++      ensure();
++    });
++
++    S.meter = { frames: 0, stageWrites: 0, running: false, playing: false, ambient: 0, t: 0 };
++    window.__meridian = S.meter;
++
++    measure();
++    S.current = S.target;
++
++    window.addEventListener("scroll", () => {
++      S.target = clamp01(window.scrollY / S.scrollable);
++      ensure();
++    }, { passive: true });
++
++    window.addEventListener("resize", () => {
++      if (S.meter) {
++        S.meter.resizeLog = S.meter.resizeLog || [];
++        S.meter.resizeLog.push([Math.round(performance.now()), window.innerWidth, window.innerHeight]);
++        if (S.meter.resizeLog.length > 40) S.meter.resizeLog.shift();
++      }
++      measure();
++      ensure();
++    });
++
++    if ("ResizeObserver" in window) {
++      const ro = new ResizeObserver(() => { measure(); ensure(); });
++      ro.observe(document.body);
++    }
++    if (document.fonts && document.fonts.ready) {
++      document.fonts.ready.then(() => { measure(); ensure(); });
++    }
++
++    // Continuous animation must stop the moment the document hides.
++    document.addEventListener("visibilitychange", () => {
++      if (document.hidden) {
++        if (S.playing) {
++          S.playing = false;
++          if (S.meter) S.meter.lastPause = `hidden @ ${Math.round(performance.now())}`;
++          notifyPlayState();
++        }
++        halt();
++      } else {
++        ensure(); // resumes only if there is real work; else it stops itself
++      }
++    });
++
++    // Any manual input interrupts play mode, like a real editor.
++    const interrupt = (e) => { if (S.playing) engine.pause(`interrupt:${e.type}`); };
++    window.addEventListener("wheel", interrupt, { passive: true });
++    window.addEventListener("touchstart", interrupt, { passive: true });
++    window.addEventListener("keydown", (e) => {
++      if (!S.playing) return;
++      const scrollKeys = ["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End"];
++      if (scrollKeys.includes(e.key)) engine.pause(`interrupt:key:${e.key}`);
++    });
++
++    ensure();
++  },
++
++  subscribe(fn) {
++    S.subs.add(fn);
++    if (S.inited) fn(payload());
++    return () => S.subs.delete(fn);
++  },
++
++  onPlayState(fn) {
++    playSubs.add(fn);
++    fn(S.playing);
++    return () => playSubs.delete(fn);
++  },
++
++  sceneProgress(id, t) {
++    const sc = S.scenes.find((s) => s.id === id);
++    if (!sc || sc.height <= 0) return 0;
++    return clamp01((t * S.docH - sc.topY) / sc.height);
++  },
++
++  seconds() { return S.current * FILM_SECONDS; },
++  reducedMotion() { return S.rm; },
++  measureVersion() { return S.mv; },
++
++  seekT(t, smooth) {
++    const y = clamp01(t) * S.scrollable;
++    window.scrollTo({ top: y, behavior: smooth && !S.rm ? "smooth" : "auto" });
++    ensure();
++  },
++
++  seekSeconds(sec, smooth) {
++    engine.seekT(sec / FILM_SECONDS, smooth);
++  },
++
++  play() {
++    if (S.rm || S.playing || !isBrowser) return;
++    // At the end of the film, play restarts from the top like an editor.
++    if (S.target > 0.995) {
++      window.scrollTo({ top: 0, behavior: "auto" });
++      S.target = 0;
++      S.current = 0;
++    }
++    S.playY = window.scrollY;
++    S.playing = true;
++    notifyPlayState();
++    ensure();
++  },
++
++  pause(reason) {
++    if (!S.playing) return;
++    S.playing = false;
++    if (S.meter) S.meter.lastPause = `${reason || "api"} @ ${Math.round(performance.now())}`;
++    notifyPlayState();
++  },
++
++  toggle() { S.playing ? engine.pause("toggle") : engine.play(); },
++
++  // Ambient effects (e.g. the stage idle loop) register here. The
++  // loop only stays alive for them while allowed; callers must also
++  // gate on their own IntersectionObserver visibility.
++  setAmbient(key, active) {
++    if (active) S.ambient.add(key); else S.ambient.delete(key);
++    if (S.meter) S.meter.ambient = S.ambient.size;
++    if (active) ensure();
++  },
++
++  countStageWrite() {
++    if (S.meter) S.meter.stageWrites++;
++  },
++};
++
++export function formatTimecode(seconds) {
++  const s = Math.max(0, seconds);
++  const mm = String(Math.floor(s / 60)).padStart(2, "0");
++  const ss = String(Math.floor(s % 60)).padStart(2, "0");
++  const ff = String(Math.floor((s % 1) * FILM_FPS)).padStart(2, "0");
++  return `00:${mm}:${ss}:${ff}`;
++}
++
++export function easeInOutCubic(x) {
++  return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
++}

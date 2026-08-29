@@ -1,0 +1,33 @@
+{
+ "run": "W1ws-fable-rep1",
+ "date": "2026-08-27",
+ "condition": "with_skill_v1 (evals/withskill_protocol.md)",
+ "model": "claude-fable-5 (explicit Agent model override, matching the baseline arm)",
+ "fixture": "launch-page-base 3543ef9 (pristine copy verified)",
+ "interruptions": "none - single 51-minute run",
+ "implementation": "Register W chosen WITH an S-grade interactive core; spectacle weighed explicitly and WebGL declined on product grounds ('Meridian sells frame-level 2D precision; GPU atmosphere would misstate the product'), not on caution. Signature moment: the hero IS a Meridian file - a 6s/60fps 7-track timeline (hero.mtl) with gold keyframes and a red playhead that drives the actual page hero; scrub/play/arrow-step assembles and disassembles the headline, copy, CTAs and a bezier-flying layer chip. Design-director self-correction on record: rejected its own first instinct (near-black + single vermilion accent) as a flagged generic default, moved to a subject-native porcelain/dark duotone with functional color (selection blue / keyframe gold / playhead red). ZERO dependencies; ~2kB custom engine (cubic-bezier solver, channel sampler, SMPTE clock bus). 8 files, 2095 insertions. Catalog gate: React Bits / Fancy / SmoothUI checked live - no timeline/playhead/keyframe primitive exists; their text reveals are Motion/GSAP-coupled and would put a second engine on transforms the timeline owns -> reference-only, custom build.",
+ "measurements": {
+  "m6_static": "PASS (build, cleanup path, no interval loops)",
+  "m1": "N_A_NO_CONTINUOUS_ANIMATION both profiles - by design: rAF runs only while playing, no idle loop, no loop mode. Matches the majority baseline pattern (W1 baseline reps 1 and 3 also N/A).",
+  "m2_offscreen": "N_A_NO_CONTINUOUS_ANIMATION (nothing idles to pause). Agent nonetheless verified offscreen pause under the actual condition: playing -> hero scrolled out -> playing:false with t frozen across 700ms -> resumed on return.",
+  "m2b_hidden_pause": "N_A_NO_CONTINUOUS_ANIMATION. Agent verified hidden-tab pause itself via puppeteer-core + system Chrome with REAL tab activation after the browser pane could not produce document.hidden - captured visibilitychange(hidden) with the engine already paused, t frozen ~2s, instant resume. This is the condition earlier reps in other arms honestly gave up on.",
+  "m3_reduced_motion": "PASS both profiles, full content parity - no autoplay, page rests at final frame with all content visible, transport still works on explicit request; live media-query listener halts playback if the preference flips mid-session",
+  "m5_accessible_parallel": "PASS both profiles - scrubber is a real input[type=range] with aria-valuetext, real labeled transport buttons, full content server-rendered and readable with JS disabled (curl-verified)",
+  "critical_failures": "ZERO (criterion F.2 requirement)",
+  "console_errors": "zero"
+ },
+ "instrument_limitation_noted": "For W-register pages that deliberately idle at rest, M1/M2/M2b report N/A because the battery samples without interacting. The instrument cannot distinguish 'no idle loop by design' (a virtue) from 'no animation at all' without driving the page. Recorded, not worked around; the agent's own real-condition verification covers the gap for this rep.",
+ "timidity_flags_observed_by_instrument": "none - distinct custom typography (Fraunces/Schibsted/Spline Mono), non-default composition, a described signature mechanic, and motion far beyond hover states. Register fit and the signature-moment binary are human-scored (worksheet).",
+ "artifacts": {
+  "diff": "results/execution/W1ws-fable-rep1.diff (8 files, 2095 insertions)",
+  "source_snapshot": "results/execution/W1ws-fable-rep1-source.zip (+ safety copy in ~/Documents)",
+  "measurements": "results/execution/W1ws-fable-rep1.json",
+  "screenshots": "results/execution/screenshots/W1ws-fable-rep1-*.png"
+ },
+ "cost": {
+  "tokens": 300820,
+  "duration_ms": 3078335,
+  "duration_min": 51.3,
+  "convention": "tokens = total context tokens reported by the orchestrating harness"
+ }
+}

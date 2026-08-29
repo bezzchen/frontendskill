@@ -1,0 +1,494 @@
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..ed1403b 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -7,6 +7,8 @@
+   --muted: #6b6b66;
+   --surface: #ffffff;
+   --line: #deded8;
++  --line-strong: color-mix(in oklab, var(--line) 55%, var(--muted));
++  --danger: #b3261e;
+ }
+ 
+ @media (prefers-color-scheme: dark) {
+@@ -16,6 +18,7 @@
+     --muted: #a0a099;
+     --surface: #181817;
+     --line: #31312f;
++    --danger: #f28b82;
+   }
+ }
+ 
+@@ -24,3 +27,51 @@ html { background: var(--background); color: var(--foreground); }
+ body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
+ a { color: inherit; }
+ button, input { font: inherit; }
++
++/* Consistent, high-contrast keyboard focus across the site. */
++:where(a, button, input, select, textarea, [tabindex]):focus-visible {
++  outline: 2px solid var(--foreground);
++  outline-offset: 2px;
++}
++
++/*
++ * Toggle switch built on a native checkbox: keyboard, label association,
++ * and form semantics come from the input itself; this is presentation only.
++ */
++.switch {
++  appearance: none;
++  -webkit-appearance: none;
++  flex: none;
++  position: relative;
++  width: 2.25rem;
++  height: 1.25rem;
++  margin: 0;
++  border-radius: 999px;
++  background: var(--muted);
++  cursor: pointer;
++  transition: background-color 160ms ease;
++}
++.switch::before {
++  content: "";
++  position: absolute;
++  top: 0.125rem;
++  left: 0.125rem;
++  width: 1rem;
++  height: 1rem;
++  border-radius: 999px;
++  background: var(--surface);
++  box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
++  transition: transform 160ms ease;
++}
++.switch:checked { background: var(--foreground); }
++.switch:checked::before { transform: translateX(1rem); }
++
++/* Reduce all motion to imperceptible durations when the user asks for it. */
++@media (prefers-reduced-motion: reduce) {
++  *, *::before, *::after {
++    animation-duration: 0.01ms !important;
++    animation-iteration-count: 1 !important;
++    transition-duration: 0.01ms !important;
++    scroll-behavior: auto !important;
++  }
++}
+diff --git a/components/SettingsPanel.jsx b/components/SettingsPanel.jsx
+index 3cd24b9..fce7eec 100644
+--- a/components/SettingsPanel.jsx
++++ b/components/SettingsPanel.jsx
+@@ -1,68 +1,373 @@
+ "use client";
+ 
+-import { useState } from "react";
++import { useEffect, useId, useRef, useState } from "react";
++
++const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
++const MIN_PASSWORD_LENGTH = 8;
++
++const NOTIFICATION_OPTIONS = [
++  {
++    key: "activity",
++    label: "Email notifications",
++    description: "Activity that involves you — mentions, replies, and shares.",
++  },
++  {
++    key: "product",
++    label: "Product updates",
++    description: "Occasional notes on new features and improvements.",
++  },
++  {
++    key: "security",
++    label: "Security alerts",
++    description: "Sign-ins from new devices and changes to your account.",
++  },
++];
++
++function fieldClass(invalid) {
++  return [
++    "w-full rounded-md border bg-[var(--background)] px-3 py-2",
++    "transition-colors duration-150 motion-reduce:transition-none",
++    invalid
++      ? "border-[var(--danger)]"
++      : "border-[var(--line)] hover:border-[var(--line-strong)] focus:border-[var(--foreground)]",
++  ].join(" ");
++}
++
++function validateField(field, value) {
++  if (field === "name") {
++    return value.trim() ? null : "Enter your name.";
++  }
++  if (field === "email") {
++    if (!value.trim()) return "Enter your email address.";
++    if (!EMAIL_PATTERN.test(value.trim())) {
++      return "Enter a valid email address, like name@example.com.";
++    }
++    return null;
++  }
++  if (field === "password") {
++    if (value && value.length < MIN_PASSWORD_LENGTH) {
++      return `Use at least ${MIN_PASSWORD_LENGTH} characters.`;
++    }
++    return null;
++  }
++  return null;
++}
++
++const STATUS_CONTENT = {
++  idle: null,
++  dirty: { text: "Unsaved changes", tone: "muted" },
++  invalid: { text: "Check the highlighted fields.", tone: "danger" },
++  saving: { text: "Saving…", tone: "muted" },
++  saved: { text: "Changes saved", tone: "default", check: true },
++};
+ 
+ export function SettingsPanel() {
+-  const [notifications, setNotifications] = useState(true);
+-  const [saved, setSaved] = useState(false);
++  const uid = useId();
++  const ids = {
++    name: `${uid}-name`,
++    email: `${uid}-email`,
++    password: `${uid}-password`,
++    passwordHint: `${uid}-password-hint`,
++    errorFor(field) {
++      return `${uid}-${field}-error`;
++    },
++  };
++
++  const [profile, setProfile] = useState({ name: "Jordan Lee", email: "jordan@example.com" });
++  const [password, setPassword] = useState("");
++  const [showPassword, setShowPassword] = useState(false);
++  const [notifications, setNotifications] = useState({
++    activity: true,
++    product: false,
++    security: true,
++  });
++  const [errors, setErrors] = useState({});
++  // idle -> dirty -> (invalid) -> saving -> saved -> idle
++  const [status, setStatus] = useState("idle");
++
++  const nameRef = useRef(null);
++  const emailRef = useRef(null);
++  const passwordRef = useRef(null);
++  const fieldRefs = { name: nameRef, email: emailRef, password: passwordRef };
++
++  const submittedRef = useRef(false);
++  const editedWhileSavingRef = useRef(false);
++  const timersRef = useRef([]);
++
++  useEffect(() => {
++    const timers = timersRef.current;
++    return () => timers.forEach(clearTimeout);
++  }, []);
++
++  function schedule(fn, delay) {
++    timersRef.current.push(setTimeout(fn, delay));
++  }
++
++  // Re-validate a field that is already showing an error, so the message
++  // clears the moment the problem is fixed; otherwise just mark the form dirty.
++  function afterEdit(field, value) {
++    if (status === "saving") {
++      editedWhileSavingRef.current = true;
++      return;
++    }
++    let nextErrors = errors;
++    if (field && errors[field] !== undefined) {
++      const message = validateField(field, value);
++      nextErrors = { ...errors };
++      if (message) nextErrors[field] = message;
++      else delete nextErrors[field];
++      setErrors(nextErrors);
++    }
++    setStatus(Object.keys(nextErrors).length ? "invalid" : "dirty");
++  }
++
++  function handleProfileChange(field, value) {
++    setProfile((current) => ({ ...current, [field]: value }));
++    afterEdit(field, value);
++  }
++
++  function handlePasswordChange(value) {
++    setPassword(value);
++    afterEdit("password", value);
++  }
++
++  function handleToggle(key, checked) {
++    setNotifications((current) => ({ ...current, [key]: checked }));
++    afterEdit(null, null);
++  }
++
++  // After the first save attempt, surface problems as fields lose focus
++  // instead of waiting for the next submit.
++  function handleBlur(field, value) {
++    if (!submittedRef.current) return;
++    const message = validateField(field, value);
++    const nextErrors = { ...errors };
++    if (message) nextErrors[field] = message;
++    else delete nextErrors[field];
++    setErrors(nextErrors);
++    if (status === "dirty" || status === "invalid") {
++      setStatus(Object.keys(nextErrors).length ? "invalid" : "dirty");
++    }
++  }
++
++  function handleSubmit(event) {
++    event.preventDefault();
++    if (status === "saving") return;
++    submittedRef.current = true;
++
++    const nextErrors = {};
++    for (const [field, value] of [
++      ["name", profile.name],
++      ["email", profile.email],
++      ["password", password],
++    ]) {
++      const message = validateField(field, value);
++      if (message) nextErrors[field] = message;
++    }
++
++    if (Object.keys(nextErrors).length) {
++      setErrors(nextErrors);
++      setStatus("invalid");
++      const firstInvalid = ["name", "email", "password"].find((field) => nextErrors[field]);
++      fieldRefs[firstInvalid]?.current?.focus();
++      return;
++    }
++
++    setErrors({});
++    setStatus("saving");
++    editedWhileSavingRef.current = false;
++
++    // Simulated request; replace with the real mutation.
++    schedule(() => {
++      submittedRef.current = false;
++      if (editedWhileSavingRef.current) {
++        // The user kept editing while the save was in flight.
++        setStatus("dirty");
++        return;
++      }
++      setProfile((current) => ({ name: current.name.trim(), email: current.email.trim() }));
++      setPassword("");
++      setShowPassword(false);
++      setStatus("saved");
++      schedule(() => {
++        setStatus((current) => (current === "saved" ? "idle" : current));
++      }, 4000);
++    }, 700);
++  }
++
++  const statusContent = STATUS_CONTENT[status];
++  const saving = status === "saving";
++  const passwordDescribedBy = [ids.passwordHint, errors.password ? ids.errorFor("password") : null]
++    .filter(Boolean)
++    .join(" ");
+ 
+   return (
+     <form
+-      className="space-y-8"
+-      onSubmit={(event) => {
+-        event.preventDefault();
+-        setSaved(true);
+-      }}
++      noValidate
++      onSubmit={handleSubmit}
++      className="divide-y divide-[var(--line)] rounded-xl border border-[var(--line)] bg-[var(--surface)]"
+     >
+-      <section className="space-y-3">
+-        <h2 className="text-lg font-semibold">Profile</h2>
+-        <label className="grid gap-2">
+-          <span>Name</span>
++      <section className="space-y-5 p-5 sm:p-6">
++        <div>
++          <h3 className="text-base font-semibold">Profile</h3>
++          <p className="mt-1 text-sm text-[var(--muted)]">How you appear across the site.</p>
++        </div>
++
++        <div className="space-y-1.5">
++          <label className="block text-sm font-medium" htmlFor={ids.name}>
++            Name
++          </label>
+           <input
+-            className="rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 py-2"
+-            defaultValue="Jordan Lee"
++            autoComplete="name"
++            className={fieldClass(Boolean(errors.name))}
++            id={ids.name}
+             name="name"
++            onBlur={(event) => handleBlur("name", event.target.value)}
++            onChange={(event) => handleProfileChange("name", event.target.value)}
++            ref={nameRef}
++            required
++            aria-invalid={errors.name ? true : undefined}
++            aria-describedby={errors.name ? ids.errorFor("name") : undefined}
++            value={profile.name}
+           />
+-        </label>
+-        <label className="grid gap-2">
+-          <span>Email</span>
++          {errors.name && (
++            <p className="text-sm text-[var(--danger)]" id={ids.errorFor("name")}>
++              {errors.name}
++            </p>
++          )}
++        </div>
++
++        <div className="space-y-1.5">
++          <label className="block text-sm font-medium" htmlFor={ids.email}>
++            Email
++          </label>
+           <input
+-            className="rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 py-2"
+-            defaultValue="jordan@example.com"
++            autoComplete="email"
++            className={fieldClass(Boolean(errors.email))}
++            id={ids.email}
++            inputMode="email"
+             name="email"
++            onBlur={(event) => handleBlur("email", event.target.value)}
++            onChange={(event) => handleProfileChange("email", event.target.value)}
++            ref={emailRef}
++            required
++            spellCheck={false}
+             type="email"
++            aria-invalid={errors.email ? true : undefined}
++            aria-describedby={errors.email ? ids.errorFor("email") : undefined}
++            value={profile.email}
+           />
+-        </label>
++          {errors.email && (
++            <p className="text-sm text-[var(--danger)]" id={ids.errorFor("email")}>
++              {errors.email}
++            </p>
++          )}
++        </div>
+       </section>
+ 
+-      <section className="space-y-3">
+-        <h2 className="text-lg font-semibold">Notifications</h2>
+-        <label className="flex items-center justify-between gap-4 rounded-lg border border-[var(--line)] p-4">
+-          <span>Email notifications</span>
+-          <input
+-            checked={notifications}
+-            onChange={(event) => setNotifications(event.target.checked)}
+-            type="checkbox"
+-          />
+-        </label>
+-      </section>
++      <fieldset className="p-5 sm:p-6">
++        <legend className="float-left w-full text-base font-semibold">Notifications</legend>
++        <p className="clear-both pt-1 text-sm text-[var(--muted)]">Choose what lands in your inbox.</p>
++        <div className="-mx-2 mt-3 space-y-1">
++          {NOTIFICATION_OPTIONS.map((option) => (
++            <label
++              className="flex cursor-pointer items-start justify-between gap-4 rounded-lg px-2 py-3 transition-colors duration-150 hover:bg-[var(--background)] motion-reduce:transition-none"
++              key={option.key}
++            >
++              <span className="min-w-0">
++                <span className="block text-sm font-medium">{option.label}</span>
++                <span className="mt-0.5 block text-sm text-[var(--muted)]">{option.description}</span>
++              </span>
++              <input
++                checked={notifications[option.key]}
++                className="switch mt-0.5"
++                name={`notifications-${option.key}`}
++                onChange={(event) => handleToggle(option.key, event.target.checked)}
++                role="switch"
++                type="checkbox"
++              />
++            </label>
++          ))}
++        </div>
++      </fieldset>
++
++      <section className="space-y-5 p-5 sm:p-6">
++        <div>
++          <h3 className="text-base font-semibold">Password</h3>
++          <p className="mt-1 text-sm text-[var(--muted)]">Update the password you use to sign in.</p>
++        </div>
+ 
+-      <section className="space-y-3">
+-        <h2 className="text-lg font-semibold">Password</h2>
+-        <input
+-          className="w-full rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 py-2"
+-          placeholder="New password"
+-          type="password"
+-        />
++        <div className="space-y-1.5">
++          <label className="block text-sm font-medium" htmlFor={ids.password}>
++            New password
++          </label>
++          <div className="relative">
++            <input
++              autoComplete="new-password"
++              className={`${fieldClass(Boolean(errors.password))} pr-16`}
++              id={ids.password}
++              name="new-password"
++              onBlur={(event) => handleBlur("password", event.target.value)}
++              onChange={(event) => handlePasswordChange(event.target.value)}
++              ref={passwordRef}
++              type={showPassword ? "text" : "password"}
++              aria-invalid={errors.password ? true : undefined}
++              aria-describedby={passwordDescribedBy}
++              value={password}
++            />
++            <button
++              className="absolute inset-y-1 right-1 rounded px-2.5 text-sm font-medium text-[var(--muted)] transition-colors duration-150 hover:text-[var(--foreground)] motion-reduce:transition-none"
++              onClick={() => setShowPassword((current) => !current)}
++              type="button"
++            >
++              {showPassword ? "Hide" : "Show"}
++              <span className="sr-only"> password</span>
++            </button>
++          </div>
++          {errors.password && (
++            <p className="text-sm text-[var(--danger)]" id={ids.errorFor("password")}>
++              {errors.password}
++            </p>
++          )}
++          <p className="text-sm text-[var(--muted)]" id={ids.passwordHint}>
++            At least {MIN_PASSWORD_LENGTH} characters. Leave blank to keep your current password.
++          </p>
++        </div>
+       </section>
+ 
+-      <div className="flex items-center gap-3">
+-        <button className="rounded-md bg-[var(--foreground)] px-4 py-2 text-[var(--background)]" type="submit">
++      <div className="sticky bottom-0 z-10 flex items-center justify-between gap-4 rounded-b-xl bg-[var(--surface)] px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:static sm:px-6">
++        <p
++          className={`min-w-0 flex items-center gap-1.5 text-sm transition-opacity duration-200 motion-reduce:transition-none ${
++            statusContent ? "opacity-100" : "opacity-0"
++          } ${
++            statusContent?.tone === "danger"
++              ? "text-[var(--danger)]"
++              : statusContent?.tone === "muted"
++                ? "text-[var(--muted)]"
++                : "text-[var(--foreground)]"
++          }`}
++          role="status"
++        >
++          {statusContent?.check && (
++            <svg aria-hidden="true" className="size-3.5" fill="none" viewBox="0 0 16 16">
++              <path
++                d="M3 8.5 6.5 12 13 4.5"
++                stroke="currentColor"
++                strokeLinecap="round"
++                strokeLinejoin="round"
++                strokeWidth="1.8"
++              />
++            </svg>
++          )}
++          {statusContent?.text}
++        </p>
++        <button
++          aria-disabled={saving || undefined}
++          className="shrink-0 whitespace-nowrap rounded-md bg-[var(--foreground)] px-4 py-2 font-medium text-[var(--background)] transition duration-150 hover:bg-[color-mix(in_oklab,var(--foreground)_86%,var(--background))] active:scale-[0.99] aria-disabled:opacity-60 motion-reduce:transition-none motion-reduce:active:scale-100"
++          type="submit"
++        >
+           Save changes
+         </button>
+-        <span aria-live="polite" className="text-sm text-[var(--muted)]">
+-          {saved ? "Saved" : ""}
+-        </span>
+       </div>
+     </form>
+   );

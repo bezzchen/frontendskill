@@ -1,0 +1,62 @@
+{
+ "_instructions": "Fill WITHOUT opening SEALED_MAPPING.json. Six candidates, conditions mixed (baseline vs with-skill), split not disclosed. Rename to RANKS.json when done.",
+ "recorded": "YYYY-MM-DD",
+ "reviewer": "harness owner",
+ "question": "W1 register fit: distinct visual identity plus a signature moment a visitor would describe to someone else (rubrics/register_fit.md, 0-4 anchors)",
+ "ranking_best_to_worst": [
+  "candidate-?",
+  "candidate-?",
+  "candidate-?",
+  "candidate-?",
+  "candidate-?",
+  "candidate-?"
+ ],
+ "per_candidate": {
+  "candidate-A": {
+   "register_fit_0_4": null,
+   "signature_moment_yes_no": null,
+   "timidity_flags": [],
+   "notes": ""
+  },
+  "candidate-B": {
+   "register_fit_0_4": null,
+   "signature_moment_yes_no": null,
+   "timidity_flags": [],
+   "notes": ""
+  },
+  "candidate-C": {
+   "register_fit_0_4": null,
+   "signature_moment_yes_no": null,
+   "timidity_flags": [],
+   "notes": ""
+  },
+  "candidate-D": {
+   "register_fit_0_4": null,
+   "signature_moment_yes_no": null,
+   "timidity_flags": [],
+   "notes": ""
+  },
+  "candidate-E": {
+   "register_fit_0_4": null,
+   "signature_moment_yes_no": null,
+   "timidity_flags": [],
+   "notes": ""
+  },
+  "candidate-F": {
+   "register_fit_0_4": null,
+   "signature_moment_yes_no": null,
+   "timidity_flags": [],
+   "notes": ""
+  }
+ },
+ "timidity_flag_checklist": [
+  "no signature moment",
+  "system-font-only typography",
+  "centered heading + subtitle + two CTAs as the whole idea",
+  "motion limited to hover colours",
+  "no relationship between identity and product",
+  "identical fade-ups as the only choreography"
+ ],
+ "blindness_note": "STRICT for condition: you are not told which three are baseline. Caveat: you have previously seen the three BASELINE W1s labelled (2026-08-12 ranking), so those may be recognisable; the three with-skill pages are new to you.",
+ "contamination_caveat": "One with-skill rep (W1ws-rep3) saw another with-skill rep2 page on a stray port and steered its art direction away from it - see its record. Its independence is compromised in the divergence direction."
+}

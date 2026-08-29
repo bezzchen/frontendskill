@@ -1,0 +1,33 @@
+{
+ "run": "W1ws-fable-rep2",
+ "date": "2026-08-27",
+ "condition": "with_skill_v1 (evals/withskill_protocol.md)",
+ "model": "claude-fable-5 (explicit Agent model override, matching the baseline arm)",
+ "fixture": "launch-page-base 3543ef9 (pristine copy verified)",
+ "interruptions": "none - single 59-minute run",
+ "implementation": "Register W; spectacle weighed and declined knowingly on product grounds ('this product's medium is DOM motion that ships as CSS/JS; a shader canvas would upstage the story and burn laptop budget'). Signature moment: the page IS a Meridian composition - a persistent editor timeline (ruler, four scene blocks sized to true section proportions, keyframe diamonds lighting as passed, vermilion playhead) makes scroll the playhead; drag to scrub, press Play/Space and the page plays itself as a 24s film to exactly 00:00:24:00, with an inspector and CSS export whose numbers move in lockstep. Art direction 'drafting-table film': warm paper, ink hairlines, single vermilion accent, Instrument Serif + IBM Plex Mono, registration marks, film grain - explicitly not dark-SaaS, and distinct from rep1's porcelain/dark editor duotone. ZERO dependencies; one engine (lib/timeline.js) owns every per-frame concern. 12 files, 1972 insertions. Fit gate: React Bits + Fancy checked via llms.txt indexes (direct fetch blocked); no catalog ships an editor-timeline scrubber -> custom; their counters/marquees run time-based tickers (the exact ambient class needing gating) while this one is scroll-position-locked -> reference-only; GSAP/Lenis/Motion rejected (25-40KB for one scroll-sync concern, and owning the loop is what makes the pause guarantees provable). Found and fixed 5 real bugs in verification (smooth-scroll fighting the play loop, film-end false trigger, React clobbering measured widths, a grid 1fr blowout inflating mobile to 619px, topbar wrapping).",
+ "measurements": {
+  "m6_static": "PASS (build, no interval loops); cleanup-path NOT_MEASURED = the checker's documented cross-file blind spot (lib/timeline.js owns the loop)",
+  "m1": "N_A_NO_CONTINUOUS_ANIMATION both profiles - demand-driven loop that fully cancels when settled (agent verified the frame counter frozen across samples, waking on scroll and stopping again)",
+  "m2_offscreen": "N_A_NO_CONTINUOUS_ANIMATION at rest. Agent verified the stage's IntersectionObserver gate under real scrolling: stageWrites frozen while the hero was offscreen even during scroll, re-engaging on return.",
+  "m2b_hidden_pause": "PASS both profiles - MEASURED, ratio 0.00 (desktop 9.7 -> 0 rAF/s, mobile 11.0 -> 0). NOTE: the agent reported it could verify a genuine document.hidden flip only ONCE and could not re-induce it on demand (headless keeps pages visible; automation flags suppress it; minimize ignored) and explicitly refused to fake a proxy. The harness's M2b probe - which overrides the flag while the page stays truly visible - independently closed exactly that gap and confirms the pause works. resumes=false is expected here: the loop is demand-driven and correctly stays dormant with no input after restore.",
+  "m3_reduced_motion": "PASS both profiles, full content parity - play controls removed (navigation preserved via scene buttons/slider), all 21 reveals forced visible, lerp becomes instant 1:1, marquee static, stage parks on the finished pose captioned 'preview parked - reduced motion'",
+  "m5_accessible_parallel": "PASS both profiles - real range slider ('Playhead position', aria-valuetext '12.3 of 24 seconds - scene 02, Sync'), scene blocks as labelled buttons, Play with aria-pressed, content fully present with JS disabled (verified)",
+  "critical_failures": "ZERO (criterion F.2 requirement)",
+  "performance_agent_measured": "zero long tasks during a 2.4s scripted scroll workout at ~57-60fps; ~7.4KB gzip added on the framework baseline",
+  "console_errors": "zero"
+ },
+ "timidity_flags_observed_by_instrument": "none - custom display/mono type pairing, non-default composition, a describable signature mechanic (scroll-as-playhead with a working transport), motion far beyond hover states. Register fit and the signature binary are human-scored.",
+ "artifacts": {
+  "diff": "results/execution/W1ws-fable-rep2.diff (12 files, 1972 insertions)",
+  "source_snapshot": "results/execution/W1ws-fable-rep2-source.zip (+ safety copy in ~/Documents)",
+  "measurements": "results/execution/W1ws-fable-rep2.json",
+  "screenshots": "results/execution/screenshots/W1ws-fable-rep2-*.png"
+ },
+ "cost": {
+  "tokens": 294850,
+  "duration_ms": 3537969,
+  "duration_min": 59.0,
+  "convention": "tokens = total context tokens reported by the orchestrating harness"
+ }
+}

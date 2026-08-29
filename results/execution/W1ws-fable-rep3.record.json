@@ -1,0 +1,42 @@
+{
+ "run": "W1ws-fable-rep3",
+ "date": "2026-08-27",
+ "condition": "with_skill_v1 (evals/withskill_protocol.md)",
+ "model": "claude-fable-5 (explicit Agent model override, matching the baseline arm)",
+ "fixture": "launch-page-base 3543ef9 (pristine copy verified)",
+ "interruptions": "none - single 57-minute run",
+ "PROTOCOL_DEVIATION_CROSS_RUN_CONTAMINATION": {
+  "what": "The agent discovered W1ws-rep2's leftover dev server still serving on port 3457, recognised it as 'another session's Meridian page', and used it as a NEGATIVE example in its own design reasoning: it noted that page matched the AI-default 'warm cream + serif + terracotta' cluster it had just discarded, and concluded 'the avoidance was worth it'.",
+  "why_it_matters": "Reps are supposed to be independent, fresh-context observations. Rep3 was demonstrably influenced by rep2's output - and in the direction of INCREASED divergence, since it treated rep2's art direction as a thing to avoid. That artificially inflates between-run art-direction diversity and breaks the independence assumption for any pooled ranking that includes both.",
+  "cause": "Orchestrator error: rep2's agent left a server running and reported it; the orchestrator killed port 3457 only at the start of rep2's battery, and the port was reachable again (or still) when rep3 explored. Serialization of BUILDS was respected; serialization of stray SERVERS was not.",
+  "scope_of_effect": "Art direction only, on the evidence available. Rep3's register decision (W, S weighed and declined), its concept (hero as its own dope sheet), and its architecture (GSAP as single engine) show no dependence on rep2. But this cannot be proven, only argued.",
+  "owner_decision_required": "Does W1ws-rep3 count toward the criterion F with-skill set, count with a flag (as S1-rep2 was ruled), or get re-run on a clean port-isolated environment? Recorded, not decided.",
+  "standing_fix": "Kill every stray dev server BEFORE launching the next rep, not merely before the battery."
+ },
+ "implementation": "Register W; spectacle weighed and declined knowingly ('the product's truth is precision timeline control; a realtime graphical backdrop would add payload and GPU load without demonstrating it'). Signature moment: the hero IS its own dope sheet - a 120-frame/30fps 8-track entrance defined once in score.js that drives BOTH the GSAP timeline and the rendered panel, so the sheet cannot drift from the motion it depicts; drag the red playhead to replay the page's own entrance, with the word 'time.' literally time-stretching on the variable font's width axis (62%->125%). Second interactive: a real cubic-bezier curve room with draggable/keyboard handles and a working copy readout. Art direction 'the animator's light table': cel-white ground, non-photo-blue construction grid, ink near-black reserved for what ships, signal red as time, cyan+red onion-skin ghosts on the headline. FIRST rep in the arm to add dependencies - and justified in writing: GSAP 3.15 + @gsap/react adopted as the SINGLE motion engine (substrate, not catalog), two @fontsource-variable packages for deterministic delivery of a width axis the signature requires. Fit gate: React Bits checked live (165+ components, no timeline/scrubber/dope-sheet/bezier editor), Fancy/SmoothUI rejected as Motion-based second engines beside GSAP. Freshness line in action: inspected GSAP's INSTALLED source before coding and found autoSleep sleeps the rAF ticker every 120 ticks when children are paused, so it drives UI sync from onUpdate rather than gsap.ticker.add. Caught and fixed a real bug in verification (CSS pre-hide transform colliding with GSAP yPercent, trapping the headline in its masks).",
+ "measurements": {
+  "m6_static": "PASS (build, cleanup path, no interval loops)",
+  "m1_desktop": "FAIL as measured - hitch 3.92% vs threshold <=1%. DIAGNOSIS (recorded, threshold NOT renegotiated): p50 16.7ms and p95 18.8ms are both well inside budget; p99 is 118ms, i.e. one long frame. The page is demand-driven at 6.4 rAF/s, so the fixed 8s window yielded only 51 samples - two long frames in a 51-sample denominator read as 3.92%, where a continuously-animating page would have ~480 samples and the same two frames would read ~0.4%. The hitch-rate threshold is calibrated for continuous animation; it is a blunt instrument for pages that deliberately idle.",
+  "m1_mobile": "PASS - p50 16.7ms, p95 17.8ms, hitch 0% over 48 samples",
+  "m2_offscreen": "NOT_MEASURABLE_BY_GEOMETRY (mechanical; 20.8% of the section still visible after scroll-away). Agent verified the governor under real conditions: scrolling the hero away froze the loop (offscreen:true, running:false, frame pinned across samples).",
+  "m2b_hidden_pause": "PASS - ratio 0.00 (15.7 -> 0 rAF/s). Agent also verified a genuine tab-hide independently: mid-intro play paused at F25/F35, GSAP tick counter froze (+1 tick over 1.2s), and restoring visibility resumed from the held frame; an autoplay requested while hidden stayed parked until actually visible.",
+  "m3_reduced_motion": "PASS both profiles, full content parity - verified under the real media query (--force-prefers-reduced-motion): page loads settled at frame 120/120 vs control mid-intro at F1; scrub, transport and curve preview remain functional as explicitly-requested motion",
+  "m5_accessible_parallel": "PASS both profiles - playhead is a real role=slider (arrows 1f, shift 10f, PageUp/Down 30f, Home/End, space/K/Enter), curve handles keyboard-operable, form errors role=alert with focus return",
+  "critical_failures": "ZERO (criterion F.2's clause is about critical failures; the M1 hitch is not one)",
+  "console_errors": "zero"
+ },
+ "agent_disclosed_verification_limit": "Could not obtain a sustained visible-but-offscreen ticker-counter reading because the harness preview pane flickers visibility between tool actions; rested that one permutation on source-verified autoSleep plus the measured pause, and said so rather than claiming it.",
+ "timidity_flags_observed_by_instrument": "none - variable-font width-axis choreography, custom editor-chrome surfaces, a describable signature mechanic, motion far beyond hover states",
+ "artifacts": {
+  "diff": "results/execution/W1ws-fable-rep3.diff (13 files, 1524 insertions)",
+  "source_snapshot": "results/execution/W1ws-fable-rep3-source.zip (+ safety copy in ~/Documents)",
+  "measurements": "results/execution/W1ws-fable-rep3.json",
+  "screenshots": "results/execution/screenshots/W1ws-fable-rep3-*.png"
+ },
+ "cost": {
+  "tokens": 312675,
+  "duration_ms": 3436886,
+  "duration_min": 57.3,
+  "convention": "tokens = total context tokens reported by the orchestrating harness"
+ }
+}

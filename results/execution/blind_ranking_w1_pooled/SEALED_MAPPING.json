@@ -1,0 +1,31 @@
+{
+ "sealed": true,
+ "created": "2026-08-27",
+ "protocol": "Rank candidates A-F on the W1 register question WITHOUT opening this file. Conditions are mixed and the reviewer is not told the split. Unseal only after RANKS are recorded.",
+ "mapping": {
+  "candidate-A": {
+   "run": "W1ws-fable-rep1",
+   "condition": "with_skill"
+  },
+  "candidate-B": {
+   "run": "W1-fable-rep3",
+   "condition": "baseline"
+  },
+  "candidate-C": {
+   "run": "W1ws-fable-rep3",
+   "condition": "with_skill"
+  },
+  "candidate-D": {
+   "run": "W1-fable-rep2",
+   "condition": "baseline"
+  },
+  "candidate-E": {
+   "run": "W1-fable-rep1",
+   "condition": "baseline"
+  },
+  "candidate-F": {
+   "run": "W1ws-fable-rep2",
+   "condition": "with_skill"
+  }
+ }
+}

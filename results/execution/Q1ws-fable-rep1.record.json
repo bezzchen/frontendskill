@@ -1,0 +1,32 @@
+{
+ "run": "Q1ws-fable-rep1",
+ "date": "2026-08-27",
+ "condition": "with_skill_v1 (evals/withskill_protocol.md)",
+ "model": "claude-fable-5 (explicit Agent model override, matching the baseline arm)",
+ "fixture": "next-tailwind-base edf3be4 (pristine copy verified)",
+ "interruptions": "none - single 19-minute run",
+ "implementation": "Register Q declared unprompted, spectacle explicitly declined. ZERO dependencies added (verified: no package.json diff) - three finite 120-180ms CSS transitions plus one sub-second save spinner. Fit gate run even for the toggle switch: headless-UI libraries were the adopt candidate, declined for a native input[type=checkbox][role=switch] + CSS at zero cost. Agent noted no ambient animation exists, so nothing to pause. 3 files, 444 insertions: accessible form validation (aria-invalid/describedby, focus-first-invalid), switch rows, password show/hide, and a real save state machine (idle -> unsaved -> saving -> saved) that fixes the fixture's never-resetting Saved flag. Verified reduced motion under UA-level forcing against a motion control run.",
+ "measurements": {
+  "m6_static": "PASS (build, no interval loops); cleanup-path NOT_MEASURED = no loop owner exists, which is correct for this register",
+  "m1": "N_A_NO_CONTINUOUS_ANIMATION both profiles - no ambient loop, as the quiet register requires",
+  "m2_offscreen": "N_A_NO_CONTINUOUS_ANIMATION",
+  "m2b_hidden_pause": "N_A_NO_CONTINUOUS_ANIMATION",
+  "m3_reduced_motion": "PASS both profiles, full content parity",
+  "m5_accessible_parallel": "PASS both profiles",
+  "console_errors": "none beyond fixture baseline"
+ },
+ "register_verdict": "Instrument-side clean and consistent with the baseline Q1 pattern (all three baseline reps also ran with no continuous animation). Register FIT itself is human-scored per method rule 7 - see results/OWNER_SCORING_WORKSHEET.md section 3.",
+ "over_design_flags_observed_by_instrument": "none - zero dependencies, no ambient animation, no scroll-reveal, no parallax; motion confined to interaction-scoped state changes",
+ "artifacts": {
+  "diff": "results/execution/Q1ws-fable-rep1.diff (3 files, 444 insertions)",
+  "source_snapshot": "results/execution/Q1ws-fable-rep1-source.zip (+ safety copy in ~/Documents)",
+  "measurements": "results/execution/Q1ws-fable-rep1.json",
+  "screenshots": "results/execution/screenshots/Q1ws-fable-rep1-*.png"
+ },
+ "cost": {
+  "tokens": 143663,
+  "duration_ms": 1139329,
+  "duration_min": 19.0,
+  "convention": "tokens = total context tokens reported by the orchestrating harness"
+ }
+}

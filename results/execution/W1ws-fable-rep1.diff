@@ -1,0 +1,2210 @@
+diff --git a/app/components/Curves.jsx b/app/components/Curves.jsx
+new file mode 100644
+index 0000000..e520cef
+--- /dev/null
++++ b/app/components/Curves.jsx
+@@ -0,0 +1,147 @@
++"use client";
++
++/*
++ * The curve library — an interactive easing playground styled like
++ * Meridian's curve editor. Selecting a preset redraws the bezier plot
++ * (with grabbable-looking handles) and runs a single finite demo pass
++ * on the runway below. Event-driven only: nothing loops, nothing runs
++ * while unattended, and under prefers-reduced-motion the ball never
++ * moves — the plot alone carries the meaning.
++ */
++
++import { useEffect, useRef, useState } from "react";
++import { cubicBezier } from "../lib/engine";
++
++const S = 260; // plot size in svg units
++
++const PRESETS = [
++  {
++    id: "outQuint",
++    bez: [0.22, 1, 0.36, 1],
++    blurb: "The house default. Fast off the mark, lands like it planned to.",
++  },
++  {
++    id: "outExpo",
++    bez: [0.16, 1, 0.3, 1],
++    blurb: "Snaps to attention, then whispers into place. Good for reveals.",
++  },
++  {
++    id: "inOutCubic",
++    bez: [0.65, 0, 0.35, 1],
++    blurb: "Symmetric. For moves that both start and end on screen.",
++  },
++  {
++    id: "outBack",
++    bez: [0.34, 1.56, 0.64, 1],
++    blurb: "Overshoots by a breath and settles. Buttons love it.",
++  },
++  {
++    id: "inOutBack",
++    bez: [0.68, -0.55, 0.27, 1.55],
++    blurb: "Winds up before it goes. Anticipation, straight from animation school.",
++  },
++  {
++    id: "linear",
++    bez: [0, 0, 1, 1],
++    blurb: "No opinion. Fine for opacity, suspicious anywhere else.",
++  },
++];
++
++export default function Curves() {
++  const [active, setActive] = useState(PRESETS[0]);
++  const ball = useRef(null);
++  const runway = useRef(null);
++  const anim = useRef(0);
++  const reduced = useRef(false);
++
++  useEffect(() => {
++    const rmq = window.matchMedia("(prefers-reduced-motion: reduce)");
++    reduced.current = rmq.matches;
++    const onRM = (e) => (reduced.current = e.matches);
++    rmq.addEventListener?.("change", onRM);
++    return () => {
++      rmq.removeEventListener?.("change", onRM);
++      cancelAnimationFrame(anim.current);
++    };
++  }, []);
++
++  const run = (preset) => {
++    setActive(preset);
++    cancelAnimationFrame(anim.current);
++    if (reduced.current || !ball.current || !runway.current) return;
++    const fn = cubicBezier(...preset.bez);
++    const width = runway.current.clientWidth - 16;
++    const start = performance.now();
++    const durMs = 900;
++    const step = (now) => {
++      const u = Math.min((now - start) / durMs, 1);
++      const v = fn(u);
++      if (ball.current)
++        ball.current.style.transform = `translate3d(${v * width}px, 0, 0)`;
++      if (u < 1) anim.current = requestAnimationFrame(step);
++    };
++    anim.current = requestAnimationFrame(step);
++  };
++
++  const [x1, y1, x2, y2] = active.bez;
++  const p1 = { x: x1 * S, y: (1 - y1) * S };
++  const p2 = { x: x2 * S, y: (1 - y2) * S };
++  const d = `M 0 ${S} C ${p1.x} ${p1.y} ${p2.x} ${p2.y} ${S} 0`;
++
++  return (
++    <div className="curves-grid">
++      <div className="curve-plot">
++        <svg viewBox="-14 -64 288 388" role="img" aria-label={`Easing curve ${active.id}`}>
++          {/* grid */}
++          {[0.25, 0.5, 0.75].map((g) => (
++            <g key={g} stroke="#2b2e34" strokeWidth="1">
++              <line x1={g * S} y1="0" x2={g * S} y2={S} />
++              <line x1="0" y1={g * S} x2={S} y2={g * S} />
++            </g>
++          ))}
++          <rect x="0" y="0" width={S} height={S} fill="none" stroke="#3a3e45" strokeWidth="1.2" />
++          {/* control handles, like the editor's */}
++          <line x1="0" y1={S} x2={p1.x} y2={p1.y} stroke="#2c5bff" strokeWidth="1.2" strokeDasharray="4 4" />
++          <line x1={S} y1="0" x2={p2.x} y2={p2.y} stroke="#2c5bff" strokeWidth="1.2" strokeDasharray="4 4" />
++          <path d={d} fill="none" stroke="#dda53e" strokeWidth="2.5" />
++          <circle cx="0" cy={S} r="5" fill="#131417" stroke="#e7e8e3" strokeWidth="1.4" />
++          <circle cx={S} cy="0" r="5" fill="#131417" stroke="#e7e8e3" strokeWidth="1.4" />
++          <circle cx={p1.x} cy={p1.y} r="5.5" fill="#2c5bff" />
++          <circle cx={p2.x} cy={p2.y} r="5.5" fill="#2c5bff" />
++          <text x="0" y={S + 22} fill="#999ea6" fontSize="11" fontFamily="var(--font-spline), monospace">
++            t = 0
++          </text>
++          <text x={S} y={S + 22} textAnchor="end" fill="#999ea6" fontSize="11" fontFamily="var(--font-spline), monospace">
++            t = 1
++          </text>
++        </svg>
++        <p className="curve-readout mono" aria-live="polite">
++          cubic-bezier({active.bez.map((n) => n.toFixed(2)).join(", ")})
++        </p>
++      </div>
++
++      <div>
++        <div className="curve-chips" role="group" aria-label="Easing presets">
++          {PRESETS.map((p) => (
++            <button
++              key={p.id}
++              type="button"
++              className="curve-chip"
++              aria-pressed={active.id === p.id}
++              onClick={() => run(p)}
++            >
++              {p.id}
++            </button>
++          ))}
++        </div>
++        <p className="curve-blurb">{active.blurb}</p>
++        <div className="runway" ref={runway} aria-hidden="true">
++          <div className="runway-ticks" />
++          <span className="runway-label">in</span>
++          <span className="runway-label end">out</span>
++          <div className="runway-ball" ref={ball} />
++        </div>
++      </div>
++    </div>
++  );
++}
+diff --git a/app/components/Hero.jsx b/app/components/Hero.jsx
+new file mode 100644
+index 0000000..17eecd1
+--- /dev/null
++++ b/app/components/Hero.jsx
+@@ -0,0 +1,600 @@
++"use client";
++
++/*
++ * The signature moment: the hero is a real Meridian composition.
++ * A 6-second, 60 fps keyframe timeline drives the actual page hero —
++ * play it, scrub it with the red playhead, or step it frame by frame.
++ *
++ * Behavior contract (verified in the browser, not assumed):
++ *  - pauses when the document is hidden, resumes if it was playing
++ *  - pauses when the hero scrolls out of view, resumes when it returns
++ *  - never auto-plays under prefers-reduced-motion (final frame shown;
++ *    the transport still works — motion only on explicit request)
++ */
++
++import { useEffect, useLayoutEffect, useRef, useState } from "react";
++import { DUR, FPS, sample, smpte, clock } from "../lib/engine";
++
++/* Keyframe channels for every element on the stage. */
++const CH = {
++  grid: { o: [{ t: 0, v: 0 }, { t: 0.7, v: 1, e: "outQuint" }] },
++  line1: {
++    y: [{ t: 0.25, v: 44 }, { t: 1.35, v: 0, e: "outExpo" }],
++    o: [{ t: 0.25, v: 0 }, { t: 1.05, v: 1, e: "outQuint" }],
++    b: [{ t: 0.25, v: 7 }, { t: 1.3, v: 0, e: "outQuint" }],
++  },
++  line2: {
++    y: [{ t: 0.55, v: 44 }, { t: 1.7, v: 0, e: "outExpo" }],
++    o: [{ t: 0.55, v: 0 }, { t: 1.35, v: 1, e: "outQuint" }],
++    b: [{ t: 0.55, v: 7 }, { t: 1.65, v: 0, e: "outQuint" }],
++  },
++  selbox: {
++    o: [{ t: 1.7, v: 0 }, { t: 1.95, v: 1, e: "outQuint" }],
++    d: [{ t: 1.7, v: 0 }, { t: 2.45, v: 1, e: "inOutCubic" }],
++    hs: [{ t: 2.3, v: 0 }, { t: 2.6, v: 1, e: "outBack" }],
++  },
++  badge: {
++    o: [{ t: 1.85, v: 0 }, { t: 2.15, v: 1, e: "outQuint" }],
++    y: [{ t: 1.85, v: 8 }, { t: 2.15, v: 0, e: "outQuint" }],
++  },
++  sub: {
++    y: [{ t: 2.5, v: 18 }, { t: 3.2, v: 0, e: "outQuint" }],
++    o: [{ t: 2.5, v: 0 }, { t: 3.1, v: 1, e: "outQuint" }],
++  },
++  cta: {
++    y: [{ t: 2.8, v: 18 }, { t: 3.5, v: 0, e: "outQuint" }],
++    o: [{ t: 2.8, v: 0 }, { t: 3.3, v: 1, e: "outQuint" }],
++    s: [{ t: 2.8, v: 0.92 }, { t: 3.6, v: 1, e: "outBack" }],
++  },
++  flight: {
++    o: [{ t: 3.05, v: 0 }, { t: 3.35, v: 1, e: "outQuint" }],
++    d: [{ t: 3.05, v: 0 }, { t: 4.0, v: 1, e: "inOutCubic" }],
++    p: [{ t: 3.9, v: 0 }, { t: 5.5, v: 1, e: "inOutCubic" }],
++    r: [{ t: 3.9, v: -10 }, { t: 5.5, v: 8, e: "inOutCubic" }],
++    co: [{ t: 3.75, v: 0 }, { t: 4.0, v: 1, e: "outQuint" }],
++  },
++  mer: {
++    o: [
++      { t: 0, v: 0 },
++      { t: 0.12, v: 0.85 },
++      { t: 5.55, v: 0.85 },
++      { t: 5.95, v: 0 },
++    ],
++  },
++};
++
++/* What the timeline panel displays — same times the engine samples. */
++const TRACKS = [
++  { id: "canvas.grid", vno: "V1", kfs: [0, 0.7] },
++  { id: "headline.line-1", vno: "V2", kfs: [0.25, 1.35] },
++  { id: "headline.line-2", vno: "V3", kfs: [0.55, 1.7] },
++  { id: "selection.box", vno: "V4", kfs: [1.7, 2.45, 2.6] },
++  { id: "copy.rise", vno: "V5", kfs: [2.5, 3.2] },
++  { id: "cta.spring", vno: "V6", kfs: [2.8, 3.6] },
++  { id: "layer-01.flight", vno: "V7", kfs: [3.05, 4.0, 5.5] },
++];
++
++const FLIGHT_D =
++  "M 26 36 C 170 -8 330 34 372 128 C 404 200 380 268 300 306 C 246 332 176 330 140 300";
++
++const pct = (t) => `${(t / DUR) * 100}%`;
++
++export default function Hero() {
++  const heroEl = useRef(null);
++  const stageEl = useRef(null);
++  const dressEl = useRef(null);
++  const merEl = useRef(null);
++  const h1Wrap = useRef(null);
++  const l1 = useRef(null);
++  const l2 = useRef(null);
++  const selSvg = useRef(null);
++  const badgeEl = useRef(null);
++  const subEl = useRef(null);
++  const ctaEl = useRef(null);
++  const flightSvg = useRef(null);
++  const drawPath = useRef(null);
++  const chipG = useRef(null);
++  const pheadEl = useRef(null);
++  const tcMain = useRef(null);
++  const scrubEl = useRef(null);
++  const lanesEl = useRef(null);
++
++  const [playing, setPlaying] = useState(false);
++  const [box, setBox] = useState({ w: 0, h: 0 });
++
++  const S = useRef({
++    t: DUR,
++    playing: false,
++    wasPlaying: false,
++    inView: true,
++    scrubbing: false,
++    scrubWasPlaying: false,
++    raf: 0,
++    last: 0,
++    pathLen: 0,
++    stageW: 0,
++    reduced: false,
++    userTouched: false,
++  }).current;
++
++  /* ---- engine ------------------------------------------------- */
++
++  const apply = (t) => {
++    if (dressEl.current) dressEl.current.style.opacity = sample(CH.grid.o, t);
++
++    const setLine = (el, ch) => {
++      if (!el.current) return;
++      const y = sample(ch.y, t);
++      const o = sample(ch.o, t);
++      const b = sample(ch.b, t);
++      el.current.style.transform = `translate3d(0, ${y}px, 0)`;
++      el.current.style.opacity = o;
++      el.current.style.filter = b > 0.02 ? `blur(${b}px)` : "";
++    };
++    setLine(l1, CH.line1);
++    setLine(l2, CH.line2);
++
++    if (selSvg.current) {
++      const el = selSvg.current;
++      el.style.opacity = sample(CH.selbox.o, t);
++      el.style.setProperty("--boxdash", String(1 - sample(CH.selbox.d, t)));
++      el.style.setProperty("--hs", String(sample(CH.selbox.hs, t)));
++    }
++    if (badgeEl.current) {
++      badgeEl.current.style.opacity = sample(CH.badge.o, t);
++      badgeEl.current.style.transform = `translate3d(0, ${sample(CH.badge.y, t)}px, 0)`;
++    }
++    if (subEl.current) {
++      subEl.current.style.opacity = sample(CH.sub.o, t);
++      subEl.current.style.transform = `translate3d(0, ${sample(CH.sub.y, t)}px, 0)`;
++    }
++    if (ctaEl.current) {
++      ctaEl.current.style.opacity = sample(CH.cta.o, t);
++      ctaEl.current.style.transform = `translate3d(0, ${sample(CH.cta.y, t)}px, 0) scale(${sample(CH.cta.s, t)})`;
++    }
++    if (flightSvg.current) {
++      const el = flightSvg.current;
++      el.style.opacity = sample(CH.flight.o, t);
++      el.style.setProperty("--pathdash", String(1 - sample(CH.flight.d, t)));
++      if (chipG.current && drawPath.current && S.pathLen > 0) {
++        const p = sample(CH.flight.p, t);
++        const pt = drawPath.current.getPointAtLength(p * S.pathLen);
++        chipG.current.setAttribute(
++          "transform",
++          `translate(${pt.x} ${pt.y}) rotate(${sample(CH.flight.r, t)})`
++        );
++        chipG.current.style.opacity = sample(CH.flight.co, t);
++      }
++    }
++    if (merEl.current) {
++      merEl.current.style.opacity = sample(CH.mer.o, t);
++      merEl.current.style.transform = `translateX(${(t / DUR) * S.stageW}px)`;
++    }
++    if (pheadEl.current) pheadEl.current.style.left = pct(t);
++    if (tcMain.current) tcMain.current.textContent = smpte(t);
++    if (scrubEl.current) {
++      const f = Math.round(t * FPS);
++      scrubEl.current.value = String(f);
++      scrubEl.current.setAttribute(
++        "aria-valuetext",
++        `${t.toFixed(2)} seconds of 6 — frame ${f} of 360`
++      );
++    }
++    clock.publish(t, S.playing);
++  };
++
++  const tick = (now) => {
++    if (!S.playing) return;
++    const dt = Math.min((now - S.last) / 1000, 0.05);
++    S.last = now;
++    S.t = Math.min(S.t + dt, DUR);
++    apply(S.t);
++    if (S.t >= DUR) {
++      S.playing = false;
++      setPlaying(false);
++      clock.publish(S.t, false);
++    } else {
++      S.raf = requestAnimationFrame(tick);
++    }
++  };
++
++  const play = () => {
++    if (S.playing) return;
++    if (S.t >= DUR - 1e-6) S.t = 0;
++    S.playing = true;
++    setPlaying(true);
++    S.last = performance.now();
++    cancelAnimationFrame(S.raf);
++    S.raf = requestAnimationFrame(tick);
++    clock.publish(S.t, true);
++  };
++
++  const pause = () => {
++    if (!S.playing) return;
++    S.playing = false;
++    setPlaying(false);
++    cancelAnimationFrame(S.raf);
++    clock.publish(S.t, false);
++  };
++
++  const seek = (t) => {
++    S.t = Math.min(Math.max(t, 0), DUR);
++    apply(S.t);
++  };
++
++  /* ---- measurement -------------------------------------------- */
++
++  useLayoutEffect(() => {
++    const measure = () => {
++      if (selSvg.current) {
++        // .selbox is a plain div (insets are reliable on non-replaced
++        // elements); the svg inside just fills it
++        setBox({
++          w: selSvg.current.clientWidth,
++          h: selSvg.current.clientHeight,
++        });
++      }
++      if (stageEl.current) S.stageW = stageEl.current.clientWidth;
++      try {
++        S.pathLen = drawPath.current ? drawPath.current.getTotalLength() : 0;
++      } catch {
++        S.pathLen = 0;
++      }
++    };
++    measure();
++    const ro = new ResizeObserver(measure);
++    if (h1Wrap.current) ro.observe(h1Wrap.current);
++    if (stageEl.current) ro.observe(stageEl.current);
++    return () => ro.disconnect();
++    // eslint-disable-next-line react-hooks/exhaustive-deps
++  }, []);
++
++  /* ---- mount: reduced motion, autoplay, visibility, exposure --- */
++
++  useEffect(() => {
++    const rmq = window.matchMedia("(prefers-reduced-motion: reduce)");
++    S.reduced = rmq.matches;
++    const onRM = (e) => {
++      S.reduced = e.matches;
++      if (e.matches) {
++        pause();
++        seek(DUR);
++      }
++    };
++    rmq.addEventListener?.("change", onRM);
++
++    apply(S.t); // paint the resting (final) frame deterministically
++
++    let cancelled = false;
++    let tm = 0;
++    if (!S.reduced) {
++      const kick = () => {
++        if (cancelled || S.userTouched || S.reduced) return;
++        if (document.hidden || !S.inView) return;
++        seek(0);
++        play();
++      };
++      tm = window.setTimeout(kick, 1200);
++      document.fonts?.ready?.then(() => {
++        if (cancelled) return;
++        window.clearTimeout(tm);
++        tm = window.setTimeout(kick, 130);
++      });
++    }
++
++    const onVis = () => {
++      if (document.hidden) {
++        if (S.playing) {
++          S.wasPlaying = true;
++          pause();
++        }
++      } else if (S.wasPlaying && S.inView) {
++        S.wasPlaying = false;
++        play();
++      }
++    };
++    document.addEventListener("visibilitychange", onVis);
++
++    const io = new IntersectionObserver(
++      ([en]) => {
++        S.inView = en.isIntersecting;
++        if (!en.isIntersecting) {
++          if (S.playing) {
++            S.wasPlaying = true;
++            pause();
++          }
++        } else if (S.wasPlaying && !document.hidden) {
++          S.wasPlaying = false;
++          play();
++        }
++      },
++      { threshold: 0.08 }
++    );
++    if (heroEl.current) io.observe(heroEl.current);
++
++    // Small verifiable handle (and a console toy for the curious).
++    window.__meridian = {
++      time: () => S.t,
++      playing: () => S.playing,
++      play,
++      pause,
++      seek: (t) => {
++        S.userTouched = true;
++        pause();
++        seek(t);
++      },
++    };
++
++    return () => {
++      cancelled = true;
++      window.clearTimeout(tm);
++      rmq.removeEventListener?.("change", onRM);
++      document.removeEventListener("visibilitychange", onVis);
++      io.disconnect();
++      cancelAnimationFrame(S.raf);
++      delete window.__meridian;
++    };
++    // eslint-disable-next-line react-hooks/exhaustive-deps
++  }, []);
++
++  /* ---- transport + scrub handlers ------------------------------ */
++
++  const onToggle = () => {
++    S.userTouched = true;
++    if (S.playing) pause();
++    else play();
++  };
++  const onRestart = () => {
++    S.userTouched = true;
++    pause();
++    seek(0);
++  };
++
++  const seekFromPointer = (e) => {
++    const lanes = lanesEl.current;
++    if (!lanes) return;
++    const rect = lanes.getBoundingClientRect();
++    const u = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
++    seek(u * DUR);
++  };
++  const onPointerDown = (e) => {
++    S.userTouched = true;
++    if (e.pointerType === "mouse" && e.button !== 0) return;
++    lanesEl.current?.setPointerCapture(e.pointerId);
++    S.scrubWasPlaying = S.playing;
++    pause();
++    S.scrubbing = true;
++    seekFromPointer(e);
++  };
++  const onPointerMove = (e) => {
++    if (S.scrubbing) seekFromPointer(e);
++  };
++  const onPointerUp = (e) => {
++    if (!S.scrubbing) return;
++    S.scrubbing = false;
++    lanesEl.current?.releasePointerCapture?.(e.pointerId);
++    if (S.scrubWasPlaying && S.t < DUR) play();
++    S.scrubWasPlaying = false;
++  };
++  const onScrubInput = (e) => {
++    S.userTouched = true;
++    pause();
++    seek(Number(e.target.value) / FPS);
++  };
++
++  /* ---- render --------------------------------------------------- */
++
++  const handles =
++    box.w > 4
++      ? [
++          [0, 0],
++          [box.w / 2, 0],
++          [box.w, 0],
++          [box.w, box.h / 2],
++          [box.w, box.h],
++          [box.w / 2, box.h],
++          [0, box.h],
++          [0, box.h / 2],
++        ]
++      : [];
++
++  return (
++    <section className="hero" ref={heroEl} aria-label="Meridian introduction">
++      <div className="stage" ref={stageEl}>
++        <div className="stage-dress" ref={dressEl} aria-hidden="true">
++          <div className="checker" />
++          <div className="ruler-x">
++            {Array.from({ length: 24 }, (_, i) => (
++              <span key={i}>{i * 120}</span>
++            ))}
++          </div>
++          <div className="ruler-y" />
++          <div className="ruler-corner" />
++        </div>
++
++        <div className="stage-meridian" ref={merEl} aria-hidden="true" />
++
++        <svg
++          className="flight"
++          ref={flightSvg}
++          viewBox="0 0 440 400"
++          aria-hidden="true"
++          focusable="false"
++        >
++          <path className="guide" d={FLIGHT_D} pathLength="1" />
++          <path className="draw" d={FLIGHT_D} pathLength="1" ref={drawPath} />
++          <line className="pinline" x1="26" y1="36" x2="110" y2="12" />
++          <circle className="pin" cx="26" cy="36" r="4" />
++          <circle className="pin" cx="110" cy="12" r="3" />
++          <line className="pinline" x1="140" y1="300" x2="188" y2="336" />
++          <circle className="pin" cx="140" cy="300" r="4" />
++          <circle className="pin" cx="188" cy="336" r="3" />
++          <g ref={chipG} style={{ opacity: 0 }} transform="translate(26 36)">
++            <rect className="chip-body" x="-16" y="-16" width="32" height="32" rx="6" />
++            <rect className="chip-key" x="-4.5" y="-4.5" width="9" height="9" transform="rotate(45)" />
++          </g>
++        </svg>
++
++        <div className="stage-inner wrap">
++          <p className="layer-badge mono" ref={badgeEl}>
++            <span className="lb-t" aria-hidden="true">
++              T
++            </span>
++            hero.headline
++            <span className="lb-sel">— selected</span>
++          </p>
++
++          <div className="h1wrap" ref={h1Wrap}>
++            <h1 className="display">
++              <span className="h1line" ref={l1}>
++                Every frame,
++              </span>
++              <span className="h1line it" ref={l2}>
++                on purpose.
++              </span>
++            </h1>
++            <div className="selbox" ref={selSvg} aria-hidden="true">
++              {/* svg fills the inset-positioned div; user units = CSS px */}
++              <svg width="100%" height="100%" focusable="false">
++                <rect
++                  className="box"
++                  x="0.75"
++                  y="0.75"
++                  width={Math.max(box.w - 1.5, 1)}
++                  height={Math.max(box.h - 1.5, 1)}
++                  pathLength="1"
++                />
++                {handles.map(([x, y], i) => (
++                  <rect key={i} className="hnd" x={x - 3.5} y={y - 3.5} width="7" height="7" />
++                ))}
++              </svg>
++            </div>
++          </div>
++
++          <p className="sub" ref={subEl}>
++            Meridian is a timeline-based motion editor for the web. Set keyframes on a
++            real canvas, shape the curves between them, then ship the result as{" "}
++            <strong>plain, production-ready code</strong>.
++          </p>
++
++          <div className="cta-row" ref={ctaEl}>
++            <a className="btn btn-primary" href="#beta">
++              Request beta access
++            </a>
++            <a className="btn btn-ghost" href="#code">
++              See what it ships
++            </a>
++            <p className="cta-note mono">
++              PRIVATE BETA · EXPORTS WAAPI + CSS · RUNTIME 3.2 KB
++            </p>
++          </div>
++        </div>
++      </div>
++
++      {/* ---- the timeline panel: this drives the hero above ---- */}
++      <div
++        className="tl-panel"
++        role="group"
++        aria-label="Timeline for the hero animation — the hero above follows the playhead"
++      >
++        <div className="tl-top">
++          <div className="tl-transport">
++            <button className="tl-btn" type="button" onClick={onRestart} aria-label="Back to start">
++              <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
++                <path d="M2.5 1.5v11" stroke="currentColor" strokeWidth="2" />
++                <path d="M12.5 1.5 5 7l7.5 5.5z" fill="currentColor" />
++              </svg>
++            </button>
++            <button
++              className="tl-btn"
++              type="button"
++              onClick={onToggle}
++              aria-label={playing ? "Pause" : "Play"}
++            >
++              {playing ? (
++                <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
++                  <rect x="2" y="1.5" width="3.4" height="11" fill="currentColor" />
++                  <rect x="8.6" y="1.5" width="3.4" height="11" fill="currentColor" />
++                </svg>
++              ) : (
++                <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
++                  <path d="M3 1.5 12.5 7 3 12.5z" fill="currentColor" />
++                </svg>
++              )}
++            </button>
++          </div>
++          <div className="tl-tc mono" aria-hidden="true">
++            <span ref={tcMain}>00:00:06:00</span>{" "}
++            <span className="dim">/ 00:00:06:00 · 60 FPS</span>
++          </div>
++          <div className="tl-file mono">
++            hero.mtl · 7 tracks · <span className="tl-hint">drag the red playhead</span>
++          </div>
++        </div>
++
++        <div className="tl-body">
++          <div className="tl-labels mono" aria-hidden="true">
++            {TRACKS.map((tr) => (
++              <div className="tl-lab" key={tr.id}>
++                <span className="vno">{tr.vno}</span>
++                {tr.id}
++              </div>
++            ))}
++          </div>
++
++          <div
++            className="tl-lanes"
++            ref={lanesEl}
++            onPointerDown={onPointerDown}
++            onPointerMove={onPointerMove}
++            onPointerUp={onPointerUp}
++            onPointerCancel={onPointerUp}
++          >
++            <div className="tl-ruler mono" aria-hidden="true">
++              {Array.from({ length: 6 }, (_, i) => (
++                <span key={i}>{i}s</span>
++              ))}
++            </div>
++
++            {TRACKS.map((tr) => {
++              const inT = tr.kfs[0];
++              const outT = tr.kfs[tr.kfs.length - 1];
++              return (
++                <div className="tl-row" key={tr.id} aria-hidden="true">
++                  <div
++                    className="tl-bar"
++                    style={{ left: pct(inT), width: `${((outT - inT) / DUR) * 100}%` }}
++                  />
++                  {tr.kfs.map((k) => (
++                    <span className="tl-kf" key={k} style={{ left: pct(k) }} />
++                  ))}
++                </div>
++              );
++            })}
++
++            <div className="tl-phead" ref={pheadEl} aria-hidden="true">
++              <div className="tl-phead-flag" />
++            </div>
++
++            <input
++              className="tl-scrub"
++              ref={scrubEl}
++              type="range"
++              min="0"
++              max="360"
++              step="1"
++              defaultValue="360"
++              aria-label="Playhead — scrub the hero timeline"
++              aria-describedby="scrub-help"
++              onInput={onScrubInput}
++            />
++            <span id="scrub-help" className="sr-only">
++              Left and right arrow keys step one frame at a time. The hero animation
++              above follows the playhead.
++            </span>
++          </div>
++        </div>
++      </div>
++    </section>
++  );
++}
+diff --git a/app/components/RevealManager.jsx b/app/components/RevealManager.jsx
+new file mode 100644
+index 0000000..ac37542
+--- /dev/null
++++ b/app/components/RevealManager.jsx
+@@ -0,0 +1,45 @@
++"use client";
++
++/*
++ * One-shot scroll reveals. Progressive-enhancement rules:
++ *  - content is fully visible by default (no JS, no problem)
++ *  - hides an element only if JS is running, the element is still below
++ *    the fold, and prefers-reduced-motion is NOT set
++ *  - IntersectionObserver reveals once, then unobserves (no ambient work)
++ */
++
++import { useEffect } from "react";
++
++export default function RevealManager() {
++  useEffect(() => {
++    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
++    const els = Array.from(document.querySelectorAll("[data-reveal]"));
++    if (!els.length) return;
++
++    const vh = window.innerHeight;
++    const pending = els.filter((el) => {
++      if (el.getBoundingClientRect().top > vh * 0.9) {
++        el.classList.add("rv-pre");
++        return true;
++      }
++      return false;
++    });
++    if (!pending.length) return;
++
++    const io = new IntersectionObserver(
++      (entries) => {
++        for (const en of entries) {
++          if (en.isIntersecting) {
++            en.target.classList.add("rv-in");
++            io.unobserve(en.target);
++          }
++        }
++      },
++      { threshold: 0.12, rootMargin: "0px 0px -6% 0px" }
++    );
++    pending.forEach((el) => io.observe(el));
++    return () => io.disconnect();
++  }, []);
++
++  return null;
++}
+diff --git a/app/components/TimecodeChip.jsx b/app/components/TimecodeChip.jsx
+new file mode 100644
+index 0000000..355b402
+--- /dev/null
++++ b/app/components/TimecodeChip.jsx
+@@ -0,0 +1,29 @@
++"use client";
++
++/*
++ * App-bar timecode chip. Watches the hero engine's clock bus and writes
++ * text directly — zero React re-renders per frame. Decorative chrome
++ * (aria-hidden): the timeline panel's slider is the accessible control.
++ */
++
++import { useEffect, useRef } from "react";
++import { clock, smpte } from "../lib/engine";
++
++export default function TimecodeChip() {
++  const txt = useRef(null);
++  const dot = useRef(null);
++
++  useEffect(() => {
++    return clock.subscribe((t, playing) => {
++      if (txt.current) txt.current.textContent = smpte(t);
++      if (dot.current) dot.current.dataset.live = playing ? "1" : "0";
++    });
++  }, []);
++
++  return (
++    <span className="tc-chip mono" aria-hidden="true">
++      <span className="tc-dot" ref={dot} />
++      <span ref={txt}>00:00:06:00</span>
++    </span>
++  );
++}
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..5edd073 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -1,26 +1,882 @@
+ @import "tailwindcss";
+ 
++/* ------------------------------------------------------------------
++   Meridian — launch page
++   Palette is functional, borrowed from motion-editor chrome:
++     porcelain / graphite  = the two grounds (canvas vs. panel)
++     select (blue)         = selection + interaction, nothing else
++     key (gold)            = keyframes + data, nothing else
++     play (red)            = the playhead + time, nothing else
++------------------------------------------------------------------- */
++
++@theme inline {
++  --color-porcelain: #edeee9;
++  --color-porcelain-deep: #e0e1da;
++  --color-ink: #17181a;
++  --color-graphite: #131417;
++  --color-graphite-2: #1b1d21;
++  --color-chalk: #e7e8e3;
++  --color-select: #2c5bff;
++  --color-key: #dda53e;
++  --color-play: #ef4640;
++  --font-display: var(--font-fraunces);
++  --font-body: var(--font-schibsted);
++  --font-mono: var(--font-spline);
++}
++
+ :root {
+-  color-scheme: light dark;
+-  --background: #f5f5f3;
+-  --foreground: #161616;
+-  --muted: #6b6b66;
+-  --surface: #ffffff;
+-  --line: #deded8;
+-}
+-
+-@media (prefers-color-scheme: dark) {
+-  :root {
+-    --background: #111110;
+-    --foreground: #f5f5f2;
+-    --muted: #a0a099;
+-    --surface: #181817;
+-    --line: #31312f;
+-  }
++  color-scheme: light; /* the page commits to its own duotone */
++  --porcelain: #edeee9;
++  --porcelain-deep: #e0e1da;
++  --ink: #17181a;
++  --ink-soft: #565b61;
++  --graphite: #131417;
++  --graphite-2: #1b1d21;
++  --hairline-d: #2b2e34;
++  --hairline-l: #d3d4cc;
++  --chalk: #e7e8e3;
++  --chalk-mute: #999ea6;
++  --select: #2c5bff;
++  --select-deep: #1d43cf;
++  --key: #dda53e;
++  --play: #ef4640;
+ }
+ 
+ * { box-sizing: border-box; }
+-html { background: var(--background); color: var(--foreground); }
+-body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
++
++html {
++  background: var(--porcelain);
++  color: var(--ink);
++  scroll-behavior: smooth;
++}
++@media (prefers-reduced-motion: reduce) {
++  html { scroll-behavior: auto; }
++}
++
++body {
++  margin: 0;
++  font-family: var(--font-body), "Helvetica Neue", Arial, sans-serif;
++  font-size: 1.0625rem;
++  line-height: 1.65;
++  -webkit-font-smoothing: antialiased;
++  text-rendering: optimizeLegibility;
++}
++
+ a { color: inherit; }
+ button, input { font: inherit; }
++
++:focus-visible {
++  outline: 2px solid var(--select);
++  outline-offset: 2px;
++  border-radius: 2px;
++}
++
++::selection { background: color-mix(in srgb, var(--select) 22%, transparent); }
++
++.wrap {
++  max-width: 1240px;
++  margin-inline: auto;
++  padding-inline: clamp(26px, 4vw, 48px);
++}
++
++.mono {
++  font-family: var(--font-mono), ui-monospace, "SF Mono", Menlo, monospace;
++  font-variant-numeric: tabular-nums;
++}
++
++.chrome-label {
++  font-family: var(--font-mono), ui-monospace, Menlo, monospace;
++  font-size: 0.72rem;
++  letter-spacing: 0.14em;
++  text-transform: uppercase;
++}
++
++.display {
++  font-family: var(--font-display), Georgia, "Times New Roman", serif;
++  font-weight: 500;
++  font-variation-settings: "opsz" 130, "SOFT" 30, "WONK" 0;
++  letter-spacing: -0.015em;
++}
++.display .it {
++  font-style: italic;
++  font-variation-settings: "opsz" 130, "SOFT" 60, "WONK" 1;
++}
++
++.skip {
++  position: absolute;
++  left: -9999px;
++  z-index: 60;
++  background: var(--select);
++  color: #fff;
++  padding: 10px 16px;
++  border-radius: 0 0 8px 0;
++  text-decoration: none;
++  font-weight: 600;
++}
++.skip:focus-visible {
++  left: 0;
++  top: 0;
++}
++
++/* ---------------------------------------------------------------
++   App bar
++--------------------------------------------------------------- */
++.appbar {
++  position: sticky;
++  top: 0;
++  z-index: 40;
++  background: color-mix(in srgb, var(--porcelain) 88%, transparent);
++  backdrop-filter: blur(10px);
++  border-bottom: 1px solid var(--hairline-l);
++}
++.appbar-in {
++  display: flex;
++  align-items: center;
++  gap: 20px;
++  height: 56px;
++}
++.wordmark {
++  font-family: var(--font-mono), monospace;
++  font-weight: 600;
++  font-size: 0.95rem;
++  letter-spacing: 0.22em;
++  text-decoration: none;
++  display: inline-flex;
++  align-items: center;
++}
++.wordmark .ph-i {
++  display: inline-block;
++  width: 3px;
++  height: 0.95em;
++  margin: 0 0.14em 0 0.06em;
++  background: var(--play);
++  transform: translateY(0.12em);
++}
++.appbar nav {
++  display: flex;
++  gap: 26px;
++  margin-left: 30px;
++}
++.appbar nav a {
++  font-size: 0.86rem;
++  font-weight: 500;
++  color: var(--ink-soft);
++  text-decoration: none;
++}
++.appbar nav a:hover { color: var(--select-deep); }
++.appbar-right {
++  margin-left: auto;
++  display: flex;
++  align-items: center;
++  gap: 14px;
++}
++.tc-chip {
++  display: inline-flex;
++  align-items: center;
++  gap: 8px;
++  font-size: 0.75rem;
++  padding: 5px 10px;
++  border: 1px solid var(--hairline-l);
++  border-radius: 6px;
++  color: var(--ink-soft);
++  background: color-mix(in srgb, var(--porcelain-deep) 55%, transparent);
++}
++.tc-dot {
++  width: 7px;
++  height: 7px;
++  border-radius: 50%;
++  border: 1.5px solid var(--play);
++  background: transparent;
++}
++.tc-dot[data-live="1"] { background: var(--play); }
++@media (max-width: 860px) {
++  .appbar nav { display: none; }
++  .tc-chip { display: none; }
++}
++
++/* ---------------------------------------------------------------
++   Buttons
++--------------------------------------------------------------- */
++.btn {
++  display: inline-flex;
++  align-items: center;
++  gap: 8px;
++  font-weight: 600;
++  font-size: 0.95rem;
++  padding: 12px 22px;
++  border-radius: 9px;
++  border: 1px solid transparent;
++  text-decoration: none;
++  cursor: pointer;
++}
++.btn-primary {
++  background: var(--select);
++  color: #fff;
++}
++.btn-primary:hover { background: var(--select-deep); }
++.btn-ghost {
++  border-color: color-mix(in srgb, var(--ink) 26%, transparent);
++  color: var(--ink);
++  background: transparent;
++}
++.btn-ghost:hover {
++  border-color: var(--select);
++  color: var(--select-deep);
++}
++.btn-sm { padding: 8px 16px; font-size: 0.86rem; }
++.on-dark .btn-ghost { border-color: color-mix(in srgb, var(--chalk) 30%, transparent); color: var(--chalk); }
++.on-dark .btn-ghost:hover { border-color: var(--select); color: #a9bdff; }
++
++/* ---------------------------------------------------------------
++   Hero stage — "the canvas"
++--------------------------------------------------------------- */
++.hero { position: relative; }
++
++.stage {
++  position: relative;
++  overflow: hidden;
++  border-bottom: 1px solid var(--hairline-l);
++}
++
++.stage-dress { position: absolute; inset: 0; pointer-events: none; }
++.checker {
++  position: absolute;
++  inset: 26px 0 0 26px;
++  background-image: repeating-conic-gradient(
++    color-mix(in srgb, var(--porcelain-deep) 62%, var(--porcelain)) 0% 25%,
++    transparent 0% 50%
++  );
++  background-size: 28px 28px;
++}
++@media (max-width: 767px) {
++  .checker { inset: 26px 0 0 0; }
++}
++
++.ruler-x {
++  position: absolute;
++  top: 0; left: 26px; right: 0;
++  height: 26px;
++  border-bottom: 1px solid var(--hairline-l);
++  background-image:
++    repeating-linear-gradient(to right, var(--hairline-l) 0 1px, transparent 1px 24px);
++  background-position: bottom left;
++  background-size: 100% 7px;
++  background-repeat: repeat-x;
++  display: flex;
++  overflow: hidden;
++}
++.ruler-x span {
++  flex: 0 0 120px;
++  font-family: var(--font-mono), monospace;
++  font-size: 0.58rem;
++  color: var(--ink-soft);
++  padding: 3px 0 0 4px;
++  border-left: 1px solid var(--hairline-l);
++  height: 100%;
++}
++.ruler-y {
++  position: absolute;
++  top: 26px; left: 0; bottom: 0;
++  width: 26px;
++  border-right: 1px solid var(--hairline-l);
++  background-image:
++    repeating-linear-gradient(to bottom, var(--hairline-l) 0 1px, transparent 1px 24px);
++  background-position: top right;
++  background-size: 7px 100%;
++  background-repeat: repeat-y;
++}
++.ruler-corner {
++  position: absolute;
++  top: 0; left: 0;
++  width: 26px; height: 26px;
++  border-right: 1px solid var(--hairline-l);
++  border-bottom: 1px solid var(--hairline-l);
++  background: var(--porcelain);
++}
++@media (max-width: 767px) {
++  .ruler-y, .ruler-corner { display: none; }
++  .ruler-x { left: 0; }
++}
++
++.stage-meridian {
++  position: absolute;
++  top: 0; bottom: 0; left: 0;
++  width: 2px;
++  background: var(--play);
++  opacity: 0;
++  pointer-events: none;
++  z-index: 3;
++}
++.stage-meridian::after {
++  content: "";
++  position: absolute;
++  top: 26px; left: 2px;
++  border: 5px solid transparent;
++  border-left-color: var(--play);
++}
++
++.stage-inner {
++  position: relative;
++  z-index: 2;
++  padding-top: clamp(70px, 9.5vh, 118px);
++  padding-bottom: clamp(48px, 7vh, 96px);
++}
++
++.layer-badge {
++  display: flex;
++  width: fit-content;
++  align-items: center;
++  gap: 8px;
++  font-size: 0.72rem;
++  letter-spacing: 0.1em;
++  color: var(--select-deep);
++  border: 1px solid color-mix(in srgb, var(--select) 45%, transparent);
++  background: color-mix(in srgb, var(--select) 7%, transparent);
++  border-radius: 5px;
++  padding: 4px 10px 4px 6px;
++  margin: 0 0 26px;
++}
++.lb-t {
++  display: inline-grid;
++  place-items: center;
++  width: 16px; height: 16px;
++  border-radius: 3px;
++  background: var(--select);
++  color: #fff;
++  font-size: 0.62rem;
++  font-weight: 700;
++}
++.lb-sel { color: color-mix(in srgb, var(--select-deep) 62%, var(--ink-soft)); }
++
++.h1wrap {
++  position: relative;
++  display: inline-block;
++  max-width: 100%;
++}
++.hero h1 {
++  margin: 0;
++  font-size: clamp(3.1rem, 8.4vw, 7.4rem);
++  line-height: 0.99;
++}
++.h1line { display: block; will-change: transform, opacity, filter; }
++
++/* selection box drawn around the headline, like a selected layer */
++.selbox {
++  position: absolute;
++  inset: -20px -26px -14px -26px;
++  overflow: visible;
++  pointer-events: none;
++  opacity: 0;
++}
++@media (max-width: 767px) {
++  .selbox { inset: -12px -13px -9px -13px; }
++}
++.selbox svg {
++  display: block;
++  width: 100%;
++  height: 100%;
++  overflow: visible;
++}
++.selbox .box {
++  fill: none;
++  stroke: var(--select);
++  stroke-width: 1.5;
++  stroke-dasharray: 1;
++  stroke-dashoffset: var(--boxdash, 0);
++}
++.selbox .hnd {
++  fill: var(--porcelain);
++  stroke: var(--select);
++  stroke-width: 1.4;
++  transform-box: fill-box;
++  transform-origin: center;
++  scale: var(--hs, 1);
++}
++
++.hero .sub {
++  max-width: 34em;
++  margin: 34px 0 0;
++  font-size: clamp(1.02rem, 1.35vw, 1.16rem);
++  color: var(--ink-soft);
++  will-change: transform, opacity;
++}
++.hero .sub strong { color: var(--ink); font-weight: 600; }
++
++.cta-row {
++  display: flex;
++  align-items: center;
++  flex-wrap: wrap;
++  gap: 14px;
++  margin-top: 34px;
++  will-change: transform, opacity;
++}
++.cta-note {
++  flex-basis: 100%;
++  margin-top: 6px;
++  font-size: 0.72rem;
++  letter-spacing: 0.08em;
++  color: var(--ink-soft);
++}
++
++/* flight path — a motion path with bezier pins, canvas vernacular */
++.flight {
++  position: absolute;
++  z-index: 1;
++  top: 3%;
++  right: 1.5%;
++  width: min(36vw, 470px);
++  height: auto;
++  overflow: visible;
++  pointer-events: none;
++}
++@media (max-width: 1023px) { .flight { opacity: 0.5; width: 42vw; } }
++@media (max-width: 767px) { .flight { visibility: hidden; } }
++.flight .guide {
++  fill: none;
++  stroke: color-mix(in srgb, var(--ink) 34%, transparent);
++  stroke-width: 1.4;
++  stroke-linecap: round;
++  stroke-dasharray: 0.0022 0.024;
++}
++.flight .draw {
++  fill: none;
++  stroke: var(--ink);
++  stroke-width: 1.4;
++  stroke-dasharray: 1;
++  stroke-dashoffset: var(--pathdash, 0);
++}
++.flight .pin { fill: var(--porcelain); stroke: var(--select); stroke-width: 1.4; }
++.flight .pinline { stroke: var(--select); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.7; }
++.flight .chip-body {
++  fill: var(--graphite);
++  stroke: color-mix(in srgb, var(--chalk) 40%, transparent);
++  stroke-width: 1;
++}
++.flight .chip-key { fill: var(--key); }
++
++/* ---------------------------------------------------------------
++   Timeline panel — "the editor"
++--------------------------------------------------------------- */
++.tl-panel {
++  background: var(--graphite);
++  color: var(--chalk);
++  border-top: 2px solid var(--graphite);
++}
++.tl-top {
++  display: flex;
++  align-items: center;
++  gap: 18px;
++  padding: 10px clamp(26px, 4vw, 48px);
++  border-bottom: 1px solid var(--hairline-d);
++  flex-wrap: wrap;
++}
++.tl-transport { display: flex; gap: 6px; }
++.tl-btn {
++  display: inline-grid;
++  place-items: center;
++  width: 34px;
++  height: 30px;
++  border-radius: 6px;
++  border: 1px solid var(--hairline-d);
++  background: var(--graphite-2);
++  color: var(--chalk);
++  cursor: pointer;
++}
++.tl-btn:hover { border-color: color-mix(in srgb, var(--chalk) 34%, transparent); }
++.tl-btn svg { display: block; }
++.tl-tc {
++  font-size: 0.86rem;
++  color: var(--chalk);
++}
++.tl-tc .dim { color: var(--chalk-mute); font-size: 0.74rem; }
++.tl-file {
++  margin-left: auto;
++  font-size: 0.72rem;
++  letter-spacing: 0.12em;
++  color: var(--chalk-mute);
++  text-transform: uppercase;
++}
++.tl-hint { color: var(--key); }
++
++.tl-body {
++  display: grid;
++  grid-template-columns: 172px 1fr;
++  padding: 0 clamp(26px, 4vw, 48px) 18px;
++}
++@media (max-width: 767px) {
++  .tl-body { grid-template-columns: 96px 1fr; }
++}
++.tl-labels { padding-top: 26px; }
++.tl-lab {
++  height: 27px;
++  display: flex;
++  align-items: center;
++  font-size: 0.7rem;
++  color: var(--chalk-mute);
++  border-bottom: 1px solid color-mix(in srgb, var(--hairline-d) 55%, transparent);
++  padding-right: 12px;
++  white-space: nowrap;
++  overflow: hidden;
++  text-overflow: ellipsis;
++}
++.tl-lab .vno { color: var(--chalk); opacity: 0.55; margin-right: 8px; }
++
++.tl-lanes {
++  position: relative;
++  touch-action: none;
++  cursor: ew-resize;
++}
++.tl-lanes:has(.tl-scrub:focus-visible) {
++  outline: 2px solid var(--select);
++  outline-offset: 3px;
++  border-radius: 4px;
++}
++.tl-ruler {
++  height: 26px;
++  display: flex;
++  border-bottom: 1px solid var(--hairline-d);
++  background-image: repeating-linear-gradient(
++    to right,
++    color-mix(in srgb, var(--chalk) 22%, transparent) 0 1px,
++    transparent 1px calc(100% / 24)
++  );
++  background-size: 100% 6px;
++  background-position: bottom left;
++  background-repeat: repeat-x;
++}
++.tl-ruler span {
++  flex: 1 0 0;
++  font-size: 0.6rem;
++  color: var(--chalk-mute);
++  padding: 4px 0 0 5px;
++  border-left: 1px solid color-mix(in srgb, var(--chalk) 30%, transparent);
++}
++.tl-ruler span:first-child { border-left: none; }
++.tl-row {
++  position: relative;
++  height: 27px;
++  border-bottom: 1px solid color-mix(in srgb, var(--hairline-d) 55%, transparent);
++}
++.tl-bar {
++  position: absolute;
++  top: 7px;
++  height: 13px;
++  border-radius: 3px;
++  background: color-mix(in srgb, var(--chalk) 11%, transparent);
++  border: 1px solid color-mix(in srgb, var(--chalk) 20%, transparent);
++}
++.tl-kf {
++  position: absolute;
++  top: 50%;
++  width: 8px;
++  height: 8px;
++  background: var(--key);
++  border: 1px solid color-mix(in srgb, var(--graphite) 60%, var(--key));
++  transform: translate(-50%, -50%) rotate(45deg);
++}
++.tl-phead {
++  position: absolute;
++  top: 0;
++  bottom: 0;
++  left: 100%;
++  width: 2px;
++  margin-left: -1px;
++  background: var(--play);
++  pointer-events: none;
++  z-index: 2;
++}
++.tl-phead-flag {
++  position: absolute;
++  top: 0;
++  left: -5px;
++  width: 12px;
++  height: 14px;
++  background: var(--play);
++  clip-path: polygon(0 0, 100% 0, 100% 55%, 50% 100%, 0 55%);
++}
++.tl-scrub {
++  position: absolute;
++  inset: 0;
++  width: 100%;
++  height: 100%;
++  opacity: 0;
++  pointer-events: none; /* pointer input handled on .tl-lanes; this is the keyboard/AT control */
++}
++
++/* ---------------------------------------------------------------
++   Sections
++--------------------------------------------------------------- */
++.sec { padding: clamp(76px, 11vh, 130px) 0; }
++.sec-dark {
++  background: var(--graphite);
++  color: var(--chalk);
++}
++.eyebrow {
++  display: inline-flex;
++  align-items: center;
++  gap: 10px;
++  margin: 0 0 18px;
++  color: var(--ink-soft);
++}
++.sec-dark .eyebrow { color: var(--chalk-mute); }
++.eyebrow::before {
++  content: "";
++  width: 7px;
++  height: 7px;
++  background: var(--key);
++  transform: rotate(45deg);
++}
++.sec h2 {
++  margin: 0 0 14px;
++  font-size: clamp(1.9rem, 3.6vw, 3rem);
++  line-height: 1.08;
++}
++.sec .lede {
++  max-width: 36em;
++  color: var(--ink-soft);
++  margin: 0;
++}
++.sec-dark .lede { color: var(--chalk-mute); }
++
++/* features as tracks */
++.trackrows { margin-top: 54px; border-top: 1px solid var(--hairline-l); }
++.trackrow {
++  display: grid;
++  grid-template-columns: 200px 1fr;
++  gap: 26px;
++  padding: 34px 0;
++  border-bottom: 1px solid var(--hairline-l);
++}
++@media (max-width: 767px) {
++  .trackrow { grid-template-columns: 1fr; gap: 10px; padding: 26px 0; }
++}
++.trackrow .tr-rail {
++  display: flex;
++  align-items: baseline;
++  gap: 10px;
++  color: var(--ink-soft);
++}
++.tr-diamond {
++  width: 8px; height: 8px;
++  background: var(--key);
++  transform: rotate(45deg) translateY(-1px);
++  flex: none;
++}
++.trackrow h3 {
++  margin: 0 0 8px;
++  font-size: 1.35rem;
++  font-weight: 650;
++  letter-spacing: -0.01em;
++}
++.trackrow p { margin: 0; max-width: 42em; color: var(--ink-soft); }
++
++/* curve playground */
++.curves-grid {
++  display: grid;
++  grid-template-columns: minmax(300px, 420px) 1fr;
++  gap: clamp(28px, 5vw, 72px);
++  margin-top: 50px;
++  align-items: start;
++}
++@media (max-width: 900px) { .curves-grid { grid-template-columns: 1fr; } }
++.curve-plot {
++  background: var(--graphite-2);
++  border: 1px solid var(--hairline-d);
++  border-radius: 12px;
++  padding: 18px;
++  max-width: 430px;
++}
++.curve-plot svg { display: block; width: 100%; height: auto; overflow: visible; }
++.curve-readout {
++  margin-top: 14px;
++  font-size: 0.8rem;
++  color: var(--key);
++}
++.curve-chips {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 10px;
++}
++.curve-chip {
++  font-family: var(--font-mono), monospace;
++  font-size: 0.82rem;
++  padding: 9px 16px;
++  border-radius: 8px;
++  border: 1px solid var(--hairline-d);
++  background: var(--graphite-2);
++  color: var(--chalk-mute);
++  cursor: pointer;
++}
++.curve-chip:hover { color: var(--chalk); border-color: color-mix(in srgb, var(--chalk) 32%, transparent); }
++.curve-chip[aria-pressed="true"] {
++  color: var(--graphite);
++  background: var(--key);
++  border-color: var(--key);
++  font-weight: 600;
++}
++.curve-blurb {
++  margin: 22px 0 0;
++  max-width: 34em;
++  color: var(--chalk-mute);
++  min-height: 3.2em;
++}
++.runway {
++  position: relative;
++  margin-top: 34px;
++  height: 54px;
++  border-block: 1px solid var(--hairline-d);
++}
++.runway-ball {
++  position: absolute;
++  top: 50%;
++  left: 0;
++  width: 16px;
++  height: 16px;
++  margin-top: -8px;
++  border-radius: 50%;
++  background: var(--chalk);
++  will-change: transform;
++}
++.runway-ticks {
++  position: absolute;
++  inset: 0;
++  background-image: repeating-linear-gradient(
++    to right,
++    color-mix(in srgb, var(--chalk) 14%, transparent) 0 1px,
++    transparent 1px 10%
++  );
++}
++.runway-label {
++  position: absolute;
++  top: -1.9em;
++  font-size: 0.66rem;
++  letter-spacing: 0.12em;
++  color: var(--chalk-mute);
++  text-transform: uppercase;
++}
++.runway-label.end { right: 0; }
++
++/* code section */
++.code-grid {
++  display: grid;
++  grid-template-columns: 1.25fr 0.75fr;
++  gap: clamp(28px, 5vw, 64px);
++  margin-top: 50px;
++  align-items: start;
++}
++@media (max-width: 900px) { .code-grid { grid-template-columns: 1fr; } }
++.codecard {
++  background: var(--graphite);
++  color: var(--chalk);
++  border-radius: 12px;
++  border: 1px solid var(--hairline-l);
++  overflow: hidden;
++  box-shadow: 0 24px 60px -30px rgba(23, 24, 26, 0.45);
++}
++.codecard-top {
++  display: flex;
++  align-items: center;
++  gap: 10px;
++  padding: 10px 16px;
++  border-bottom: 1px solid var(--hairline-d);
++  color: var(--chalk-mute);
++  font-size: 0.74rem;
++  letter-spacing: 0.1em;
++}
++.codecard-top .dots { display: flex; gap: 5px; }
++.codecard-top .dots i {
++  width: 8px; height: 8px;
++  border-radius: 50%;
++  background: var(--hairline-d);
++}
++.codecard pre {
++  margin: 0;
++  padding: 20px 22px 24px;
++  overflow-x: auto;
++  font-family: var(--font-mono), monospace;
++  font-size: 0.82rem;
++  line-height: 1.75;
++}
++.tk-c { color: #6f747d; }
++.tk-k { color: #9db4ff; }
++.tk-s { color: var(--key); }
++.tk-f { color: var(--chalk); }
++.tk-p { color: #8d939c; }
++.export-list { list-style: none; margin: 26px 0 0; padding: 0; }
++.export-list li {
++  display: flex;
++  gap: 12px;
++  padding: 13px 0;
++  border-bottom: 1px solid var(--hairline-l);
++  align-items: baseline;
++}
++.export-list .k {
++  font-family: var(--font-mono), monospace;
++  font-size: 0.78rem;
++  color: var(--select-deep);
++  flex: 0 0 9.5em;
++}
++.export-list .v { color: var(--ink-soft); font-size: 0.94rem; }
++
++/* final band */
++.beta { text-align: left; }
++.beta .display {
++  font-size: clamp(2.6rem, 6.2vw, 5.2rem);
++  line-height: 1.02;
++  margin: 0 0 30px;
++  max-width: 12em;
++}
++.beta-note {
++  margin: 18px 0 0;
++  font-size: 0.74rem;
++  letter-spacing: 0.1em;
++  color: var(--chalk-mute);
++}
++
++/* footer */
++footer.site {
++  background: var(--graphite);
++  color: var(--chalk-mute);
++  border-top: 1px solid var(--hairline-d);
++}
++.foot-in {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 28px;
++  align-items: baseline;
++  padding-block: 44px;
++}
++footer.site .wordmark { color: var(--chalk); }
++.foot-tag { margin: 8px 0 0; font-size: 0.9rem; }
++.foot-links { display: flex; gap: 24px; flex-wrap: wrap; margin-left: auto; }
++.foot-links a {
++  font-size: 0.86rem;
++  text-decoration: none;
++  color: var(--chalk-mute);
++}
++.foot-links a:hover { color: var(--chalk); }
++.foot-line {
++  border-top: 1px solid var(--hairline-d);
++  padding-block: 18px 26px;
++  font-size: 0.72rem;
++  letter-spacing: 0.08em;
++}
++
++/* ---------------------------------------------------------------
++   Scroll reveals — applied only by JS, only without reduced motion.
++   Content is fully visible by default (no-JS safe).
++--------------------------------------------------------------- */
++@media (prefers-reduced-motion: no-preference) {
++  .rv-pre {
++    opacity: 0;
++    transform: translateY(22px);
++  }
++  .rv-pre.rv-in {
++    opacity: 1;
++    transform: none;
++    transition:
++      opacity 0.7s ease,
++      transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
++    transition-delay: var(--rv-delay, 0s);
++  }
++}
+diff --git a/app/layout.jsx b/app/layout.jsx
+index 35fc217..217604b 100644
+--- a/app/layout.jsx
++++ b/app/layout.jsx
+@@ -1,13 +1,54 @@
+ import "./globals.css";
++import { Fraunces, Schibsted_Grotesk, Spline_Sans_Mono } from "next/font/google";
++
++/*
++ * Type carries the product's two voices:
++ *   Fraunces        — display; "motion is craft"
++ *   Schibsted Grotesk — body
++ *   Spline Sans Mono  — timecode, tracks, code; "frames and code"
++ * Loaded via next/font: self-hosted at build time, zero runtime requests.
++ */
++const fraunces = Fraunces({
++  subsets: ["latin"],
++  style: ["normal", "italic"],
++  axes: ["opsz", "SOFT", "WONK"],
++  variable: "--font-fraunces",
++  display: "swap",
++});
++const schibsted = Schibsted_Grotesk({
++  subsets: ["latin"],
++  variable: "--font-schibsted",
++  display: "swap",
++});
++const spline = Spline_Sans_Mono({
++  subsets: ["latin"],
++  variable: "--font-spline",
++  display: "swap",
++});
+ 
+ export const metadata = {
+-  title: "Meridian",
+-  description: "Meridian is a timeline-based motion editor for the web. Design animation visually, ship production code.",
++  metadataBase: new URL("https://meridian.tools"),
++  title: "Meridian — the motion editor for the web",
++  description:
++    "Meridian is a timeline-based motion editor for the web. Design animation visually, ship production code.",
++  openGraph: {
++    title: "Meridian — the motion editor for the web",
++    description:
++      "Design animation on a real canvas — keyframes, curves, a playhead — then ship it as plain, production-ready code.",
++    type: "website",
++  },
++};
++
++export const viewport = {
++  themeColor: "#edeee9",
+ };
+ 
+ export default function RootLayout({ children }) {
+   return (
+-    <html lang="en">
++    <html
++      lang="en"
++      className={`${fraunces.variable} ${schibsted.variable} ${spline.variable}`}
++    >
+       <body>{children}</body>
+     </html>
+   );
+diff --git a/app/lib/engine.js b/app/lib/engine.js
+new file mode 100644
+index 0000000..b96a1b2
+--- /dev/null
++++ b/app/lib/engine.js
+@@ -0,0 +1,96 @@
++/*
++ * Meridian micro-engine — the keyframe sampler that drives the hero.
++ *
++ * Deliberately dependency-free: the launch page's thesis is frame-level
++ * precision, and a 2 kB bespoke sampler keeps a single owner for every
++ * transform on the page (no second animation engine to fight with).
++ */
++
++export const FPS = 60;
++export const DUR = 6; // seconds — 360 frames
++
++/* Standard cubic-bezier(x1, y1, x2, y2) solver: Newton-Raphson with a
++   bisection fallback. Same contract as CSS easing functions. */
++export function cubicBezier(p1x, p1y, p2x, p2y) {
++  const cx = 3 * p1x;
++  const bx = 3 * (p2x - p1x) - cx;
++  const ax = 1 - cx - bx;
++  const cy = 3 * p1y;
++  const by = 3 * (p2y - p1y) - cy;
++  const ay = 1 - cy - by;
++  const sampleX = (t) => ((ax * t + bx) * t + cx) * t;
++  const sampleY = (t) => ((ay * t + by) * t + cy) * t;
++  const sampleDX = (t) => (3 * ax * t + 2 * bx) * t + cx;
++  return (x) => {
++    if (x <= 0) return 0;
++    if (x >= 1) return 1;
++    let t = x;
++    for (let i = 0; i < 6; i++) {
++      const err = sampleX(t) - x;
++      if (Math.abs(err) < 1e-5) return sampleY(t);
++      const d = sampleDX(t);
++      if (Math.abs(d) < 1e-6) break;
++      t -= err / d;
++    }
++    let lo = 0;
++    let hi = 1;
++    for (let i = 0; i < 22; i++) {
++      t = (lo + hi) / 2;
++      if (sampleX(t) < x) lo = t;
++      else hi = t;
++    }
++    return sampleY(t);
++  };
++}
++
++export const EASE = {
++  linear: (u) => u,
++  outQuint: cubicBezier(0.22, 1, 0.36, 1),
++  outExpo: cubicBezier(0.16, 1, 0.3, 1),
++  inOutCubic: cubicBezier(0.65, 0, 0.35, 1),
++  outBack: cubicBezier(0.34, 1.56, 0.64, 1),
++};
++
++/* Sample one channel: kfs = [{ t, v, e? }] sorted by t.
++   The ease named on a keyframe shapes the segment arriving at it. */
++export function sample(kfs, t) {
++  const n = kfs.length;
++  if (t <= kfs[0].t) return kfs[0].v;
++  if (t >= kfs[n - 1].t) return kfs[n - 1].v;
++  let i = 0;
++  while (i < n - 2 && t >= kfs[i + 1].t) i++;
++  const a = kfs[i];
++  const b = kfs[i + 1];
++  const u = (t - a.t) / (b.t - a.t);
++  const e = b.e ? EASE[b.e] : EASE.linear;
++  return a.v + (b.v - a.v) * e(u);
++}
++
++/* SMPTE-style timecode: HH:MM:SS:FF at 60 fps. */
++export function smpte(t) {
++  const f = Math.max(0, Math.round(t * FPS));
++  const ff = f % FPS;
++  const s = Math.floor(f / FPS);
++  const ss = s % 60;
++  const m = Math.floor(s / 60);
++  const pad = (x) => String(x).padStart(2, "0");
++  return `00:${pad(m)}:${pad(ss)}:${pad(ff)}`;
++}
++
++/* Tiny clock bus so detached chrome (the app-bar timecode chip) can watch
++   the hero's transport without prop-drilling or per-frame React renders. */
++export const clock = {
++  t: DUR,
++  playing: false,
++  listeners: new Set(),
++  publish(t, playing) {
++    this.t = t;
++    this.playing = playing;
++    for (const fn of this.listeners) fn(t, playing);
++  },
++  subscribe(fn) {
++    this.listeners.add(fn);
++    fn(this.t, this.playing);
++    return () => this.listeners.delete(fn);
++  },
++};
+diff --git a/app/page.jsx b/app/page.jsx
+index 6f15aef..8abe8ad 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -1,31 +1,265 @@
++import Hero from "./components/Hero";
++import Curves from "./components/Curves";
++import TimecodeChip from "./components/TimecodeChip";
++import RevealManager from "./components/RevealManager";
++
++/* Hand-tokenized code sample — the "file" behind the hero. Keeping it as
++   data avoids a syntax-highlighting dependency for 24 lines of code. */
++const k = (text) => ({ cls: "tk-k", text });
++const s = (text) => ({ cls: "tk-s", text });
++const c = (text) => ({ cls: "tk-c", text });
++const f = (text) => ({ cls: "tk-f", text });
++const p = (text) => ({ cls: "tk-p", text });
++
++const CODE_LINES = [
++  [c("// hero.timeline.js — exported by Meridian 1.0")],
++  [c("// The source of the hero above. Scrub it, then read it.")],
++  [],
++  [k("import"), p(" { "), f("timeline"), p(" } "), k("from"), p(" "), s('"@meridian/run"'), p(";  "), c("// 3.2 kB, zero deps")],
++  [],
++  [k("export const"), f(" hero "), p("= "), f("timeline"), p("({")],
++  [p("  "), f("duration"), p(": "), s("6"), p(", "), f("fps"), p(": "), s("60"), p(",")],
++  [p("  "), f("tracks"), p(": {")],
++  [p("    "), s('"headline.line-1"'), p(": [")],
++  [p("      { "), f("at"), p(": "), s("0.25"), p(", "), f("y"), p(": "), s("44"), p(", "), f("opacity"), p(": "), s("0"), p(", "), f("blur"), p(": "), s("7"), p(" },")],
++  [p("      { "), f("at"), p(": "), s("1.35"), p(", "), f("y"), p(": "), s("0"), p(", "), f("opacity"), p(": "), s("1"), p(", "), f("ease"), p(": "), s('"outExpo"'), p(" },")],
++  [p("    ],")],
++  [p("    "), s('"selection.box"'), p(": [")],
++  [p("      { "), f("at"), p(": "), s("1.70"), p(", "), f("draw"), p(": "), s("0"), p(" },")],
++  [p("      { "), f("at"), p(": "), s("2.45"), p(", "), f("draw"), p(": "), s("1"), p(", "), f("ease"), p(": "), s('"inOutCubic"'), p(" },")],
++  [p("    ],")],
++  [p("    "), s('"layer-01.flight"'), p(": [")],
++  [p("      { "), f("at"), p(": "), s("3.05"), p(", "), f("path"), p(": "), s("0"), p(" },")],
++  [p("      { "), f("at"), p(": "), s("5.50"), p(", "), f("path"), p(": "), s("1"), p(", "), f("ease"), p(": "), s('"inOutCubic"'), p(" },")],
++  [p("    ],")],
++  [p("  },")],
++  [p("});")],
++  [],
++  [f("hero"), p("."), f("play"), p("();  "), c("// or hero.seek(t) — the red playhead does")],
++];
++
++function Wordmark({ href, label }) {
++  return (
++    <a className="wordmark" href={href} aria-label={label}>
++      <span aria-hidden="true">
++        MER
++        <span className="ph-i" />
++        DIAN
++      </span>
++    </a>
++  );
++}
++
+ export default function Home() {
+   return (
+-    <main className="mx-auto max-w-3xl space-y-16 px-6 py-24">
+-      <section className="space-y-4">
+-        <h1 className="text-4xl font-semibold">Meridian</h1>
+-        <p className="text-lg text-[var(--muted)]">
+-          A timeline-based motion editor for the web. Design animation visually, ship production code.
+-        </p>
+-        <a
+-          className="inline-block rounded-md bg-[var(--foreground)] px-4 py-2 text-[var(--background)]"
+-          href="#get-access"
+-        >
+-          Get early access
+-        </a>
+-      </section>
+-
+-      <section className="space-y-6">
+-        <h2 className="text-2xl font-semibold">What it does</h2>
+-        <ul className="space-y-4 text-[var(--muted)]">
+-          <li>Visual timeline editing for springs, keyframes, and gesture-driven motion.</li>
+-          <li>One-click export to production JavaScript and CSS with no runtime lock-in.</li>
+-          <li>Live preview across breakpoints, with reduced-motion variants built in.</li>
+-        </ul>
+-      </section>
+-
+-      <footer className="border-t border-[var(--line)] pt-8 text-sm text-[var(--muted)]" id="get-access">
+-        <p>Meridian is in private beta. hello@meridian.tools</p>
++    <>
++      <a className="skip" href="#main">
++        Skip to content
++      </a>
++      <RevealManager />
++
++      <header className="appbar">
++        <div className="wrap appbar-in">
++          <Wordmark href="#top" label="Meridian home" />
++          <nav aria-label="Primary">
++            <a href="#product">Editor</a>
++            <a href="#curves">Curves</a>
++            <a href="#code">Export</a>
++          </nav>
++          <div className="appbar-right">
++            <TimecodeChip />
++            <a className="btn btn-primary btn-sm" href="#beta">
++              Request beta access
++            </a>
++          </div>
++        </div>
++      </header>
++
++      <main id="main">
++        <span id="top" />
++        <Hero />
++
++        <section className="sec" id="product" aria-labelledby="h-product">
++          <div className="wrap">
++            <p className="eyebrow chrome-label" data-reveal>
++              the editor · three panels
++            </p>
++            <h2 className="display" id="h-product" data-reveal>
++              An editor, not another library.
++            </h2>
++            <p className="lede" data-reveal style={{ "--rv-delay": ".08s" }}>
++              Motion libraries hand you an API and wish you luck. Meridian hands you a
++              canvas, a timeline, and a playhead — and when you&rsquo;re done, the code
++              walks out the door with you.
++            </p>
++
++            <div className="trackrows">
++              <div className="trackrow" data-reveal>
++                <div className="tr-rail mono">
++                  <span className="tr-diamond" aria-hidden="true" />
++                  <span>canvas</span>
++                </div>
++                <div>
++                  <h3>Design where it ships</h3>
++                  <p>
++                    No preview pane. You select real DOM, nudge it into place, and
++                    keyframe it on the element itself — what you scrub is exactly what
++                    the browser renders, because it is the browser.
++                  </p>
++                </div>
++              </div>
++              <div className="trackrow" data-reveal style={{ "--rv-delay": ".06s" }}>
++                <div className="tr-rail mono">
++                  <span className="tr-diamond" aria-hidden="true" />
++                  <span>timeline</span>
++                </div>
++                <div>
++                  <h3>Frames, not vibes</h3>
++                  <p>
++                    A real playhead at 60 fps. Snap keyframes to frames, stagger tracks
++                    against each other, and step through a move one frame at a time
++                    until it lands.
++                  </p>
++                </div>
++              </div>
++              <div className="trackrow" data-reveal style={{ "--rv-delay": ".12s" }}>
++                <div className="tr-rail mono">
++                  <span className="tr-diamond" aria-hidden="true" />
++                  <span>export</span>
++                </div>
++                <div>
++                  <h3>Leave with the code</h3>
++                  <p>
++                    One export: plain Web Animations API or CSS, plus an optional 3.2 kB
++                    scrubbable runtime. Your motion lives in your repo, not our SDK.
++                  </p>
++                </div>
++              </div>
++            </div>
++          </div>
++        </section>
++
++        <section className="sec sec-dark on-dark" id="curves" aria-labelledby="h-curves">
++          <div className="wrap">
++            <p className="eyebrow chrome-label" data-reveal>
++              panel · curve editor
++            </p>
++            <h2 className="display" id="h-curves" data-reveal>
++              Curves you can feel.
++            </h2>
++            <p className="lede" data-reveal style={{ "--rv-delay": ".06s" }}>
++              Six of the presets that ship with Meridian. Select one — the plot redraws
++              and the ball runs it once. In the editor, those blue handles are yours to
++              pull.
++            </p>
++            <div data-reveal style={{ "--rv-delay": ".1s" }}>
++              <Curves />
++            </div>
++          </div>
++        </section>
++
++        <section className="sec" id="code" aria-labelledby="h-code">
++          <div className="wrap">
++            <p className="eyebrow chrome-label" data-reveal>
++              export · hero.timeline.js
++            </p>
++            <h2 className="display" id="h-code" data-reveal>
++              The code walks out the door.
++            </h2>
++            <p className="lede" data-reveal style={{ "--rv-delay": ".06s" }}>
++              Nothing to embed, nothing to license. Meridian compiles a timeline into
++              code you&rsquo;d be glad to review — this page&rsquo;s hero included.
++            </p>
++
++            <div className="code-grid">
++              <div className="codecard" data-reveal>
++                <div className="codecard-top mono">
++                  <span className="dots" aria-hidden="true">
++                    <i />
++                    <i />
++                    <i />
++                  </span>
++                  hero.timeline.js
++                </div>
++                <pre tabIndex={0}>
++                  <code>
++                    {CODE_LINES.map((line, i) => (
++                      <span key={i}>
++                        {line.map((tk, j) => (
++                          <span key={j} className={tk.cls}>
++                            {tk.text}
++                          </span>
++                        ))}
++                        {"\n"}
++                      </span>
++                    ))}
++                  </code>
++                </pre>
++              </div>
++              <ul className="export-list" data-reveal style={{ "--rv-delay": ".1s" }}>
++                <li>
++                  <span className="k">waapi</span>
++                  <span className="v">Native Web Animations API — no wrapper, no lock-in</span>
++                </li>
++                <li>
++                  <span className="k">css</span>
++                  <span className="v">Pure @keyframes for the simple cases</span>
++                </li>
++                <li>
++                  <span className="k">runtime</span>
++                  <span className="v">
++                    Optional 3.2 kB scrubbable runtime — the one this page runs on
++                  </span>
++                </li>
++                <li>
++                  <span className="k">reduced-motion</span>
++                  <span className="v">A still variant generated with every export</span>
++                </li>
++              </ul>
++            </div>
++          </div>
++        </section>
++
++        <section className="sec sec-dark on-dark beta" id="beta" aria-labelledby="h-beta">
++          <div className="wrap">
++            <p className="eyebrow chrome-label" data-reveal>
++              00:00:00:00 · start here
++            </p>
++            <h2 className="display" id="h-beta" data-reveal>
++              Set your motion to <span className="it">Meridian&nbsp;time.</span>
++            </h2>
++            <div data-reveal style={{ "--rv-delay": ".08s" }}>
++              <a
++                className="btn btn-primary"
++                href="mailto:hello@meridian.tools?subject=Beta%20access"
++              >
++                Request beta access
++              </a>
++              <p className="beta-note mono">
++                PRIVATE BETA · INVITES WEEKLY · BRING A PROJECT, NOT A PROTOTYPE
++              </p>
++            </div>
++          </div>
++        </section>
++      </main>
++
++      <footer className="site">
++        <div className="wrap foot-in">
++          <div>
++            <Wordmark href="#top" label="Meridian — back to top" />
++            <p className="foot-tag">The motion editor for the web.</p>
++          </div>
++          <div className="foot-links">
++            <a href="#product">Editor</a>
++            <a href="#curves">Curves</a>
++            <a href="#code">Export</a>
++            <a href="mailto:hello@meridian.tools">hello@meridian.tools</a>
++          </div>
++        </div>
++        <div className="wrap foot-line mono">
++          © 2026 MERIDIAN · LONGITUDE 0° 0′ 0″ — EVERY FRAME MEASURED FROM HERE
++        </div>
+       </footer>
+-    </main>
++    </>
+   );
+ }
