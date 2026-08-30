@@ -22,7 +22,7 @@ def tree_hash(path):
 
 manifest_path = root / "fixtures" / "FIXTURE_MANIFEST.json"
 old = json.loads(manifest_path.read_text())
-for name in ["next-tailwind-base", "anime-v4-portfolio", "launch-page-base"]:
+for name in ["next-tailwind-base", "anime-v4-portfolio", "launch-page-base", "spirits-launch-base"]:
     p = root / "fixtures" / name
     old["fixtures"][name]["git_revision"] = git_head(p)
     old["fixtures"][name]["content_sha256_excluding_git"] = tree_hash(p)

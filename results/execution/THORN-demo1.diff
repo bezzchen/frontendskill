@@ -1,0 +1,2721 @@
+diff --git a/app/experience/BotanicalLedger.jsx b/app/experience/BotanicalLedger.jsx
+new file mode 100644
+index 0000000..b95fd97
+--- /dev/null
++++ b/app/experience/BotanicalLedger.jsx
+@@ -0,0 +1,58 @@
++"use client";
++
++import { useEffect, useState } from "react";
++import { BOTANICALS } from "./botanicals";
++import { setHover, subscribeBus, getBus } from "./bus";
++import { initMotionStore, getMotion, subscribeMotion } from "./motionStore";
++
++export default function BotanicalLedger() {
++  const [active, setActive] = useState(-1);
++  const [reduced, setReduced] = useState(false);
++
++  useEffect(() => {
++    setReduced(initMotionStore() === "reduced");
++    const un1 = subscribeMotion((m) => setReduced(m === "reduced"));
++    const un2 = subscribeBus((s) => setActive(s.hover > -1 ? s.hover : s.beat));
++    const b = getBus();
++    setActive(b.hover > -1 ? b.hover : b.beat);
++    return () => { un1(); un2(); };
++  }, []);
++
++  return (
++    <ol className="botanical-list">
++      {BOTANICALS.map((b, i) => {
++        const inner = (
++          <>
++            <span className="num" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
++            <span>
++              <span className="name">
++                {b.name}
++                <i className="latin">{b.latin}</i>
++              </span>
++              <span className="note">{b.note}</span>
++            </span>
++          </>
++        );
++        return (
++          <li key={b.id}>
++            {reduced ? (
++              <div className="botanical-row is-active">{inner}</div>
++            ) : (
++              <button
++                type="button"
++                className={`botanical-row${active === i ? " is-active" : ""}`}
++                onMouseEnter={() => setHover(i)}
++                onMouseLeave={() => setHover(-1)}
++                onFocus={() => setHover(i)}
++                onBlur={() => setHover(-1)}
++                aria-label={`${b.name} — highlight its plate in the scene`}
++              >
++                {inner}
++              </button>
++            )}
++          </li>
++        );
++      })}
++    </ol>
++  );
++}
+diff --git a/app/experience/Distillery.jsx b/app/experience/Distillery.jsx
+new file mode 100644
+index 0000000..6d891b6
+--- /dev/null
++++ b/app/experience/Distillery.jsx
+@@ -0,0 +1,194 @@
++"use client";
++
++import { useEffect, useRef, useState } from "react";
++import { actFromP, beatFromP } from "./timeline.js";
++import { initMotionStore, getMotion, subscribeMotion, lockReduced } from "./motionStore";
++import { setBeat, getBus, subscribeBus } from "./bus";
++
++export default function Distillery({ children }) {
++  const wrapRef = useRef(null);
++  const stickyRef = useRef(null);
++  const canvasRef = useRef(null);
++  const engineRef = useRef(null);
++  const [pct, setPct] = useState(0);
++  const [done, setDone] = useState(false);
++  const [failed, setFailed] = useState(false);
++
++  useEffect(() => {
++    let disposed = false;
++    const wrap = wrapRef.current;
++    const canvas = canvasRef.current;
++    initMotionStore();
++
++    // capability recipe
++    const coarse = window.matchMedia("(pointer: coarse)").matches;
++    const small = window.innerWidth < 820;
++    const lowMem = navigator.deviceMemory !== undefined && navigator.deviceMemory <= 4;
++    const tier = coarse || small || lowMem ? "low" : "high";
++
++    let engine = null;
++    let cleanupFns = [];
++
++    const applyAct = (act) => {
++      wrap.dataset.act = act;
++      const reduced = getMotion() === "reduced";
++      wrap.querySelectorAll("[data-act-for]").forEach((el) => {
++        const live = reduced || el.dataset.actFor === act;
++        el.classList.toggle("is-live", live);
++        el.querySelectorAll("a,button,input").forEach((f) => {
++          f.tabIndex = live ? 0 : -1;
++        });
++      });
++      const arrival = wrap.querySelector("[data-arrival]");
++      if (arrival) arrival.classList.toggle("is-gone", !reduced && act !== "a0");
++    };
++
++    let lastAct = null;
++    let lastBeat = -2;
++    const onScroll = () => {
++      const travel = Math.max(1, wrap.offsetHeight - window.innerHeight);
++      const p = Math.min(1, Math.max(0, window.scrollY / travel));
++      if (engine) engine.setProgress(p);
++      const act = actFromP(p);
++      if (act !== lastAct) {
++        lastAct = act;
++        applyAct(act);
++      }
++      const beat = beatFromP(p);
++      if (beat !== lastBeat) {
++        lastBeat = beat;
++        setBeat(beat);
++      }
++    };
++
++    const boot = async () => {
++      const { Experience } = await import("./engine.js");
++      if (disposed) return;
++      engine = new Experience(canvas, {
++        tier,
++        mode: getMotion(),
++        onProgress: (f) => setPct(Math.round(f * 100)),
++        onReady: () => {
++          setDone(true);
++          onScroll();
++          engine.updateRun();
++        },
++        onFail: () => {
++          setFailed(true);
++          setDone(true);
++          lockReduced();
++          wrap.dataset.canvas = "off";
++        },
++      });
++      engineRef.current = engine;
++      window.__thorn = {
++        get frames() { return engine ? engine.frames : -1; },
++        get running() { return engine ? engine.running : false; },
++        get fps() { return engine ? Math.round(engine.fps) : 0; },
++        get p() { return engine ? engine.p : 0; },
++        get mode() { return engine ? engine.mode : "none"; },
++        tier,
++        step(p) { if (engine) engine.step(p); },
++        // verification probes: mutate exactly one input, repaint one frame
++        stir(x, y, z) {
++          if (!engine) return;
++          engine.pointerWorld.set(x, y, z);
++          engine.pointerTargetWorld.set(x, y, z);
++          engine.renderOnce();
++        },
++        glow(hover) {
++          if (!engine) return;
++          engine.setHighlight(hover, -1);
++          engine.renderOnce();
++        },
++        snap() {
++          return engine ? engine.canvas.toDataURL("image/png").length : 0;
++        },
++        hash() {
++          if (!engine) return "none";
++          const d = engine.canvas.toDataURL("image/png");
++          let h = 0;
++          for (let i = 0; i < d.length; i += 7) h = (h * 33 + d.charCodeAt(i)) >>> 0;
++          return h.toString(16) + ":" + d.length;
++        },
++      };
++      await engine.init();
++      if (disposed) { engine.dispose(); return; }
++
++      // scroll + resize
++      window.addEventListener("scroll", onScroll, { passive: true });
++      const onResize = () => { engine.resize(); onScroll(); };
++      window.addEventListener("resize", onResize);
++      cleanupFns.push(() => window.removeEventListener("scroll", onScroll));
++      cleanupFns.push(() => window.removeEventListener("resize", onResize));
++
++      // pause when the tab is hidden — the actual condition
++      const onVis = () => engine.setRunFlags({ visible: document.visibilityState === "visible" });
++      document.addEventListener("visibilitychange", onVis);
++      cleanupFns.push(() => document.removeEventListener("visibilitychange", onVis));
++
++      // pause when the stage scrolls offscreen — the actual condition
++      const io = new IntersectionObserver(
++        (entries) => engine.setRunFlags({ onscreen: entries[0].isIntersecting }),
++        { threshold: 0 }
++      );
++      io.observe(stickyRef.current);
++      cleanupFns.push(() => io.disconnect());
++
++      // pointer (fine pointers only)
++      if (window.matchMedia("(pointer: fine)").matches) {
++        const onMove = (e) => {
++          engine.setPointer((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1);
++        };
++        window.addEventListener("pointermove", onMove, { passive: true });
++        cleanupFns.push(() => window.removeEventListener("pointermove", onMove));
++      }
++
++      // ledger hover / scroll beat → plate glow
++      cleanupFns.push(
++        subscribeBus((s) => engine.setHighlight(s.hover, s.beat))
++      );
++
++      // motion preference
++      cleanupFns.push(
++        subscribeMotion((m) => {
++          engine.setMode(m);
++          if (lastAct) applyAct(lastAct);
++          onScroll();
++        })
++      );
++
++      onScroll();
++      applyAct(actFromP(0));
++      onVis();
++    };
++
++    boot();
++    return () => {
++      disposed = true;
++      cleanupFns.forEach((fn) => fn());
++      if (engineRef.current) engineRef.current.dispose();
++      engineRef.current = null;
++    };
++  }, []);
++
++  return (
++    <>
++      <div className="loader" data-done={done} aria-hidden={done}>
++        <span className="lm">Thornmere</span>
++        <span className="bar" aria-hidden="true">
++          <i style={{ transform: `scaleX(${pct / 100})` }} />
++        </span>
++        <span className="pct">{failed ? "folio edition" : `distilling ${pct}%`}</span>
++      </div>
++
++      <div className="stage-wrap" ref={wrapRef} data-act="a0">
++        <div className="stage-sticky" ref={stickyRef}>
++          <canvas className="stage-canvas" ref={canvasRef} aria-hidden="true" />
++          <div className="stage-vignette" aria-hidden="true" />
++        </div>
++        {children}
++      </div>
++    </>
++  );
++}
+diff --git a/app/experience/LedgerForm.jsx b/app/experience/LedgerForm.jsx
+new file mode 100644
+index 0000000..27f1fc9
+--- /dev/null
++++ b/app/experience/LedgerForm.jsx
+@@ -0,0 +1,37 @@
++"use client";
++
++import { useState } from "react";
++
++export default function LedgerForm() {
++  const [note, setNote] = useState("");
++
++  return (
++    <form
++      className="ledger-form"
++      onSubmit={(e) => {
++        e.preventDefault();
++        setNote("Noted. (Thornmere is a demo — nothing was sent anywhere.)");
++      }}
++      aria-describedby="ledger-note"
++    >
++      <label className="sr-only" htmlFor="ledger-email">
++        Email address
++      </label>
++      <input
++        id="ledger-email"
++        className="ledger-input"
++        type="email"
++        name="email"
++        autoComplete="off"
++        placeholder="you@example.com"
++        required
++      />
++      <button className="btn" type="submit">
++        Join the ledger
++      </button>
++      <p id="ledger-note" className="ledger-note" role="status">
++        {note || "First word of each batch. Nothing else, ever."}
++      </p>
++    </form>
++  );
++}
+diff --git a/app/experience/MotionToggle.jsx b/app/experience/MotionToggle.jsx
+new file mode 100644
+index 0000000..8447ae5
+--- /dev/null
++++ b/app/experience/MotionToggle.jsx
+@@ -0,0 +1,27 @@
++"use client";
++
++import { useEffect, useState } from "react";
++import { initMotionStore, getMotion, setMotion, subscribeMotion, isMotionLocked } from "./motionStore";
++
++export default function MotionToggle() {
++  const [motion, setLocal] = useState("full");
++
++  useEffect(() => {
++    setLocal(initMotionStore());
++    return subscribeMotion(setLocal);
++  }, []);
++
++  const reduced = motion === "reduced";
++  return (
++    <button
++      type="button"
++      className="chip-btn"
++      aria-pressed={reduced}
++      disabled={typeof window !== "undefined" && isMotionLocked()}
++      onClick={() => setMotion(getMotion() === "reduced" ? "full" : "reduced")}
++      title={reduced ? "Switch to the full-motion experience" : "Switch to the low-motion folio"}
++    >
++      Motion&nbsp;{reduced ? "off" : "on"}
++    </button>
++  );
++}
+diff --git a/app/experience/botanicals.js b/app/experience/botanicals.js
+new file mode 100644
+index 0000000..e6da42e
+--- /dev/null
++++ b/app/experience/botanicals.js
+@@ -0,0 +1,42 @@
++export const BOTANICALS = [
++  {
++    id: "juniper",
++    name: "Juniper",
++    latin: "Juniperus communis",
++    note: "The spine. Pine resin and cold air — the reason gin is gin.",
++    file: "/botanicals/juniper.jpg",
++    alt: "Köhler plate 082 — juniper branch with green needles and black berries, 1887 chromolithograph",
++  },
++  {
++    id: "coriander",
++    name: "Coriander seed",
++    latin: "Coriandrum sativum",
++    note: "Harvested late. A bright citrus-spice that lifts the juniper.",
++    file: "/botanicals/coriander.jpg",
++    alt: "Köhler plate 193 — coriander plant with umbels of pale flowers and round seeds, 1887 chromolithograph",
++  },
++  {
++    id: "angelica",
++    name: "Angelica root",
++    latin: "Angelica archangelica",
++    note: "Earth and dryness at the base; it holds the others together.",
++    file: "/botanicals/angelica.jpg",
++    alt: "Köhler plate 158 — angelica with domed green flower heads and thick stems, 1887 chromolithograph",
++  },
++  {
++    id: "orris",
++    name: "Orris",
++    latin: "Iris germanica var. florentina",
++    note: "Ground iris rhizome. A violet-powder stillness that fixes every note in place.",
++    file: "/botanicals/orris.jpg",
++    alt: "Köhler plate 078 — white-flowered Florentine iris with sword leaves and rhizome, 1887 chromolithograph",
++  },
++  {
++    id: "lemon",
++    name: "Lemon peel",
++    latin: "Citrus × limon",
++    note: "Peel, not juice — pared by hand, added last.",
++    file: "/botanicals/lemon.jpg",
++    alt: "Köhler plate 041 — lemon branch with fruit, blossom and cut lemon, 1887 chromolithograph",
++  },
++];
+diff --git a/app/experience/bus.js b/app/experience/bus.js
+new file mode 100644
+index 0000000..e3d0d6f
+--- /dev/null
++++ b/app/experience/bus.js
+@@ -0,0 +1,21 @@
++// Tiny pubsub linking DOM copy (botanical ledger) and the WebGL scene.
++const state = { hover: -1, beat: -1 };
++const subs = new Set();
++
++export function setHover(i) {
++  if (state.hover === i) return;
++  state.hover = i;
++  subs.forEach((fn) => fn(state));
++}
++export function setBeat(i) {
++  if (state.beat === i) return;
++  state.beat = i;
++  subs.forEach((fn) => fn(state));
++}
++export function getBus() {
++  return state;
++}
++export function subscribeBus(fn) {
++  subs.add(fn);
++  return () => subs.delete(fn);
++}
+diff --git a/app/experience/engine.js b/app/experience/engine.js
+new file mode 100644
+index 0000000..a8cefe1
+--- /dev/null
++++ b/app/experience/engine.js
+@@ -0,0 +1,625 @@
++// ————————————————————————————————————————————————————————————————
++// Thornmere Experience — one imperative three.js scene, one RAF,
++// one timeline. Rendering runs ONLY while the canvas is onscreen
++// and the document is visible; reduced mode renders single frames
++// on demand.
++// ————————————————————————————————————————————————————————————————
++import * as THREE from "three";
++import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
++import {
++  TL,
++  LAYOUT,
++  galleryPose,
++  ringPose,
++  wallPose,
++  lerpPose,
++} from "./timeline.js";
++import {
++  plateVert,
++  plateFrag,
++  pointsVert,
++  pointsFrag,
++  liquidVert,
++  liquidFrag,
++  floorVert,
++  floorFrag,
++  backVert,
++  backFrag,
++} from "./shaders.js";
++import {
++  sampleInk,
++  inkToWorld,
++  sampleBottleSurface,
++  BOTTLE_PROFILE,
++  LIQUID_PROFILE,
++} from "./sampling.js";
++import { BOTANICALS } from "./botanicals.js";
++import { drawLabel } from "./label.js";
++
++const BG = new THREE.Color(0x070b08);
++
++function TLcamTgtAt(p) {
++  return TL.camTgt(p);
++}
++
++export class Experience {
++  constructor(canvas, { tier = "high", mode = "full", onProgress, onReady, onFail } = {}) {
++    this.canvas = canvas;
++    this.tier = tier;
++    this.mode = mode;
++    this.onProgress = onProgress || (() => {});
++    this.onReady = onReady || (() => {});
++    this.onFail = onFail || (() => {});
++
++    this.p = 0;
++    this.targetP = 0;
++    this.time = 0;
++    this.intro = 0;
++    this.frames = 0;
++    this.fps = 0;
++    this.running = false;
++    this.visible = true;
++    this.onscreen = true;
++    this.disposed = false;
++    this.ready = false;
++    this.raf = 0;
++
++    this.pointerNdc = new THREE.Vector2(0, 0);
++    this.pointerWorld = new THREE.Vector3(0, 0.8, 0);
++    this.pointerTargetWorld = new THREE.Vector3(0, 0.8, 0);
++    this.parallax = new THREE.Vector2(0, 0);
++    this.highlight = { hover: -1, beat: -1 };
++    this.glow = [0, 0, 0, 0, 0];
++  }
++
++  async init() {
++    try {
++      this.renderer = new THREE.WebGLRenderer({
++        canvas: this.canvas,
++        antialias: this.tier === "high",
++        alpha: false,
++        powerPreference: "high-performance",
++      });
++    } catch (e) {
++      this.onFail(e);
++      return;
++    }
++    const r = this.renderer;
++    r.toneMapping = THREE.ACESFilmicToneMapping;
++    r.toneMappingExposure = 1.05;
++    r.setClearColor(BG, 1);
++
++    this.canvas.addEventListener("webglcontextlost", (e) => {
++      e.preventDefault();
++      this.stopLoop();
++      this.onFail(new Error("context lost"));
++    });
++
++    this.scene = new THREE.Scene();
++    this.camera = new THREE.PerspectiveCamera(42, 1, 0.1, 60);
++    this.scene.add(this.camera);
++    this.camTarget = new THREE.Vector3();
++    this.smoothTarget = new THREE.Vector3(0, 1.35, 0);
++
++    this.resize();
++
++    // ——— asset loading with coarse progress ———
++    const total = 7;
++    let done = 0;
++    const step = () => this.onProgress(++done / total);
++
++    try {
++      const texLoader = new THREE.TextureLoader();
++      const [env, ...plateTex] = await Promise.all([
++        new RGBELoader().loadAsync("/env/studio_small_09_1k.hdr").then((t) => {
++          step();
++          return t;
++        }),
++        ...BOTANICALS.map((b) =>
++          texLoader.loadAsync(b.file).then((t) => {
++            step();
++            return t;
++          })
++        ),
++      ]);
++      env.mapping = THREE.EquirectangularReflectionMapping;
++      this.scene.environment = env;
++      this.envTex = env;
++      plateTex.forEach((t) => {
++        t.colorSpace = THREE.SRGBColorSpace;
++        t.anisotropy = Math.min(4, r.capabilities.getMaxAnisotropy());
++      });
++      this.plateTex = plateTex;
++
++      this.build();
++      step();
++      this.ready = true;
++      this.visible = typeof document === "undefined" || document.visibilityState === "visible";
++      this.onReady();
++      this.applyMode();
++      if (this.frames === 0) this.renderOnce();
++    } catch (e) {
++      this.onFail(e);
++    }
++  }
++
++  // ————— scene construction —————
++  build() {
++    const s = this.scene;
++
++    // backdrop + floor
++    this.backMat = new THREE.ShaderMaterial({
++      vertexShader: backVert,
++      fragmentShader: backFrag,
++      uniforms: {
++        uBottom: { value: new THREE.Color(0x050705) },
++        uTop: { value: new THREE.Color(0x0e1811) },
++        uLight: { value: 1 },
++      },
++      depthWrite: false,
++    });
++    const back = new THREE.Mesh(new THREE.PlaneGeometry(70, 34), this.backMat);
++    back.position.set(0, 6, -12);
++    back.renderOrder = -2;
++    s.add(back);
++
++    this.floorMat = new THREE.ShaderMaterial({
++      vertexShader: floorVert,
++      fragmentShader: floorFrag,
++      uniforms: {
++        uBase: { value: new THREE.Color(0x0a120c) },
++        uWarm: { value: new THREE.Color(0x2b2317) },
++        uLight: { value: 1 },
++      },
++      transparent: true,
++      depthWrite: false,
++    });
++    const floor = new THREE.Mesh(new THREE.CircleGeometry(10, 48), this.floorMat);
++    floor.rotation.x = -Math.PI / 2;
++    floor.position.y = LAYOUT.floorY - 0.001;
++    floor.renderOrder = -1;
++    s.add(floor);
++
++    // ——— plates ———
++    this.plates = [];
++    const plateGeo = new THREE.PlaneGeometry(LAYOUT.plateW, LAYOUT.plateH, 12, 16);
++    for (let i = 0; i < 5; i++) {
++      const mat = new THREE.ShaderMaterial({
++        vertexShader: plateVert,
++        fragmentShader: plateFrag,
++        uniforms: {
++          uMap: { value: this.plateTex[i] },
++          uTime: { value: 0 },
++          uSway: { value: 1 },
++          uPhase: { value: i * 1.7 },
++          uErode: { value: 0 },
++          uGlow: { value: 0 },
++          uDim: { value: 1 },
++          uFog: { value: BG.clone() },
++        },
++        transparent: true,
++        depthWrite: false,
++        side: THREE.DoubleSide,
++      });
++      const mesh = new THREE.Mesh(plateGeo, mat);
++      mesh.renderOrder = 3;
++      s.add(mesh);
++      this.plates.push(mesh);
++    }
++
++    // ——— copper still (surface of revolution, like the bottle) ———
++    const stillPts = [
++      [0.001, 0], [0.55, 0], [0.78, 0.05], [0.92, 0.22], [1.02, 0.55],
++      [1.0, 0.95], [0.86, 1.3], [0.62, 1.6], [0.42, 1.78], [0.3, 1.9],
++      [0.26, 2.05], [0.3, 2.14], [0.31, 2.24], [0.26, 2.3], [0.001, 2.3],
++    ].map(([x, y]) => new THREE.Vector2(x, y));
++    this.stillMat = new THREE.MeshStandardMaterial({
++      color: 0x9c5a28,
++      metalness: 1,
++      roughness: 0.27,
++      emissive: 0x501707,
++      emissiveIntensity: 0,
++      envMapIntensity: 1.0,
++    });
++    this.still = new THREE.Group();
++    const pot = new THREE.Mesh(new THREE.LatheGeometry(stillPts, 56), this.stillMat);
++    this.still.add(pot);
++    // stub of a lyne arm — the rest is drawn by vapour
++    const armCurve = new THREE.QuadraticBezierCurve3(
++      new THREE.Vector3(0.05, 2.18, 0),
++      new THREE.Vector3(0.3, 2.42, 0),
++      new THREE.Vector3(0.62, 2.32, 0)
++    );
++    const arm = new THREE.Mesh(new THREE.TubeGeometry(armCurve, 12, 0.065, 10, false), this.stillMat);
++    this.still.add(arm);
++    this.still.position.set(LAYOUT.still.x, -6.4, 0);
++    s.add(this.still);
++
++    // ——— bottle (lathed), liquid, label, closure ———
++    this.bottleGroup = new THREE.Group();
++    this.bottleGroup.position.set(LAYOUT.bottle.x, LAYOUT.bottle.baseY, 0);
++    s.add(this.bottleGroup);
++
++    const bottlePts = BOTTLE_PROFILE.map(([x, y]) => new THREE.Vector2(x, y));
++    const bottleGeo = new THREE.LatheGeometry(bottlePts, 64);
++    if (this.tier === "high") {
++      this.glassMat = new THREE.MeshPhysicalMaterial({
++        color: 0xf2f6f0,
++        metalness: 0,
++        roughness: 0.06,
++        transmission: 1,
++        thickness: 0.5,
++        ior: 1.5,
++        attenuationColor: 0xd9e6d2,
++        attenuationDistance: 3.0,
++        clearcoat: 0.5,
++        clearcoatRoughness: 0.25,
++        specularIntensity: 1,
++        envMapIntensity: 0,
++      });
++    } else {
++      this.glassMat = new THREE.MeshPhysicalMaterial({
++        color: 0xdfe8dd,
++        metalness: 0,
++        roughness: 0.08,
++        transparent: true,
++        opacity: 0.32,
++        envMapIntensity: 0,
++        depthWrite: false,
++      });
++    }
++    const glass = new THREE.Mesh(bottleGeo, this.glassMat);
++    glass.renderOrder = 5;
++    this.bottleGroup.add(glass);
++
++    const liquidPts = LIQUID_PROFILE.map(([x, y]) => new THREE.Vector2(x, y));
++    this.liquidMat = new THREE.ShaderMaterial({
++      vertexShader: liquidVert,
++      fragmentShader: liquidFrag,
++      uniforms: {
++        uFill: { value: -3 },
++        uOn: { value: 0 },
++        uTint: { value: new THREE.Color(0x9db487) },
++        uCam: { value: new THREE.Vector3() },
++      },
++      transparent: true,
++      depthWrite: false,
++    });
++    const liquid = new THREE.Mesh(new THREE.LatheGeometry(liquidPts, 48), this.liquidMat);
++    liquid.renderOrder = 4;
++    this.bottleGroup.add(liquid);
++
++    // label
++    const labelCanvas = document.createElement("canvas");
++    drawLabel(labelCanvas);
++    this.labelTex = new THREE.CanvasTexture(labelCanvas);
++    this.labelTex.colorSpace = THREE.SRGBColorSpace;
++    this.labelTex.anisotropy = 4;
++    if (document.fonts && document.fonts.ready) {
++      document.fonts.ready.then(() => {
++        if (this.disposed) return;
++        drawLabel(labelCanvas);
++        this.labelTex.needsUpdate = true;
++        if (this.mode === "reduced") this.renderOnce();
++      });
++    }
++    this.labelMat = new THREE.MeshStandardMaterial({
++      map: this.labelTex,
++      roughness: 0.85,
++      metalness: 0,
++      envMapIntensity: 0.3,
++      transparent: true,
++      opacity: 0,
++    });
++    const label = new THREE.Mesh(
++      new THREE.CylinderGeometry(0.645, 0.645, 0.82, 48, 1, true, -0.82, 1.64),
++      this.labelMat
++    );
++    label.position.y = 0.78;
++    label.renderOrder = 6;
++    this.bottleGroup.add(label);
++
++    // closure: cork + copper cap band
++    const corkMat = new THREE.MeshStandardMaterial({ color: 0x241812, roughness: 0.6, metalness: 0.05 });
++    const cork = new THREE.Mesh(new THREE.CylinderGeometry(0.155, 0.16, 0.3, 24), corkMat);
++    cork.position.y = 3.28;
++    this.bottleGroup.add(cork);
++    const band = new THREE.Mesh(
++      new THREE.CylinderGeometry(0.2, 0.2, 0.1, 24),
++      new THREE.MeshStandardMaterial({ color: 0x9c5a28, metalness: 1, roughness: 0.35, envMapIntensity: 1 })
++    );
++    band.position.y = 3.2;
++    this.bottleGroup.add(band);
++    this.closure = [cork, band];
++
++    // warm light that "finds" the bottle as the spirit condenses
++    this.bottleLight = new THREE.PointLight(0xffdcb0, 0, 9, 2);
++    this.bottleLight.position.set(LAYOUT.bottle.x + 1.4, 1.6, 2.4);
++    s.add(this.bottleLight);
++    // ember inside the still
++    this.emberLight = new THREE.PointLight(0xff7a30, 0, 7, 2);
++    this.emberLight.position.set(LAYOUT.still.x, -1.4, 0.6);
++    s.add(this.emberLight);
++
++    // ——— the distillate: ink-sampled particles ———
++    const N = this.tier === "high" ? 30000 : 12000;
++    const per = Math.floor(N / 5);
++    const home = new Float32Array(N * 3);
++    const color = new Float32Array(N * 3);
++    for (let i = 0; i < 5; i++) {
++      const { positions, colors } = sampleInk(this.plateTex[i].image, per);
++      home.set(inkToWorld(positions, i), i * per * 3);
++      color.set(colors, i * per * 3);
++    }
++    // any remainder duplicates plate 0 points
++    for (let i = per * 5; i < N; i++) {
++      home.copyWithin(i * 3, 0, 3);
++      color.copyWithin(i * 3, 0, 3);
++    }
++    const bottleTargets = sampleBottleSurface(N);
++    const seeds = new Float32Array(N * 4);
++    for (let i = 0; i < N; i++) {
++      seeds[i * 4] = Math.random();
++      seeds[i * 4 + 1] = Math.random();
++      seeds[i * 4 + 2] = Math.random();
++      seeds[i * 4 + 3] = Math.random();
++    }
++    const geo = new THREE.BufferGeometry();
++    geo.setAttribute("position", new THREE.BufferAttribute(home.slice(), 3)); // required by three
++    geo.setAttribute("aHome", new THREE.BufferAttribute(home, 3));
++    geo.setAttribute("aBottle", new THREE.BufferAttribute(bottleTargets, 3));
++    geo.setAttribute("aColor", new THREE.BufferAttribute(color, 3));
++    geo.setAttribute("aSeed", new THREE.BufferAttribute(seeds, 4));
++    geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 0.5, 0), 14);
++    const b = LAYOUT.bez;
++    this.pointsMat = new THREE.ShaderMaterial({
++      vertexShader: pointsVert,
++      fragmentShader: pointsFrag,
++      uniforms: {
++        uTime: { value: 0 },
++        uDissolve: { value: 0 },
++        uTravel: { value: 0 },
++        uCondense: { value: 0 },
++        uAlpha: { value: 0 },
++        uSize: { value: 0.045 },
++        uScaleH: { value: 800 },
++        uPointerK: { value: this.tier === "high" ? 0.55 : 0 },
++        uPointer: { value: this.pointerWorld },
++        uP0: { value: new THREE.Vector3(...b.p0) },
++        uP1: { value: new THREE.Vector3(...b.p1) },
++        uP2: { value: new THREE.Vector3(...b.p2) },
++        uP3: { value: new THREE.Vector3(...b.p3) },
++        uClear: { value: new THREE.Vector3(...LAYOUT.clearSpirit) },
++      },
++      transparent: true,
++      depthWrite: false,
++      blending: THREE.AdditiveBlending,
++    });
++    this.points = new THREE.Points(geo, this.pointsMat);
++    this.points.renderOrder = 7;
++    this.points.visible = false;
++    s.add(this.points);
++
++    this.clock = new THREE.Clock(false);
++  }
++
++  // ————— per-frame state from the timeline —————
++  applyProgress(dt) {
++    const p = this.p;
++    const t = this.time;
++
++    // camera — lookAt on the camera itself (−Z convention), parallax composed after
++    if (this.mode === "reduced") {
++      // the folio still-life: bottle right of frame, copy space left
++      this.camera.position.set(0.2, 0.05, 5.6);
++      this.camera.lookAt(this.smoothTarget.set(2.65, -0.55, 0));
++    } else {
++      const cp = TL.camPos(p);
++      const ct = TL.camTgt(p);
++      const introBack = (1 - this.intro) * 3.2;
++      this.camera.position.set(cp[0], cp[1], cp[2] + introBack);
++      this.smoothTarget.lerp(this.camTarget.set(ct[0], ct[1], ct[2]), dt ? 1 - Math.exp(-dt * 5.5) : 1);
++      this.camera.lookAt(this.smoothTarget);
++      this.camera.rotateY(this.parallax.x);
++      this.camera.rotateX(this.parallax.y);
++    }
++
++    // plates
++    const ringMix = TL.ringMix(p);
++    const wallMix = TL.wallMix(p);
++    const erode = TL.erode(p);
++    const sway = TL.sway(p);
++    const dim = TL.plateDim(p);
++    for (let i = 0; i < 5; i++) {
++      let pose = lerpPose(galleryPose(i), ringPose(i), ringMix);
++      if (wallMix > 0) pose = lerpPose(pose, wallPose(i), wallMix);
++      const m = this.plates[i];
++      const introDrift = (1 - this.intro) * (1.5 + i * 0.7);
++      m.position.set(pose.pos[0], pose.pos[1], pose.pos[2] - introDrift);
++      m.rotation.set(pose.rot[0], pose.rot[1], pose.rot[2]);
++      m.scale.setScalar(pose.scale);
++      const u = m.material.uniforms;
++      u.uTime.value = t;
++      u.uSway.value = sway;
++      u.uErode.value = Math.max(0, erode - i * 0.045);
++      u.uDim.value = wallMix > 0 ? dim : 1;
++      // hover / beat glow
++      const target = this.highlight.hover === i ? 1 : this.highlight.beat === i ? 0.45 : 0;
++      this.glow[i] += (target - this.glow[i]) * (dt ? 1 - Math.exp(-dt * 8) : 1);
++      u.uGlow.value = this.glow[i];
++      m.visible = erode - i * 0.045 < 1.2 || wallMix > 0;
++    }
++
++    // still
++    this.still.position.y = TL.stillRise(p);
++    const heat = TL.heat(p);
++    this.stillMat.emissiveIntensity = heat * 0.55;
++    this.emberLight.intensity = heat * 2.6;
++
++    // vapour
++    const pu = this.pointsMat.uniforms;
++    pu.uTime.value = t;
++    pu.uDissolve.value = TL.dissolve(p);
++    pu.uTravel.value = TL.travel(p);
++    pu.uCondense.value = TL.condense(p);
++    pu.uAlpha.value = TL.pointsAlpha(p);
++    this.points.visible = pu.uAlpha.value > 0.003;
++
++    // bottle — offstage until the vapour has somewhere to land
++    this.bottleGroup.visible = p > 0.485;
++    const light = TL.glassLight(p);
++    this.glassMat.envMapIntensity = light;
++    this.bottleLight.intensity = light * 2.2;
++    this.labelMat.opacity = TL.labelFade(p);
++    this.liquidMat.uniforms.uFill.value = TL.liquidFill(p);
++    this.liquidMat.uniforms.uOn.value = TL.liquidOn(p);
++    this.liquidMat.uniforms.uCam.value.setFromMatrixPosition(this.camera.matrixWorld);
++    const closureOn = TL.labelFade(p);
++    this.closure.forEach((c) => {
++      c.visible = closureOn > 0.02;
++      if (c.material.transparent) c.material.opacity = closureOn;
++    });
++
++    // ambience
++    const stage = TL.stageLight(p);
++    this.backMat.uniforms.uLight.value = stage;
++    this.floorMat.uniforms.uLight.value = stage;
++  }
++
++  // ————— loop control —————
++  updateRun() {
++    const should =
++      this.ready && !this.disposed && this.mode === "full" && this.visible && this.onscreen;
++    if (should && !this.running) {
++      this.running = true;
++      this.clock.start();
++      this.raf = requestAnimationFrame(this.tick);
++    } else if (!should && this.running) {
++      this.stopLoop();
++    }
++  }
++
++  stopLoop() {
++    this.running = false;
++    cancelAnimationFrame(this.raf);
++    if (this.clock) this.clock.stop();
++  }
++
++  tick = () => {
++    if (!this.running) return;
++    const dt = Math.min(this.clock.getDelta(), 0.05);
++    this.time += dt;
++    this.fps = this.fps * 0.95 + (dt > 0 ? 1 / dt : 60) * 0.05;
++
++    if (this.intro < 1) this.intro = Math.min(1, this.intro + dt / 2.2);
++    const e = 1 - Math.exp(-dt * 6.5);
++    this.p += (this.targetP - this.p) * e;
++    this.pointerWorld.lerp(this.pointerTargetWorld, 1 - Math.exp(-dt * 5));
++
++    this.applyProgress(dt);
++    this.renderer.render(this.scene, this.camera);
++    this.frames++;
++    this.raf = requestAnimationFrame(this.tick);
++  };
++
++  renderOnce() {
++    if (!this.ready || this.disposed) return;
++    this.applyProgress(0);
++    this.renderer.render(this.scene, this.camera);
++    this.frames++;
++  }
++
++  // ————— external API —————
++  setProgress(p) {
++    this.targetP = p;
++  }
++
++  // deterministic scrub + single frame (verification/debug)
++  step(p) {
++    this.intro = 1;
++    this.targetP = p;
++    this.p = p;
++    this.smoothTarget.set(...([].concat(TLcamTgtAt(p))));
++    this.renderOnce();
++  }
++
++  setPointer(ndcX, ndcY) {
++    if (this.mode !== "full" || this.tier !== "high") return;
++    this.pointerNdc.set(ndcX, ndcY);
++    this.parallax.x += (-ndcX * 0.03 - this.parallax.x) * 0.5;
++    this.parallax.y += (ndcY * 0.02 - this.parallax.y) * 0.5;
++    // project onto the z=0 stage plane for vapour stirring
++    const v = new THREE.Vector3(ndcX, ndcY, 0.5).unproject(this.camera);
++    const o = new THREE.Vector3().setFromMatrixPosition(this.camera.matrixWorld);
++    const d = v.sub(o).normalize();
++    const tPlane = -o.z / (d.z || 1e-4);
++    if (tPlane > 0 && tPlane < 40) this.pointerTargetWorld.copy(o).addScaledVector(d, tPlane);
++  }
++
++  setHighlight(hover, beat) {
++    this.highlight.hover = hover;
++    this.highlight.beat = beat;
++  }
++
++  setRunFlags({ visible, onscreen }) {
++    if (visible !== undefined) this.visible = visible;
++    if (onscreen !== undefined) this.onscreen = onscreen;
++    this.updateRun();
++  }
++
++  setMode(mode) {
++    this.mode = mode;
++    this.applyMode();
++  }
++
++  applyMode() {
++    if (!this.ready) return;
++    if (this.mode === "reduced") {
++      this.stopLoop();
++      // the composed still-life: end of the run, no motion
++      this.intro = 1;
++      this.p = 1;
++      this.targetP = 1;
++      this.parallax.set(0, 0);
++      this.renderOnce();
++    } else {
++      this.p = Math.min(this.p, this.targetP);
++      this.updateRun();
++      // paused at birth (hidden tab / offscreen): still paint one composed frame
++      if (!this.running) this.renderOnce();
++    }
++  }
++
++  resize() {
++    const w = this.canvas.clientWidth || 1;
++    const h = this.canvas.clientHeight || 1;
++    const dprCap = this.tier === "high" ? 1.75 : 1.25;
++    const dpr = Math.min(window.devicePixelRatio || 1, dprCap);
++    this.renderer.setPixelRatio(dpr);
++    this.renderer.setSize(w, h, false);
++    this.camera.aspect = w / h;
++    this.camera.updateProjectionMatrix();
++    if (this.pointsMat) {
++      this.pointsMat.uniforms.uScaleH.value = (h * 0.5) / Math.tan((this.camera.fov * Math.PI) / 360);
++    }
++    if (this.ready && !this.running) this.renderOnce();
++  }
++
++  dispose() {
++    this.disposed = true;
++    this.stopLoop();
++    if (this.renderer) this.renderer.dispose();
++    if (this.scene) {
++      this.scene.traverse((o) => {
++        if (o.geometry) o.geometry.dispose();
++        if (o.material) {
++          const mats = Array.isArray(o.material) ? o.material : [o.material];
++          mats.forEach((m) => {
++            for (const k in m) if (m[k] && m[k].isTexture) m[k].dispose();
++            m.dispose();
++          });
++        }
++      });
++    }
++  }
++}
+diff --git a/app/experience/label.js b/app/experience/label.js
+new file mode 100644
+index 0000000..19d93b6
+--- /dev/null
++++ b/app/experience/label.js
+@@ -0,0 +1,81 @@
++// The bottle label, drawn once into a canvas texture using the page's own fonts.
++export function drawLabel(canvas) {
++  const W = 640;
++  const H = 880;
++  canvas.width = W;
++  canvas.height = H;
++  const ctx = canvas.getContext("2d");
++  const css = getComputedStyle(document.documentElement);
++  const display = (css.getPropertyValue("--font-display") || "Georgia").trim() || "Georgia";
++  const sans = (css.getPropertyValue("--font-sans") || "Arial").trim() || "Arial";
++
++  // paper
++  const grad = ctx.createLinearGradient(0, 0, 0, H);
++  grad.addColorStop(0, "#f2ead7");
++  grad.addColorStop(1, "#e7dcc2");
++  ctx.fillStyle = grad;
++  ctx.fillRect(0, 0, W, H);
++
++  // rules
++  ctx.strokeStyle = "#7a3f1c";
++  ctx.lineWidth = 3;
++  ctx.strokeRect(26, 26, W - 52, H - 52);
++  ctx.lineWidth = 1;
++  ctx.strokeRect(40, 40, W - 80, H - 80);
++
++  ctx.fillStyle = "#23231d";
++  ctx.textAlign = "center";
++
++  const caps = (size, spacing, weight) => {
++    ctx.font = `${weight || 600} ${size}px ${sans}`;
++    try { ctx.letterSpacing = `${spacing}px`; } catch (e) { /* older engines */ }
++  };
++
++  caps(21, 9);
++  ctx.fillStyle = "#7a3f1c";
++  ctx.fillText("SMALL BATCH · LONDON", W / 2, 118);
++
++  ctx.fillStyle = "#1d1d18";
++  ctx.font = `500 92px ${display}`;
++  try { ctx.letterSpacing = "6px"; } catch (e) {}
++  ctx.fillText("Thornmere", W / 2, 250);
++
++  // five botanical marks
++  ctx.fillStyle = "#7a3f1c";
++  for (let i = 0; i < 5; i++) {
++    const x = W / 2 + (i - 2) * 46;
++    ctx.save();
++    ctx.translate(x, 306);
++    ctx.rotate(Math.PI / 4);
++    ctx.fillRect(-5, -5, 10, 10);
++    ctx.restore();
++  }
++
++  ctx.fillStyle = "#23231d";
++  caps(30, 12);
++  ctx.fillText("LONDON DRY GIN", W / 2, 386);
++
++  caps(19, 6, 500);
++  ctx.fillStyle = "#4b4a40";
++  ctx.fillText("JUNIPER · CORIANDER · ANGELICA", W / 2, 452);
++  ctx.fillText("ORRIS · LEMON PEEL", W / 2, 484);
++
++  ctx.strokeStyle = "#7a3f1c";
++  ctx.beginPath();
++  ctx.moveTo(150, 540);
++  ctx.lineTo(W - 150, 540);
++  ctx.stroke();
++
++  ctx.font = `italic 400 30px ${display}`;
++  try { ctx.letterSpacing = "0px"; } catch (e) {}
++  ctx.fillStyle = "#33322b";
++  ctx.fillText("Distilled once, in copper.", W / 2, 600);
++
++  caps(22, 7);
++  ctx.fillStyle = "#23231d";
++  ctx.fillText("43.1% VOL — 70 CL", W / 2, 682);
++
++  caps(18, 6, 500);
++  ctx.fillStyle = "#7a3f1c";
++  ctx.fillText("BATCH Nº 03 — BOTTLE 217 / 400", W / 2, 764);
++}
+diff --git a/app/experience/motionStore.js b/app/experience/motionStore.js
+new file mode 100644
+index 0000000..0acabbb
+--- /dev/null
++++ b/app/experience/motionStore.js
+@@ -0,0 +1,74 @@
++// Tiny shared store for the motion preference.
++// Initial value follows prefers-reduced-motion; the header toggle overrides it
++// (persisted); OS-level changes keep being honoured unless the user overrode.
++const KEY = "thornmere-motion";
++
++const store = {
++  state: "full", // "full" | "reduced"
++  overridden: false,
++  locked: false,
++  listeners: new Set(),
++  initialized: false,
++};
++
++function apply(next) {
++  if (next === store.state) return;
++  store.state = next;
++  if (typeof document !== "undefined") {
++    document.documentElement.dataset.motion = next;
++  }
++  store.listeners.forEach((fn) => fn(next));
++}
++
++export function initMotionStore() {
++  if (store.initialized || typeof window === "undefined") return store.state;
++  store.initialized = true;
++  let saved = null;
++  try {
++    saved = window.localStorage.getItem(KEY);
++  } catch (e) {
++    /* storage unavailable — follow the media query */
++  }
++  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
++  if (saved === "full" || saved === "reduced") {
++    store.overridden = true;
++    apply(saved);
++  } else {
++    apply(mq.matches ? "reduced" : "full");
++  }
++  mq.addEventListener("change", (e) => {
++    if (!store.overridden) apply(e.matches ? "reduced" : "full");
++  });
++  return store.state;
++}
++
++export function getMotion() {
++  return store.state;
++}
++
++export function setMotion(next) {
++  if (store.locked) return;
++  store.overridden = true;
++  try {
++    window.localStorage.setItem(KEY, next);
++  } catch (e) {
++    /* fine */
++  }
++  apply(next);
++}
++
++// WebGL unavailable: the folio IS the page. Not persisted; toggle disabled.
++export function lockReduced() {
++  store.overridden = true;
++  store.locked = true;
++  apply("reduced");
++}
++
++export function isMotionLocked() {
++  return store.locked;
++}
++
++export function subscribeMotion(fn) {
++  store.listeners.add(fn);
++  return () => store.listeners.delete(fn);
++}
+diff --git a/app/experience/sampling.js b/app/experience/sampling.js
+new file mode 100644
+index 0000000..8aaaea2
+--- /dev/null
++++ b/app/experience/sampling.js
+@@ -0,0 +1,130 @@
++// CPU-side sampling: engraving ink → particle homes; lathe surface → condensation targets.
++import { LAYOUT, ringPose } from "./timeline.js";
++
++// Sample pigment pixels from a plate image. Returns {positions, colors} in
++// plate-local units (plate width/height from LAYOUT), origin at plate centre.
++export function sampleInk(image, count) {
++  const w = image.naturalWidth || image.width;
++  const h = image.naturalHeight || image.height;
++  const cv = document.createElement("canvas");
++  cv.width = w;
++  cv.height = h;
++  const ctx = cv.getContext("2d", { willReadFrequently: true });
++  ctx.drawImage(image, 0, 0);
++  const data = ctx.getImageData(0, 0, w, h).data;
++
++  const positions = new Float32Array(count * 3);
++  const colors = new Float32Array(count * 3);
++  let placed = 0;
++  let guard = 0;
++  const maxTries = count * 80;
++  while (placed < count && guard++ < maxTries) {
++    const x = (Math.random() * w) | 0;
++    const y = (Math.random() * h) | 0;
++    const o = (y * w + x) * 4;
++    const r = data[o] / 255;
++    const g = data[o + 1] / 255;
++    const b = data[o + 2] / 255;
++    const lum = 0.299 * r + 0.587 * g + 0.114 * b;
++    if (lum > 0.86) continue; // paper
++    // keep denser ink more often so structure survives
++    if (Math.random() > (1 - lum) * 1.4 + 0.08) continue;
++    const px = (x / w - 0.5) * LAYOUT.plateW;
++    const py = (0.5 - y / h) * LAYOUT.plateH;
++    positions[placed * 3] = px;
++    positions[placed * 3 + 1] = py;
++    positions[placed * 3 + 2] = (Math.random() - 0.5) * 0.02;
++    // slightly brightened, linearised for additive glow
++    colors[placed * 3] = Math.pow(Math.min(1, r * 1.25 + 0.06), 2.0);
++    colors[placed * 3 + 1] = Math.pow(Math.min(1, g * 1.25 + 0.06), 2.0);
++    colors[placed * 3 + 2] = Math.pow(Math.min(1, b * 1.2 + 0.05), 2.0);
++    placed++;
++  }
++  // fill any shortfall by duplicating placed points
++  for (let i = placed; i < count; i++) {
++    const j = (Math.random() * Math.max(1, placed)) | 0;
++    positions.set(positions.subarray(j * 3, j * 3 + 3), i * 3);
++    colors.set(colors.subarray(j * 3, j * 3 + 3), i * 3);
++  }
++  return { positions, colors };
++}
++
++// Transform plate-local ink points into world space at the converged-ring
++// keyframe (the dissolve moment) — same constants the timeline uses.
++export function inkToWorld(local, plateIndex) {
++  const pose = ringPose(plateIndex);
++  const [cx, cy, cz] = pose.pos;
++  const rz = pose.rot[2];
++  const s = pose.scale;
++  const cos = Math.cos(rz);
++  const sin = Math.sin(rz);
++  const out = new Float32Array(local.length);
++  for (let i = 0; i < local.length; i += 3) {
++    const x = local[i] * s;
++    const y = local[i + 1] * s;
++    out[i] = cx + x * cos - y * sin;
++    out[i + 1] = cy + x * sin + y * cos;
++    out[i + 2] = cz + local[i + 2] * s;
++  }
++  return out;
++}
++
++// The bottle is a surface of revolution — this is its profile, reused by
++// LatheGeometry (via toVector2s) and by the surface sampler below.
++// [radius, height-above-base]
++export const BOTTLE_PROFILE = [
++  [0.001, 0.0],
++  [0.3, 0.0],
++  [0.55, 0.015],
++  [0.615, 0.09],
++  [0.63, 0.28],
++  [0.63, 1.42],
++  [0.605, 1.6],
++  [0.5, 1.78],
++  [0.335, 1.98],
++  [0.215, 2.2],
++  [0.172, 2.42],
++  [0.165, 2.78],
++  [0.168, 2.96],
++  [0.19, 3.02],
++  [0.195, 3.12],
++  [0.17, 3.16],
++];
++
++// liquid: inset copy of the wetted part of the profile
++export const LIQUID_PROFILE = BOTTLE_PROFILE.filter(([, y]) => y <= 2.45).map(([r, y]) => [
++  Math.max(0.001, r - 0.05),
++  y + 0.015,
++]);
++
++export function sampleBottleSurface(count) {
++  const P = BOTTLE_PROFILE;
++  const bx = LAYOUT.bottle.x;
++  const by = LAYOUT.bottle.baseY;
++  // cumulative lateral area per segment ≈ avg radius × segment length
++  const cum = [];
++  let total = 0;
++  for (let i = 1; i < P.length; i++) {
++    const [r0, y0] = P[i - 1];
++    const [r1, y1] = P[i];
++    const len = Math.hypot(r1 - r0, y1 - y0);
++    total += ((r0 + r1) / 2) * len;
++    cum.push(total);
++  }
++  const out = new Float32Array(count * 3);
++  for (let i = 0; i < count; i++) {
++    const pick = Math.random() * total;
++    let s = 0;
++    while (s < cum.length - 1 && cum[s] < pick) s++;
++    const [r0, y0] = P[s];
++    const [r1, y1] = P[s + 1];
++    const f = Math.random();
++    const r = r0 + (r1 - r0) * f + (Math.random() - 0.5) * 0.012;
++    const y = y0 + (y1 - y0) * f;
++    const a = Math.random() * Math.PI * 2;
++    out[i * 3] = bx + Math.cos(a) * r;
++    out[i * 3 + 1] = by + y;
++    out[i * 3 + 2] = Math.sin(a) * r;
++  }
++  return out;
++}
+diff --git a/app/experience/shaders.js b/app/experience/shaders.js
+new file mode 100644
+index 0000000..cd9d1e0
+--- /dev/null
++++ b/app/experience/shaders.js
+@@ -0,0 +1,223 @@
++// GLSL for the four custom materials. Everything else uses three's PBR.
++
++const NOISE = /* glsl */ `
++  float hash21(vec2 p) {
++    p = fract(p * vec2(234.34, 435.345));
++    p += dot(p, p + 34.23);
++    return fract(p.x * p.y);
++  }
++  float vnoise(vec2 p) {
++    vec2 i = floor(p);
++    vec2 f = fract(p);
++    f = f * f * (3.0 - 2.0 * f);
++    float a = hash21(i);
++    float b = hash21(i + vec2(1.0, 0.0));
++    float c = hash21(i + vec2(0.0, 1.0));
++    float d = hash21(i + vec2(1.0, 1.0));
++    return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
++  }
++  vec3 swirl(vec3 p, float t) {
++    return 0.5 * vec3(
++      sin(p.y * 1.7 + t * 0.9) + sin(p.z * 2.3 + t * 0.7),
++      sin(p.z * 1.9 + t * 0.8) + sin(p.x * 2.1 + t * 1.1),
++      sin(p.x * 1.5 + t)       + sin(p.y * 2.7 + t * 0.6)
++    );
++  }
++`;
++
++// ————— botanical plate: white paper keyed away, pigment kept —————
++export const plateVert = /* glsl */ `
++  uniform float uTime;
++  uniform float uSway;
++  uniform float uPhase;
++  varying vec2 vUv;
++  varying float vDepth;
++  void main() {
++    vUv = uv;
++    vec3 p = position;
++    float sway = uSway * 0.05;
++    p.z += sin(uv.y * 2.6 + uTime * 0.55 + uPhase) * sway;
++    p.x += sin(uv.y * 1.4 + uTime * 0.4 + uPhase * 1.7) * sway * 0.55;
++    vec4 mv = modelViewMatrix * vec4(p, 1.0);
++    vDepth = -mv.z;
++    gl_Position = projectionMatrix * mv;
++  }
++`;
++
++export const plateFrag = /* glsl */ `
++  precision highp float;
++  uniform sampler2D uMap;
++  uniform float uErode;
++  uniform float uGlow;
++  uniform float uDim;
++  uniform vec3 uFog;
++  varying vec2 vUv;
++  varying float vDepth;
++  ${NOISE}
++  void main() {
++    vec4 tex = texture2D(uMap, vUv);
++    float lum = dot(tex.rgb, vec3(0.299, 0.587, 0.114));
++    float alpha = 1.0 - smoothstep(0.80, 0.955, lum);
++    float n = 0.62 * vnoise(vUv * 6.0) + 0.38 * vnoise(vUv * 15.0);
++    alpha *= smoothstep(uErode - 0.22, uErode + 0.02, n + 0.12);
++    if (alpha < 0.012) discard;
++    vec3 col = tex.rgb;
++    col = mix(col, col * vec3(1.04, 1.0, 0.92), 0.35);   // warm the pigment
++    col *= (0.94 + uGlow * 0.55);
++    col *= uDim;
++    float fogF = 1.0 - exp(-vDepth * vDepth * 0.0016);
++    col = mix(col, uFog, fogF * 0.85);
++    gl_FragColor = vec4(col, alpha);
++  }
++`;
++
++// ————— the distillate: ink-sampled particles —————
++export const pointsVert = /* glsl */ `
++  attribute vec3 aHome;
++  attribute vec3 aBottle;
++  attribute vec3 aColor;
++  attribute vec4 aSeed;
++  uniform float uTime;
++  uniform float uDissolve;
++  uniform float uTravel;
++  uniform float uCondense;
++  uniform float uSize;
++  uniform float uScaleH;
++  uniform float uPointerK;
++  uniform vec3 uPointer;
++  uniform vec3 uP0; uniform vec3 uP1; uniform vec3 uP2; uniform vec3 uP3;
++  uniform vec3 uClear;
++  varying vec3 vColor;
++  varying float vFade;
++  ${NOISE}
++  vec3 bez(float t) {
++    float s = 1.0 - t;
++    return s*s*s*uP0 + 3.0*s*s*t*uP1 + 3.0*s*t*t*uP2 + t*t*t*uP3;
++  }
++  void main() {
++    float sg = aSeed.x;
++    // 1 — lift off the engraving
++    float d = smoothstep(sg * 0.3, sg * 0.3 + 0.7, uDissolve);
++    vec3 pos = aHome + swirl(aHome * 1.5 + sg * 6.0, uTime * 0.6) * 0.22 * d;
++    // 2 — ride the invisible swan neck
++    float tr = clamp(uTravel * (1.3 + aSeed.y * 0.35) - sg * 0.42, 0.0, 1.0);
++    tr = tr * tr * (3.0 - 2.0 * tr);
++    float spread = sin(tr * 3.14159) * (0.3 + aSeed.w * 0.55);
++    vec3 vap = bez(tr) + swirl(vec3(aSeed.yw * 8.0, tr * 4.0), uTime * 0.45) * spread;
++    pos = mix(pos, vap, smoothstep(0.015, 0.28, tr));
++    // 3 — condense onto the bottle, bottom first
++    float cn = smoothstep(sg * 0.45, sg * 0.45 + 0.55, uCondense);
++    pos = mix(pos, aBottle, cn);
++    // pointer stirs the vapour only
++    float vaporness = smoothstep(0.04, 0.35, tr) * (1.0 - cn) * (1.0 - d * 0.0);
++    vec3 dp = pos - uPointer;
++    float dl2 = dot(dp, dp);
++    pos += (dp / (sqrt(dl2) + 0.001)) * exp(-dl2 * 1.9) * uPointerK * vaporness;
++
++    vColor = mix(aColor, uClear, cn * 0.88);
++    vFade = (0.5 + 0.5 * aSeed.w) * mix(1.0, 0.8, cn);
++    vec4 mv = modelViewMatrix * vec4(pos, 1.0);
++    float size = uSize * (0.7 + aSeed.z) * (1.0 + spread * 0.7) * (1.0 - 0.5 * cn);
++    gl_PointSize = clamp(size * uScaleH / -mv.z, 1.0, 26.0);
++    gl_Position = projectionMatrix * mv;
++  }
++`;
++
++export const pointsFrag = /* glsl */ `
++  precision mediump float;
++  uniform float uAlpha;
++  varying vec3 vColor;
++  varying float vFade;
++  void main() {
++    vec2 c = gl_PointCoord - 0.5;
++    float a = smoothstep(0.5, 0.06, length(c));
++    gl_FragColor = vec4(vColor * (a * vFade * uAlpha), 1.0);
++  }
++`;
++
++// ————— the spirit inside the glass —————
++export const liquidVert = /* glsl */ `
++  varying vec3 vWorld;
++  varying vec3 vNormalW;
++  void main() {
++    vec4 w = modelMatrix * vec4(position, 1.0);
++    vWorld = w.xyz;
++    vNormalW = normalize(mat3(modelMatrix) * normal);
++    gl_Position = projectionMatrix * viewMatrix * w;
++  }
++`;
++
++export const liquidFrag = /* glsl */ `
++  precision highp float;
++  uniform float uFill;
++  uniform float uOn;
++  uniform vec3 uTint;
++  uniform vec3 uCam;
++  varying vec3 vWorld;
++  varying vec3 vNormalW;
++  void main() {
++    if (vWorld.y > uFill || uOn < 0.003) discard;
++    vec3 v = normalize(uCam - vWorld);
++    float fres = pow(1.0 - abs(dot(normalize(vNormalW), v)), 2.4);
++    float line = smoothstep(0.05, 0.0, abs(vWorld.y - uFill)) * 0.85;
++    vec3 col = uTint * (0.2 + fres * 0.9) + vec3(0.95, 0.9, 0.74) * line;
++    float alpha = clamp(fres * 0.42 + line * 0.85 + 0.09, 0.0, 1.0) * uOn;
++    gl_FragColor = vec4(col, alpha);
++  }
++`;
++
++// ————— floor: light pool + contact shadows —————
++export const floorFrag = /* glsl */ `
++  precision highp float;
++  uniform vec3 uBase;
++  uniform vec3 uWarm;
++  uniform float uLight;
++  varying vec3 vWorld;
++  ${NOISE}
++  void main() {
++    float r2 = vWorld.x * vWorld.x * 0.55 + vWorld.z * vWorld.z;
++    vec3 col = uBase + uWarm * exp(-r2 * 0.10) * 0.5 * uLight;
++    vec2 ds = vWorld.xz - vec2(-2.2, 0.0);
++    vec2 db = vWorld.xz - vec2(2.2, 0.0);
++    col *= 1.0 - 0.55 * exp(-dot(ds, ds) * 1.35);
++    col *= 1.0 - 0.55 * exp(-dot(db, db) * 1.9);
++    col += (hash21(vWorld.xz * 41.7) - 0.5) * 0.012;
++    float edge = 1.0 - smoothstep(4.5, 9.5, sqrt(r2));
++    gl_FragColor = vec4(col, edge);
++  }
++`;
++
++export const floorVert = /* glsl */ `
++  varying vec3 vWorld;
++  void main() {
++    vec4 w = modelMatrix * vec4(position, 1.0);
++    vWorld = w.xyz;
++    gl_Position = projectionMatrix * viewMatrix * w;
++  }
++`;
++
++// ————— backdrop gradient, dithered —————
++export const backVert = /* glsl */ `
++  varying vec2 vUv;
++  void main() {
++    vUv = uv;
++    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
++  }
++`;
++
++export const backFrag = /* glsl */ `
++  precision highp float;
++  uniform vec3 uBottom;
++  uniform vec3 uTop;
++  uniform float uLight;
++  varying vec2 vUv;
++  ${NOISE}
++  void main() {
++    float g = smoothstep(0.0, 0.85, vUv.y);
++    vec2 c = vUv - vec2(0.5, 0.42);
++    float halo = exp(-dot(c, c) * 5.5) * 0.5 * uLight;
++    vec3 col = mix(uBottom, uTop, g * 0.8 + halo);
++    col += (hash21(vUv * 913.7) - 0.5) * 0.012;
++    gl_FragColor = vec4(col, 1.0);
++  }
++`;
+diff --git a/app/experience/timeline.js b/app/experience/timeline.js
+new file mode 100644
+index 0000000..3cd023c
+--- /dev/null
++++ b/app/experience/timeline.js
+@@ -0,0 +1,215 @@
++// ————————————————————————————————————————————————————————————————
++// The single owner of the scene timeline. Scroll progress p ∈ [0,1]
++// is evaluated through keyframe tracks; nothing else animates
++// transforms. DOM copy reveals are CSS classes keyed off the same p.
++// ————————————————————————————————————————————————————————————————
++
++export const ACT_RANGES = [
++  { id: "a0", from: 0.0, to: 0.1 },
++  { id: "a1", from: 0.1, to: 0.36 },
++  { id: "a2", from: 0.36, to: 0.5 },
++  { id: "a3", from: 0.5, to: 0.7 },
++  { id: "a4", from: 0.7, to: 0.86 },
++  { id: "a5", from: 0.86, to: 1.0 },
++];
++
++export function actFromP(p) {
++  for (const a of ACT_RANGES) if (p < a.to) return a.id;
++  return "a5";
++}
++
++// Act I sub-beats: which botanical the camera is framing.
++// camX(p) mirrors the camPos track's linear a1 segment.
++export function beatFromP(p) {
++  if (p < 0.1 || p > 0.352) return -1;
++  const camX = -6.4 + ((p - 0.1) / 0.245) * 12.8;
++  return Math.max(0, Math.min(4, Math.round((camX + 6.9) / 3)));
++}
++
++// ————— easing —————
++const EASE = {
++  lin: (t) => t,
++  io: (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2),
++  o: (t) => 1 - Math.pow(1 - t, 3),
++  i: (t) => t * t * t,
++};
++
++// keys: [[t, value, ease?], ...] value = number | number[]
++export function track(keys) {
++  return (p) => {
++    if (p <= keys[0][0]) return keys[0][1];
++    for (let k = 1; k < keys.length; k++) {
++      if (p <= keys[k][0]) {
++        const [t0, v0] = keys[k - 1];
++        const [t1, v1, e] = keys[k];
++        const f = EASE[e || "io"]((p - t0) / (t1 - t0));
++        if (Array.isArray(v0)) return v0.map((a, j) => a + (v1[j] - a) * f);
++        return v0 + (v1 - v0) * f;
++      }
++    }
++    return keys[keys.length - 1][1];
++  };
++}
++
++// ————— world layout —————
++export const LAYOUT = {
++  plateW: 1.7,
++  plateH: 2.17,
++  floorY: -2.6,
++  still: { x: -2.2, baseY: -2.6, mouth: [-2.2, -0.3, 0] },
++  bottle: { x: 2.2, baseY: -2.6, height: 3.16 },
++  // the swan neck, drawn in vapour: cubic bezier from still mouth to bottle mouth
++  bez: {
++    p0: [-2.2, -0.2, 0],
++    p1: [-2.05, 2.55, 0],
++    p2: [1.55, 2.8, 0.15],
++    p3: [2.2, 0.72, 0],
++  },
++  clearSpirit: [0.82, 0.86, 0.8],
++};
++
++const GX = [-6, -3, 0, 3, 6];
++const GY = [0.25, -0.12, 0.16, -0.2, 0.1];
++const GZ = [-0.6, 0.5, -0.35, 0.6, -0.5];
++const GR = [-0.03, 0.025, -0.02, 0.03, -0.025];
++
++export function galleryPose(i) {
++  return {
++    pos: [GX[i], 1.45 + GY[i], GZ[i]],
++    rot: [0, 0, GR[i]],
++    scale: 1,
++  };
++}
++
++// converged ring above the still mouth at the dissolve keyframe —
++// the SAME constants feed the CPU particle-home sampler.
++export function ringPose(i) {
++  const a = (i / 5) * Math.PI * 2 - Math.PI / 2;
++  return {
++    pos: [
++      LAYOUT.still.x + Math.cos(a) * 0.78,
++      0.62 + Math.sin(a) * 0.46,
++      i % 2 ? 0.14 : -0.14,
++    ],
++    rot: [0, 0, Math.cos(a) * 0.22],
++    scale: 0.3,
++  };
++}
++
++// herbarium wall behind the finished bottle (Act V echo)
++export function wallPose(i) {
++  return {
++    pos: [2.45 + (i - 2) * 1.16, 0.95, -3.6],
++    rot: [0, 0, (i - 2) * 0.012],
++    scale: 0.8,
++  };
++}
++
++export function lerpPose(a, b, f) {
++  return {
++    pos: a.pos.map((v, j) => v + (b.pos[j] - v) * f),
++    rot: a.rot.map((v, j) => v + (b.rot[j] - v) * f),
++    scale: a.scale + (b.scale - a.scale) * f,
++  };
++}
++
++// ————— tracks —————
++export const TL = {
++  camPos: track([
++    [0.0, [0, 1.5, 12.0]],
++    [0.1, [-6.4, 1.5, 4.8], "io"],
++    [0.345, [6.4, 1.5, 4.6], "lin"],
++    [0.42, [1.6, 0.9, 6.6], "io"],
++    [0.5, [-0.9, 0.5, 5.6], "io"],
++    [0.62, [0.1, 1.15, 7.4], "io"],
++    [0.74, [1.35, 0.55, 5.6], "io"],
++    [0.86, [2.2, -0.1, 4.0], "io"],
++    [1.0, [0.95, 0.12, 5.3], "io"],
++  ]),
++  camTgt: track([
++    [0.0, [0, 1.35, 0]],
++    [0.1, [-6.95, 1.42, 0], "io"],
++    [0.345, [5.05, 1.4, 0], "lin"],
++    [0.42, [-1.2, 0.35, 0], "io"],
++    [0.5, [-2.15, 0.45, 0], "io"],
++    [0.62, [0.0, 1.0, 0], "io"],
++    [0.74, [2.1, 0.15, 0], "io"],
++    [0.86, [2.2, -0.7, 0], "io"],
++    [1.0, [1.85, -0.62, 0], "io"],
++  ]),
++  ringMix: track([
++    [0.355, 0],
++    [0.5, 1, "io"],
++  ]),
++  wallMix: track([
++    [0.875, 0],
++    [0.975, 1, "io"],
++  ]),
++  erode: track([
++    [0.495, 0],
++    [0.615, 1.25, "o"],
++    [0.875, 1.25],
++    [0.955, 0, "io"],
++  ]),
++  plateDim: track([
++    [0.86, 1],
++    [0.97, 0.34, "io"],
++  ]),
++  sway: track([
++    [0.34, 1],
++    [0.48, 0, "io"],
++  ]),
++  stillRise: track([
++    [0.335, -6.4],
++    [0.46, -2.6, "o"],
++    [0.87, -2.6],
++    [0.97, -7.6, "io"],
++  ]),
++  heat: track([
++    [0.4, 0],
++    [0.56, 1, "io"],
++    [0.68, 0.35, "io"],
++    [0.8, 0.0, "io"],
++  ]),
++  dissolve: track([
++    [0.495, 0],
++    [0.62, 1, "io"],
++  ]),
++  travel: track([
++    [0.52, 0],
++    [0.75, 1, "lin"],
++  ]),
++  condense: track([
++    [0.7, 0],
++    [0.865, 1, "io"],
++  ]),
++  pointsAlpha: track([
++    [0.49, 0],
++    [0.56, 0.9, "o"],
++    [0.845, 0.9],
++    [0.9, 0, "io"],
++  ]),
++  glassLight: track([
++    [0.72, 0],
++    [0.88, 1.15, "io"],
++  ]),
++  labelFade: track([
++    [0.885, 0],
++    [0.945, 1, "io"],
++  ]),
++  liquidFill: track([
++    [0.755, -2.75],
++    [0.92, -1.38, "io"],
++  ]),
++  liquidOn: track([
++    [0.74, 0],
++    [0.8, 1, "io"],
++  ]),
++  stageLight: track([
++    [0.0, 1],
++    [0.36, 1],
++    [0.5, 0.75, "io"],
++    [0.7, 0.7, "io"],
++    [0.88, 1, "io"],
++  ]),
++};
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..f622ac2 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -1,26 +1,474 @@
+ @import "tailwindcss";
+ 
++/* ————— Thornmere design tokens ————— */
+ :root {
+-  color-scheme: light dark;
+-  --background: #f5f5f3;
+-  --foreground: #161616;
+-  --muted: #6b6b66;
+-  --surface: #ffffff;
+-  --line: #deded8;
++  color-scheme: dark;
++  --bg0: #070b08;
++  --bg1: #0c1410;
++  --ink: #e9e4d6;
++  --ink-dim: #a8a698;
++  --paper: #efe7d4;
++  --copper: #c07840;
++  --copper-hot: #e09055;
++  --copper-deep: #7a3f1c;
++  --juniper: #7d9070;
++  --lemon: #d8c05a;
++  --line: rgba(233, 228, 214, 0.16);
++  --scrim: rgba(7, 11, 8, 0.6);
+ }
+ 
+-@media (prefers-color-scheme: dark) {
+-  :root {
+-    --background: #111110;
+-    --foreground: #f5f5f2;
+-    --muted: #a0a099;
+-    --surface: #181817;
+-    --line: #31312f;
+-  }
++* { box-sizing: border-box; }
++
++html {
++  background: var(--bg0);
++  color: var(--ink);
+ }
+ 
+-* { box-sizing: border-box; }
+-html { background: var(--background); color: var(--foreground); }
+-body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
++@media (prefers-reduced-motion: no-preference) {
++  html[data-motion="full"] { scroll-behavior: smooth; }
++}
++
++body {
++  margin: 0;
++  font-family: var(--font-sans), "Helvetica Neue", Arial, sans-serif;
++  font-size: 16px;
++  line-height: 1.6;
++  text-rendering: optimizeLegibility;
++  -webkit-font-smoothing: antialiased;
++  background: var(--bg0);
++}
++
++::selection { background: var(--copper-deep); color: var(--paper); }
++
+ a { color: inherit; }
+ button, input { font: inherit; }
++
++:focus-visible {
++  outline: 2px solid var(--copper);
++  outline-offset: 3px;
++  border-radius: 2px;
++}
++
++/* film grain — static texture, no animation */
++body::after {
++  content: "";
++  position: fixed;
++  inset: 0;
++  z-index: 70;
++  pointer-events: none;
++  opacity: 0.05;
++  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
++  background-size: 140px 140px;
++  mix-blend-mode: overlay;
++}
++
++/* ————— typography ————— */
++.font-display { font-family: var(--font-display), Georgia, "Times New Roman", serif; }
++
++.kicker {
++  font-family: var(--font-sans), sans-serif;
++  font-size: 0.6875rem;
++  font-weight: 600;
++  letter-spacing: 0.28em;
++  text-transform: uppercase;
++  color: var(--copper);
++}
++
++.act-kicker {
++  display: flex;
++  align-items: center;
++  gap: 0.9rem;
++  font-size: 0.65rem;
++  font-weight: 600;
++  letter-spacing: 0.3em;
++  text-transform: uppercase;
++  color: var(--copper);
++  white-space: nowrap;
++}
++.act-kicker::before, .act-kicker::after {
++  content: "";
++  height: 1px;
++  width: 2.4rem;
++  background: var(--copper-deep);
++  flex: none;
++}
++.act--center .act-kicker { justify-content: center; }
++
++.headline {
++  font-family: var(--font-display), Georgia, serif;
++  font-weight: 420;
++  font-variation-settings: "opsz" 72;
++  line-height: 1.04;
++  letter-spacing: -0.015em;
++  color: var(--ink);
++  text-wrap: balance;
++}
++
++.prose-dim { color: var(--ink-dim); max-width: 34rem; text-wrap: pretty; }
++
++/* ————— header / footer chrome ————— */
++.site-header {
++  position: fixed;
++  inset: 0 0 auto 0;
++  z-index: 50;
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  padding: 1.1rem 1.4rem;
++  pointer-events: none;
++}
++.site-header > * { pointer-events: auto; }
++
++.wordmark {
++  font-family: var(--font-display), Georgia, serif;
++  font-weight: 560;
++  font-size: 1.02rem;
++  letter-spacing: 0.34em;
++  text-transform: uppercase;
++  text-decoration: none;
++}
++.wordmark .thorn { color: var(--copper); }
++
++.header-meta {
++  display: flex;
++  align-items: center;
++  gap: 1.1rem;
++  font-size: 0.65rem;
++  font-weight: 600;
++  letter-spacing: 0.22em;
++  text-transform: uppercase;
++  color: var(--ink-dim);
++}
++.header-meta .batch { display: none; }
++@media (min-width: 640px) { .header-meta .batch { display: inline; } }
++
++.chip-btn {
++  border: 1px solid var(--line);
++  background: rgba(7, 11, 8, 0.5);
++  color: var(--ink-dim);
++  border-radius: 999px;
++  padding: 0.38rem 0.85rem;
++  font-size: 0.65rem;
++  font-weight: 600;
++  letter-spacing: 0.18em;
++  text-transform: uppercase;
++  cursor: pointer;
++  transition: color 0.25s ease, border-color 0.25s ease;
++}
++.chip-btn:hover { color: var(--ink); border-color: var(--copper-deep); }
++
++.skip-link {
++  position: fixed;
++  top: -4rem;
++  left: 1rem;
++  z-index: 90;
++  background: var(--copper-deep);
++  color: var(--paper);
++  padding: 0.6rem 1rem;
++  border-radius: 4px;
++  text-decoration: none;
++  transition: top 0.2s ease;
++}
++.skip-link:focus-visible { top: 1rem; }
++
++/* ————— the stage ————— */
++.stage-wrap {
++  position: relative;
++  height: 900vh;
++}
++
++.stage-sticky {
++  position: sticky;
++  top: 0;
++  height: 100svh;
++  overflow: hidden;
++}
++
++.stage-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
++
++/* soft vignette over canvas */
++.stage-vignette {
++  position: absolute;
++  inset: 0;
++  pointer-events: none;
++  background:
++    radial-gradient(ellipse 120% 90% at 50% 42%, transparent 55%, rgba(4, 6, 4, 0.55) 100%);
++}
++
++/* act copy containers: absolutely placed along the 900vh wrapper.
++   top = pStart * 800vh ; height = (pEnd - pStart) * 800vh + 100vh */
++.act {
++  position: absolute;
++  left: 0;
++  right: 0;
++  pointer-events: none;
++}
++.act-pin {
++  position: sticky;
++  top: 0;
++  height: 100svh;
++  display: flex;
++  align-items: center;
++  padding: 0 clamp(1.2rem, 6vw, 6rem);
++}
++.act-copy {
++  max-width: 30rem;
++  opacity: 0;
++  transform: translateY(18px);
++  transition: opacity 0.7s ease, transform 0.7s ease;
++  pointer-events: none;
++}
++.act-copy.is-live {
++  opacity: 1;
++  transform: none;
++  pointer-events: auto;
++}
++.copy-panel {
++  background: var(--scrim);
++  backdrop-filter: blur(7px);
++  -webkit-backdrop-filter: blur(7px);
++  border: 1px solid rgba(233, 228, 214, 0.07);
++  border-radius: 6px;
++  padding: 1.6rem 1.8rem;
++}
++
++.act--right .act-pin { justify-content: flex-end; }
++.act--center .act-pin { justify-content: center; text-align: center; }
++
++/* Act 0 — arrival */
++.arrival-overlay {
++  position: absolute;
++  top: 0;
++  left: 0;
++  right: 0;
++  height: 100svh;
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  text-align: center;
++  pointer-events: none;
++  padding: 0 1.4rem;
++  z-index: 5;
++}
++[data-motion="reduced"] .arrival-overlay { height: 92svh; }
++.arrival-copy { transition: opacity 0.5s ease; }
++.arrival-copy.is-gone { opacity: 0; }
++.arrival-title {
++  font-family: var(--font-display), Georgia, serif;
++  font-weight: 400;
++  font-variation-settings: "opsz" 144;
++  font-size: clamp(3.2rem, 11.5vw, 9.5rem);
++  line-height: 0.98;
++  letter-spacing: 0.06em;
++  margin: 0.4rem 0 1rem;
++  color: var(--ink);
++}
++.arrival-sub { color: var(--ink-dim); max-width: 30rem; margin-inline: auto; }
++
++.scroll-cue {
++  margin-top: 2.6rem;
++  display: inline-flex;
++  flex-direction: column;
++  align-items: center;
++  gap: 0.7rem;
++  font-size: 0.62rem;
++  letter-spacing: 0.3em;
++  text-transform: uppercase;
++  color: var(--ink-dim);
++}
++.scroll-cue::after {
++  content: "";
++  width: 1px;
++  height: 3.2rem;
++  background: linear-gradient(var(--copper), transparent);
++}
++@media (prefers-reduced-motion: no-preference) {
++  [data-motion="full"] .scroll-cue::after { animation: cue-drop 2.2s ease-in-out infinite; }
++}
++@keyframes cue-drop {
++  0% { transform: scaleY(0); transform-origin: top; }
++  55% { transform: scaleY(1); transform-origin: top; }
++  56% { transform-origin: bottom; }
++  100% { transform: scaleY(0); transform-origin: bottom; }
++}
++
++/* Act I — botanical ledger */
++.botanical-list { list-style: none; margin: 1.2rem 0 0; padding: 0; }
++.botanical-list li + li { border-top: 1px solid rgba(233, 228, 214, 0.08); }
++.botanical-row {
++  display: grid;
++  grid-template-columns: 2.2rem 1fr;
++  gap: 0.9rem;
++  width: 100%;
++  text-align: left;
++  background: none;
++  border: 0;
++  padding: 0.72rem 0.2rem;
++  color: var(--ink-dim);
++  cursor: pointer;
++  transition: color 0.3s ease;
++}
++.botanical-row .num {
++  font-size: 0.68rem;
++  letter-spacing: 0.18em;
++  color: var(--copper-deep);
++  padding-top: 0.28rem;
++  transition: color 0.3s ease;
++}
++.botanical-row .name {
++  font-family: var(--font-display), Georgia, serif;
++  font-size: 1.28rem;
++  font-weight: 480;
++  letter-spacing: 0.02em;
++  color: var(--ink-dim);
++  transition: color 0.3s ease;
++}
++.botanical-row .latin {
++  font-style: italic;
++  font-family: var(--font-display), Georgia, serif;
++  font-size: 0.82rem;
++  opacity: 0.75;
++  margin-left: 0.6rem;
++}
++.botanical-row .note {
++  display: block;
++  font-size: 0.85rem;
++  max-height: 0;
++  overflow: hidden;
++  opacity: 0;
++  transition: max-height 0.45s ease, opacity 0.45s ease;
++}
++.botanical-row.is-active { color: var(--ink); }
++.botanical-row.is-active .name { color: var(--ink); }
++.botanical-row.is-active .num { color: var(--copper); }
++.botanical-row.is-active .note { max-height: 4.5rem; opacity: 1; }
++.botanical-row:hover .name { color: var(--ink); }
++
++/* Act V — still life lockup */
++.cta-row { display: flex; gap: 0.9rem; flex-wrap: wrap; margin-top: 1.6rem; }
++.act--center .cta-row { justify-content: center; }
++.btn {
++  display: inline-block;
++  padding: 0.78rem 1.5rem;
++  border-radius: 999px;
++  font-size: 0.7rem;
++  font-weight: 600;
++  letter-spacing: 0.22em;
++  text-transform: uppercase;
++  text-decoration: none;
++  border: 1px solid var(--copper-deep);
++  color: var(--paper);
++  background: linear-gradient(180deg, var(--copper), var(--copper-deep));
++  transition: filter 0.25s ease;
++}
++.btn:hover { filter: brightness(1.12); }
++.btn--ghost { background: none; color: var(--ink); border-color: var(--line); }
++.btn--ghost:hover { border-color: var(--copper); }
++
++/* ————— tail (after the stage) ————— */
++.tail { position: relative; z-index: 10; background: linear-gradient(180deg, var(--bg0), var(--bg1) 30%); }
++.tail-section {
++  max-width: 68rem;
++  margin: 0 auto;
++  padding: clamp(4rem, 10vh, 8rem) clamp(1.2rem, 6vw, 4rem);
++  border-top: 1px solid rgba(233, 228, 214, 0.07);
++}
++.serve-grid { display: grid; gap: 1px; background: rgba(233,228,214,0.09); border: 1px solid rgba(233,228,214,0.09); margin-top: 2.4rem; }
++@media (min-width: 760px) { .serve-grid { grid-template-columns: repeat(3, 1fr); } }
++.serve-step { background: var(--bg0); padding: 1.7rem 1.6rem 2rem; }
++.serve-step .n { font-family: var(--font-display), Georgia, serif; font-size: 2rem; color: var(--copper); display: block; }
++.serve-step h3 { font-family: var(--font-display), Georgia, serif; font-weight: 500; font-size: 1.15rem; margin: 0.5rem 0 0.4rem; }
++.serve-step p { color: var(--ink-dim); font-size: 0.92rem; margin: 0; }
++
++.ledger-form { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-top: 1.6rem; }
++.ledger-input {
++  flex: 1 1 16rem;
++  background: rgba(233, 228, 214, 0.05);
++  border: 1px solid var(--line);
++  color: var(--ink);
++  border-radius: 999px;
++  padding: 0.78rem 1.3rem;
++}
++.ledger-input::placeholder { color: rgba(168, 166, 152, 0.7); }
++.ledger-note { font-size: 0.82rem; color: var(--juniper); margin-top: 0.8rem; }
++
++.site-footer {
++  border-top: 1px solid rgba(233, 228, 214, 0.07);
++  padding: 3rem clamp(1.2rem, 6vw, 4rem) 4rem;
++  font-size: 0.8rem;
++  color: var(--ink-dim);
++}
++.site-footer .cols { max-width: 68rem; margin: 0 auto; display: grid; gap: 2rem; }
++@media (min-width: 760px) { .site-footer .cols { grid-template-columns: 2fr 1fr 1fr; } }
++.site-footer h3 { font-size: 0.68rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--copper); font-weight: 600; }
++
++/* ————— loader ————— */
++.loader {
++  position: fixed;
++  inset: 0;
++  z-index: 80;
++  display: flex;
++  flex-direction: column;
++  align-items: center;
++  justify-content: center;
++  gap: 1.2rem;
++  background: var(--bg0);
++  transition: opacity 0.8s ease, visibility 0.8s ease;
++}
++.loader[data-done="true"] { opacity: 0; visibility: hidden; }
++.loader .lm {
++  font-family: var(--font-display), Georgia, serif;
++  letter-spacing: 0.42em;
++  text-transform: uppercase;
++  font-size: 0.9rem;
++  color: var(--ink);
++}
++.loader .bar { width: 9rem; height: 1px; background: rgba(233,228,214,0.14); overflow: hidden; }
++.loader .bar i { display: block; height: 100%; background: var(--copper); transform-origin: left; transform: scaleX(0); transition: transform 0.3s ease; }
++.loader .pct { font-size: 0.62rem; letter-spacing: 0.3em; color: var(--ink-dim); }
++
++/* ————— reduced-motion “Folio” variant ————— */
++.folio-plates { display: none; }
++
++[data-motion="reduced"] .stage-wrap { height: auto; }
++[data-motion="reduced"] .stage-sticky { position: relative; height: 92svh; }
++[data-motion="reduced"] .act { position: static; height: auto !important; }
++[data-motion="reduced"] .act-pin { position: static; height: auto; padding-block: clamp(3rem, 8vh, 6rem); }
++[data-motion="reduced"] .act-copy { opacity: 1; transform: none; pointer-events: auto; transition: none; }
++[data-motion="reduced"] .botanical-row .note { max-height: none; opacity: 1; }
++[data-motion="reduced"] .botanical-row { cursor: default; color: var(--ink); }
++[data-motion="reduced"] .botanical-row .name { color: var(--ink); }
++[data-motion="reduced"] * { transition: none !important; animation: none !important; }
++
++[data-motion="reduced"] .folio-plates {
++  display: grid;
++  gap: 1rem;
++  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
++  max-width: 68rem;
++  margin: 0 auto;
++  padding: 2rem clamp(1.2rem, 6vw, 4rem) 3rem;
++}
++.folio-plate { background: var(--paper); border-radius: 4px; padding: 0.7rem; margin: 0; }
++.folio-plate img { width: 100%; height: auto; display: block; mix-blend-mode: multiply; }
++.folio-plate figcaption {
++  font-size: 0.62rem;
++  letter-spacing: 0.2em;
++  text-transform: uppercase;
++  color: #40403a;
++  padding-top: 0.5rem;
++  text-align: center;
++}
++
++.vapour-hint { font-size: 0.8rem; color: var(--juniper); font-style: italic; }
++@media (hover: none) { .vapour-hint { display: none; } }
++[data-motion="reduced"] .vapour-hint { display: none; }
++
++/* reduced-motion hero: copy left, bottle right */
++[data-motion="reduced"] .arrival-overlay {
++  justify-content: flex-start;
++  text-align: left;
++  padding: 0 clamp(1.2rem, 7vw, 7rem);
++}
++[data-motion="reduced"] .arrival-title { font-size: clamp(2.6rem, 7vw, 6rem); }
++[data-motion="reduced"] .arrival-sub { margin-inline: 0; }
++[data-motion="reduced"] .scroll-cue { display: none; }
+diff --git a/app/icon.svg b/app/icon.svg
+new file mode 100644
+index 0000000..55770e1
+--- /dev/null
++++ b/app/icon.svg
+@@ -0,0 +1,7 @@
++<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
++  <rect width="64" height="64" rx="14" fill="#070b08"/>
++  <g transform="translate(32 32) rotate(45)">
++    <rect x="-11" y="-11" width="22" height="22" fill="none" stroke="#c07840" stroke-width="3"/>
++    <rect x="-4" y="-4" width="8" height="8" fill="#c07840"/>
++  </g>
++</svg>
+diff --git a/app/layout.jsx b/app/layout.jsx
+index 35fc217..2b2efcd 100644
+--- a/app/layout.jsx
++++ b/app/layout.jsx
+@@ -1,13 +1,53 @@
+ import "./globals.css";
++import { Fraunces, Archivo } from "next/font/google";
++
++const fraunces = Fraunces({
++  subsets: ["latin"],
++  axes: ["opsz", "SOFT", "WONK"],
++  style: ["normal", "italic"],
++  variable: "--font-display",
++  display: "swap",
++});
++
++const archivo = Archivo({
++  subsets: ["latin"],
++  weight: ["400", "500", "600"],
++  variable: "--font-sans",
++  display: "swap",
++});
+ 
+ export const metadata = {
+-  title: "Meridian",
+-  description: "Meridian is a timeline-based motion editor for the web. Design animation visually, ship production code.",
++  title: "Thornmere — London Dry Gin",
++  description:
++    "A small-batch London dry gin: five botanicals, one copper still, four hundred numbered bottles a batch. Scroll the run — from plate to vapour to glass.",
++};
++
++export const viewport = {
++  themeColor: "#070b08",
++  width: "device-width",
++  initialScale: 1,
+ };
+ 
+ export default function RootLayout({ children }) {
+   return (
+-    <html lang="en">
++    <html lang="en-GB" className={`${fraunces.variable} ${archivo.variable}`} data-motion="full">
++      <head>
++        <noscript>
++          {/* Without JS the page reads as the static folio: no 900vh stage, plates shown inline. */}
++          <style>{`
++            .stage-wrap { height: auto !important; }
++            .stage-sticky { position: relative !important; height: 60svh !important; }
++            .act { position: static !important; height: auto !important; }
++            .act-pin { position: static !important; height: auto !important; padding-block: 3rem !important; }
++            .act-copy { opacity: 1 !important; transform: none !important; pointer-events: auto !important; }
++            .arrival-copy { opacity: 1 !important; }
++            .botanical-row .note { max-height: none !important; opacity: 1 !important; }
++            .folio-plates { display: grid !important; }
++            .loader { display: none !important; }
++            .scroll-cue { display: none !important; }
++          `}</style>
++        </noscript>
++      </head>
+       <body>{children}</body>
+     </html>
+   );
+diff --git a/app/page.jsx b/app/page.jsx
+index 46a166b..2982485 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -1,49 +1,244 @@
++import Distillery from "./experience/Distillery";
++import MotionToggle from "./experience/MotionToggle";
++import BotanicalLedger from "./experience/BotanicalLedger";
++import LedgerForm from "./experience/LedgerForm";
++import { BOTANICALS } from "./experience/botanicals";
++
++// Act scroll ranges (fractions of the 900vh stage; travel = 800vh):
++// a1 .10–.36 · a2 .36–.50 · a3 .50–.70 · a4 .70–.86 · a5 .86–1
++const ACT_STYLE = {
++  a1: { top: "80vh", height: "308vh" },
++  a2: { top: "288vh", height: "212vh" },
++  a3: { top: "400vh", height: "260vh" },
++  a4: { top: "560vh", height: "228vh" },
++  a5: { top: "688vh", height: "212vh" },
++};
++
+ export default function Home() {
+   return (
+-    <main className="mx-auto max-w-3xl space-y-16 px-6 py-24">
+-      <section className="space-y-4">
+-        <h1 className="text-4xl font-semibold">Thornmere</h1>
+-        <p className="text-lg text-[var(--muted)]">
+-          A small-batch London dry gin, distilled in copper from five botanicals.
+-        </p>
+-        <a
+-          className="inline-block rounded-md bg-[var(--foreground)] px-4 py-2 text-[var(--background)]"
+-          href="#stockists"
+-        >
+-          Find a stockist
++    <>
++      <a className="skip-link" href="#serve">
++        Skip past the visual journey
++      </a>
++
++      <header className="site-header">
++        <a className="wordmark" href="#top" aria-label="Thornmere — back to top">
++          <span className="thorn">Thorn</span>mere
+         </a>
+-      </section>
+-
+-      <section className="space-y-6">
+-        <h2 className="text-2xl font-semibold">The botanicals</h2>
+-        <ul className="space-y-4 text-[var(--muted)]">
+-          <li>Juniper — the backbone; pine, resin, and cold air.</li>
+-          <li>Coriander seed — citrus and pepper, harvested late.</li>
+-          <li>Angelica root — earth and dryness; it holds the others together.</li>
+-          <li>Orris root — fixes the aroma so it lasts in the glass.</li>
+-          <li>Lemon peel — pared by hand, added last.</li>
+-        </ul>
+-        <p className="text-[var(--muted)]">
+-          Plates from Köhler&apos;s Medizinal-Pflanzen (1887) are in{" "}
+-          <code>/public/botanicals</code>. A studio environment map for image-based lighting is in{" "}
+-          <code>/public/env</code>. Licences: <code>/public/ASSET_LICENSES.md</code>.
+-        </p>
+-      </section>
+-
+-      <section className="space-y-4">
+-        <h2 className="text-2xl font-semibold">How it is made</h2>
+-        <p className="text-[var(--muted)]">
+-          One 300-litre copper still. A 24-hour maceration, then a slow run — the heads and tails cut
+-          by taste rather than by clock. Roughly 400 bottles a batch, each one numbered.
+-        </p>
+-      </section>
+-
+-      <section id="stockists" className="space-y-4">
+-        <h2 className="text-2xl font-semibold">Stockists</h2>
+-        <p className="text-[var(--muted)]">
+-          Trade enquiries: <a className="underline" href="mailto:orders@thornmere.example">orders@thornmere.example</a>
+-        </p>
+-      </section>
+-    </main>
++        <div className="header-meta">
++          <span className="batch">Batch № 03 · London Dry</span>
++          <MotionToggle />
++        </div>
++      </header>
++
++      <main id="top">
++        <h1 className="sr-only">Thornmere — London Dry Gin</h1>
++
++        <Distillery>
++          {/* Act 0 — arrival (overlays the sticky stage) */}
++          <div className="arrival-overlay">
++            <div className="arrival-copy" data-arrival>
++              <p className="kicker">London · Small batch · Est. MMXXIV</p>
++              <p className="arrival-title font-display" aria-hidden="true">
++                Thornmere
++              </p>
++              <p className="arrival-sub">
++                A London dry gin of five botanicals, distilled once in copper.
++                What follows is the run itself — from plate, to vapour, to glass.
++              </p>
++              <span className="scroll-cue" aria-hidden="true">
++                Scroll — the run begins
++              </span>
++            </div>
++          </div>
++
++          {/* Act I — the five */}
++          <section className="act" style={ACT_STYLE.a1} aria-label="Act one — the five botanicals">
++            <div className="act-pin">
++              <div className="act-copy copy-panel" data-act-for="a1">
++                <p className="act-kicker">Act I · The Five</p>
++                <h2 className="headline" style={{ fontSize: "1.9rem" }}>
++                  Nothing that doesn&apos;t earn its place.
++                </h2>
++                <BotanicalLedger />
++              </div>
++            </div>
++          </section>
++
++          {/* Reduced-motion / no-JS folio: the plates themselves */}
++          <div className="folio-plates" aria-label="The five botanical plates">
++            {BOTANICALS.map((b) => (
++              <figure className="folio-plate" key={b.id}>
++                <img src={b.file} alt={b.alt} loading="lazy" width="460" height="590" />
++                <figcaption>{b.name}</figcaption>
++              </figure>
++            ))}
++          </div>
++
++          {/* Act II — the copper */}
++          <section className="act act--right" style={ACT_STYLE.a2} aria-label="Act two — the copper still">
++            <div className="act-pin">
++              <div className="act-copy copy-panel" data-act-for="a2">
++                <p className="act-kicker">Act II · The Copper</p>
++                <h2 className="headline" style={{ fontSize: "2.1rem" }}>
++                  One still. One slow morning.
++                </h2>
++                <p className="prose-dim">
++                  Batch № 03 was run on <em>Constance</em>, our 300-litre copper pot.
++                  Copper isn&apos;t nostalgia: it holds back what the grain would rather
++                  keep, and gives the spirit back its brightness. Twenty-four hours of
++                  maceration. The fire is lit at five.
++                </p>
++              </div>
++            </div>
++          </section>
++
++          {/* Act III — the vapour */}
++          <section className="act" style={ACT_STYLE.a3} aria-label="Act three — the vapour">
++            <div className="act-pin">
++              <div className="act-copy copy-panel" data-act-for="a3">
++                <p className="act-kicker">Act III · The Vapour</p>
++                <h2 className="headline" style={{ fontSize: "2.1rem" }}>
++                  We keep only the heart.
++                </h2>
++                <p className="prose-dim">
++                  The run begins loud with heads and ends heavy with tails — both are
++                  cut by taste, not by clock. Only what crosses the swan neck between
++                  them will ever wear the name.
++                </p>
++                <p className="prose-dim vapour-hint" aria-hidden="true">
++                  Move your cursor through the vapour.
++                </p>
++              </div>
++            </div>
++          </section>
++
++          {/* Act IV — the spirit */}
++          <section className="act act--right" style={ACT_STYLE.a4} aria-label="Act four — the spirit condenses">
++            <div className="act-pin">
++              <div className="act-copy copy-panel" data-act-for="a4">
++                <p className="act-kicker">Act IV · The Spirit</p>
++                <h2 className="headline" style={{ fontSize: "2.1rem" }}>
++                  The colour stays behind. The character doesn&apos;t.
++                </h2>
++                <p className="prose-dim">
++                  Vapour condenses to a spirit that runs perfectly clear, carrying
++                  everything the five gave it. Cut to 43.1% with soft water, rested
++                  fourteen days in glass, and never chill-filtered.
++                </p>
++              </div>
++            </div>
++          </section>
++
++          {/* Act V — still life */}
++          <section className="act" style={ACT_STYLE.a5} aria-label="Act five — the bottle">
++            <div className="act-pin">
++              <div className="act-copy copy-panel" data-act-for="a5">
++                <p className="act-kicker">Batch № 03</p>
++                <h2 className="headline" style={{ fontSize: "2.6rem" }}>
++                  Four hundred bottles,
++                  <br />
++                  numbered by hand.
++                </h2>
++                <div className="cta-row">
++                  <a className="btn" href="#stockists">
++                    Find a stockist
++                  </a>
++                  <a className="btn btn--ghost" href="#serve">
++                    The serve
++                  </a>
++                </div>
++              </div>
++            </div>
++          </section>
++
++        </Distillery>
++
++        <div className="tail">
++          <section id="serve" className="tail-section" aria-labelledby="serve-h">
++            <p className="kicker">The Serve</p>
++            <h2 id="serve-h" className="headline" style={{ fontSize: "2.4rem" }}>
++              The Thornmere &amp; Tonic.
++            </h2>
++            <div className="serve-grid">
++              <div className="serve-step">
++                <span className="n" aria-hidden="true">1</span>
++                <h3>Build it cold</h3>
++                <p>A tall glass, ice to the rim. 50&nbsp;ml of Thornmere, poured over.</p>
++              </div>
++              <div className="serve-step">
++                <span className="n" aria-hidden="true">2</span>
++                <h3>Keep it bitter</h3>
++                <p>100&nbsp;ml of a properly bitter tonic. One to two — never drown it.</p>
++              </div>
++              <div className="serve-step">
++                <span className="n" aria-hidden="true">3</span>
++                <h3>Peel, not juice</h3>
++                <p>A long coil of lemon peel, oils over the top, and three juniper berries.</p>
++              </div>
++            </div>
++            <p className="prose-dim" style={{ marginTop: "2rem" }}>
++              Or stirred, cold and brief: ten parts Thornmere to one of dry vermouth,
++              lemon oils over the top.
++            </p>
++          </section>
++
++          <section id="stockists" className="tail-section" aria-labelledby="stockists-h">
++            <p className="kicker">Stockists</p>
++            <h2 id="stockists-h" className="headline" style={{ fontSize: "2.4rem" }}>
++              Independent merchants, mostly.
++            </h2>
++            <p className="prose-dim">
++              Batch № 03 is with independent wine and spirit merchants across London
++              and the South East. For the batch list, or trade terms:{" "}
++              <a className="underline" href="mailto:orders@thornmere.example">
++                orders@thornmere.example
++              </a>
++            </p>
++          </section>
++
++          <section id="ledger" className="tail-section" aria-labelledby="ledger-h">
++            <p className="kicker">The Ledger</p>
++            <h2 id="ledger-h" className="headline" style={{ fontSize: "2.4rem" }}>
++              First word of each batch.
++            </h2>
++            <LedgerForm />
++          </section>
++
++          <footer className="site-footer">
++            <div className="cols">
++              <div>
++                <p className="wordmark" style={{ fontSize: "0.9rem" }}>
++                  <span className="thorn">Thorn</span>mere
++                </p>
++                <p>
++                  Thornmere is a fictional distillery, built as a design demonstration.
++                  Please enjoy gin responsibly.
++                </p>
++              </div>
++              <div>
++                <h3>Provenance</h3>
++                <p>
++                  Botanical plates from Köhler&apos;s <em>Medizinal-Pflanzen</em> (1887),
++                  public domain. Studio lighting environment by Poly Haven, CC0.
++                </p>
++              </div>
++              <div>
++                <h3>Thornmere Distillery</h3>
++                <p>
++                  Arch 9, Thornmere Yard
++                  <br />
++                  London E8 — by appointment
++                  <br />
++                  <a className="underline" href="mailto:orders@thornmere.example">
++                    orders@thornmere.example
++                  </a>
++                </p>
++              </div>
++            </div>
++          </footer>
++        </div>
++      </main>
++    </>
+   );
+ }
+diff --git a/package-lock.json b/package-lock.json
+index 0a1babc..1dc4e60 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -1,16 +1,17 @@
+ {
+-  "name": "meridian-launch",
++  "name": "spirits-launch-base",
+   "version": "1.0.0",
+   "lockfileVersion": 3,
+   "requires": true,
+   "packages": {
+     "": {
+-      "name": "meridian-launch",
++      "name": "spirits-launch-base",
+       "version": "1.0.0",
+       "dependencies": {
+         "next": "16.2.12",
+         "react": "19.2.8",
+-        "react-dom": "19.2.8"
++        "react-dom": "19.2.8",
++        "three": "^0.185.1"
+       },
+       "devDependencies": {
+         "@tailwindcss/postcss": "4.3.3",
+@@ -1658,6 +1659,12 @@
+         "url": "https://opencollective.com/webpack"
+       }
+     },
++    "node_modules/three": {
++      "version": "0.185.1",
++      "resolved": "https://registry.npmjs.org/three/-/three-0.185.1.tgz",
++      "integrity": "sha512-5aojFCXKwnjBRZvUnt3WFfEcvUJgkN5LlijRFN95hMy8WVkG4I0QNcJE+OuWvuJ0bOdStrbfXn0pkd6/QyiAlg==",
++      "license": "MIT"
++    },
+     "node_modules/tslib": {
+       "version": "2.8.1",
+       "resolved": "https://registry.npmjs.org/tslib/-/tslib-2.8.1.tgz",
+diff --git a/package.json b/package.json
+index 43a9ebf..1d6b1e7 100644
+--- a/package.json
++++ b/package.json
+@@ -10,10 +10,11 @@
+   "dependencies": {
+     "next": "16.2.12",
+     "react": "19.2.8",
+-    "react-dom": "19.2.8"
++    "react-dom": "19.2.8",
++    "three": "^0.185.1"
+   },
+   "devDependencies": {
+-    "tailwindcss": "4.3.3",
+-    "@tailwindcss/postcss": "4.3.3"
++    "@tailwindcss/postcss": "4.3.3",
++    "tailwindcss": "4.3.3"
+   }
+-}
+\ No newline at end of file
++}

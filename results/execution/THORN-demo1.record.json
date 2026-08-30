@@ -1,0 +1,60 @@
+{
+  "run": "THORN-demo1",
+  "date": "2026-08-30",
+  "status": "CAPABILITY DEMONSTRATION - not an eval run. No pre-registered criteria, no baseline comparison, not admissible as evidence of skill efficacy.",
+  "condition": "skill v1 + landing_love calibration pack + asset kit (the maximum configuration)",
+  "model": "claude-fable-5",
+  "fixture": "spirits-launch-base 9eb8cf2 (new, first asset-bearing fixture)",
+  "interruptions": "1 stream-watchdog stall mid catalog fit-gate; resumed from transcript",
+  "concept": "'Scroll performs the distillation.' The five 1887 Koehler plates are not illustrations OF the botanicals - they ARE the botanicals, and the run transforms them. Five acts in one continuous scene, one camera, no cuts: Arrival (plates in a dark colonnade) -> The Five (lateral gallery walk, ledger tracks the camera) -> The Copper (plates converge into a ring; a lathed pot still rises) -> The Vapour (plates erode by noise-threshold dissolve while 30,000 particles SAMPLED FROM THE ACTUAL INK PIXELS, carrying their sampled pigment colours, ride a cubic-bezier arc from still mouth to bottle mouth - the swan neck is never modelled, the vapour draws it) -> The Spirit (particles condense bottom-up onto a lathed glass bottle and their colour drains to clear as they land: 'the colour stays behind') -> Still life.",
+  "asset_use": "Plates used three ways: luminance-keyed textures (white paper to transparency, pigment kept) on swaying meshes; the particle source via ink-pixel rejection sampling with per-pixel colour; and plain <img> cutout cards in the reduced-motion folio. HDR studio map is the only light source besides two animated point lights. Bottle AND still are lathed surfaces of revolution from hand-authored profiles - no models imported. Label is a CanvasTexture drawn in the page's own typefaces.",
+  "renderer": "three.js r185 vanilla, WebGL. R3F/drei declined (reconciler indirection for one imperative scene). GSAP declined (one hand-rolled keyframe evaluator owns every scene transform). Postprocessing declined (additive points on near-black read as glow without a bloom pass). Only dependency added: three.",
+  "measurements": {
+    "m1": "PASS - p50 16.7ms, 0% hitches; agent measured 60fps at every act incl. vapour and transmission, at DSF 1 and 2 and on the mobile recipe",
+    "m2_offscreen": "NOT_MEASURABLE_BY_GEOMETRY (viewport-fixed canvas). Agent verified under the actual condition: frame counter froze exactly 607->607 over 2s with running:false, resumed on scroll-back.",
+    "m2b_hidden_pause": "PASS ratio 0.00",
+    "m3_reduced_motion": "REPORTED FAIL with 2 criticals - ADJUDICATED FALSE POSITIVE, see below",
+    "m5_accessible_parallel": "PASS",
+    "m6_static": "REPORTED FAIL - ADJUDICATED FALSE POSITIVE, see below",
+    "console_errors": "zero"
+  },
+  "ADJUDICATION_1_m3_critical": {
+    "instrument_said": "'content lost under reduced motion' x2 (critical) - accessible names 13 motion-on vs 8 reduced",
+    "investigated_with": "scripts/investigations/m3_name_diff.mjs and m3_text_parity.mjs (new)",
+    "found": "NO CONTENT IS LOST. All five botanicals (Juniper, Coriander, Angelica, Orris, Lemon) are present in the reduced-motion body text, and the heading list is IDENTICAL in both modes (14 headings, same order, same text). The entire delta is five buttons labelled '<botanical> - highlight its plate in the scene' - controls whose sole referent is the animating scene - plus the motion toggle relabelling itself 'Motion on' -> 'Motion off' (same control, different label).",
+    "verdict": "FALSE POSITIVE. Same class as the W1-rep2 baseline adjudication (Replay-button removal, 14->13). This is the SECOND occurrence of this specific critical-failure false positive.",
+    "instrument_recommendation": "M3's parity check counts accessible names on button/a/li and treats any decrease as content loss. It cannot distinguish content loss (bad) from control loss where the control's referent no longer exists (legitimate). It should compare CONTENT - body text and heading list - and treat control-count changes as a separate, non-critical signal. NOT APPLIED: thresholds are frozen and this is a demo, not an eval; recorded for the owner."
+  },
+  "ADJUDICATION_2_m6_cleanup": {
+    "instrument_said": "cleanup-path-present FAIL - no teardown in sampling.js and label.js",
+    "found": "sampling.js creates a throwaway canvas INSIDE a pure function to read ink pixels; it is never attached to the DOM and dies with the call. label.js receives a canvas it does not own. engine.js holds the real dispose(): cancels rAF, disposes renderer, geometries, materials and textures.",
+    "verdict": "FALSE POSITIVE - the documented cross-file ownership blind spot. THIRD occurrence. HANDOFF section 8 already says 'fix or keep adjudicating'; the case for fixing is now stronger than the case for adjudicating."
+  },
+  "accessibility": "All narrative is SSR'd real DOM, canvas aria-hidden, skip link, visible focus rings, act-gated tabIndex so keyboard users never tab into invisible copy. Reduced motion yields 'the Folio': a designed static variant - one composed still-life hero rendered on demand (2 frames, no loop), plates as paper cards, all acts stacked and readable. Doubles as the no-JS/no-WebGL fallback. A Motion on/off toggle overrides in both directions.",
+  "brand_care": "No health claims, 'Please enjoy gin responsibly', fictional-brand disclaimer and public-domain/CC0 credits in the footer, ledger form stated as a demo that sends nothing.",
+  "artifacts": {
+    "diff": "results/execution/THORN-demo1.diff (18 files, 2496 insertions)",
+    "source_snapshot": "results/execution/THORN-demo1-source.zip (+ safety copy in ~/Documents)",
+    "measurements": "results/execution/THORN-demo1.json",
+    "screenshots": "results/execution/screenshots/THORN-demo1-*.png",
+    "motion_recording": "results/execution/motion/THORN-demo1.webm (47s, pinned choreography)"
+  },
+  "cost": {
+    "tokens": 275078,
+    "duration_ms": 2209673,
+    "duration_min": 36.8
+  },
+  "owner_calibration_note_verbatim": "the thornmere video you showed me is a great start. It is a step closer than before",
+  "owner_calibration_series": [
+    "2026-08-12 (W1 baseline): 'none of the three is the pinnacle of frontend design; expressive ceiling = 3D / rich flashy animation per landing.love exemplars'",
+    "2026-08-27 (W1 pooled, 6 candidates): 'All of them don't really reach the pinnacle of design... all quite similar in terms of level... my definition of best design is usage of 3d objects (which give depth) and scrolling animations etc.'",
+    "2026-08-30 (calibration ablation): 'these two look a lot better. It does have the depth and scroll animations I was looking for.'",
+    "2026-08-30 (Thornmere demo, assets added): 'a great start. It is a step closer than before' - closer still, explicitly NOT arrived."
+  ],
+  "gap_analysis_vs_reference_tier": {
+    "thornmere_kit": "5 flat public-domain engravings + 1 CC0 HDRI = 2.3MB",
+    "research_stated_minimum": "20-60 small cut-out subjects (~1MB) OR 5-10 low-poly Draco glb at 100-400KB each, PLUS one characterful display face, PLUS a short looping video for editorial",
+    "reading": "Thornmere was built on roughly a QUARTER of the research's stated minimum subject count, and with zero 3D models and zero audio. The reference tier's remaining advantages are (a) subject volume and variety, (b) real 3D geometry, (c) sound design, (d) human art direction iterating past the first draft.",
+    "untested_lever": "The project's own ARCHITECTURE_V2 puts a DESIGN DIRECTOR upstream of the architect, owning visual thesis and FINAL CRITIQUE AND POLISH. That role has never been run in any eval or demo. Every artifact in this programme is a first draft with no critique pass - which is not how any reference site was made."
+  }
+}

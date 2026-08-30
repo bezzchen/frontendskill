@@ -22,6 +22,11 @@
       "git_revision": "3543ef943fcc5434ff7653a1147d944bf8f40223",
       "content_sha256_excluding_git": "b12f71a5889bef493f4ff77d96ab287f49375641f06f302f72776701c1670125",
       "dependency_lock": "package-lock.json frozen and committed"
+    },
+    "spirits-launch-base": {
+      "git_revision": "9eb8cf27e6a29f0cf0507dd020687528858e3114",
+      "content_sha256_excluding_git": "851d1e6251a13bf3ef92593ac029d2960290a4f921afe9e99c13e677e1ddded5",
+      "dependency_lock": "package-lock.json frozen and committed"
     }
   },
   "baseline_blocker": null
