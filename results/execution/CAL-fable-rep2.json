@@ -1,0 +1,137 @@
+{
+  "run_id": "CAL-fable-rep2",
+  "url": "http://localhost:3252",
+  "section_selector": "canvas",
+  "measured_at": "2026-08-29T15:43:06.529Z",
+  "protocol": "rubrics/execution_measurement.md (pre-registered 2026-08-11; M2 geometry gate + M2b amendment 2026-08-24)",
+  "desktop": {
+    "profile": "desktop",
+    "thresholds": {
+      "p50": 18,
+      "p95": 26,
+      "hitchPct": 1
+    },
+    "m1": {
+      "samples": 480,
+      "p50": 16.699999999999818,
+      "p95": 18.5,
+      "p99": 18.600000000000364,
+      "hitchPct": 0,
+      "onscreenRafPerSec": 60,
+      "pass": true
+    },
+    "hasContinuousAnimation": true,
+    "m2": {
+      "onscreenRafPerSec": 60,
+      "offscreenRafPerSec": 60.333333333333336,
+      "ratio": 1.0055555555555555,
+      "geometryAfterScrollAway": {
+        "visibleFractionOfElement": 1,
+        "visibleFractionOfViewport": 1
+      },
+      "pass": "NOT_MEASURABLE_BY_GEOMETRY"
+    },
+    "m2b": {
+      "method": "synthetic document.hidden/visibilityState override + visibilitychange dispatch; page remains actually visible so native hidden-tab rAF throttling cannot mask app behavior",
+      "baselineRafPerSec": 60,
+      "hiddenRafPerSec": 0,
+      "resumedRafPerSec": 60.333333333333336,
+      "ratio": 0,
+      "resumes": true,
+      "pass": true,
+      "caveat": null
+    },
+    "m5": {
+      "accessibleNameCount": 23,
+      "focusableCount": 27,
+      "pass": true
+    },
+    "m3": {
+      "reducedMotionRafPerSec": 0,
+      "ratio": 0,
+      "accessibleNameCount": 23,
+      "contentParity": true,
+      "motionStops": true,
+      "pass": true,
+      "scope": "full",
+      "criticalFailure": null
+    },
+    "consoleErrors": [],
+    "status": "MEASURED"
+  },
+  "mobile": {
+    "profile": "mobile",
+    "thresholds": {
+      "p50": 22,
+      "p95": 34,
+      "hitchPct": 2
+    },
+    "m1": {
+      "samples": 479,
+      "p50": 16.699999999999818,
+      "p95": 18.19999999999891,
+      "p99": 18.600000000000364,
+      "hitchPct": 0,
+      "onscreenRafPerSec": 59.875,
+      "pass": true
+    },
+    "hasContinuousAnimation": true,
+    "m2": {
+      "onscreenRafPerSec": 59.875,
+      "offscreenRafPerSec": 60,
+      "ratio": 1.0020876826722338,
+      "geometryAfterScrollAway": {
+        "visibleFractionOfElement": 1,
+        "visibleFractionOfViewport": 1
+      },
+      "pass": "NOT_MEASURABLE_BY_GEOMETRY"
+    },
+    "m2b": {
+      "method": "synthetic document.hidden/visibilityState override + visibilitychange dispatch; page remains actually visible so native hidden-tab rAF throttling cannot mask app behavior",
+      "baselineRafPerSec": 60.333333333333336,
+      "hiddenRafPerSec": 0,
+      "resumedRafPerSec": 60,
+      "ratio": 0,
+      "resumes": true,
+      "pass": true,
+      "caveat": null
+    },
+    "m5": {
+      "accessibleNameCount": 23,
+      "focusableCount": 27,
+      "pass": true
+    },
+    "m3": {
+      "reducedMotionRafPerSec": 0,
+      "ratio": 0,
+      "accessibleNameCount": 23,
+      "contentParity": true,
+      "motionStops": true,
+      "pass": true,
+      "scope": "full",
+      "criticalFailure": null
+    },
+    "consoleErrors": [],
+    "status": "MEASURED"
+  },
+  "m4_teardown": {
+    "glContextsPerCycle": [
+      2,
+      2,
+      2
+    ],
+    "note": "Full-navigation cycles reset page state, so this bounds per-load context creation only. In-app mount/unmount teardown requires an app-specific route pair and is reported NOT_MEASURED unless supplied.",
+    "status": "PARTIAL",
+    "consoleErrors": [],
+    "pass": true
+  },
+  "summary": {
+    "m1_desktop": true,
+    "m1_mobile": true,
+    "m2_offscreen_pause": "NOT_MEASURABLE_BY_GEOMETRY",
+    "m2b_hidden_pause": true,
+    "m3_reduced_motion": true,
+    "m5_accessible_parallel": true,
+    "critical": []
+  }
+}

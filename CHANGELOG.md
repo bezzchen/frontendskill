@@ -1,5 +1,36 @@
 # Changelog
 
+## v3.5 — 2026-08-30
+
+**Calibration ablation — the pinnacle probe. The reference pack moves the ceiling: spatial-3D
+adoption 2/2 against a baseline of 0/3.** Stopped at n=2 on the owner's instruction once the
+result was unambiguous; rep 3 stalled on a stream watchdog and is discarded, not counted.
+
+- Same pinned fixture, same verbatim S1 prompt, same Fable arm, **no architect skill on either
+  side** — the only variable was `references/landing_love_calibration.md`.
+- **Verified in source, not from the agents' prose**: rep1 hand-rolled `perspective()`/`lookAt()`
+  with **12 authored camera keyframes** (eye z 9.2 → −1.6, travelling *through* the scene, fov
+  40→56); rep2 adopted **three.js 0.185** with a `PerspectiveCamera` and its own CAMERA track
+  keyframed at 0/12/26/40/52s. The S1 baseline was 0/3 — all three were 2.5D particle fields with
+  no camera at all.
+- Batteries clean on both: 60fps both profiles, M2b pause verified, reduced-motion as a *designed*
+  variant with full parity, zero critical failures, choreographed recordings captured.
+- **Owner's verdict:** *"these two look a lot better. It does have the depth and scroll animations
+  I was looking for."* First time in the programme an output met the owner's stated ceiling.
+- **The finding that matters:** register awareness and ambition ceiling are **separate levers**.
+  The skill decides *whether the spectacle question is asked* (G2: 3/3 vs 0/3); the calibration
+  pack decides *how high the answer reaches*. Skill-equipped runs kept declining 3D on product-fit
+  grounds; the pack flipped that without the skill present at all.
+- Honest limits recorded: the pack is **not free** (rep2 at 365k tokens / 69 min exceeded the S1
+  baseline band; rep1 sat inside it); rep2 added `three` — the first 3D library adopted anywhere
+  in the programme; **neither rep cited the pack**, so influence is inferred from output shape,
+  not stated reasoning; and **concept convergence is untouched** — both are again "the page is a
+  Meridian project", now 5 of 5.
+- Findings: `results/CALIBRATION_ABLATION_FINDINGS.md`. No `SKILL.md` change is warranted — the
+  pack is a reference, not skill content — though a routing-flavoured v1.1 candidate is recorded
+  for the owner's later decision.
+
+
 ## v3.4 — 2026-08-27
 
 **Section E, register arm (criterion F) — six with-skill runs. Instrument-clean; the timidity

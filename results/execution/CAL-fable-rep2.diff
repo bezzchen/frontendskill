@@ -1,0 +1,4303 @@
+diff --git a/app/experience/CodePanel.jsx b/app/experience/CodePanel.jsx
+new file mode 100644
+index 0000000..dd81d5f
+--- /dev/null
++++ b/app/experience/CodePanel.jsx
+@@ -0,0 +1,133 @@
++"use client";
++// Act IV: not a mockup. The page's own curve state, serialized live.
++import { useState } from "react";
++import { store, useStoreVersion } from "./store";
++import { SHUTTLE_PERIOD } from "./constants";
++import { springLinearStops, springSettleMs } from "./easing";
++
++const fmt = (n) => String(Number(n.toFixed(2)));
++
++function easingText(curve) {
++  if (curve.mode === "spring") return `linear(${springLinearStops(curve.stiffness, curve.damping, 14).join(", ")})`;
++  return `cubic-bezier(${curve.p.map(fmt).join(", ")})`;
++}
++function durationMs(curve) {
++  return curve.mode === "spring" ? springSettleMs(curve.stiffness, curve.damping) : Math.round(SHUTTLE_PERIOD * 1000);
++}
++
++function buildText(tab, curve) {
++  const ease = easingText(curve);
++  const dur = durationMs(curve);
++  const head =
++    curve.mode === "spring"
++      ? `// spring(stiffness ${curve.stiffness}, damping ${curve.damping}) sampled to linear()\n`
++      : "";
++  if (tab === "js") {
++    return (
++      `// launch.mrd → shuttle · exported by Meridian\n${head}` +
++      `const shuttle = document.querySelector(".shuttle");\n\n` +
++      `shuttle.animate(\n  { translate: ["0 0", "240px 0"] },\n  {\n` +
++      `    duration: ${dur},\n    direction: "alternate",\n    iterations: Infinity,\n` +
++      `    easing: "${ease}",\n  },\n);\n`
++    );
++  }
++  return (
++    `/* launch.mrd → shuttle · exported by Meridian */\n` +
++    `.shuttle {\n  animation: shuttle ${dur}ms infinite alternate;\n` +
++    `  animation-timing-function: ${ease};\n}\n\n` +
++    `@keyframes shuttle {\n  to { translate: 240px 0; }\n}\n`
++  );
++}
++
++export default function CodePanel() {
++  useStoreVersion();
++  const curve = store.get().curve;
++  const [tab, setTab] = useState("js");
++  const [copied, setCopied] = useState(false);
++
++  const copy = async () => {
++    try {
++      await navigator.clipboard.writeText(buildText(tab, curve));
++      setCopied(true);
++      setTimeout(() => setCopied(false), 1400);
++    } catch {}
++  };
++
++  const ease = easingText(curve);
++  const dur = durationMs(curve);
++
++  return (
++    <div className="code-panel" role="region" aria-label="Export preview — updates live with the curve above">
++      <div className="cp-head">
++        <div className="cp-tabs" role="tablist" aria-label="Export format">
++          <button type="button" role="tab" aria-selected={tab === "js"} className="cp-tab mono" onClick={() => setTab("js")}>
++            JS
++          </button>
++          <button type="button" role="tab" aria-selected={tab === "css"} className="cp-tab mono" onClick={() => setTab("css")}>
++            CSS
++          </button>
++        </div>
++        <span className="cp-note mono">ZERO RUNTIME · NO LOCK-IN</span>
++        <button type="button" className="cp-copy mono" onClick={copy}>
++          {copied ? "COPIED ✓" : "COPY"}
++        </button>
++      </div>
++      <pre className="cp-pre" tabIndex={0}>
++        <code>
++          {tab === "js" ? (
++            <>
++              <span className="cmt">{"// launch.mrd → shuttle · exported by Meridian"}</span>
++              {"\n"}
++              {curve.mode === "spring" && (
++                <>
++                  <span className="cmt">{`// spring(stiffness ${curve.stiffness}, damping ${curve.damping}) sampled to linear()`}</span>
++                  {"\n"}
++                </>
++              )}
++              <span className="kw">const</span> shuttle = document.<span className="fn">querySelector</span>(
++              <span className="str">&quot;.shuttle&quot;</span>);{"\n\n"}
++              shuttle.<span className="fn">animate</span>({"(\n"}
++              {"  { translate: ["}
++              <span className="str">&quot;0 0&quot;</span>
++              {", "}
++              <span className="str">&quot;240px 0&quot;</span>
++              {"] },\n"}
++              {"  {\n"}
++              {"    duration: "}
++              <span className="live">{dur}</span>
++              {",\n    direction: "}
++              <span className="str">&quot;alternate&quot;</span>
++              {",\n    iterations: "}
++              <span className="kw">Infinity</span>
++              {",\n    easing: "}
++              <span className="str">
++                &quot;<span className="live">{ease}</span>&quot;
++              </span>
++              {",\n  },\n);"}
++            </>
++          ) : (
++            <>
++              <span className="cmt">{"/* launch.mrd → shuttle · exported by Meridian */"}</span>
++              {"\n"}
++              <span className="fn">.shuttle</span>
++              {" {\n  "}
++              <span className="kw">animation</span>
++              {": shuttle "}
++              <span className="live">{dur}ms</span>
++              {" infinite alternate;\n  "}
++              <span className="kw">animation-timing-function</span>
++              {": "}
++              <span className="live">{ease}</span>
++              {";\n}\n\n"}
++              <span className="kw">@keyframes</span>
++              <span className="fn"> shuttle</span>
++              {" {\n  to { translate: "}
++              <span className="num">240px 0</span>
++              {"; }\n}"}
++            </>
++          )}
++        </code>
++      </pre>
++    </div>
++  );
++}
+diff --git a/app/experience/CurveEditor.jsx b/app/experience/CurveEditor.jsx
+new file mode 100644
+index 0000000..fad4834
+--- /dev/null
++++ b/app/experience/CurveEditor.jsx
+@@ -0,0 +1,235 @@
++"use client";
++// Act III: the easing curve is the interface. What you shape here drives the
++// shuttle in the world, the ribbon's pulse, and the exported code — same math.
++import { useEffect, useRef } from "react";
++import { store, useStoreVersion } from "./store";
++import { CURVE_PRESETS, SHUTTLE_PERIOD } from "./constants";
++import { clamp, makeEase, springSettleMs } from "./easing";
++
++const W = 300;
++const H = 174;
++const PXD = 34;
++const PYD = 18;
++const X = (x) => PXD + x * (W - 2 * PXD);
++const Y = (v) => PYD + ((1.5 - v) / 2) * (H - 2 * PYD);
++
++const sameP = (a, b) => a.length === b.length && a.every((v, i) => Math.abs(v - b[i]) < 0.001);
++
++export default function CurveEditor() {
++  useStoreVersion();
++  const curve = store.get().curve;
++  const svgRef = useRef(null);
++  const dotRef = useRef(null);
++  const easeRef = useRef({ key: "", fn: null });
++
++  const setCurve = (patch) => store.set({ curve: { ...store.get().curve, ...patch } });
++
++  const toXY = (e) => {
++    const rect = svgRef.current.getBoundingClientRect();
++    const sx = ((e.clientX - rect.left) / rect.width) * W;
++    const sy = ((e.clientY - rect.top) / rect.height) * H;
++    return {
++      x: clamp((sx - PXD) / (W - 2 * PXD), 0, 1),
++      y: clamp(1.5 - ((sy - PYD) / (H - 2 * PYD)) * 2, -0.5, 1.5),
++    };
++  };
++
++  const startDrag = (idx) => (e) => {
++    e.preventDefault();
++    e.stopPropagation();
++    const move = (ev) => {
++      const { x, y } = toXY(ev);
++      const p = [...store.get().curve.p];
++      p[idx * 2] = Math.round(x * 100) / 100;
++      p[idx * 2 + 1] = Math.round(y * 100) / 100;
++      setCurve({ mode: "bezier", p });
++    };
++    const up = () => {
++      window.removeEventListener("pointermove", move);
++      window.removeEventListener("pointerup", up);
++    };
++    window.addEventListener("pointermove", move);
++    window.addEventListener("pointerup", up);
++    move(e);
++  };
++
++  const handleKeys = (idx) => (e) => {
++    const dx = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
++    const dy = e.key === "ArrowUp" ? 1 : e.key === "ArrowDown" ? -1 : 0;
++    if (!dx && !dy) return;
++    e.preventDefault();
++    const stp = e.shiftKey ? 0.1 : 0.02;
++    const p = [...store.get().curve.p];
++    p[idx * 2] = clamp(Math.round((p[idx * 2] + dx * stp) * 100) / 100, 0, 1);
++    p[idx * 2 + 1] = clamp(Math.round((p[idx * 2 + 1] + dy * stp) * 100) / 100, -0.5, 1.5);
++    setCurve({ mode: "bezier", p });
++  };
++
++  // preview dot: runs only in full motion, only while the editor is on screen
++  useEffect(() => {
++    const el = svgRef.current;
++    const dot = dotRef.current;
++    if (!el || !dot) return;
++    let raf = null;
++    let visible = false;
++    const easeOf = (c) => {
++      const key = c.mode === "spring" ? `s${c.stiffness},${c.damping}` : `b${c.p.join(",")}`;
++      if (easeRef.current.key !== key) easeRef.current = { key, fn: makeEase(c) };
++      return easeRef.current.fn;
++    };
++    const running = () => visible && !document.hidden && store.get().motion === "full";
++    const loop = () => {
++      if (!running()) {
++        raf = null;
++        return;
++      }
++      const s = store.get();
++      const cyc = ((performance.now() / 1000) % (2 * SHUTTLE_PERIOD)) / SHUTTLE_PERIOD;
++      const tri = cyc < 1 ? cyc : 2 - cyc;
++      const f = easeOf(s.curve);
++      dot.setAttribute("cx", X(tri));
++      dot.setAttribute("cy", Y(clamp(f(tri), -0.5, 1.5)));
++      raf = requestAnimationFrame(loop);
++    };
++    const ensure = () => {
++      if (running() && raf === null) raf = requestAnimationFrame(loop);
++      dot.style.opacity = store.get().motion === "full" ? "1" : "0";
++    };
++    const io = new IntersectionObserver((entries) => {
++      visible = entries[0] ? entries[0].isIntersecting : false;
++      ensure();
++    });
++    io.observe(el);
++    const unsub = store.onState(ensure);
++    document.addEventListener("visibilitychange", ensure);
++    return () => {
++      io.disconnect();
++      unsub();
++      document.removeEventListener("visibilitychange", ensure);
++      if (raf) cancelAnimationFrame(raf);
++    };
++  }, []);
++
++  const p = curve.p;
++  let springPts = "";
++  if (curve.mode === "spring") {
++    const f = makeEase(curve);
++    const pts = [];
++    for (let i = 0; i <= 60; i++) {
++      const x = i / 60;
++      pts.push(`${X(x).toFixed(1)},${Y(clamp(f(x), -0.5, 1.5)).toFixed(1)}`);
++    }
++    springPts = pts.join(" ");
++  }
++
++  return (
++    <div className="curve-editor">
++      <div className="ce-chips" role="group" aria-label="Easing presets">
++        {CURVE_PRESETS.map((pr) => (
++          <button
++            key={pr.id}
++            type="button"
++            className="chip-btn mono"
++            aria-pressed={curve.mode === "bezier" && sameP(pr.p, p)}
++            onClick={() => setCurve({ mode: "bezier", p: [...pr.p] })}
++          >
++            {pr.label.toUpperCase()}
++          </button>
++        ))}
++        <button
++          type="button"
++          className="chip-btn mono"
++          aria-pressed={curve.mode === "spring"}
++          onClick={() => setCurve({ mode: "spring" })}
++        >
++          SPRING
++        </button>
++      </div>
++
++      <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} className="ce-svg" role="img" aria-label="Easing curve plot">
++        <rect className="ce-unit" x={X(0)} y={Y(1)} width={X(1) - X(0)} height={Y(0) - Y(1)} />
++        {[0.25, 0.5, 0.75].map((g) => (
++          <line key={`v${g}`} className="ce-grid" x1={X(g)} y1={Y(1.5)} x2={X(g)} y2={Y(-0.5)} />
++        ))}
++        {[-0.5, 0.5, 1.5].map((g) => (
++          <line key={`h${g}`} className="ce-grid" x1={X(0)} y1={Y(g)} x2={X(1)} y2={Y(g)} />
++        ))}
++        <line className="ce-linear" x1={X(0)} y1={Y(0)} x2={X(1)} y2={Y(1)} />
++        {curve.mode === "bezier" ? (
++          <>
++            <path
++              className="ce-curve"
++              d={`M ${X(0)} ${Y(0)} C ${X(p[0])} ${Y(p[1])}, ${X(p[2])} ${Y(p[3])}, ${X(1)} ${Y(1)}`}
++            />
++            <line className="ce-hline" x1={X(0)} y1={Y(0)} x2={X(p[0])} y2={Y(p[1])} />
++            <line className="ce-hline" x1={X(1)} y1={Y(1)} x2={X(p[2])} y2={Y(p[3])} />
++            <circle className="ce-anchor" cx={X(0)} cy={Y(0)} r="3.5" />
++            <circle className="ce-anchor" cx={X(1)} cy={Y(1)} r="3.5" />
++            {[0, 1].map((idx) => (
++              <circle
++                key={idx}
++                className="ce-handle"
++                tabIndex={0}
++                role="slider"
++                aria-label={`Control point ${idx + 1} — arrows move it, shift for coarse`}
++                aria-valuemin={-0.5}
++                aria-valuemax={1.5}
++                aria-valuenow={p[idx * 2 + 1]}
++                aria-valuetext={`x ${p[idx * 2]}, y ${p[idx * 2 + 1]}`}
++                cx={X(p[idx * 2])}
++                cy={Y(p[idx * 2 + 1])}
++                r="7"
++                onPointerDown={startDrag(idx)}
++                onKeyDown={handleKeys(idx)}
++              />
++            ))}
++          </>
++        ) : (
++          <polyline className="ce-curve" points={springPts} fill="none" />
++        )}
++        <circle ref={dotRef} className="ce-dot" r="4.5" cx={X(0)} cy={Y(0)} />
++      </svg>
++
++      {curve.mode === "spring" && (
++        <div className="ce-springs">
++          <label className="mono">
++            STIFFNESS
++            <input
++              type="range"
++              min="40"
++              max="400"
++              step="5"
++              value={curve.stiffness}
++              onChange={(e) => setCurve({ stiffness: Number(e.target.value) })}
++            />
++            <b>{curve.stiffness}</b>
++          </label>
++          <label className="mono">
++            DAMPING
++            <input
++              type="range"
++              min="4"
++              max="40"
++              step="1"
++              value={curve.damping}
++              onChange={(e) => setCurve({ damping: Number(e.target.value) })}
++            />
++            <b>{curve.damping}</b>
++          </label>
++        </div>
++      )}
++
++      <p className="ce-readout mono">
++        {curve.mode === "bezier" ? (
++          <>
++            cubic-bezier(<b>{p.join(", ")}</b>)
++          </>
++        ) : (
++          <>
++            spring(<b>{curve.stiffness}</b>, <b>{curve.damping}</b>) ≈ <b>{springSettleMs(curve.stiffness, curve.damping)}ms</b>
++          </>
++        )}
++      </p>
++    </div>
++  );
++}
+diff --git a/app/experience/Experience.jsx b/app/experience/Experience.jsx
+new file mode 100644
+index 0000000..289dcd7
+--- /dev/null
++++ b/app/experience/Experience.jsx
+@@ -0,0 +1,324 @@
++"use client";
++// Orchestrator: owns the canvas, scroll→time mapping, motion mode, capability
++// tier, engine lifecycle (pause on hidden/offscreen), boot, and the play loop.
++import { useCallback, useEffect, useRef, useState } from "react";
++import { store, useStoreVersion } from "./store";
++import { DURATION } from "./constants";
++import { togglePlay } from "./controls";
++import TopBar from "./TopBar";
++import TimelineDock from "./TimelineDock";
++import Poster from "./Poster";
++
++export default function Experience({ children }) {
++  useStoreVersion();
++  const st = store.get();
++  const canvasRef = useRef(null);
++  const engineRef = useRef(null);
++  const maxScrollRef = useRef(1);
++  const intersectingRef = useRef(true);
++  const mountTRef = useRef(0);
++  const leftRef = useRef(false);
++  const [ready, setReady] = useState(false); // world compiled (or no world needed)
++  const [lockMode, setLockMode] = useState(false);
++  const [leaving, setLeaving] = useState(false);
++  const [gone, setGone] = useState(false);
++
++  const beginLeave = useCallback(() => {
++    if (leftRef.current) return;
++    leftRef.current = true;
++    setLeaving(true);
++    engineRef.current?.ignite();
++    const calm = store.get().motion !== "full" || store.get().tier === 0;
++    window.setTimeout(
++      () => {
++        setGone(true);
++        store.set({ booted: true });
++      },
++      calm ? 180 : 800
++    );
++  }, []);
++
++  // ---- mount: detection + global wiring
++  useEffect(() => {
++    mountTRef.current = performance.now();
++    const qs = new URLSearchParams(window.location.search);
++    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
++    let saved = null;
++    try {
++      saved = localStorage.getItem("mrd-motion");
++    } catch {}
++    const qMotion = qs.get("motion");
++    const motion =
++      qMotion === "calm" || qMotion === "full"
++        ? qMotion
++        : saved === "calm" || saved === "full"
++          ? saved
++          : mq.matches
++            ? "calm"
++            : "full";
++    const motionSource = qMotion ? "query" : saved ? "user" : "auto";
++
++    let tier = 2;
++    const coarse = window.matchMedia("(pointer: coarse)").matches;
++    const dm = navigator.deviceMemory || 8;
++    const cores = navigator.hardwareConcurrency || 8;
++    if (coarse || window.innerWidth < 820 || dm <= 4 || cores <= 4) tier = 1;
++    try {
++      const probe = document.createElement("canvas");
++      if (!probe.getContext("webgl2") && !probe.getContext("webgl")) tier = 0;
++    } catch {
++      tier = 0;
++    }
++    const qTier = qs.get("tier");
++    if (qTier === "0" || qTier === "1" || qTier === "2") tier = Number(qTier);
++    store.set({ motion, motionSource, tier });
++
++    const onMq = () => {
++      if (store.get().motionSource === "auto")
++        store.set({ motion: mq.matches ? "calm" : "full", playing: false });
++    };
++    mq.addEventListener?.("change", onMq);
++
++    const measure = () => {
++      maxScrollRef.current = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
++    };
++    measure();
++    const t1 = window.setTimeout(measure, 500);
++    // debug/test hooks: ?t=<s> scroll-jumps there; ?lock=<s> pins the playhead
++    // without scrolling (used by the screenshot harness)
++    const qT = parseFloat(qs.get("t"));
++    if (!Number.isNaN(qT)) {
++      requestAnimationFrame(() => {
++        measure();
++        window.scrollTo(0, (Math.max(0, Math.min(DURATION, qT)) / DURATION) * maxScrollRef.current);
++      });
++    }
++    const qLock = parseFloat(qs.get("lock"));
++    const locked = !Number.isNaN(qLock);
++    if (locked) {
++      setLockMode(true);
++      store.setTarget(qLock);
++      window.setTimeout(() => {
++        const s = store.get();
++        if (s.motion !== "full" || s.tier === 0) {
++          store.tick(s.targetTime);
++        }
++        engineRef.current?.renderOnce();
++      }, 60);
++    }
++    const onResize = () => {
++      measure();
++      engineRef.current?.resize();
++      if (store.get().motion !== "full") engineRef.current?.renderOnce();
++    };
++    window.addEventListener("resize", onResize);
++
++    const onScroll = () => {
++      if (locked) return;
++      store.setTarget((window.scrollY / maxScrollRef.current) * DURATION);
++      const s = store.get();
++      if (s.motion !== "full" || s.tier === 0 || !engineRef.current) {
++        store.tick(s.targetTime);
++        engineRef.current?.renderOnce();
++      }
++    };
++    window.addEventListener("scroll", onScroll, { passive: true });
++    onScroll();
++
++    // Space = play/pause, editor style (only in full motion, never on controls)
++    const onKey = (e) => {
++      if (e.code !== "Space" || e.repeat) return;
++      const t = e.target;
++      if (t && t.closest?.("button, a, input, textarea, select, [role='slider'], [contenteditable='true']")) return;
++      if (store.get().motion !== "full") return;
++      e.preventDefault();
++      togglePlay();
++    };
++    window.addEventListener("keydown", onKey);
++
++    // pointer → gesture field + parallax; taps ripple on touch
++    const onMove = (e) => {
++      if (e.pointerType === "touch") return;
++      engineRef.current?.setPointer(
++        (e.clientX / window.innerWidth) * 2 - 1,
++        -((e.clientY / window.innerHeight) * 2 - 1),
++        true
++      );
++    };
++    const onLeave = () => engineRef.current?.setPointer(10, 10, false);
++    const onDown = (e) => {
++      if (e.pointerType !== "touch") return;
++      engineRef.current?.setPointer(
++        (e.clientX / window.innerWidth) * 2 - 1,
++        -((e.clientY / window.innerHeight) * 2 - 1),
++        false
++      );
++      engineRef.current?.tap();
++    };
++    window.addEventListener("pointermove", onMove, { passive: true });
++    window.addEventListener("pointerdown", onDown, { passive: true });
++    document.documentElement.addEventListener("pointerleave", onLeave);
++
++    return () => {
++      window.clearTimeout(t1);
++      mq.removeEventListener?.("change", onMq);
++      window.removeEventListener("resize", onResize);
++      window.removeEventListener("scroll", onScroll);
++      window.removeEventListener("keydown", onKey);
++      window.removeEventListener("pointermove", onMove);
++      window.removeEventListener("pointerdown", onDown);
++      document.documentElement.removeEventListener("pointerleave", onLeave);
++    };
++  }, []);
++
++  // ---- engine lifecycle, keyed on tier
++  useEffect(() => {
++    const tier = store.get().tier;
++    if (tier === 0) {
++      setReady(true);
++      return;
++    }
++    if (!canvasRef.current) return;
++    let cancelled = false;
++
++    const syncActive = () => {
++      const e = engineRef.current;
++      if (!e) return;
++      const vis = !document.hidden && intersectingRef.current;
++      if (store.get().motion === "full") e.setActive(vis);
++      else {
++        e.setActive(false);
++        if (vis) e.renderOnce();
++      }
++    };
++
++    (async () => {
++      const mod = await import("./engine");
++      if (cancelled) return;
++      const engine = mod.createEngine({ canvas: canvasRef.current, store, tier });
++      if (!engine) {
++        store.set({ tier: 0 });
++        return;
++      }
++      engineRef.current = engine;
++      engine.onContextLost(() => {
++        engineRef.current = null;
++        store.set({ tier: 0, playing: false });
++      });
++      await engine.ready;
++      if (cancelled) return;
++      setReady(true);
++      syncActive();
++    })();
++
++    const onVis = () => syncActive();
++    document.addEventListener("visibilitychange", onVis);
++    const io = new IntersectionObserver((entries) => {
++      intersectingRef.current = entries[0] ? entries[0].isIntersecting : true;
++      syncActive();
++    });
++    io.observe(canvasRef.current);
++    const unsub = store.onState(syncActive);
++
++    return () => {
++      cancelled = true;
++      document.removeEventListener("visibilitychange", onVis);
++      io.disconnect();
++      unsub();
++      engineRef.current?.dispose();
++      engineRef.current = null;
++    };
++  }, [st.tier]);
++
++  // ---- boot exit
++  useEffect(() => {
++    if (!ready || gone) return;
++    const calm = store.get().motion !== "full" || store.get().tier === 0;
++    const elapsed = performance.now() - mountTRef.current;
++    const hold = calm ? 100 : Math.max(80, 1000 - elapsed);
++    const t = window.setTimeout(beginLeave, hold);
++    const onEsc = (e) => {
++      if (e.key === "Escape") beginLeave();
++    };
++    window.addEventListener("keydown", onEsc);
++    return () => {
++      window.clearTimeout(t);
++      window.removeEventListener("keydown", onEsc);
++    };
++  }, [ready, gone, beginLeave]);
++
++  // ---- play transport: advances scroll in real time; any user input takes over
++  useEffect(() => {
++    if (!st.playing) return;
++    let raf = null;
++    let last = performance.now();
++    const step = (now) => {
++      const dt = Math.min(0.05, (now - last) / 1000);
++      last = now;
++      const max = maxScrollRef.current;
++      const y = window.scrollY + (max / DURATION) * dt;
++      window.scrollTo(0, y);
++      if (y >= max - 1) {
++        store.set({ playing: false });
++        return;
++      }
++      raf = requestAnimationFrame(step);
++    };
++    raf = requestAnimationFrame(step);
++    const cancel = () => store.set({ playing: false });
++    const onNavKey = (e) => {
++      if (["PageDown", "PageUp", "ArrowDown", "ArrowUp", "Home", "End"].includes(e.key)) cancel();
++    };
++    window.addEventListener("wheel", cancel, { passive: true });
++    window.addEventListener("touchmove", cancel, { passive: true });
++    window.addEventListener("keydown", onNavKey);
++    return () => {
++      if (raf) cancelAnimationFrame(raf);
++      window.removeEventListener("wheel", cancel);
++      window.removeEventListener("touchmove", cancel);
++      window.removeEventListener("keydown", onNavKey);
++    };
++  }, [st.playing]);
++
++  return (
++    <div
++      className={"stage" + (lockMode ? " lockmode" : "")}
++      data-act={st.act}
++      data-motion={st.motion}
++      data-tier={st.tier}
++      data-ended={st.ended ? "1" : "0"}
++    >
++      <a className="skip-link" href="#content">
++        Skip to content
++      </a>
++      {st.tier > 0 ? (
++        <canvas ref={canvasRef} className="world" aria-hidden="true" />
++      ) : (
++        <Poster />
++      )}
++      <div className="vignette" aria-hidden="true" />
++      <TopBar />
++      <main id="content" className="content">
++        {children}
++      </main>
++      <TimelineDock />
++      {!gone && (
++        <div
++          className={"boot" + (leaving ? " boot-leaving" : "")}
++          onClick={() => ready && beginLeave()}
++          aria-hidden="true"
++        >
++          <div className="boot-inner">
++            <p className="boot-kicker mono">MERIDIAN · MOTION EDITOR FOR THE WEB</p>
++            <div className="boot-mark serif">Meridian</div>
++            <p className="boot-line mono">LAUNCH.MRD — 60S @ 60FPS · 3 TRACKS · 23 KEYFRAMES</p>
++            <div className="boot-progress" aria-hidden="true">
++              <span className={ready ? "isdone" : ""} />
++            </div>
++            <p className="boot-line mono dim">{ready ? "READY — ROLLING" : "COMPILING WORLD…"}</p>
++          </div>
++        </div>
++      )}
++    </div>
++  );
++}
+diff --git a/app/experience/Poster.jsx b/app/experience/Poster.jsx
+new file mode 100644
+index 0000000..bcaa599
+--- /dev/null
++++ b/app/experience/Poster.jsx
+@@ -0,0 +1,61 @@
++// Tier-0 fallback: no WebGL. The same world as a composed still — palette,
++// spline, gates and ring — in CSS gradients and one inline SVG.
++export default function Poster() {
++  return (
++    <div className="poster" aria-hidden="true">
++      <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
++        <defs>
++          <linearGradient id="mrd-spline" x1="0" y1="1" x2="1" y2="0">
++            <stop offset="0" stopColor="#FFB35C" stopOpacity="0.95" />
++            <stop offset="0.55" stopColor="#FF8E3D" stopOpacity="0.6" />
++            <stop offset="1" stopColor="#3E7DBF" stopOpacity="0.45" />
++          </linearGradient>
++          <filter id="mrd-glow" x="-40%" y="-40%" width="180%" height="180%">
++            <feGaussianBlur stdDeviation="7" />
++          </filter>
++        </defs>
++        <g fill="none" strokeLinecap="round">
++          <path
++            d="M -80 760 C 240 640, 330 500, 560 540 S 900 720, 1020 560 S 940 330, 1120 300"
++            stroke="url(#mrd-spline)"
++            strokeWidth="10"
++            opacity="0.55"
++            filter="url(#mrd-glow)"
++          />
++          <path
++            d="M -80 760 C 240 640, 330 500, 560 540 S 900 720, 1020 560 S 940 330, 1120 300"
++            stroke="url(#mrd-spline)"
++            strokeWidth="2.5"
++          />
++          <ellipse cx="1160" cy="345" rx="128" ry="96" stroke="#5A7FB8" strokeWidth="2" opacity="0.7" filter="url(#mrd-glow)" transform="rotate(-14 1160 345)" />
++          <ellipse cx="1160" cy="345" rx="128" ry="96" stroke="#8FB4E8" strokeWidth="1.4" opacity="0.8" transform="rotate(-14 1160 345)" />
++        </g>
++        <g>
++          {[
++            [210, 655, 1],
++            [430, 545, 1],
++            [640, 570, 1],
++            [880, 650, 0],
++            [1005, 520, 0],
++            [1078, 385, 0],
++          ].map(([x, y, done], i) => (
++            <rect
++              key={i}
++              x={x - 7}
++              y={y - 7}
++              width="14"
++              height="14"
++              transform={`rotate(45 ${x} ${y})`}
++              fill={done ? "#FFB35C" : "none"}
++              stroke={done ? "#FFB35C" : "#7DE9FF"}
++              strokeWidth="1.6"
++              opacity="0.9"
++            />
++          ))}
++          <circle cx="700" cy="588" r="7" fill="#FFF2DD" />
++          <circle cx="700" cy="588" r="22" fill="#FFB35C" opacity="0.25" filter="url(#mrd-glow)" />
++        </g>
++      </svg>
++    </div>
++  );
++}
+diff --git a/app/experience/TimelineDock.jsx b/app/experience/TimelineDock.jsx
+new file mode 100644
+index 0000000..12fe1b5
+--- /dev/null
++++ b/app/experience/TimelineDock.jsx
+@@ -0,0 +1,199 @@
++"use client";
++// The signature element: a real timeline. Minimap of the world and its controller.
++import { useEffect, useRef } from "react";
++import { store, useStoreVersion } from "./store";
++import { ACTS, TRACKS, DURATION, KF_TOTAL, timecode, pad2 } from "./constants";
++import { seekTo, togglePlay } from "./controls";
++import { clamp } from "./easing";
++
++const pct = (t) => `${(t / DURATION) * 100}%`;
++
++const IconStart = () => (
++  <svg viewBox="0 0 12 12" width="11" height="11" aria-hidden="true">
++    <path d="M2 1v10M11 1L4 6l7 5z" fill="currentColor" stroke="currentColor" strokeWidth="1" strokeLinejoin="round" />
++  </svg>
++);
++const IconPlay = () => (
++  <svg viewBox="0 0 12 12" width="11" height="11" aria-hidden="true">
++    <path d="M2.5 1.2L11 6l-8.5 4.8z" fill="currentColor" />
++  </svg>
++);
++const IconPause = () => (
++  <svg viewBox="0 0 12 12" width="11" height="11" aria-hidden="true">
++    <path d="M2.5 1.5h2.6v9H2.5zM6.9 1.5h2.6v9H6.9z" fill="currentColor" />
++  </svg>
++);
++const IconNext = () => (
++  <svg viewBox="0 0 14 12" width="12" height="11" aria-hidden="true">
++    <path d="M1 1.2L7 6l-6 4.8zM7 1.2L13 6l-6 4.8z" fill="currentColor" />
++  </svg>
++);
++
++export default function TimelineDock() {
++  useStoreVersion();
++  const st = store.get();
++  const rulerRef = useRef(null);
++  const phRef = useRef(null);
++  const progRef = useRef(null);
++  const tcRef = useRef(null);
++  const actRef = useRef(null);
++  const kfRef = useRef(null);
++  const widthRef = useRef(1);
++
++  useEffect(() => {
++    const apply = (s) => {
++      const f = s.time / DURATION;
++      if (phRef.current) {
++        phRef.current.style.transform = `translateX(${f * widthRef.current}px)`;
++        phRef.current.setAttribute("aria-valuenow", s.time.toFixed(1));
++        phRef.current.setAttribute(
++          "aria-valuetext",
++          `${s.time.toFixed(1)} seconds — act ${ACTS[s.act].num}, ${ACTS[s.act].name.toLowerCase()}`
++        );
++      }
++      if (progRef.current) progRef.current.style.transform = `scaleX(${f})`;
++      if (tcRef.current) tcRef.current.textContent = timecode(s.time);
++      if (actRef.current) actRef.current.textContent = `ACT ${ACTS[s.act].num} · ${ACTS[s.act].name}`;
++      if (kfRef.current) kfRef.current.textContent = `K ${pad2(s.kfPassed)}/${KF_TOTAL}`;
++    };
++    const ro = new ResizeObserver(() => {
++      widthRef.current = rulerRef.current ? rulerRef.current.clientWidth : 1;
++      apply(store.get());
++    });
++    if (rulerRef.current) {
++      widthRef.current = rulerRef.current.clientWidth;
++      ro.observe(rulerRef.current);
++    }
++    const un = store.onFrame(apply);
++    apply(store.get());
++    return () => {
++      un();
++      ro.disconnect();
++    };
++  }, []);
++
++  const scrub = (e) => {
++    const el = rulerRef.current;
++    if (!el) return;
++    const rect = el.getBoundingClientRect();
++    const f = clamp((e.clientX - rect.left) / rect.width, 0, 1);
++    seekTo(f * DURATION, false);
++  };
++  const startScrub = (e) => {
++    if (e.button !== undefined && e.button !== 0) return;
++    e.preventDefault();
++    store.set({ playing: false });
++    scrub(e);
++    const move = (ev) => scrub(ev);
++    const up = () => {
++      window.removeEventListener("pointermove", move);
++      window.removeEventListener("pointerup", up);
++    };
++    window.addEventListener("pointermove", move);
++    window.addEventListener("pointerup", up);
++  };
++
++  const onSliderKeys = (e) => {
++    const s = store.get();
++    let t = null;
++    const stp = e.shiftKey ? 5 : 1;
++    if (e.key === "ArrowRight" || e.key === "ArrowUp") t = s.time + stp;
++    else if (e.key === "ArrowLeft" || e.key === "ArrowDown") t = s.time - stp;
++    else if (e.key === "Home") t = 0;
++    else if (e.key === "End") t = DURATION;
++    else if (e.key === "PageUp") t = ACTS[Math.max(0, s.act - 1)].t0 + 0.01;
++    else if (e.key === "PageDown") t = ACTS[Math.min(ACTS.length - 1, s.act + 1)].t0 + 0.01;
++    if (t !== null) {
++      e.preventDefault();
++      store.set({ playing: false });
++      seekTo(t, false);
++    }
++  };
++
++  const nextAct = () => seekTo(ACTS[Math.min(ACTS.length - 1, st.act + 1)].t0 + 0.01, true);
++
++  return (
++    <div className="dock" role="region" aria-label="Timeline transport">
++      <div className="dock-left">
++        <button type="button" className="tbtn" aria-label="Back to start" onClick={() => seekTo(0, true)}>
++          <IconStart />
++        </button>
++        {st.motion === "full" ? (
++          <button
++            type="button"
++            className="tbtn tbtn-play"
++            aria-label={st.playing ? "Pause" : "Play the page"}
++            aria-pressed={st.playing}
++            onClick={togglePlay}
++          >
++            {st.playing ? <IconPause /> : <IconPlay />}
++          </button>
++        ) : (
++          <button type="button" className="tbtn tbtn-play" aria-label="Next act" onClick={nextAct}>
++            <IconNext />
++          </button>
++        )}
++        <div className="tc-block mono">
++          <span className="tc-main" ref={tcRef}>
++            00:00:00:00
++          </span>
++          <span className="tc-sub" ref={actRef}>
++            ACT I · ORIGIN
++          </span>
++        </div>
++      </div>
++
++      <div className="dock-ruler" ref={rulerRef}>
++        <div className="chapters">
++          {ACTS.map((a) => (
++            <button
++              key={a.id}
++              type="button"
++              className={"chapter mono" + (st.act === a.i ? " on" : "")}
++              style={{ left: pct(a.t0) }}
++              onClick={() => seekTo(a.t0 + 0.01, true)}
++            >
++              <b>{a.num}</b>
++              <span className="chapter-name"> {a.name}</span>
++            </button>
++          ))}
++        </div>
++        <div className="ruler-band" onPointerDown={startScrub}>
++          <div className="ticks" aria-hidden="true" />
++          <div className="progress" ref={progRef} aria-hidden="true" />
++        </div>
++        <div className="tracks" aria-hidden="true">
++          {TRACKS.map((tr) => (
++            <div className="track" key={tr.name}>
++              <span className="track-name mono">{tr.name}</span>
++              {tr.kf.map((t) => (
++                <i key={t} className={"kf" + (st.time >= t ? " done" : "")} style={{ left: pct(t) }} />
++              ))}
++            </div>
++          ))}
++        </div>
++        <div
++          className="playhead"
++          ref={phRef}
++          role="slider"
++          tabIndex={0}
++          aria-label="Playhead"
++          aria-valuemin={0}
++          aria-valuemax={DURATION}
++          aria-valuenow={0}
++          onKeyDown={onSliderKeys}
++          onPointerDown={startScrub}
++        >
++          <span className="playhead-cap" aria-hidden="true" />
++        </div>
++      </div>
++
++      <div className="dock-right mono">
++        <span className="kf-count" ref={kfRef}>
++          K 01/{KF_TOTAL}
++        </span>
++        <span className="hint">SPACE ▸ PLAY</span>
++      </div>
++    </div>
++  );
++}
+diff --git a/app/experience/TopBar.jsx b/app/experience/TopBar.jsx
+new file mode 100644
+index 0000000..80e1a5e
+--- /dev/null
++++ b/app/experience/TopBar.jsx
+@@ -0,0 +1,62 @@
++"use client";
++import { useEffect, useRef } from "react";
++import { store, useStoreVersion } from "./store";
++import { timecode } from "./constants";
++
++const RingMark = () => (
++  <svg className="ringmark" viewBox="0 0 22 22" width="19" height="19" aria-hidden="true">
++    <circle cx="11" cy="11" r="8.6" fill="none" stroke="currentColor" strokeWidth="1.4" />
++    <ellipse cx="11" cy="11" rx="3.6" ry="8.6" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.65" />
++    <circle cx="11" cy="2.4" r="1.9" fill="currentColor" />
++  </svg>
++);
++
++export default function TopBar() {
++  useStoreVersion();
++  const st = store.get();
++  const tcRef = useRef(null);
++
++  useEffect(
++    () =>
++      store.onFrame((s) => {
++        if (tcRef.current) tcRef.current.textContent = timecode(s.time);
++      }),
++    []
++  );
++
++  const toggleMotion = () => {
++    const s = store.get();
++    const next = s.motion === "full" ? "calm" : "full";
++    try {
++      localStorage.setItem("mrd-motion", next);
++    } catch {}
++    store.set({ motion: next, motionSource: "user", playing: false });
++  };
++
++  return (
++    <header className="topbar">
++      <div className="brand">
++        <RingMark />
++        <span className="brand-name serif">Meridian</span>
++        <span className="chip mono">LAUNCH.MRD</span>
++      </div>
++      <div className="topbar-right">
++        <span className="tc-top mono" aria-hidden="true">
++          TC <span ref={tcRef}>00:00:00:00</span>
++        </span>
++        <button
++          type="button"
++          className="toggle mono"
++          aria-pressed={st.motion === "calm"}
++          onClick={toggleMotion}
++          title="Calm trades the flight for composed stills — same story, no motion"
++        >
++          MOTION <b>{st.motion === "calm" ? "CALM" : "FULL"}</b>
++        </button>
++        <a className="btn btn-primary mono" href="mailto:hello@meridian.tools?subject=Early%20access">
++          GET EARLY ACCESS
++        </a>
++      </div>
++    </header>
++  );
++}
+diff --git a/app/experience/constants.js b/app/experience/constants.js
+new file mode 100644
+index 0000000..17f02f8
+--- /dev/null
++++ b/app/experience/constants.js
+@@ -0,0 +1,78 @@
++// launch.mrd — the project this page plays.
++// Single source of truth for the timeline: the DOM dock, the WebGL world,
++// the copy, and the exported code all read from here.
++
++export const DURATION = 60; // project seconds
++export const FPS = 60;
++export const VH_PER_SECOND = 13; // scroll density: 1 project second = 13vh of scroll
++
++export const ACTS = [
++  { i: 0, num: "I", id: "origin", name: "ORIGIN", t0: 0, t1: 12 },
++  { i: 1, num: "II", id: "keyframes", name: "KEYFRAMES", t0: 12, t1: 26 },
++  { i: 2, num: "III", id: "curves", name: "CURVES", t0: 26, t1: 40 },
++  { i: 3, num: "IV", id: "ship", name: "SHIP", t0: 40, t1: 52 },
++  { i: 4, num: "V", id: "premiere", name: "PREMIERE", t0: 52, t1: 60 },
++];
++
++// Three visible tracks. 23 keyframes total.
++export const TRACKS = [
++  { name: "CAMERA", kf: [0, 12, 26, 40, 52] },
++  { name: "WORLD", kf: [2, 13, 15.5, 18, 20.5, 23, 31, 45, 56, 60] },
++  { name: "CURVE", kf: [6, 27, 29, 33, 36, 38, 42, 48] },
++];
++
++export const ALL_KF = TRACKS.flatMap((t) => t.kf).sort((a, b) => a - b);
++export const KF_TOTAL = ALL_KF.length; // 23
++
++// Gates rendered inside the 3D world (the WORLD track).
++// phase 1..5 = the five properties act II re-keys: palette, drift, width, density, hue.
++export const WORLD_GATES = [
++  { t: 2 },
++  { t: 13, phase: 1 },
++  { t: 15.5, phase: 2 },
++  { t: 18, phase: 3 },
++  { t: 20.5, phase: 4 },
++  { t: 23, phase: 5 },
++  { t: 31 },
++  { t: 45 },
++  { t: 56 },
++  { t: 60 },
++];
++
++// Act III shuttle runs between these two times on the path.
++export const SHUTTLE_SPAN = [31, 37];
++export const SHUTTLE_PERIOD = 1.9; // seconds per pass — also the exported duration
++
++export const CURVE_PRESETS = [
++  { id: "linear", label: "Linear", p: [0, 0, 1, 1] },
++  { id: "glide", label: "Glide", p: [0.25, 0.1, 0.25, 1] },
++  { id: "snap", label: "Snap", p: [0.85, 0, 0.12, 1] },
++  { id: "overshoot", label: "Overshoot", p: [0.62, -0.18, 0.24, 1.18] },
++];
++
++export function actIndexAt(t) {
++  for (let i = ACTS.length - 1; i >= 0; i--) {
++    if (t >= ACTS[i].t0) return i;
++  }
++  return 0;
++}
++
++export function kfCountAt(t) {
++  let n = 0;
++  for (let i = 0; i < ALL_KF.length; i++) {
++    if (ALL_KF[i] <= t + 1e-6) n++;
++    else break;
++  }
++  return n;
++}
++
++// SMPTE-style timecode 00:00:SS:FF at 60fps
++export function timecode(t) {
++  const tt = Math.max(0, Math.min(DURATION, t));
++  const s = Math.floor(tt);
++  const f = Math.floor((tt - s) * FPS);
++  if (s >= 60) return "00:01:00:00"; // the film ends exactly on the minute
++  return `00:00:${String(s).padStart(2, "0")}:${String(f).padStart(2, "0")}`;
++}
++
++export const pad2 = (n) => String(n).padStart(2, "0");
+diff --git a/app/experience/controls.jsx b/app/experience/controls.jsx
+new file mode 100644
+index 0000000..adc4b6a
+--- /dev/null
++++ b/app/experience/controls.jsx
+@@ -0,0 +1,41 @@
++"use client";
++// Transport actions shared by the dock, the hero, and keyboard shortcuts.
++import { store, useStoreVersion } from "./store";
++import { DURATION } from "./constants";
++
++export function seekTo(t, smoothScroll = true) {
++  const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
++  const y = (Math.max(0, Math.min(DURATION, t)) / DURATION) * max;
++  const calm = store.get().motion !== "full";
++  window.scrollTo({ top: y, behavior: smoothScroll && !calm ? "smooth" : "auto" });
++}
++
++export function togglePlay() {
++  const s = store.get();
++  if (s.motion !== "full") return;
++  if (!s.playing && s.time >= DURATION - 0.1) seekTo(0, false);
++  store.set({ playing: !s.playing });
++}
++
++export function PressPlay() {
++  useStoreVersion();
++  const s = store.get();
++  return (
++    <button
++      type="button"
++      className="btn btn-ghost mono play-only"
++      onClick={togglePlay}
++      aria-pressed={s.playing}
++    >
++      {s.playing ? "❚❚ PAUSE" : "▶ PRESS PLAY — 60S"}
++    </button>
++  );
++}
++
++export function Replay() {
++  return (
++    <button type="button" className="btn btn-ghost mono" onClick={() => seekTo(0.001, true)}>
++      ⏮ WATCH IT AGAIN
++    </button>
++  );
++}
+diff --git a/app/experience/easing.js b/app/experience/easing.js
+new file mode 100644
+index 0000000..94b2c68
+--- /dev/null
++++ b/app/experience/easing.js
+@@ -0,0 +1,89 @@
++// Shared motion math. The WebGL world, the curve editor, and the code
++// exporter all evaluate easing through these exact functions — the curve
++// you see is literally the curve you ship.
++
++export const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
++export const lerp = (a, b, t) => a + (b - a) * t;
++export const smooth = (a, b, x) => {
++  const t = clamp((x - a) / (b - a), 0, 1);
++  return t * t * (3 - 2 * t);
++};
++export const easeInOut = (t) =>
++  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
++
++// Standard CSS cubic-bezier(x1, y1, x2, y2) evaluator: solve x(t)=x, return y(t).
++export function cubicBezier(x1, y1, x2, y2) {
++  const cx = 3 * x1;
++  const bx = 3 * (x2 - x1) - cx;
++  const ax = 1 - cx - bx;
++  const cy = 3 * y1;
++  const by = 3 * (y2 - y1) - cy;
++  const ay = 1 - cy - by;
++  const sampleX = (t) => ((ax * t + bx) * t + cx) * t;
++  const sampleY = (t) => ((ay * t + by) * t + cy) * t;
++  const sampleDX = (t) => (3 * ax * t + 2 * bx) * t + cx;
++  return (x) => {
++    if (x <= 0) return 0;
++    if (x >= 1) return 1;
++    let t = x;
++    for (let i = 0; i < 6; i++) {
++      const d = sampleDX(t);
++      if (Math.abs(d) < 1e-6) break;
++      t = clamp(t - (sampleX(t) - x) / d, 0, 1);
++    }
++    let lo = 0;
++    let hi = 1;
++    if (Math.abs(sampleX(t) - x) > 1e-4) {
++      while (hi - lo > 1e-5) {
++        t = (lo + hi) / 2;
++        if (sampleX(t) < x) lo = t;
++        else hi = t;
++      }
++    }
++    return sampleY(t);
++  };
++}
++
++// Damped spring, closed form, normalized to settle at u = 1.
++// Returns f(u) for u in [0, 1] where the window is the spring's settle time.
++export function springEase(stiffness, damping) {
++  const w0 = Math.sqrt(Math.max(1, stiffness));
++  const zeta = damping / (2 * Math.sqrt(Math.max(1, stiffness)));
++  const settle = -Math.log(0.001) / Math.max(0.0001, zeta * w0);
++  if (zeta < 1) {
++    const wd = w0 * Math.sqrt(1 - zeta * zeta);
++    return (u) => {
++      const t = clamp(u, 0, 1) * settle;
++      const e = Math.exp(-zeta * w0 * t);
++      return 1 - e * (Math.cos(wd * t) + ((zeta * w0) / wd) * Math.sin(wd * t));
++    };
++  }
++  // critically damped / overdamped approximation
++  return (u) => {
++    const t = clamp(u, 0, 1) * settle;
++    return 1 - (1 + w0 * t) * Math.exp(-w0 * t);
++  };
++}
++
++export function springSettleMs(stiffness, damping) {
++  const w0 = Math.sqrt(Math.max(1, stiffness));
++  const zeta = damping / (2 * Math.sqrt(Math.max(1, stiffness)));
++  return Math.round((-Math.log(0.001) / Math.max(0.0001, zeta * w0)) * 1000);
++}
++
++// Sample a spring into CSS linear() stops.
++export function springLinearStops(stiffness, damping, n = 16) {
++  const f = springEase(stiffness, damping);
++  const out = [];
++  for (let i = 0; i <= n; i++) {
++    out.push(Number(f(i / n).toFixed(3)));
++  }
++  return out;
++}
++
++// Evaluate the current curve state (bezier or spring) as f(u), u in [0,1].
++export function makeEase(curve) {
++  if (curve.mode === "spring") return springEase(curve.stiffness, curve.damping);
++  const [x1, y1, x2, y2] = curve.p;
++  return cubicBezier(x1, y1, x2, y2);
++}
+diff --git a/app/experience/engine.js b/app/experience/engine.js
+new file mode 100644
+index 0000000..1703dc8
+--- /dev/null
++++ b/app/experience/engine.js
+@@ -0,0 +1,916 @@
++"use client";
++// The world: one continuous flight along the project's own timeline.
++// Raw three.js — one scene, one camera, one RAF, custom GLSL throughout.
++import * as THREE from "three";
++import { DURATION, WORLD_GATES, SHUTTLE_SPAN, SHUTTLE_PERIOD } from "./constants";
++import { clamp, lerp, smooth, easeInOut, makeEase } from "./easing";
++
++let DBG = false;
++try {
++  DBG = typeof window !== "undefined" && new URLSearchParams(window.location.search).has("dbg");
++} catch {}
++const U0 = 0.022; // the comet starts slightly down the path so the camera has road behind it
++const uOf = (t) => U0 + (clamp(t, 0, DURATION) / DURATION) * (1 - U0);
++
++// ---------------------------------------------------------------- path
++function buildPath() {
++  const pts = [
++    [0, 0.6, 8],
++    [0, 0.4, -6],
++    [-2.5, 1.0, -20],
++    [-5.5, 2.2, -36],
++    [-2, 3.2, -52],
++    [4, 2.4, -66],
++    [7.5, 0.8, -82],
++    [4, -0.6, -98],
++    [-3, -0.2, -112],
++    [-7, 1.6, -126],
++    [-4.5, 3.4, -140],
++    [-1, 1.2, -152],
++  ].map(([x, y, z]) => new THREE.Vector3(x, y, z));
++  // Finale: the path closes into the Meridian ring.
++  const C = new THREE.Vector3(0, 2.5, -176);
++  const R = 16;
++  const tilt = (18 * Math.PI) / 180;
++  const bu = new THREE.Vector3(1, 0, 0);
++  const bv = new THREE.Vector3(0, Math.sin(tilt), -Math.cos(tilt));
++  const steps = 11;
++  for (let i = 0; i <= steps; i++) {
++    const th = ((-90 + (356 * i) / steps) * Math.PI) / 180;
++    pts.push(
++      C.clone()
++        .addScaledVector(bu, Math.cos(th) * R)
++        .addScaledVector(bv, Math.sin(th) * R)
++    );
++  }
++  const curve = new THREE.CatmullRomCurve3(pts, false, "centripetal");
++  curve.arcLengthDivisions = 1200;
++  return { curve, ringCenter: C };
++}
++
++// Camera rig keyframes: t, back, up, side, ahead, fov — the flight is authored, not orbited.
++const RIG = [
++  [0, 0.026, 1.55, -2.45, 0.045, 63],
++  [7, 0.024, 1.7, -1.6, 0.04, 64],
++  [13, 0.024, 1.1, 0.95, 0.02, 64],
++  [21, 0.024, 1.35, 0.8, 0.022, 64],
++  [27, 0.046, 3.2, -4.4, 0.006, 55],
++  [34, 0.044, 2.8, -4.0, 0.008, 55],
++  [39, 0.03, 1.6, -1.5, 0.026, 62],
++  [45, 0.026, 1.3, -1.0, 0.03, 64],
++  [51, 0.026, 1.7, 0.5, 0.045, 68],
++  [60, 0.026, 1.7, 0.5, 0.045, 68],
++];
++
++function rigAt(t, out) {
++  let a = RIG[0];
++  let b = RIG[RIG.length - 1];
++  for (let i = 0; i < RIG.length - 1; i++) {
++    if (t >= RIG[i][0] && t <= RIG[i + 1][0]) {
++      a = RIG[i];
++      b = RIG[i + 1];
++      break;
++    }
++  }
++  const f = easeInOut(clamp((t - a[0]) / Math.max(0.001, b[0] - a[0]), 0, 1));
++  for (let k = 1; k <= 5; k++) out[k - 1] = lerp(a[k], b[k], f);
++  return out;
++}
++
++// ---------------------------------------------------------------- textures
++function glowTexture(inner = 0.0) {
++  const s = 128;
++  const cv = document.createElement("canvas");
++  cv.width = cv.height = s;
++  const g = cv.getContext("2d");
++  const grad = g.createRadialGradient(s / 2, s / 2, s * 0.02, s / 2, s / 2, s / 2);
++  grad.addColorStop(0, "rgba(255,255,255,1)");
++  grad.addColorStop(0.25, `rgba(255,255,255,${0.55 + inner * 0.3})`);
++  grad.addColorStop(0.6, "rgba(255,255,255,0.12)");
++  grad.addColorStop(1, "rgba(255,255,255,0)");
++  g.fillStyle = grad;
++  g.fillRect(0, 0, s, s);
++  const tx = new THREE.CanvasTexture(cv);
++  return tx;
++}
++
++function gateAtlasTexture() {
++  // left cell: hollow diamond (ahead) · right cell: filled diamond (committed)
++  const w = 256;
++  const h = 128;
++  const cv = document.createElement("canvas");
++  cv.width = w;
++  cv.height = h;
++  const g = cv.getContext("2d");
++  const draw = (cx, filled) => {
++    const r = 34;
++    g.save();
++    g.translate(cx, h / 2);
++    g.rotate(Math.PI / 4);
++    g.shadowColor = "rgba(255,255,255,0.9)";
++    g.shadowBlur = 22;
++    g.lineWidth = 7;
++    g.strokeStyle = "rgba(255,255,255,0.95)";
++    g.fillStyle = filled ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.22)";
++    g.fillRect(-r / 1.42, -r / 1.42, (2 * r) / 1.42, (2 * r) / 1.42);
++    g.strokeRect(-r / 1.42, -r / 1.42, (2 * r) / 1.42, (2 * r) / 1.42);
++    g.restore();
++  };
++  draw(64, false);
++  draw(192, true);
++  return new THREE.CanvasTexture(cv);
++}
++
++// ---------------------------------------------------------------- shaders
++const RIBBON_VERT = /* glsl */ `
++  varying float vU;
++  varying float vRim;
++  varying float vDist;
++  uniform float uTime, uWiden, uPulseAmp, uPulseFreq, uPulseCenter, uPulseSigma, uHalo;
++  void main() {
++    vU = uv.x;
++    vec3 p = position;
++    float reg = exp(-pow((vU - uPulseCenter) / uPulseSigma, 2.0));
++    float pulse = sin(vU * uPulseFreq + uTime * 3.2) * uPulseAmp * reg;
++    float w = uWiden + pulse;
++    p += normal * w * (uHalo > 0.5 ? 2.2 : 1.0);
++    vec4 mv = modelViewMatrix * vec4(p, 1.0);
++    vDist = -mv.z;
++    vec3 nV = normalize(normalMatrix * normal);
++    vRim = 1.0 - abs(nV.z);
++    gl_Position = projectionMatrix * mv;
++  }
++`;
++const RIBBON_FRAG = /* glsl */ `
++  precision highp float;
++  varying float vU;
++  varying float vRim;
++  varying float vDist;
++  uniform float uTime, uPlayU, uWarmth, uFlow, uIgnite, uRingLight, uHalo, uFogD, uTeal;
++  void main() {
++    float du = vU - uPlayU;
++    float visited = 1.0 - smoothstep(-0.004, 0.004, du);
++    vec3 futureCol = mix(vec3(0.16, 0.28, 0.55), vec3(0.13, 0.44, 0.52), uTeal);
++    vec3 pastCol = mix(vec3(1.0, 0.42, 0.12), vec3(1.0, 0.66, 0.28), clamp(uWarmth, 0.0, 1.0));
++    float dashAmt = 0.2 * smoothstep(70.0, 22.0, vDist);
++    float flow = (1.0 - dashAmt) + dashAmt * smoothstep(0.3, 0.95, fract(vU * 420.0 - uTime * uFlow));
++    float base = uHalo > 0.5 ? 0.038 : 0.52;
++    vec3 col = mix(futureCol * (0.55 + 0.45 * flow), pastCol * flow, visited) * base;
++    float g = exp(-abs(du) * 110.0);
++    col += vec3(1.0, 0.62, 0.25) * g * (uHalo > 0.5 ? 0.3 : 1.35);
++    // anticipation: the stretch just ahead of the playhead is locally lit
++    col += futureCol * exp(-max(du, 0.0) * 90.0) * step(0.0, du) * 0.55;
++    col += vec3(1.0, 0.7, 0.35) * uIgnite * exp(-vU * 26.0) * 2.4;
++    col += vec3(1.0, 0.82, 0.55) * uRingLight * 0.5 * flow;
++    float rim = uHalo > 0.5 ? (0.25 + 0.75 * vRim) : (0.55 + 0.45 * vRim);
++    float nearFade = smoothstep(2.0, 10.0, vDist);
++    col *= rim * nearFade * exp(-vDist * uFogD);
++    gl_FragColor = vec4(col, 1.0);
++  }
++`;
++
++const DUST_VERT = /* glsl */ `
++  attribute float aSeed;
++  attribute float aKind;
++  uniform float uTime, uDrift, uPtrAmp, uGather, uDense, uSizeMul, uRingLight, uPxScale, uSpread, uFogD;
++  uniform vec2 uPtr;
++  uniform vec3 uTintA, uTintB;
++  varying vec3 vColor;
++  varying float vCore;
++  void main() {
++    float s = aSeed * 6.28318;
++    vec3 p = position;
++    float amp = (0.22 + uDrift * 1.35) * (aKind < 0.5 ? 1.0 : 0.45);
++    p += vec3(sin(uTime * 0.31 + s * 3.1), cos(uTime * 0.24 + s * 5.7), sin(uTime * 0.27 + s * 7.3)) * amp;
++    vec4 mv = modelViewMatrix * vec4(p, 1.0);
++    vec4 clip = projectionMatrix * mv;
++    vec2 ndc = clip.xy / max(0.001, clip.w);
++    vec2 d = ndc - uPtr;
++    float L = length(d);
++    float push = exp(-L * L * 10.0) * uPtrAmp;
++    float dist0 = max(0.5, -mv.z);
++    mv.xy += (d / max(L, 0.04)) * push * dist0 * 0.11;
++    float gk = clamp(uGather * 1.7 - fract(aSeed * 13.7) * 0.7, 0.0, 1.0);
++    gk = gk * gk * (3.0 - 2.0 * gk) * (aKind < 0.5 ? 1.0 : 0.3);
++    if (gk > 0.001) {
++      vec3 tv = vec3(
++        (fract(aSeed * 7.13) - 0.5) * 2.6 + 3.2,
++        (fract(aSeed * 3.71) - 0.5) * 3.8,
++        -9.0 - fract(aSeed * 9.41) * 6.0
++      );
++      mv.xyz = mix(mv.xyz, tv, gk);
++    }
++    gl_Position = projectionMatrix * mv;
++    float dist = max(0.5, -mv.z);
++    float tw = 0.75 + 0.35 * sin(uTime * (1.0 + fract(aSeed * 5.3) * 2.0) + s);
++    float base = aKind > 1.5 ? 1.6 + uRingLight * 1.8 : (aKind > 0.5 ? 1.35 : 1.0);
++    gl_PointSize = clamp(uSizeMul * base * tw * uPxScale * (0.030 + 0.055 * fract(aSeed * 4.7)) / dist, 1.0, 34.0);
++    float fog = exp(-dist * uFogD);
++    float dense = 1.0 + uDense * (aKind > 0.5 ? 0.9 : 0.35);
++    vColor = mix(uTintA, uTintB, fract(aSeed * 11.7) * uSpread) * fog * dense * tw;
++    if (aKind > 1.5) vColor += vec3(1.0, 0.72, 0.38) * uRingLight * fog * 0.9;
++    vCore = fract(aSeed * 2.9);
++  }
++`;
++const DUST_FRAG = /* glsl */ `
++  precision highp float;
++  varying vec3 vColor;
++  varying float vCore;
++  void main() {
++    vec2 q = gl_PointCoord - 0.5;
++    float d = length(q);
++    float a = smoothstep(0.5, 0.06, d);
++    float core = smoothstep(0.16, 0.0, d) * (0.5 + vCore * 0.7);
++    gl_FragColor = vec4(vColor * (a * 0.85 + core), 1.0);
++  }
++`;
++
++const GATE_VERT = /* glsl */ `
++  attribute float aT;
++  uniform float uPlayT, uPxScale, uRingLight, uFogD;
++  varying float vCell;
++  varying float vGlow;
++  varying float vFog;
++  void main() {
++    vec4 mv = modelViewMatrix * vec4(position, 1.0);
++    float dist = max(0.5, -mv.z);
++    float passed = step(aT, uPlayT + 0.001);
++    float pulse = exp(-abs(aT - uPlayT) * 1.3);
++    vCell = passed;
++    vGlow = pulse + uRingLight * 1.2;
++    vFog = exp(-dist * uFogD);
++    gl_Position = projectionMatrix * mv;
++    gl_PointSize = clamp(uPxScale * (0.22 + pulse * 0.1 + uRingLight * 0.06) / dist, 11.0, 150.0);
++  }
++`;
++const GATE_FRAG = /* glsl */ `
++  precision highp float;
++  uniform sampler2D uMap;
++  varying float vCell;
++  varying float vGlow;
++  varying float vFog;
++  void main() {
++    vec2 uv = vec2(gl_PointCoord.x * 0.5 + vCell * 0.5, gl_PointCoord.y);
++    vec4 tx = texture2D(uMap, uv);
++    vec3 ahead = vec3(0.35, 0.75, 0.95);
++    vec3 done = vec3(1.0, 0.62, 0.24);
++    vec3 col = mix(ahead, done, vCell) * tx.a * (0.85 + vGlow * 1.0) * vFog;
++    gl_FragColor = vec4(col, 1.0);
++  }
++`;
++
++const TRAIL_VERT = /* glsl */ `
++  attribute float aFade;
++  uniform float uPxScale;
++  varying float vFade;
++  void main() {
++    vec4 mv = modelViewMatrix * vec4(position, 1.0);
++    float dist = max(0.5, -mv.z);
++    vFade = aFade;
++    gl_Position = projectionMatrix * mv;
++    gl_PointSize = clamp(uPxScale * (0.015 + 0.035 * aFade) / dist, 1.0, 30.0);
++  }
++`;
++const TRAIL_FRAG = /* glsl */ `
++  precision highp float;
++  varying float vFade;
++  void main() {
++    vec2 q = gl_PointCoord - 0.5;
++    float a = smoothstep(0.5, 0.05, length(q));
++    gl_FragColor = vec4(vec3(1.0, 0.6, 0.22) * a * vFade * vFade * 1.4, 1.0);
++  }
++`;
++
++const DOME_VERT = /* glsl */ `
++  varying vec3 vDir;
++  void main() {
++    vDir = normalize(position);
++    vec4 mv = modelViewMatrix * vec4(position, 1.0);
++    gl_Position = projectionMatrix * mv;
++  }
++`;
++const DOME_FRAG = /* glsl */ `
++  precision highp float;
++  varying vec3 vDir;
++  uniform float uWarmth, uTeal;
++  uniform vec3 uWarmDir;
++  float hash(vec3 p) { return fract(sin(dot(p, vec3(12.9898, 78.233, 45.164))) * 43758.5453); }
++  void main() {
++    float h = vDir.y * 0.5 + 0.5;
++    vec3 deep = mix(vec3(0.016, 0.021, 0.044), vec3(0.038, 0.050, 0.098), h);
++    deep = mix(deep, deep * vec3(0.8, 1.25, 1.15), uTeal * 0.5);
++    float band = exp(-pow(vDir.y * 3.4 + 0.35, 2.0));
++    deep += vec3(0.020, 0.026, 0.052) * band;
++    float w = pow(max(0.0, dot(vDir, uWarmDir)), 3.0);
++    deep += uWarmth * vec3(0.10, 0.05, 0.016) * w;
++    deep += (hash(vDir * 90.0) - 0.5) * 0.008;
++    gl_FragColor = vec4(deep, 1.0);
++  }
++`;
++
++// ---------------------------------------------------------------- engine
++export function createEngine({ canvas, store, tier }) {
++  let renderer;
++  try {
++    renderer = new THREE.WebGLRenderer({
++      canvas,
++      antialias: true,
++      alpha: false,
++      powerPreference: "high-performance",
++      failIfMajorPerformanceCaveat: false,
++    });
++  } catch (err) {
++    return null;
++  }
++  renderer.setClearColor(0x05070b, 1);
++  renderer.toneMapping = THREE.NoToneMapping;
++
++  const scene = new THREE.Scene();
++  const camera = new THREE.PerspectiveCamera(66, 1, 0.1, 460);
++  const { curve, ringCenter } = buildPath();
++
++  const lean = tier < 2;
++  let baseDpr = Math.min(window.devicePixelRatio || 1, lean ? 1.4 : 1.8);
++
++  // dome
++  const dome = new THREE.Mesh(
++    new THREE.SphereGeometry(240, 24, 12),
++    new THREE.ShaderMaterial({
++      vertexShader: DOME_VERT,
++      fragmentShader: DOME_FRAG,
++      side: THREE.BackSide,
++      depthWrite: false,
++      uniforms: {
++        uWarmth: { value: 0 },
++        uTeal: { value: 0 },
++        uWarmDir: { value: new THREE.Vector3(0, -0.1, -1).normalize() },
++      },
++    })
++  );
++  dome.renderOrder = -10;
++  dome.frustumCulled = false;
++  scene.add(dome);
++
++  // ribbon core + halo
++  const ribbonUniforms = {
++    uTime: { value: 0 },
++    uPlayU: { value: U0 },
++    uWarmth: { value: 0 },
++    uFlow: { value: 2.2 },
++    uIgnite: { value: 0 },
++    uRingLight: { value: 0 },
++    uFogD: { value: lean ? 0.016 : 0.011 },
++    uTeal: { value: 0 },
++    uWiden: { value: 0 },
++    uPulseAmp: { value: 0 },
++    uPulseFreq: { value: 110 },
++    uPulseCenter: { value: (uOf(SHUTTLE_SPAN[0]) + uOf(SHUTTLE_SPAN[1])) / 2 },
++    uPulseSigma: { value: (uOf(SHUTTLE_SPAN[1]) - uOf(SHUTTLE_SPAN[0])) * 0.8 },
++  };
++  const mkRibbonMat = (halo) =>
++    new THREE.ShaderMaterial({
++      vertexShader: RIBBON_VERT,
++      fragmentShader: RIBBON_FRAG,
++      transparent: true,
++      blending: THREE.AdditiveBlending,
++      depthWrite: false,
++      // uniform value objects are shared between core and halo on purpose:
++      // setUniform() writes once, both materials see it.
++      uniforms: { ...ribbonUniforms, uHalo: { value: halo } },
++    });
++  const ribbonCore = new THREE.Mesh(
++    new THREE.TubeGeometry(curve, lean ? 800 : 1400, 0.085, lean ? 8 : 10, false),
++    mkRibbonMat(0)
++  );
++  const ribbonHalo = new THREE.Mesh(
++    new THREE.TubeGeometry(curve, lean ? 400 : 700, 0.34, 8, false),
++    mkRibbonMat(1)
++  );
++  ribbonCore.frustumCulled = false;
++  ribbonHalo.frustumCulled = false;
++  scene.add(ribbonCore, ribbonHalo);
++
++  // dust field
++  const COUNT = lean ? 4200 : 13000;
++  const pos = new Float32Array(COUNT * 3);
++  const seed = new Float32Array(COUNT);
++  const kind = new Float32Array(COUNT);
++  {
++    const tmp = new THREE.Vector3();
++    const dir = new THREE.Vector3();
++    let i = 0;
++    const put = (v, k) => {
++      pos[i * 3] = v.x;
++      pos[i * 3 + 1] = v.y;
++      pos[i * 3 + 2] = v.z;
++      seed[i] = Math.random();
++      kind[i] = k;
++      i++;
++    };
++    const nCh = Math.floor(COUNT * 0.62);
++    const nSky = Math.floor(COUNT * 0.3);
++    for (let j = 0; j < nCh; j++) {
++      curve.getPointAt(Math.random(), tmp);
++      dir.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize();
++      const r = 1.6 + Math.pow(Math.random(), 1.7) * 26;
++      put(tmp.addScaledVector(dir, r), 0);
++    }
++    for (let j = 0; j < nSky; j++) {
++      dir.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize();
++      const r = 60 + Math.random() * 130;
++      tmp.set(0, 10, -85).addScaledVector(dir, r);
++      put(tmp, 1);
++    }
++    while (i < COUNT) {
++      const th = Math.random() * Math.PI * 2;
++      tmp.set(
++        ringCenter.x + Math.cos(th) * 16,
++        ringCenter.y + Math.sin(th) * 16 * 0.31,
++        ringCenter.z - Math.sin(th) * 16 * 0.95
++      );
++      dir.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5);
++      put(tmp.addScaledVector(dir, 4), 2);
++    }
++  }
++  const dustGeo = new THREE.BufferGeometry();
++  dustGeo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
++  dustGeo.setAttribute("aSeed", new THREE.BufferAttribute(seed, 1));
++  dustGeo.setAttribute("aKind", new THREE.BufferAttribute(kind, 1));
++  const dustUniforms = {
++    uTime: { value: 0 },
++    uDrift: { value: 0 },
++    uPtrAmp: { value: 0 },
++    uGather: { value: 0 },
++    uDense: { value: 0 },
++    uSizeMul: { value: 1.3 },
++    uRingLight: { value: 0 },
++    uPxScale: { value: 800 },
++    uSpread: { value: 0 },
++    uFogD: { value: lean ? 0.014 : 0.009 },
++    uPtr: { value: new THREE.Vector2(10, 10) },
++    uTintA: { value: new THREE.Color(0.42, 0.6, 1.0).multiplyScalar(0.55) },
++    uTintB: { value: new THREE.Color(1.0, 0.62, 0.3).multiplyScalar(0.6) },
++  };
++  const dust = new THREE.Points(
++    dustGeo,
++    new THREE.ShaderMaterial({
++      vertexShader: DUST_VERT,
++      fragmentShader: DUST_FRAG,
++      transparent: true,
++      blending: THREE.AdditiveBlending,
++      depthWrite: false,
++      uniforms: dustUniforms,
++    })
++  );
++  dust.frustumCulled = false;
++  scene.add(dust);
++
++  // keyframe gates
++  const gateGeo = new THREE.BufferGeometry();
++  {
++    const gp = new Float32Array(WORLD_GATES.length * 3);
++    const gt = new Float32Array(WORLD_GATES.length);
++    const tmp = new THREE.Vector3();
++    WORLD_GATES.forEach((g, i) => {
++      curve.getPointAt(uOf(g.t), tmp);
++      gp[i * 3] = tmp.x;
++      gp[i * 3 + 1] = tmp.y;
++      gp[i * 3 + 2] = tmp.z;
++      gt[i] = g.t;
++    });
++    gateGeo.setAttribute("position", new THREE.BufferAttribute(gp, 3));
++    gateGeo.setAttribute("aT", new THREE.BufferAttribute(gt, 1));
++  }
++  const gateUniforms = {
++    uPlayT: { value: 0 },
++    uPxScale: { value: 800 },
++    uRingLight: { value: 0 },
++    uFogD: { value: lean ? 0.014 : 0.009 },
++    uMap: { value: gateAtlasTexture() },
++  };
++  const gates = new THREE.Points(
++    gateGeo,
++    new THREE.ShaderMaterial({
++      vertexShader: GATE_VERT,
++      fragmentShader: GATE_FRAG,
++      transparent: true,
++      blending: THREE.AdditiveBlending,
++      depthWrite: false,
++      uniforms: gateUniforms,
++    })
++  );
++  gates.frustumCulled = false;
++  scene.add(gates);
++
++  // comet (playhead) — sprites are safe from point-size caps
++  const glowTex = glowTexture(0.4);
++  const cometCore = new THREE.Sprite(
++    new THREE.SpriteMaterial({ map: glowTex, color: 0xfff2dd, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true })
++  );
++  cometCore.scale.setScalar(2.0);
++  const cometHalo = new THREE.Sprite(
++    new THREE.SpriteMaterial({ map: glowTex, color: 0xff9a3d, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0.5 })
++  );
++  cometHalo.scale.setScalar(4.8);
++  scene.add(cometCore, cometHalo);
++
++  // comet trail
++  const TRAIL_N = 26;
++  const trailGeo = new THREE.BufferGeometry();
++  const trailPos = new Float32Array(TRAIL_N * 3);
++  const trailFade = new Float32Array(TRAIL_N);
++  for (let i = 0; i < TRAIL_N; i++) trailFade[i] = 1 - i / TRAIL_N;
++  trailGeo.setAttribute("position", new THREE.BufferAttribute(trailPos, 3));
++  trailGeo.setAttribute("aFade", new THREE.BufferAttribute(trailFade, 1));
++  const trailUniforms = { uPxScale: { value: 800 } };
++  const trail = new THREE.Points(
++    trailGeo,
++    new THREE.ShaderMaterial({
++      vertexShader: TRAIL_VERT,
++      fragmentShader: TRAIL_FRAG,
++      transparent: true,
++      blending: THREE.AdditiveBlending,
++      depthWrite: false,
++      uniforms: trailUniforms,
++    })
++  );
++  trail.frustumCulled = false;
++  scene.add(trail);
++
++  // act III shuttles: bright one runs your curve, dim ghost runs linear
++  const shuttle = new THREE.Sprite(
++    new THREE.SpriteMaterial({ map: glowTex, color: 0xbff3ff, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true })
++  );
++  const shuttleGhost = new THREE.Sprite(
++    new THREE.SpriteMaterial({ map: glowTex, color: 0x9aa8c2, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0.75 })
++  );
++  scene.add(shuttle, shuttleGhost);
++
++  // ---------------------------------------------------------------- state
++  const phases = [0, 0, 0, 0, 0];
++  const phaseGates = [1, 2, 3, 4, 5].map((n) => WORLD_GATES.find((g) => g.phase === n));
++  const tmpA = new THREE.Vector3();
++  const tmpB = new THREE.Vector3();
++  const tmpC = new THREE.Vector3();
++  const tmpTan = new THREE.Vector3();
++  const right = new THREE.Vector3();
++  const UP = new THREE.Vector3(0, 1, 0);
++  const camPos = new THREE.Vector3(0, 2, 14);
++  const lookPos = new THREE.Vector3(0, 0, -10);
++  const vantagePos = new THREE.Vector3(0, 27, -126);
++  const shA = curve.getPointAt(uOf(SHUTTLE_SPAN[0]), new THREE.Vector3());
++  const shB = curve.getPointAt(uOf(SHUTTLE_SPAN[1]), new THREE.Vector3());
++  const rigOut = [0, 0, 0, 0, 0];
++  const coolTint = new THREE.Color(0.42, 0.6, 1.0).multiplyScalar(0.55);
++  const tealTint = new THREE.Color(0.3, 0.95, 0.85).multiplyScalar(0.58);
++
++  let playT = 0;
++  let clock = 0;
++  let last = 0;
++  let raf = null;
++  let running = false;
++  let wantActive = false;
++  let disposed = false;
++  let igniteV = 0;
++  let endFlash = 0;
++  let prevEnded = false;
++  let pointer = { x: 10, y: 10, active: false };
++  let parX = 0;
++  let parY = 0;
++  let ptrAmp = 0;
++  let tapPulse = 0;
++  let easeFn = makeEase(store.get().curve);
++  let curveKey = "";
++  let curveEnergy = 0.4;
++  let fov = 66;
++
++  const curveKeyOf = (c) =>
++    c.mode === "spring" ? `s${c.stiffness},${c.damping}` : `b${c.p.join(",")}`;
++
++  function refreshCurve(c) {
++    const key = curveKeyOf(c);
++    if (key === curveKey) return;
++    curveKey = key;
++    easeFn = makeEase(c);
++    let over = 0;
++    let dev = 0;
++    for (let i = 0; i <= 24; i++) {
++      const x = i / 24;
++      const v = easeFn(x);
++      if (v > 1) over = Math.max(over, v - 1);
++      if (v < 0) over = Math.max(over, -v);
++      dev += Math.abs(v - x);
++    }
++    curveEnergy = Math.min(1, over * 2.4 + (dev / 25) * 1.6);
++  }
++  refreshCurve(store.get().curve);
++
++  // quality ladder
++  const frameTimes = [];
++  let qStep = 0;
++  let qRestored = false;
++  function applyQuality() {
++    const dprSteps = [baseDpr, baseDpr * 0.82, baseDpr * 0.82, Math.max(1, baseDpr * 0.66), Math.max(1, baseDpr * 0.66)];
++    const partSteps = [1, 1, 0.62, 0.62, 0.45];
++    renderer.setPixelRatio(dprSteps[qStep]);
++    dustGeo.setDrawRange(0, Math.floor(COUNT * partSteps[qStep]));
++    if (qStep >= 4) ribbonHalo.visible = false;
++  }
++  function fpsMonitor(dt) {
++    frameTimes.push(dt);
++    if (frameTimes.length < 90) return;
++    const sorted = [...frameTimes].sort((a, b) => a - b);
++    const med = sorted[Math.floor(sorted.length / 2)];
++    frameTimes.length = 0;
++    if (med > 0.021 && qStep < 4) {
++      qStep++;
++      applyQuality();
++    } else if (med < 0.011 && qStep > 0 && !qRestored) {
++      qStep--;
++      qRestored = true;
++      applyQuality();
++    }
++  }
++
++  function setUniform(name, v) {
++    ribbonUniforms[name].value = v;
++  }
++
++  function update(t, dt, calm) {
++    const st = store.get();
++    refreshCurve(st.curve);
++    const u = uOf(t);
++
++    // world phases (act II property gates)
++    for (let i = 0; i < 5; i++) {
++      const gate = phaseGates[i];
++      const target = t >= gate.t ? 1 : 0;
++      phases[i] = calm ? target : phases[i] + (target - phases[i]) * Math.min(1, dt * 2.4);
++    }
++    const warmth = clamp((t / DURATION) * 1.15, 0, 1);
++    const actIII = smooth(26, 29, t) * (1 - smooth(38, 41, t));
++    const gather = smooth(41, 44, t) * (1 - smooth(51.5, 53.5, t));
++    const ringLight = smooth(52, 56, t) * 0.55 + endFlash;
++
++    setUniform("uTime", clock);
++    setUniform("uPlayU", u);
++    setUniform("uWarmth", warmth);
++    setUniform("uTeal", phases[0]);
++    setUniform("uWiden", phases[2] * 0.1);
++    setUniform("uFlow", 2.2 + phases[2] * 2.6);
++    setUniform("uPulseAmp", actIII * (0.02 + curveEnergy * 0.09));
++    setUniform("uPulseFreq", 90 + curveEnergy * 150);
++    setUniform("uIgnite", igniteV);
++    setUniform("uRingLight", ringLight);
++
++    dustUniforms.uTime.value = clock;
++    dustUniforms.uDrift.value = phases[1];
++    dustUniforms.uDense.value = phases[3];
++    dustUniforms.uSpread.value = phases[4];
++    dustUniforms.uGather.value = gather;
++    dustUniforms.uRingLight.value = ringLight;
++    dustUniforms.uTintA.value.copy(coolTint).lerp(tealTint, phases[0]);
++    const ptrTarget = pointer.active && !calm ? 0.85 : 0;
++    ptrAmp += (ptrTarget + tapPulse - ptrAmp) * Math.min(1, dt * 4);
++    tapPulse *= Math.exp(-dt * 2.6);
++    dustUniforms.uPtrAmp.value = ptrAmp;
++    dustUniforms.uPtr.value.set(pointer.x, pointer.y);
++
++    gateUniforms.uPlayT.value = t;
++    gateUniforms.uRingLight.value = ringLight;
++
++    // comet
++    curve.getPointAt(u, tmpA);
++    cometCore.position.copy(tmpA);
++    cometHalo.position.copy(tmpA);
++    const pulse = 1 + Math.sin(clock * 2.3) * 0.08 + ringLight * 0.5;
++    cometCore.scale.setScalar(2.0 * pulse);
++    cometHalo.scale.setScalar(4.8 * pulse);
++    const camD = camera.position.distanceTo(tmpA);
++    const nearK = smooth(1.8, 7.0, camD);
++    cometCore.material.opacity = 0.55 + 0.45 * nearK;
++    cometHalo.material.opacity = 0.5 * (0.35 + 0.65 * nearK);
++    if (!calm) {
++      // shift trail history
++      for (let i = TRAIL_N - 1; i > 0; i--) {
++        trailPos[i * 3] = trailPos[(i - 1) * 3];
++        trailPos[i * 3 + 1] = trailPos[(i - 1) * 3 + 1];
++        trailPos[i * 3 + 2] = trailPos[(i - 1) * 3 + 2];
++      }
++      trailPos[0] = tmpA.x;
++      trailPos[1] = tmpA.y;
++      trailPos[2] = tmpA.z;
++      trailGeo.attributes.position.needsUpdate = true;
++      trail.visible = true;
++    } else {
++      trail.visible = false;
++    }
++
++    // act III shuttles
++    const shVis = actIII > 0.01;
++    shuttle.visible = shVis;
++    shuttleGhost.visible = shVis && !calm;
++    if (shVis) {
++      const cyc = (clock % (2 * SHUTTLE_PERIOD)) / SHUTTLE_PERIOD;
++      const tri = calm ? 0.62 : cyc < 1 ? cyc : 2 - cyc;
++      const p1 = easeFn(tri);
++      tmpB.lerpVectors(shA, shB, p1);
++      shuttle.position.copy(tmpB).addScaledVector(UP, 0.55);
++      shuttle.scale.setScalar((0.85 + curveEnergy * 0.25) * actIII);
++      tmpC.lerpVectors(shA, shB, tri);
++      shuttleGhost.position.copy(tmpC).addScaledVector(UP, 1.15);
++      shuttleGhost.scale.setScalar(0.66 * actIII);
++    }
++
++    dome.material.uniforms.uWarmth.value = warmth * (0.5 + ringLight);
++    dome.material.uniforms.uTeal.value = phases[0];
++
++    // ---------------- camera
++    // calm mode: the camera follows the playhead in 2-second cuts — a strip of
++    // stills driven only by the visitor's scrubbing, never continuous motion
++    const ct = calm ? Math.min(DURATION, Math.floor(t / 2) * 2 + 1) : t;
++    rigAt(ct, rigOut);
++    let [back, up, side, ahead, fovT] = rigOut;
++    if (calm) {
++      // stills breathe wider: further back and higher so the comet stays framed
++      back += 0.016;
++      up += 1.1;
++      ahead += 0.012;
++    }
++    const cu = uOf(ct);
++    curve.getPointAt(clamp(cu - back, 0, 1), tmpB);
++    curve.getPointAt(clamp(cu + ahead, 0, 1), tmpC);
++    curve.getTangentAt(clamp(cu, 0, 1), tmpTan);
++    right.crossVectors(tmpTan, UP);
++    if (right.lengthSq() < 1e-4) right.set(1, 0, 0);
++    right.normalize();
++    tmpB.addScaledVector(UP, up).addScaledVector(right, side);
++    const vb = easeInOut(smooth(52, 55.5, calm ? ct : t));
++    if (vb > 0) {
++      tmpB.lerp(vantagePos, vb);
++      tmpC.lerp(ringCenter, vb);
++      tmpC.x -= 6.5 * vb; // look-bias: the ring settles right of the end card
++    }
++    if (!calm) {
++      tmpB.addScaledVector(right, Math.sin(clock * 0.13) * 0.18 + parX * 0.55);
++      tmpB.addScaledVector(UP, Math.sin(clock * 0.17) * 0.12 + parY * 0.3);
++    }
++    const ck = calm || forceCut ? 1 : 1 - Math.exp(-dt * 6);
++    camPos.lerp(tmpB, ck);
++    lookPos.lerp(tmpC, ck);
++    if (DBG) {
++      document.title = `cam ${camPos.x.toFixed(1)},${camPos.y.toFixed(1)},${camPos.z.toFixed(1)} tgt ${tmpB.x.toFixed(1)},${tmpB.y.toFixed(1)},${tmpB.z.toFixed(1)} vb ${vb.toFixed(2)} t ${t.toFixed(1)} calm ${calm}`;
++    }
++    camera.position.copy(camPos);
++    camera.lookAt(lookPos);
++    if (!calm) camera.rotateZ(-side * 0.012 + Math.sin(clock * 0.11) * 0.004);
++    const fovTarget = fovT;
++    fov = calm || forceCut ? fovTarget : fov + (fovTarget - fov) * Math.min(1, dt * 4);
++    forceCut = false;
++    if (Math.abs(camera.fov - fov) > 0.01) {
++      camera.fov = fov;
++      camera.updateProjectionMatrix();
++    }
++    const pxScale = (renderer.domElement.height / 2) / Math.tan((fov * Math.PI) / 360);
++    dustUniforms.uPxScale.value = pxScale;
++    gateUniforms.uPxScale.value = pxScale;
++    trailUniforms.uPxScale.value = pxScale;
++
++    dome.position.copy(camera.position);
++
++    igniteV *= Math.exp(-dt * 1.9);
++    if (st.ended && !prevEnded) endFlash = 1.1;
++    prevEnded = st.ended;
++    endFlash *= Math.exp(-dt * 1.6);
++  }
++
++  let snapped = false;
++  let forceCut = false;
++  function frame(now) {
++    if (!running || disposed) return;
++    const dt = clamp((now - last) / 1000, 0.001, 0.05);
++    last = now;
++    clock += dt;
++    const st = store.get();
++    if (!snapped) {
++      snapped = true;
++      try {
++        if (new URLSearchParams(window.location.search).has("snap")) {
++          playT = st.targetTime;
++          forceCut = true;
++        }
++      } catch {}
++    }
++    const k = 1 - Math.exp(-dt * 5.2);
++    playT += (st.targetTime - playT) * k;
++    if (Math.abs(st.targetTime - playT) < 0.0006) playT = st.targetTime;
++    update(playT, dt, false);
++    renderer.render(scene, camera);
++    store.tick(playT);
++    fpsMonitor(dt);
++    raf = requestAnimationFrame(frame);
++  }
++
++  function start() {
++    if (running || disposed) return;
++    running = true;
++    last = performance.now();
++    raf = requestAnimationFrame(frame);
++  }
++  function stop() {
++    running = false;
++    if (raf) cancelAnimationFrame(raf);
++    raf = null;
++  }
++
++  let renderQueued = false;
++  function renderOnce() {
++    if (disposed || renderQueued) return;
++    renderQueued = true;
++    requestAnimationFrame(() => {
++      renderQueued = false;
++      if (disposed) return;
++      const st = store.get();
++      playT = st.targetTime;
++      update(playT, 0.016, true);
++      renderer.render(scene, camera);
++      store.tick(playT);
++    });
++  }
++
++  function resize() {
++    const w = window.innerWidth;
++    const h = window.innerHeight;
++    renderer.setPixelRatio(baseDpr);
++    renderer.setSize(w, h, false);
++    camera.aspect = w / h;
++    camera.updateProjectionMatrix();
++    applyQuality();
++  }
++  resize();
++
++  const ready = new Promise((resolve) => {
++    renderer.compileAsync
++      ? renderer.compileAsync(scene, camera).then(() => {
++          renderer.render(scene, camera);
++          resolve();
++        }).catch(() => {
++          renderer.render(scene, camera);
++          resolve();
++        })
++      : (renderer.render(scene, camera), resolve());
++  });
++
++  let contextLostCb = null;
++  canvas.addEventListener("webglcontextlost", (e) => {
++    e.preventDefault();
++    stop();
++    contextLostCb && contextLostCb();
++  });
++
++  return {
++    ready,
++    start,
++    stop,
++    renderOnce,
++    resize,
++    setActive(v) {
++      wantActive = v;
++      const st = store.get();
++      if (st.motion === "calm") {
++        stop();
++        if (v) renderOnce();
++        return;
++      }
++      v ? start() : stop();
++    },
++    setPointer(x, y, active) {
++      pointer.x = x;
++      pointer.y = y;
++      pointer.active = active;
++      parX = parX * 0.9 + x * 0.1;
++      parY = parY * 0.9 + y * 0.1;
++    },
++    tap() {
++      tapPulse = 1.0;
++    },
++    ignite() {
++      igniteV = 1;
++    },
++    onContextLost(cb) {
++      contextLostCb = cb;
++    },
++    dispose() {
++      disposed = true;
++      stop();
++      scene.traverse((o) => {
++        if (o.geometry) o.geometry.dispose();
++        if (o.material) {
++          if (o.material.map) o.material.map.dispose();
++          o.material.dispose();
++        }
++      });
++      renderer.dispose();
++    },
++  };
++}
+diff --git a/app/experience/store.js b/app/experience/store.js
+new file mode 100644
+index 0000000..294d040
+--- /dev/null
++++ b/app/experience/store.js
+@@ -0,0 +1,78 @@
++"use client";
++// A deliberately tiny external store. Two channels:
++//  - "frame": high-frequency (every rendered frame) — DOM refs subscribe, React never re-renders.
++//  - "state": discrete changes (act, keyframe count, motion mode, curve edits) — React subscribes.
++import { useSyncExternalStore } from "react";
++import { DURATION, actIndexAt, kfCountAt } from "./constants";
++import { clamp } from "./easing";
++
++const frameListeners = new Set();
++const stateListeners = new Set();
++let version = 0;
++
++const state = {
++  targetTime: 0,
++  time: 0, // smoothed, engine-owned
++  act: 0,
++  kfPassed: 1,
++  playing: false,
++  motion: "full", // 'full' | 'calm'
++  motionSource: "auto", // 'auto' | 'user' | 'query'
++  tier: 2, // 2 desktop full · 1 lean · 0 no-WebGL poster
++  booted: false,
++  ended: false,
++  curve: { mode: "bezier", p: [0.62, -0.18, 0.24, 1.18], stiffness: 170, damping: 14 },
++};
++
++function emitState() {
++  version++;
++  for (const fn of stateListeners) fn(state);
++}
++
++export const store = {
++  get: () => state,
++  version: () => version,
++  set(patch) {
++    Object.assign(state, patch);
++    emitState();
++  },
++  setTarget(t) {
++    state.targetTime = clamp(t, 0, DURATION);
++  },
++  // Called by the engine each rendered frame (or directly on scroll in calm/tier-0).
++  tick(time) {
++    state.time = time;
++    const act = actIndexAt(time);
++    const kf = kfCountAt(time);
++    let discrete = false;
++    if (act !== state.act) {
++      state.act = act;
++      discrete = true;
++    }
++    if (kf !== state.kfPassed) {
++      state.kfPassed = kf;
++      discrete = true;
++    }
++    if (!state.ended && time >= DURATION - 0.05) {
++      state.ended = true;
++      discrete = true;
++    }
++    for (const fn of frameListeners) fn(state);
++    if (discrete) emitState();
++  },
++  onFrame(fn) {
++    frameListeners.add(fn);
++    return () => frameListeners.delete(fn);
++  },
++  onState(fn) {
++    stateListeners.add(fn);
++    return () => stateListeners.delete(fn);
++  },
++};
++
++const subscribe = (fn) => store.onState(fn);
++
++// React hook: re-render on any discrete state change, read fields directly.
++export function useStoreVersion() {
++  return useSyncExternalStore(subscribe, store.version, () => 0);
++}
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..f0bb745 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -1,26 +1,1044 @@
+ @import "tailwindcss";
+ 
++/* ============================================================ tokens
++   Midnight instrument: the native habitat of motion editors.
++   Amber is time (the playhead light). Cyan is keyframe/selection only. */
+ :root {
+-  color-scheme: light dark;
+-  --background: #f5f5f3;
+-  --foreground: #161616;
+-  --muted: #6b6b66;
+-  --surface: #ffffff;
+-  --line: #deded8;
++  color-scheme: dark;
++  --ink: #05070b;
++  --indigo: #0a1024;
++  --panel: #0b0f16;
++  --panel-2: #070a10;
++  --line: #1a2230;
++  --text: #e9edf4;
++  --muted: #8a94a8;
++  --meridian: #ffb35c;
++  --meridian-deep: #ff8e3d;
++  --signal: #7de9ff;
++  --dock-h: 104px;
++  --top-h: 58px;
+ }
+ 
+-@media (prefers-color-scheme: dark) {
++* {
++  box-sizing: border-box;
++}
++html {
++  background: var(--ink);
++  color: var(--text);
++}
++body {
++  margin: 0;
++  font-family: var(--font-sans), "Helvetica Neue", Arial, sans-serif;
++  font-size: 16px;
++  -webkit-font-smoothing: antialiased;
++  background: var(--ink);
++}
++a {
++  color: inherit;
++}
++button,
++input {
++  font: inherit;
++  color: inherit;
++}
++::selection {
++  background: var(--meridian);
++  color: #12100b;
++}
++:focus-visible {
++  outline: 1.5px solid var(--meridian);
++  outline-offset: 3px;
++  border-radius: 2px;
++}
++::-webkit-scrollbar {
++  width: 10px;
++}
++::-webkit-scrollbar-thumb {
++  background: #1c2534;
++  border-radius: 5px;
++  border: 2px solid var(--ink);
++}
++::-webkit-scrollbar-track {
++  background: transparent;
++}
++
++.mono {
++  font-family: var(--font-mono), "SFMono-Regular", Consolas, monospace;
++}
++.serif {
++  font-family: var(--font-serif), Georgia, serif;
++}
++.amber {
++  color: var(--meridian);
++}
++
++.skip-link {
++  position: fixed;
++  top: -48px;
++  left: 12px;
++  z-index: 60;
++  padding: 10px 14px;
++  background: var(--panel);
++  border: 1px solid var(--line);
++  border-radius: 6px;
++  font-size: 13px;
++  transition: top 0.15s;
++}
++.skip-link:focus-visible {
++  top: 10px;
++}
++
++/* ============================================================ stage */
++.world {
++  position: fixed;
++  inset: 0;
++  z-index: 0;
++  width: 100%;
++  height: 100%;
++  display: block;
++}
++.vignette {
++  position: fixed;
++  inset: 0;
++  z-index: 1;
++  pointer-events: none;
++  background:
++    radial-gradient(120% 100% at 50% 40%, transparent 55%, rgba(3, 4, 8, 0.55) 100%),
++    linear-gradient(to top, rgba(4, 6, 10, 0.9) 0, rgba(4, 6, 10, 0.3) 130px, transparent 260px);
++}
++
++.poster {
++  position: fixed;
++  inset: 0;
++  z-index: 0;
++  background:
++    radial-gradient(130% 90% at 72% 16%, var(--indigo) 0%, transparent 60%),
++    radial-gradient(90% 70% at 18% 82%, #0c0f1e 0%, transparent 55%),
++    var(--ink);
++  overflow: hidden;
++}
++.poster svg {
++  position: absolute;
++  inset: 0;
++  width: 100%;
++  height: 100%;
++  transition: transform 0.7s ease;
++}
++.stage[data-act="1"] .poster svg { transform: translateX(-3%) scale(1.05); }
++.stage[data-act="2"] .poster svg { transform: translateX(-6%) translateY(-2%) scale(1.12); }
++.stage[data-act="3"] .poster svg { transform: translateX(-9%) translateY(-4%) scale(1.18); }
++.stage[data-act="4"] .poster svg { transform: translateX(2%) translateY(2%) scale(1.02); }
++
++/* ============================================================ topbar */
++.topbar {
++  position: fixed;
++  top: 0;
++  left: 0;
++  right: 0;
++  z-index: 40;
++  height: var(--top-h);
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  padding: 0 clamp(14px, 2.5vw, 26px);
++  background: linear-gradient(to bottom, rgba(5, 7, 11, 0.82), rgba(5, 7, 11, 0));
++}
++.brand {
++  display: flex;
++  align-items: center;
++  gap: 10px;
++}
++.ringmark {
++  color: var(--meridian);
++}
++.brand-name {
++  font-size: 20px;
++  letter-spacing: 0.01em;
++}
++.chip {
++  font-size: 9.5px;
++  letter-spacing: 0.14em;
++  color: var(--muted);
++  border: 1px solid var(--line);
++  border-radius: 4px;
++  padding: 3px 7px;
++  background: rgba(9, 12, 18, 0.5);
++}
++.topbar-right {
++  display: flex;
++  align-items: center;
++  gap: 14px;
++}
++.tc-top {
++  font-size: 12px;
++  letter-spacing: 0.08em;
++  color: var(--muted);
++}
++.tc-top span {
++  color: var(--text);
++  font-variant-numeric: tabular-nums;
++}
++.toggle {
++  font-size: 10px;
++  letter-spacing: 0.14em;
++  color: var(--muted);
++  background: rgba(9, 12, 18, 0.5);
++  border: 1px solid var(--line);
++  border-radius: 5px;
++  padding: 8px 11px;
++  cursor: pointer;
++  transition: border-color 0.2s, color 0.2s;
++}
++.toggle b {
++  color: var(--meridian);
++  font-weight: 500;
++}
++.toggle:hover {
++  border-color: #2a3446;
++  color: var(--text);
++}
++
++/* ============================================================ buttons */
++.btn {
++  display: inline-block;
++  font-size: 11px;
++  letter-spacing: 0.12em;
++  padding: 12px 17px;
++  border-radius: 6px;
++  text-decoration: none;
++  cursor: pointer;
++  border: 1px solid transparent;
++  transition: transform 0.18s, background-color 0.18s, border-color 0.18s, color 0.18s;
++}
++.btn-primary {
++  background: var(--meridian);
++  color: #14100a;
++  font-weight: 500;
++}
++.btn-primary:hover {
++  background: #ffc987;
++  transform: translateY(-1px);
++}
++.btn-ghost {
++  border-color: var(--line);
++  color: var(--text);
++  background: rgba(9, 12, 18, 0.45);
++}
++.btn-ghost:hover {
++  border-color: #33405a;
++}
++
++/* ============================================================ content */
++.content {
++  position: relative;
++  z-index: 10;
++}
++.act {
++  position: relative;
++  padding-inline: clamp(18px, 6vw, 110px);
++}
++.card {
++  position: sticky;
++  top: clamp(84px, 15vh, 190px);
++  max-width: 560px;
++  padding: clamp(22px, 3vw, 34px);
++  border: 1px solid rgba(26, 34, 48, 0.85);
++  border-radius: 10px;
++  background: color-mix(in srgb, var(--panel) 72%, transparent);
++  backdrop-filter: blur(9px);
++  -webkit-backdrop-filter: blur(9px);
++  opacity: 0.22;
++  transform: translateY(14px);
++  transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
++}
++.card-right {
++  margin-left: auto;
++}
++.stage[data-act="0"] .act[data-card="0"] .card,
++.stage[data-act="1"] .act[data-card="1"] .card,
++.stage[data-act="2"] .act[data-card="2"] .card,
++.stage[data-act="3"] .act[data-card="3"] .card,
++.stage[data-act="4"] .act[data-card="4"] .card {
++  opacity: 1;
++  transform: none;
++}
++.hero-card {
++  max-width: 660px;
++  top: clamp(90px, 17vh, 210px);
++  background: color-mix(in srgb, var(--panel) 55%, transparent);
++}
++.stage[data-ended="1"] .card-final {
++  border-color: rgba(255, 179, 92, 0.55);
++  box-shadow: 0 0 48px rgba(255, 179, 92, 0.14);
++}
++
++.eyebrow {
++  margin: 0 0 14px;
++  font-size: 10.5px;
++  letter-spacing: 0.18em;
++  color: var(--muted);
++}
++.display {
++  font-family: var(--font-serif), Georgia, serif;
++  font-weight: 400;
++  font-size: clamp(54px, 7.4vw, 104px);
++  line-height: 0.98;
++  letter-spacing: -0.01em;
++  margin: 0 0 18px;
++}
++.display2 {
++  font-family: var(--font-serif), Georgia, serif;
++  font-weight: 400;
++  font-size: clamp(36px, 4.4vw, 58px);
++  line-height: 1.02;
++  letter-spacing: -0.005em;
++  margin: 0 0 16px;
++}
++.display em,
++.display2 em {
++  font-style: italic;
++  color: var(--meridian);
++}
++.premise {
++  font-size: 11px;
++  letter-spacing: 0.14em;
++  color: var(--meridian);
++  margin: 0 0 16px;
++  line-height: 1.8;
++}
++.premise b {
++  font-weight: 500;
++  border-bottom: 1px solid rgba(255, 179, 92, 0.4);
++}
++.body {
++  font-size: 15.5px;
++  line-height: 1.7;
++  color: color-mix(in srgb, var(--text) 86%, var(--muted));
++  margin: 0 0 18px;
++  max-width: 56ch;
++}
++.body b.mono {
++  color: var(--meridian);
++  font-size: 13px;
++  letter-spacing: 0.1em;
++}
++.caption {
++  font-size: 12.5px;
++  color: var(--muted);
++  margin: 14px 0 0;
++}
++.cta-row {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 12px;
++  align-items: center;
++  margin-top: 6px;
++}
++
++.tail {
++  height: 100vh;
++  display: flex;
++  align-items: flex-end;
++  padding-inline: clamp(18px, 6vw, 110px);
++}
++.site-footer {
++  width: 100%;
++  display: flex;
++  flex-wrap: wrap;
++  gap: 14px 28px;
++  justify-content: space-between;
++  font-size: 10px;
++  letter-spacing: 0.12em;
++  color: var(--muted);
++  padding-bottom: calc(var(--dock-h) + 26px);
++}
++.site-footer a {
++  text-decoration: none;
++  border-bottom: 1px solid rgba(138, 148, 168, 0.4);
++}
++.site-footer a:hover {
++  color: var(--text);
++}
++
++/* ============================================================ dock */
++.dock {
++  position: fixed;
++  left: 0;
++  right: 0;
++  bottom: 0;
++  z-index: 40;
++  height: var(--dock-h);
++  display: grid;
++  grid-template-columns: 210px 1fr 132px;
++  gap: 16px;
++  align-items: stretch;
++  padding: 12px clamp(14px, 2.5vw, 26px) 14px;
++  background: linear-gradient(to top, rgba(4, 6, 10, 0.94) 55%, rgba(4, 6, 10, 0));
++}
++.dock-left {
++  display: flex;
++  align-items: center;
++  gap: 8px;
++}
++.tbtn {
++  width: 36px;
++  height: 36px;
++  flex: none;
++  display: grid;
++  place-items: center;
++  background: rgba(9, 12, 18, 0.7);
++  border: 1px solid var(--line);
++  border-radius: 6px;
++  color: var(--text);
++  cursor: pointer;
++  transition: border-color 0.2s, color 0.2s, background-color 0.2s;
++}
++.tbtn:hover {
++  border-color: #33405a;
++}
++.tbtn-play {
++  width: 44px;
++  color: var(--meridian);
++}
++.tbtn-play[aria-pressed="true"] {
++  background: rgba(255, 179, 92, 0.12);
++  border-color: rgba(255, 179, 92, 0.5);
++}
++.tc-block {
++  display: flex;
++  flex-direction: column;
++  gap: 3px;
++  margin-left: 6px;
++  min-width: 0;
++}
++.tc-main {
++  font-size: 13.5px;
++  color: var(--text);
++  font-variant-numeric: tabular-nums;
++}
++.tc-sub {
++  font-size: 8.5px;
++  letter-spacing: 0.16em;
++  color: var(--muted);
++  white-space: nowrap;
++}
++
++.dock-ruler {
++  position: relative;
++  border: 1px solid var(--line);
++  border-radius: 8px;
++  background: rgba(8, 11, 17, 0.72);
++  backdrop-filter: blur(7px);
++  -webkit-backdrop-filter: blur(7px);
++  display: grid;
++  grid-template-rows: 18px 24px 1fr;
++  overflow: hidden;
++}
++.chapters {
++  position: relative;
++  border-bottom: 1px solid rgba(26, 34, 48, 0.8);
++}
++.chapter {
++  position: absolute;
++  top: 0;
++  height: 100%;
++  display: flex;
++  align-items: center;
++  padding: 0 7px;
++  font-size: 8.5px;
++  letter-spacing: 0.13em;
++  color: var(--muted);
++  background: none;
++  border: none;
++  border-left: 1px solid rgba(26, 34, 48, 0.9);
++  cursor: pointer;
++  white-space: nowrap;
++  transition: color 0.2s;
++}
++.chapter b {
++  font-weight: 500;
++}
++.chapter:hover {
++  color: var(--text);
++}
++.chapter.on {
++  color: var(--meridian);
++}
++.ruler-band {
++  position: relative;
++  cursor: ew-resize;
++  touch-action: none;
++}
++.ticks {
++  position: absolute;
++  inset: 0;
++  background-image:
++    linear-gradient(90deg, rgba(138, 148, 168, 0.22) 0 1px, transparent 1px 100%),
++    linear-gradient(90deg, rgba(138, 148, 168, 0.45) 0 1px, transparent 1px 100%);
++  background-size:
++    calc(100% / 60) 45%,
++    calc(100% / 10) 100%;
++  background-position:
++    0 100%,
++    0 0;
++  background-repeat: repeat-x;
++}
++.progress {
++  position: absolute;
++  inset: 0;
++  transform-origin: left center;
++  transform: scaleX(0);
++  background: linear-gradient(90deg, rgba(255, 179, 92, 0.05), rgba(255, 179, 92, 0.22));
++  pointer-events: none;
++}
++.tracks {
++  display: grid;
++  grid-auto-rows: 1fr;
++}
++.track {
++  position: relative;
++}
++.track + .track {
++  border-top: 1px solid rgba(26, 34, 48, 0.6);
++}
++.track-name {
++  position: absolute;
++  left: 8px;
++  top: 50%;
++  transform: translateY(-50%);
++  font-size: 7.5px;
++  letter-spacing: 0.16em;
++  color: rgba(138, 148, 168, 0.55);
++  pointer-events: none;
++}
++.kf {
++  position: absolute;
++  top: 50%;
++  width: 7px;
++  height: 7px;
++  margin: -3.5px 0 0 -3.5px;
++  transform: rotate(45deg);
++  border: 1px solid var(--signal);
++  opacity: 0.7;
++  transition: background-color 0.25s, border-color 0.25s, box-shadow 0.25s, opacity 0.25s;
++}
++.kf.done {
++  background: var(--meridian);
++  border-color: var(--meridian);
++  box-shadow: 0 0 8px rgba(255, 179, 92, 0.75);
++  opacity: 1;
++}
++.playhead {
++  position: absolute;
++  top: 17px;
++  bottom: 5px;
++  left: 0;
++  width: 18px;
++  margin-left: -9px;
++  cursor: grab;
++  touch-action: none;
++  z-index: 2;
++}
++.playhead:active {
++  cursor: grabbing;
++}
++.playhead::before {
++  content: "";
++  position: absolute;
++  left: 50%;
++  top: 0;
++  bottom: 0;
++  width: 2px;
++  margin-left: -1px;
++  background: var(--meridian);
++  border-radius: 1px;
++  box-shadow: 0 0 10px rgba(255, 179, 92, 0.85);
++}
++.playhead-cap {
++  position: absolute;
++  top: 0;
++  left: 50%;
++  width: 11px;
++  height: 9px;
++  margin-left: -5.5px;
++  background: var(--meridian);
++  clip-path: polygon(0 0, 100% 0, 50% 100%);
++}
++.dock-right {
++  display: flex;
++  flex-direction: column;
++  align-items: flex-end;
++  justify-content: center;
++  gap: 5px;
++}
++.kf-count {
++  font-size: 12px;
++  color: var(--text);
++  font-variant-numeric: tabular-nums;
++}
++.hint {
++  font-size: 8.5px;
++  letter-spacing: 0.16em;
++  color: rgba(138, 148, 168, 0.7);
++}
++
++/* ============================================================ boot */
++.boot {
++  position: fixed;
++  inset: 0;
++  z-index: 50;
++  background: var(--ink);
++  display: flex;
++  align-items: flex-end;
++  padding: 9vh 8vw;
++  clip-path: inset(0 0 0 0);
++  transition: clip-path 0.78s cubic-bezier(0.76, 0, 0.24, 1);
++}
++.boot-leaving {
++  clip-path: inset(0 0 100% 0);
++}
++.boot-inner {
++  display: flex;
++  flex-direction: column;
++  gap: 13px;
++}
++.boot-kicker {
++  font-size: 10px;
++  letter-spacing: 0.22em;
++  color: var(--muted);
++  margin: 0;
++}
++.boot-mark {
++  font-size: clamp(56px, 9vw, 120px);
++  line-height: 0.95;
++  letter-spacing: -0.01em;
++}
++.boot-line {
++  font-size: 10.5px;
++  letter-spacing: 0.16em;
++  color: var(--text);
++  margin: 0;
++}
++.boot-line.dim {
++  color: var(--muted);
++}
++.boot-progress {
++  width: 260px;
++  height: 1px;
++  background: rgba(138, 148, 168, 0.25);
++  overflow: hidden;
++}
++.boot-progress span {
++  display: block;
++  height: 100%;
++  width: 40%;
++  background: var(--meridian);
++  animation: boot-scan 1.1s linear infinite;
++}
++.boot-progress span.isdone {
++  width: 100%;
++  animation: none;
++}
++@keyframes boot-scan {
++  from {
++    transform: translateX(-110%);
++  }
++  to {
++    transform: translateX(300%);
++  }
++}
++
++/* ============================================================ curve editor */
++.curve-editor {
++  margin-top: 20px;
++  border: 1px solid var(--line);
++  border-radius: 8px;
++  background: rgba(7, 10, 15, 0.72);
++  padding: 13px 14px 11px;
++}
++.ce-chips {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 7px;
++  margin-bottom: 10px;
++}
++.chip-btn {
++  font-size: 9.5px;
++  letter-spacing: 0.12em;
++  color: var(--muted);
++  background: none;
++  border: 1px solid var(--line);
++  border-radius: 999px;
++  padding: 6px 11px;
++  cursor: pointer;
++  transition: color 0.2s, border-color 0.2s;
++}
++.chip-btn:hover {
++  color: var(--text);
++}
++.chip-btn[aria-pressed="true"] {
++  color: var(--meridian);
++  border-color: rgba(255, 179, 92, 0.55);
++}
++.ce-svg {
++  display: block;
++  width: 100%;
++  height: auto;
++  touch-action: none;
++}
++.ce-unit {
++  fill: rgba(125, 233, 255, 0.03);
++  stroke: rgba(138, 148, 168, 0.4);
++  stroke-width: 1;
++  stroke-dasharray: none;
++}
++.ce-grid {
++  stroke: rgba(138, 148, 168, 0.14);
++  stroke-width: 1;
++}
++.ce-curve {
++  stroke: var(--meridian);
++  stroke-width: 2;
++  fill: none;
++}
++.ce-hline {
++  stroke: rgba(125, 233, 255, 0.5);
++  stroke-width: 1;
++  stroke-dasharray: 3 3;
++}
++.ce-anchor {
++  fill: var(--text);
++}
++.ce-handle {
++  fill: var(--panel);
++  stroke: var(--signal);
++  stroke-width: 1.6;
++  cursor: grab;
++}
++.ce-handle:hover {
++  stroke-width: 2.6;
++}
++.ce-handle:focus-visible {
++  outline: none;
++  stroke: var(--meridian);
++  stroke-width: 3;
++}
++.ce-dot {
++  fill: #bff3ff;
++  transition: opacity 0.3s;
++}
++.ce-springs {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 8px 22px;
++  margin: 8px 0 2px;
++}
++.ce-springs label {
++  display: flex;
++  align-items: center;
++  gap: 9px;
++  font-size: 9px;
++  letter-spacing: 0.14em;
++  color: var(--muted);
++}
++.ce-springs input[type="range"] {
++  accent-color: var(--meridian);
++  width: 110px;
++}
++.ce-springs b {
++  color: var(--text);
++  font-weight: 500;
++  font-size: 11px;
++}
++.ce-readout {
++  margin: 9px 0 0;
++  font-size: 10.5px;
++  letter-spacing: 0.05em;
++  color: var(--muted);
++}
++.ce-readout b {
++  color: var(--meridian);
++  font-weight: 400;
++}
++
++/* ============================================================ code panel */
++.code-panel {
++  margin-top: 20px;
++  border: 1px solid var(--line);
++  border-radius: 8px;
++  background: var(--panel-2);
++  overflow: hidden;
++}
++.cp-head {
++  display: flex;
++  align-items: center;
++  border-bottom: 1px solid var(--line);
++}
++.cp-tabs {
++  display: flex;
++}
++.cp-tab {
++  font-size: 10px;
++  letter-spacing: 0.14em;
++  padding: 9px 14px;
++  color: var(--muted);
++  background: none;
++  border: none;
++  border-right: 1px solid var(--line);
++  cursor: pointer;
++}
++.cp-tab[aria-selected="true"] {
++  color: var(--meridian);
++  background: rgba(255, 179, 92, 0.06);
++}
++.cp-note {
++  margin-left: auto;
++  font-size: 8.5px;
++  letter-spacing: 0.14em;
++  color: rgba(138, 148, 168, 0.6);
++  padding: 0 10px;
++}
++.cp-copy {
++  font-size: 10px;
++  letter-spacing: 0.12em;
++  color: var(--muted);
++  background: none;
++  border: none;
++  border-left: 1px solid var(--line);
++  padding: 9px 13px;
++  cursor: pointer;
++  transition: color 0.2s;
++}
++.cp-copy:hover {
++  color: var(--meridian);
++}
++.cp-pre {
++  margin: 0;
++  padding: 14px 16px 16px;
++  font-family: var(--font-mono), monospace;
++  font-size: 11.5px;
++  line-height: 1.65;
++  overflow: auto;
++  max-height: 300px;
++  color: #c9d2e0;
++}
++.cp-pre .cmt {
++  color: #55617a;
++}
++.cp-pre .kw {
++  color: #e8b36b;
++}
++.cp-pre .str {
++  color: #7fd8c8;
++}
++.cp-pre .num {
++  color: var(--signal);
++}
++.cp-pre .fn {
++  color: #dfe6f2;
++}
++.cp-pre .live {
++  color: var(--meridian);
++  background: rgba(255, 179, 92, 0.09);
++  border-radius: 3px;
++  padding: 0 2px;
++}
++
++/* ============================================================ calm mode
++   A designed variant, not a gutted one: composed stills, cuts instead of
++   tweens, everything readable, every control still working. */
++.stage[data-motion="calm"] .card {
++  opacity: 1;
++  transform: none;
++  transition: none;
++}
++.stage[data-motion="calm"] .play-only {
++  display: none;
++}
++.stage[data-motion="calm"] .hint {
++  visibility: hidden;
++}
++.stage[data-motion="calm"] .poster svg {
++  transition: none;
++}
++.stage[data-motion="calm"] .boot {
++  transition: opacity 0.16s;
++  clip-path: none;
++}
++.stage[data-motion="calm"] .boot-leaving {
++  opacity: 0;
++}
++.stage[data-motion="calm"] .boot-progress span {
++  animation: none;
++  width: 100%;
++}
++
++/* system-level reduced motion baseline (before JS, and belt-and-braces) */
++@media (prefers-reduced-motion: reduce) {
++  *,
++  *::before,
++  *::after {
++    animation-duration: 0.01ms !important;
++    animation-iteration-count: 1 !important;
++    transition-duration: 0.01ms !important;
++  }
++  html {
++    scroll-behavior: auto !important;
++  }
++}
++
++/* ============================================================ responsive */
++@media (max-width: 980px) {
++  .dock {
++    grid-template-columns: 158px 1fr;
++    gap: 12px;
++  }
++  .dock-right {
++    display: none;
++  }
++  .chapter-name {
++    display: none;
++  }
++  .tc-sub {
++    display: none;
++  }
++}
++@media (max-width: 700px) {
+   :root {
+-    --background: #111110;
+-    --foreground: #f5f5f2;
+-    --muted: #a0a099;
+-    --surface: #181817;
+-    --line: #31312f;
++    --dock-h: 92px;
++    --top-h: 54px;
++  }
++  .chip,
++  .tc-top {
++    display: none;
++  }
++  .brand-name {
++    font-size: 17px;
++  }
++  .toggle {
++    padding: 7px 9px;
++  }
++  .btn {
++    padding: 10px 13px;
++    font-size: 10px;
++  }
++  .dock {
++    grid-template-columns: 96px 1fr;
++    gap: 10px;
++    padding-inline: 12px;
++  }
++  .tc-block {
++    display: none;
++  }
++  .tracks .track-name {
++    display: none;
++  }
++  .card {
++    max-width: 100%;
++    top: 13vh;
++  }
++  .act {
++    padding-inline: 14px;
++  }
++  .site-footer {
++    flex-direction: column;
++    gap: 8px;
+   }
+ }
+ 
+-* { box-sizing: border-box; }
+-html { background: var(--background); color: var(--foreground); }
+-body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
+-a { color: inherit; }
+-button, input { font: inherit; }
++/* round 1 refinements */
++.nobr {
++  white-space: nowrap;
++}
++.chapter b {
++  margin-right: 5px;
++}
++.hero-card {
++  background: transparent;
++  border-color: transparent;
++  backdrop-filter: none;
++  -webkit-backdrop-filter: none;
++  padding-left: 0;
++  box-shadow: none;
++}
++.hero-card::before {
++  content: "";
++  position: absolute;
++  inset: -60px -60px -60px -140px;
++  z-index: -1;
++  background: radial-gradient(88% 80% at 32% 45%, rgba(4, 6, 10, 0.62) 26%, transparent 72%);
++  pointer-events: none;
++}
++
++/* lock-mode (screenshot harness): pin the current act's card in place */
++.stage.lockmode .act {
++  height: 20vh !important;
++  padding: 0;
++}
++.stage.lockmode .card {
++  display: none;
++}
++.stage.lockmode[data-act="0"] .act[data-card="0"] .card,
++.stage.lockmode[data-act="1"] .act[data-card="1"] .card,
++.stage.lockmode[data-act="2"] .act[data-card="2"] .card,
++.stage.lockmode[data-act="3"] .act[data-card="3"] .card,
++.stage.lockmode[data-act="4"] .act[data-card="4"] .card {
++  display: block;
++  position: fixed;
++  top: 14vh;
++  left: clamp(18px, 6vw, 110px);
++  right: auto;
++  margin: 0;
++  opacity: 1;
++  transform: none;
++}
++.stage.lockmode[data-act="1"] .act[data-card="1"] .card,
++.stage.lockmode[data-act="3"] .act[data-card="3"] .card {
++  left: auto;
++  right: clamp(18px, 5vw, 96px);
++}
++
++/* act III density fixes */
++.ce-svg {
++  max-width: 430px;
++}
++.ce-linear {
++  stroke: rgba(138, 148, 168, 0.3);
++  stroke-width: 1;
++  stroke-dasharray: 2 4;
++}
++.act[data-card="2"] .card {
++  top: clamp(70px, 10vh, 130px);
++  max-width: 620px;
++}
++.act[data-card="2"] .body {
++  margin-bottom: 8px;
++}
++.act[data-card="2"] .caption {
++  margin-top: 10px;
++}
++.curve-editor {
++  margin-top: 12px;
++}
++
++/* mobile overflow + fit fixes */
++html,
++body {
++  overflow-x: clip;
++}
++@media (max-width: 700px) {
++  .display .nobr {
++    white-space: normal;
++  }
++  .hero-card::before {
++    inset: -30px -14px;
++  }
++  .display {
++    font-size: clamp(44px, 12vw, 60px);
++  }
++}
++@media (max-width: 560px) {
++  .topbar .btn-primary {
++    display: none;
++  }
++}
+diff --git a/app/icon.svg b/app/icon.svg
+new file mode 100644
+index 0000000..ef6c122
+--- /dev/null
++++ b/app/icon.svg
+@@ -0,0 +1,6 @@
++<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
++  <rect width="32" height="32" rx="7" fill="#05070B"/>
++  <circle cx="16" cy="16" r="10.5" fill="none" stroke="#FFB35C" stroke-width="1.8"/>
++  <ellipse cx="16" cy="16" rx="4.4" ry="10.5" fill="none" stroke="#FFB35C" stroke-width="1.1" opacity="0.6"/>
++  <circle cx="16" cy="5.5" r="2.6" fill="#FFB35C"/>
++</svg>
+diff --git a/app/layout.jsx b/app/layout.jsx
+index 35fc217..0159ca6 100644
+--- a/app/layout.jsx
++++ b/app/layout.jsx
+@@ -1,14 +1,54 @@
+ import "./globals.css";
++import { Instrument_Serif, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
++
++const serif = Instrument_Serif({
++  weight: "400",
++  style: ["normal", "italic"],
++  subsets: ["latin"],
++  variable: "--font-serif",
++  display: "swap",
++});
++const sans = IBM_Plex_Sans({
++  weight: ["400", "500"],
++  subsets: ["latin"],
++  variable: "--font-sans",
++  display: "swap",
++});
++const mono = IBM_Plex_Mono({
++  weight: ["400", "500"],
++  subsets: ["latin"],
++  variable: "--font-mono",
++  display: "swap",
++});
+ 
+ export const metadata = {
+-  title: "Meridian",
+-  description: "Meridian is a timeline-based motion editor for the web. Design animation visually, ship production code.",
++  title: "Meridian — the timeline is a place",
++  description:
++    "Meridian is a timeline-based motion editor for the web. Design springs, keyframes, and gesture-driven motion visually — ship production JavaScript and CSS. This launch page is itself a Meridian project: scroll to scrub it.",
++  openGraph: {
++    title: "Meridian — the timeline is a place",
++    description:
++      "A motion editor for the web. This launch page is one of its projects: 60 seconds, 3 tracks, 23 keyframes. Scroll to scrub it.",
++    type: "website",
++    images: [{ url: "/og.png", width: 1200, height: 630 }],
++  },
++};
++
++export const viewport = {
++  themeColor: "#05070B",
++  width: "device-width",
++  initialScale: 1,
+ };
+ 
+ export default function RootLayout({ children }) {
+   return (
+-    <html lang="en">
+-      <body>{children}</body>
++    <html lang="en" className={`${serif.variable} ${sans.variable} ${mono.variable}`}>
++      <body>
++        <noscript>
++          <style>{`.card{opacity:1!important;transform:none!important}.boot{display:none!important}`}</style>
++        </noscript>
++        {children}
++      </body>
+     </html>
+   );
+ }
+diff --git a/app/page.jsx b/app/page.jsx
+index 6f15aef..3089805 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -1,31 +1,124 @@
++import Experience from "./experience/Experience";
++import CurveEditor from "./experience/CurveEditor";
++import CodePanel from "./experience/CodePanel";
++import { PressPlay, Replay } from "./experience/controls";
++import { timecode } from "./experience/constants";
++
++// Section heights: 1 project second = 13vh of scroll. 60s + a 100vh tail.
+ export default function Home() {
+   return (
+-    <main className="mx-auto max-w-3xl space-y-16 px-6 py-24">
+-      <section className="space-y-4">
+-        <h1 className="text-4xl font-semibold">Meridian</h1>
+-        <p className="text-lg text-[var(--muted)]">
+-          A timeline-based motion editor for the web. Design animation visually, ship production code.
+-        </p>
+-        <a
+-          className="inline-block rounded-md bg-[var(--foreground)] px-4 py-2 text-[var(--background)]"
+-          href="#get-access"
+-        >
+-          Get early access
+-        </a>
++    <Experience>
++      {/* ACT I — ORIGIN */}
++      <section className="act" data-card="0" id="act-origin" aria-labelledby="h-origin" style={{ height: "156vh" }}>
++        <div className="card hero-card card-left">
++          <p className="eyebrow mono">MERIDIAN · PRIVATE BETA</p>
++          <h1 id="h-origin" className="display">
++            The timeline is <em className="nobr">a place.</em>
++          </h1>
++          <p className="premise mono">
++            THIS PAGE IS A MERIDIAN PROJECT — <b>LAUNCH.MRD</b> · 60 SECONDS ·{" "}
++            <span className="nobr">SCROLL TO SCRUB IT</span>
++          </p>
++          <p className="body">
++            Meridian is a motion editor for the web. Springs, keyframes, and gesture-driven motion on
++            real tracks — designed visually, shipped as production JavaScript and CSS.
++          </p>
++          <div className="cta-row">
++            <a className="btn btn-primary mono" href="mailto:hello@meridian.tools?subject=Early%20access">
++              GET EARLY ACCESS
++            </a>
++            <PressPlay />
++          </div>
++          <p className="caption">No install — the editor runs in your browser.</p>
++        </div>
++      </section>
++
++      {/* ACT II — KEYFRAMES */}
++      <section className="act" data-card="1" id="act-keyframes" aria-labelledby="h-keyframes" style={{ height: "182vh" }}>
++        <div className="card card-right">
++          <p className="eyebrow mono">
++            ACT II · <span className="amber">TC {timecode(12)}</span> · KEYFRAMES
++          </p>
++          <h2 id="h-keyframes" className="display2">
++            Set a keyframe. The world <em>remembers.</em>
++          </h2>
++          <p className="body">
++            Every property lives on a track — position, color, anything you can name. The five gates
++            ahead, K-05 through K-09, each re-key this sky: palette, drift, width, density, hue. Cross
++            one and the world commits to it. Scrub back, and it un-happens.
++          </p>
++          <p className="caption">The dust bending around your cursor is a gesture track doing its job.</p>
++        </div>
++      </section>
++
++      {/* ACT III — CURVES */}
++      <section className="act" data-card="2" id="act-curves" aria-labelledby="h-curves" style={{ height: "182vh" }}>
++        <div className="card card-left">
++          <p className="eyebrow mono">
++            ACT III · <span className="amber">TC {timecode(26)}</span> · CURVES
++          </p>
++          <h2 id="h-curves" className="display2">
++            Easing is a shape. <em>Bend it.</em>
++          </h2>
++          <p className="body">
++            Drag the handles. The bright shuttle out there runs your curve; the dim one runs linear, so
++            you can see exactly what character you added. Or hand it to physics — a spring with
++            stiffness and damping, sampled into keyframes you can ship.
++          </p>
++          <CurveEditor />
++          <p className="caption">There is no apply button. The curve you see is the curve you ship.</p>
++        </div>
++      </section>
++
++      {/* ACT IV — SHIP */}
++      <section className="act" data-card="3" id="act-ship" aria-labelledby="h-ship" style={{ height: "156vh" }}>
++        <div className="card card-right">
++          <p className="eyebrow mono">
++            ACT IV · <span className="amber">TC {timecode(40)}</span> · SHIP
++          </p>
++          <h2 id="h-ship" className="display2">
++            Scrub it. <em>Ship it.</em>
++          </h2>
++          <p className="body">
++            One click compiles the timeline to dependency-free JavaScript or CSS — no runtime, no
++            lock-in. This panel is not a mockup: it is this page&apos;s own shuttle curve, serialized
++            live while you play with it.
++          </p>
++          <CodePanel />
++        </div>
+       </section>
+ 
+-      <section className="space-y-6">
+-        <h2 className="text-2xl font-semibold">What it does</h2>
+-        <ul className="space-y-4 text-[var(--muted)]">
+-          <li>Visual timeline editing for springs, keyframes, and gesture-driven motion.</li>
+-          <li>One-click export to production JavaScript and CSS with no runtime lock-in.</li>
+-          <li>Live preview across breakpoints, with reduced-motion variants built in.</li>
+-        </ul>
++      {/* ACT V — PREMIERE */}
++      <section className="act" data-card="4" id="act-premiere" aria-labelledby="h-premiere" style={{ height: "104vh" }}>
++        <div className="card card-left card-final">
++          <p className="eyebrow mono">
++            ACT V · <span className="amber">TC {timecode(52)}</span> · PREMIERE
++          </p>
++          <h2 id="h-premiere" className="display2">
++            Your project starts at <em>00:00.</em>
++          </h2>
++          <p className="body">
++            The line below has been the film all along — one ring, sixty seconds, twenty-three
++            keyframes. Meridian previews every breakpoint and builds the reduced-motion cut beside the
++            full one. This page ships both: try <b className="mono">CALM</b>, top right.
++          </p>
++          <div className="cta-row">
++            <a className="btn btn-primary mono" href="mailto:hello@meridian.tools?subject=Early%20access">
++              GET EARLY ACCESS
++            </a>
++            <Replay />
++          </div>
++          <p className="caption">Private beta · hello@meridian.tools</p>
++        </div>
+       </section>
+ 
+-      <footer className="border-t border-[var(--line)] pt-8 text-sm text-[var(--muted)]" id="get-access">
+-        <p>Meridian is in private beta. hello@meridian.tools</p>
+-      </footer>
+-    </main>
++      <div className="tail">
++        <footer className="site-footer mono">
++          <span>BUILT IN MERIDIAN — LAUNCH.MRD · 60S · 3 TRACKS · 23 KEYFRAMES</span>
++          <a href="mailto:hello@meridian.tools">HELLO@MERIDIAN.TOOLS</a>
++          <span>© 2026 MERIDIAN TOOLS</span>
++        </footer>
++      </div>
++    </Experience>
+   );
+ }
+diff --git a/package-lock.json b/package-lock.json
+index 0a1babc..623138c 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -10,10 +10,12 @@
+       "dependencies": {
+         "next": "16.2.12",
+         "react": "19.2.8",
+-        "react-dom": "19.2.8"
++        "react-dom": "19.2.8",
++        "three": "^0.185.1"
+       },
+       "devDependencies": {
+         "@tailwindcss/postcss": "4.3.3",
++        "puppeteer-core": "^25.9.0",
+         "tailwindcss": "4.3.3"
+       }
+     },
+@@ -690,6 +692,35 @@
+         "node": ">= 10"
+       }
+     },
++    "node_modules/@puppeteer/browsers": {
++      "version": "3.2.1",
++      "resolved": "https://registry.npmjs.org/@puppeteer/browsers/-/browsers-3.2.1.tgz",
++      "integrity": "sha512-KDz+3qDRdBAlRlMjmKyj6dEs33YHTk/xRHEENSXq6TNnhgoU15ruSHtEBeVF6OZ9tBDY55Se4P0nFMNsipzU9A==",
++      "dev": true,
++      "license": "Apache-2.0",
++      "dependencies": {
++        "modern-tar": "^0.8.0",
++        "yargs": "^18.0.0"
++      },
++      "bin": {
++        "browsers": "lib/main-cli.js"
++      },
++      "engines": {
++        "node": ">=22.12.0"
++      },
++      "peerDependencies": {
++        "proxy-agent": ">=8.0.1",
++        "yauzl": "^2.10.0 || ^3.4.0"
++      },
++      "peerDependenciesMeta": {
++        "proxy-agent": {
++          "optional": true
++        },
++        "yauzl": {
++          "optional": true
++        }
++      }
++    },
+     "node_modules/@swc/helpers": {
+       "version": "0.5.15",
+       "resolved": "https://registry.npmjs.org/@swc/helpers/-/helpers-0.5.15.tgz",
+@@ -1036,6 +1067,32 @@
+         "tailwindcss": "4.3.3"
+       }
+     },
++    "node_modules/ansi-regex": {
++      "version": "6.3.0",
++      "resolved": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-6.3.0.tgz",
++      "integrity": "sha512-WpDfL7NO6j7tH88IDBNVdUJxDh9nmCteAVW9dsep846XdwF4naCBK+/tGLX3KJgcpgMRXCFlTM2hKGoK9FsdrQ==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=12"
++      },
++      "funding": {
++        "url": "https://github.com/chalk/ansi-regex?sponsor=1"
++      }
++    },
++    "node_modules/ansi-styles": {
++      "version": "6.2.3",
++      "resolved": "https://registry.npmjs.org/ansi-styles/-/ansi-styles-6.2.3.tgz",
++      "integrity": "sha512-4Dj6M28JB+oAH8kFkTLUo+a2jwOFkuqb3yucU0CANcRRUbxS0cP0nZYCGjcc3BNXwRIsUVmDGgzawme7zvJHvg==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=12"
++      },
++      "funding": {
++        "url": "https://github.com/chalk/ansi-styles?sponsor=1"
++      }
++    },
+     "node_modules/baseline-browser-mapping": {
+       "version": "2.11.13",
+       "resolved": "https://registry.npmjs.org/baseline-browser-mapping/-/baseline-browser-mapping-2.11.13.tgz",
+@@ -1068,12 +1125,62 @@
+       ],
+       "license": "CC-BY-4.0"
+     },
++    "node_modules/chromium-bidi": {
++      "version": "17.0.2",
++      "resolved": "https://registry.npmjs.org/chromium-bidi/-/chromium-bidi-17.0.2.tgz",
++      "integrity": "sha512-5v9GQFhTktFvotn/OFNJBmKLKRAb6n9r0bVCwf7sHgWc3/JryK0bj1nn93L3pHFrfgcsu6Be6EWsDi+1XHTGDg==",
++      "dev": true,
++      "license": "Apache-2.0",
++      "dependencies": {
++        "mitt": "^3.0.1",
++        "zod": "^3.24.1"
++      },
++      "engines": {
++        "node": ">=20.19.0 <22.0.0 || >=22.12.0"
++      },
++      "peerDependencies": {
++        "devtools-protocol": "*"
++      }
++    },
+     "node_modules/client-only": {
+       "version": "0.0.1",
+       "resolved": "https://registry.npmjs.org/client-only/-/client-only-0.0.1.tgz",
+       "integrity": "sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==",
+       "license": "MIT"
+     },
++    "node_modules/cliui": {
++      "version": "9.0.1",
++      "resolved": "https://registry.npmjs.org/cliui/-/cliui-9.0.1.tgz",
++      "integrity": "sha512-k7ndgKhwoQveBL+/1tqGJYNz097I7WOvwbmmU2AR5+magtbjPWQTS1C5vzGkBC8Ym8UWRzfKUzUUqFLypY4Q+w==",
++      "dev": true,
++      "license": "ISC",
++      "dependencies": {
++        "string-width": "^7.2.0",
++        "strip-ansi": "^7.1.0",
++        "wrap-ansi": "^9.0.0"
++      },
++      "engines": {
++        "node": ">=20"
++      }
++    },
++    "node_modules/cliui/node_modules/string-width": {
++      "version": "7.2.0",
++      "resolved": "https://registry.npmjs.org/string-width/-/string-width-7.2.0.tgz",
++      "integrity": "sha512-tsaTIkKW9b4N+AEj+SVA+WhJzV7/zMhcSu78mLKWSk7cXMOSHsBKFWUs0fWwq8QyK3MgJBQRX6Gbi4kYbdvGkQ==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "emoji-regex": "^10.3.0",
++        "get-east-asian-width": "^1.0.0",
++        "strip-ansi": "^7.1.0"
++      },
++      "engines": {
++        "node": ">=18"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/sindresorhus"
++      }
++    },
+     "node_modules/detect-libc": {
+       "version": "2.1.2",
+       "resolved": "https://registry.npmjs.org/detect-libc/-/detect-libc-2.1.2.tgz",
+@@ -1084,6 +1191,20 @@
+         "node": ">=8"
+       }
+     },
++    "node_modules/devtools-protocol": {
++      "version": "0.0.1666840",
++      "resolved": "https://registry.npmjs.org/devtools-protocol/-/devtools-protocol-0.0.1666840.tgz",
++      "integrity": "sha512-gCcO42XCHKEs7Ag0S7aGYsnJ7hlgrO3qderYqeiY0Eqk+0GFfuvT13IA0hHreJTa2KCdDVyGMeOhdMNmrrTjVg==",
++      "dev": true,
++      "license": "BSD-3-Clause"
++    },
++    "node_modules/emoji-regex": {
++      "version": "10.6.0",
++      "resolved": "https://registry.npmjs.org/emoji-regex/-/emoji-regex-10.6.0.tgz",
++      "integrity": "sha512-toUI84YS5YmxW219erniWD0CIVOo46xGKColeNQRgOzDorgBi1v4D71/OFzgD9GO2UGKIv1C3Sp8DAn0+j5w7A==",
++      "dev": true,
++      "license": "MIT"
++    },
+     "node_modules/enhanced-resolve": {
+       "version": "5.24.5",
+       "resolved": "https://registry.npmjs.org/enhanced-resolve/-/enhanced-resolve-5.24.5.tgz",
+@@ -1098,6 +1219,39 @@
+         "node": ">=10.13.0"
+       }
+     },
++    "node_modules/escalade": {
++      "version": "3.2.0",
++      "resolved": "https://registry.npmjs.org/escalade/-/escalade-3.2.0.tgz",
++      "integrity": "sha512-WUj2qlxaQtO4g6Pq5c29GTcWGDyd8itL8zTlipgECz3JesAiiOKotd8JU6otB3PACgG6xkJUyVhboMS+bje/jA==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=6"
++      }
++    },
++    "node_modules/get-caller-file": {
++      "version": "2.0.5",
++      "resolved": "https://registry.npmjs.org/get-caller-file/-/get-caller-file-2.0.5.tgz",
++      "integrity": "sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==",
++      "dev": true,
++      "license": "ISC",
++      "engines": {
++        "node": "6.* || 8.* || >= 10.*"
++      }
++    },
++    "node_modules/get-east-asian-width": {
++      "version": "1.6.0",
++      "resolved": "https://registry.npmjs.org/get-east-asian-width/-/get-east-asian-width-1.6.0.tgz",
++      "integrity": "sha512-QRbvDIbx6YklUe6RxeTeleMR0yv3cYH6PsPZHcnVn7xv7zO1BHN8r0XETu8n6Ye3Q+ahtSarc3WgtNWmehIBfA==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=18"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/sindresorhus"
++      }
++    },
+     "node_modules/graceful-fs": {
+       "version": "4.2.11",
+       "resolved": "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.11.tgz",
+@@ -1386,6 +1540,23 @@
+         "@jridgewell/sourcemap-codec": "^1.5.5"
+       }
+     },
++    "node_modules/mitt": {
++      "version": "3.0.1",
++      "resolved": "https://registry.npmjs.org/mitt/-/mitt-3.0.1.tgz",
++      "integrity": "sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/modern-tar": {
++      "version": "0.8.4",
++      "resolved": "https://registry.npmjs.org/modern-tar/-/modern-tar-0.8.4.tgz",
++      "integrity": "sha512-gN54ddmyzEg10orwZ2u4OOv+bjpMWdIl5jIkodK97bMq8QBSL5c0D7YX0lT1Ooz+99S7+PvFbnxzdjgHo1r41g==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=18.0.0"
++      }
++    },
+     "node_modules/nanoid": {
+       "version": "3.3.18",
+       "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-3.3.18.tgz",
+@@ -1520,6 +1691,24 @@
+         "node": "^10 || ^12 || >=14"
+       }
+     },
++    "node_modules/puppeteer-core": {
++      "version": "25.9.0",
++      "resolved": "https://registry.npmjs.org/puppeteer-core/-/puppeteer-core-25.9.0.tgz",
++      "integrity": "sha512-U61rCwSMha62CA/Opy6tCx2Fx+ck7ouiKnbpEApzSoLYMoEu9F71nuFpHL55vmIt33/GYm6eKZVhH2ev0nAIeg==",
++      "dev": true,
++      "license": "Apache-2.0",
++      "dependencies": {
++        "@puppeteer/browsers": "3.2.1",
++        "chromium-bidi": "17.0.2",
++        "devtools-protocol": "0.0.1666840",
++        "typed-query-selector": "^2.12.2",
++        "webdriver-bidi-protocol": "0.4.2",
++        "ws": "^8.21.3"
++      },
++      "engines": {
++        "node": ">=22.12.0"
++      }
++    },
+     "node_modules/react": {
+       "version": "19.2.8",
+       "resolved": "https://registry.npmjs.org/react/-/react-19.2.8.tgz",
+@@ -1614,6 +1803,39 @@
+         "node": ">=0.10.0"
+       }
+     },
++    "node_modules/string-width": {
++      "version": "8.2.2",
++      "resolved": "https://registry.npmjs.org/string-width/-/string-width-8.2.2.tgz",
++      "integrity": "sha512-GaPUh5gfdrYzqeVNZvUfT23vYYxXzKYidUcnMtJg/3rxRV63EFZy3k6xfKlmfeJD0176lnUV/Usr3XcwSvFzpg==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "get-east-asian-width": "^1.5.0",
++        "strip-ansi": "^7.1.2"
++      },
++      "engines": {
++        "node": ">=20"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/sindresorhus"
++      }
++    },
++    "node_modules/strip-ansi": {
++      "version": "7.2.0",
++      "resolved": "https://registry.npmjs.org/strip-ansi/-/strip-ansi-7.2.0.tgz",
++      "integrity": "sha512-yDPMNjp4WyfYBkHnjIRLfca1i6KMyGCtsVgoKe/z1+6vukgaENdgGBZt+ZmKPc4gavvEZ5OgHfHdrazhgNyG7w==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "ansi-regex": "^6.2.2"
++      },
++      "engines": {
++        "node": ">=12"
++      },
++      "funding": {
++        "url": "https://github.com/chalk/strip-ansi?sponsor=1"
++      }
++    },
+     "node_modules/styled-jsx": {
+       "version": "5.1.6",
+       "resolved": "https://registry.npmjs.org/styled-jsx/-/styled-jsx-5.1.6.tgz",
+@@ -1658,11 +1880,137 @@
+         "url": "https://opencollective.com/webpack"
+       }
+     },
++    "node_modules/three": {
++      "version": "0.185.1",
++      "resolved": "https://registry.npmjs.org/three/-/three-0.185.1.tgz",
++      "integrity": "sha512-5aojFCXKwnjBRZvUnt3WFfEcvUJgkN5LlijRFN95hMy8WVkG4I0QNcJE+OuWvuJ0bOdStrbfXn0pkd6/QyiAlg==",
++      "license": "MIT"
++    },
+     "node_modules/tslib": {
+       "version": "2.8.1",
+       "resolved": "https://registry.npmjs.org/tslib/-/tslib-2.8.1.tgz",
+       "integrity": "sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==",
+       "license": "0BSD"
++    },
++    "node_modules/typed-query-selector": {
++      "version": "2.12.2",
++      "resolved": "https://registry.npmjs.org/typed-query-selector/-/typed-query-selector-2.12.2.tgz",
++      "integrity": "sha512-EOPFbyIub4ngnEdqi2yOcNeDLaX/0jcE1JoAXQDDMIthap7FoN795lc/SHfIq2d416VufXpM8z/lD+WRm2gfOQ==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/webdriver-bidi-protocol": {
++      "version": "0.4.2",
++      "resolved": "https://registry.npmjs.org/webdriver-bidi-protocol/-/webdriver-bidi-protocol-0.4.2.tgz",
++      "integrity": "sha512-VSV+fzfChirL3e7jay2yUC7B4HQCGtEWEg/MSSQbK+qWbqeGlRLlXTzPpYr3XGUvbpDHumWZBJxgesg4N7dbtA==",
++      "dev": true,
++      "license": "Apache-2.0"
++    },
++    "node_modules/wrap-ansi": {
++      "version": "9.0.2",
++      "resolved": "https://registry.npmjs.org/wrap-ansi/-/wrap-ansi-9.0.2.tgz",
++      "integrity": "sha512-42AtmgqjV+X1VpdOfyTGOYRi0/zsoLqtXQckTmqTeybT+BDIbM/Guxo7x3pE2vtpr1ok6xRqM9OpBe+Jyoqyww==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "ansi-styles": "^6.2.1",
++        "string-width": "^7.0.0",
++        "strip-ansi": "^7.1.0"
++      },
++      "engines": {
++        "node": ">=18"
++      },
++      "funding": {
++        "url": "https://github.com/chalk/wrap-ansi?sponsor=1"
++      }
++    },
++    "node_modules/wrap-ansi/node_modules/string-width": {
++      "version": "7.2.0",
++      "resolved": "https://registry.npmjs.org/string-width/-/string-width-7.2.0.tgz",
++      "integrity": "sha512-tsaTIkKW9b4N+AEj+SVA+WhJzV7/zMhcSu78mLKWSk7cXMOSHsBKFWUs0fWwq8QyK3MgJBQRX6Gbi4kYbdvGkQ==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "emoji-regex": "^10.3.0",
++        "get-east-asian-width": "^1.0.0",
++        "strip-ansi": "^7.1.0"
++      },
++      "engines": {
++        "node": ">=18"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/sindresorhus"
++      }
++    },
++    "node_modules/ws": {
++      "version": "8.21.3",
++      "resolved": "https://registry.npmjs.org/ws/-/ws-8.21.3.tgz",
++      "integrity": "sha512-201TZ/kPWxoPr/OKWjquZR1SWKXcvxdH+e1xrx89b3YbmzLMFCLfnaG1HFIgWzJOEWZ7MvpK++odZufgYR50Rw==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=10.0.0"
++      },
++      "peerDependencies": {
++        "bufferutil": "^4.0.1",
++        "utf-8-validate": ">=5.0.2"
++      },
++      "peerDependenciesMeta": {
++        "bufferutil": {
++          "optional": true
++        },
++        "utf-8-validate": {
++          "optional": true
++        }
++      }
++    },
++    "node_modules/y18n": {
++      "version": "5.0.8",
++      "resolved": "https://registry.npmjs.org/y18n/-/y18n-5.0.8.tgz",
++      "integrity": "sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==",
++      "dev": true,
++      "license": "ISC",
++      "engines": {
++        "node": ">=10"
++      }
++    },
++    "node_modules/yargs": {
++      "version": "18.1.0",
++      "resolved": "https://registry.npmjs.org/yargs/-/yargs-18.1.0.tgz",
++      "integrity": "sha512-2rAgRKu54VsHkqI0/tYkmluGXHD4KW7yZoycuqDQ15QOTnc2VVfy0nN/1eMhnQLO00A+dwtK20xuCnc1YGeUyg==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "cliui": "^9.0.1",
++        "escalade": "^3.1.1",
++        "get-caller-file": "^2.0.5",
++        "string-width": "^8.2.1",
++        "y18n": "^5.0.5",
++        "yargs-parser": "^22.0.0"
++      },
++      "engines": {
++        "node": "^20.19.0 || ^22.12.0 || >=23"
++      }
++    },
++    "node_modules/yargs-parser": {
++      "version": "22.0.0",
++      "resolved": "https://registry.npmjs.org/yargs-parser/-/yargs-parser-22.0.0.tgz",
++      "integrity": "sha512-rwu/ClNdSMpkSrUb+d6BRsSkLUq1fmfsY6TOpYzTwvwkg1/NRG85KBy3kq++A8LKQwX6lsu+aWad+2khvuXrqw==",
++      "dev": true,
++      "license": "ISC",
++      "engines": {
++        "node": "^20.19.0 || ^22.12.0 || >=23"
++      }
++    },
++    "node_modules/zod": {
++      "version": "3.25.76",
++      "resolved": "https://registry.npmjs.org/zod/-/zod-3.25.76.tgz",
++      "integrity": "sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==",
++      "dev": true,
++      "license": "MIT",
++      "funding": {
++        "url": "https://github.com/sponsors/colinhacks"
++      }
+     }
+   }
+ }
+diff --git a/package.json b/package.json
+index 22c9199..66cd711 100644
+--- a/package.json
++++ b/package.json
+@@ -10,10 +10,12 @@
+   "dependencies": {
+     "next": "16.2.12",
+     "react": "19.2.8",
+-    "react-dom": "19.2.8"
++    "react-dom": "19.2.8",
++    "three": "^0.185.1"
+   },
+   "devDependencies": {
+-    "tailwindcss": "4.3.3",
+-    "@tailwindcss/postcss": "4.3.3"
++    "@tailwindcss/postcss": "4.3.3",
++    "puppeteer-core": "^25.9.0",
++    "tailwindcss": "4.3.3"
+   }
+ }
+diff --git a/public/og.png b/public/og.png
+new file mode 100644
+index 0000000..f8f9b08
+Binary files /dev/null and b/public/og.png differ
+diff --git a/scripts/fps-retina.mjs b/scripts/fps-retina.mjs
+new file mode 100644
+index 0000000..5ff4395
+--- /dev/null
++++ b/scripts/fps-retina.mjs
+@@ -0,0 +1,36 @@
++import puppeteer from "puppeteer-core";
++const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
++const stats = (arr) => {
++  const s = [...arr].sort((a, b) => a - b);
++  const q = (p) => s[Math.min(s.length - 1, Math.floor(p * s.length))];
++  return { n: s.length, avg: +(s.reduce((a, b) => a + b, 0) / s.length).toFixed(2), p50: +q(0.5).toFixed(2), p95: +q(0.95).toFixed(2), over25: s.filter((v) => v > 25).length };
++};
++const run = async (label, viewport, url) => {
++  const browser = await puppeteer.launch({
++    executablePath: CHROME, headless: "new",
++    args: ["--use-angle=metal", "--hide-scrollbars"],
++    defaultViewport: viewport,
++  });
++  const page = await browser.newPage();
++  await page.goto(url, { waitUntil: "networkidle0", timeout: 60000 });
++  await page.waitForFunction(() => !document.querySelector(".boot"), { timeout: 30000 });
++  await new Promise((r) => setTimeout(r, 700));
++  const scrub = await page.evaluate(
++    () => new Promise((res) => {
++      const max = document.documentElement.scrollHeight - innerHeight;
++      const t = []; let last = performance.now(); const start = last;
++      const loop = (now) => {
++        t.push(now - last); last = now;
++        const p = Math.min(1, (now - start) / 12000);
++        window.scrollTo(0, p * max);
++        if (p < 1) requestAnimationFrame(loop); else res(t.slice(5));
++      };
++      requestAnimationFrame(loop);
++    })
++  );
++  console.log(label, JSON.stringify(stats(scrub)));
++  console.log(label + "-dpr", await page.evaluate(() => devicePixelRatio));
++  await browser.close();
++};
++await run("RETINA-2X", { width: 1440, height: 900, deviceScaleFactor: 2 }, "http://localhost:3021");
++await run("MOBILE-T1", { width: 390, height: 844, deviceScaleFactor: 3, isMobile: true, hasTouch: true }, "http://localhost:3021");
+diff --git a/scripts/qa.mjs b/scripts/qa.mjs
+new file mode 100644
+index 0000000..4124278
+--- /dev/null
++++ b/scripts/qa.mjs
+@@ -0,0 +1,174 @@
++// QA rig: real-GPU headless run. FPS floor + interaction contract.
++import puppeteer from "puppeteer-core";
++
++const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
++const URL = process.env.QA_URL || "http://localhost:3021";
++
++const stats = (arr) => {
++  const s = [...arr].sort((a, b) => a - b);
++  const q = (p) => s[Math.min(s.length - 1, Math.floor(p * s.length))];
++  return {
++    n: s.length,
++    avg: +(s.reduce((a, b) => a + b, 0) / s.length).toFixed(2),
++    p50: +q(0.5).toFixed(2),
++    p95: +q(0.95).toFixed(2),
++    over25ms: s.filter((v) => v > 25).length,
++  };
++};
++
++const browser = await puppeteer.launch({
++  executablePath: CHROME,
++  headless: "new",
++  args: ["--use-angle=metal", "--window-size=1440,940", "--hide-scrollbars"],
++  defaultViewport: { width: 1440, height: 900 },
++});
++const page = await browser.newPage();
++const errors = [];
++page.on("console", (m) => {
++  if (m.type() === "error") errors.push(m.text().slice(0, 200));
++});
++page.on("pageerror", (e) => errors.push("PAGEERROR " + String(e).slice(0, 200)));
++
++await page.goto(URL, { waitUntil: "networkidle0", timeout: 60000 });
++await page.waitForFunction(() => !document.querySelector(".boot"), { timeout: 30000 });
++await new Promise((r) => setTimeout(r, 800));
++
++// --- 1. ambient hero fps
++const ambient = await page.evaluate(
++  () =>
++    new Promise((res) => {
++      const t = [];
++      let last = performance.now();
++      const loop = (now) => {
++        t.push(now - last);
++        last = now;
++        if (t.length < 240) requestAnimationFrame(loop);
++        else res(t.slice(10));
++      };
++      requestAnimationFrame(loop);
++    })
++);
++console.log("AMBIENT", JSON.stringify(stats(ambient)));
++
++// --- 2. full-flight scrub fps (0 → 60s over ~12s, worst case)
++const scrub = await page.evaluate(
++  () =>
++    new Promise((res) => {
++      const max = document.documentElement.scrollHeight - innerHeight;
++      const t = [];
++      let last = performance.now();
++      const start = last;
++      const loop = (now) => {
++        t.push(now - last);
++        last = now;
++        const p = Math.min(1, (now - start) / 12000);
++        window.scrollTo(0, p * max);
++        if (p < 1) requestAnimationFrame(loop);
++        else res(t.slice(5));
++      };
++      requestAnimationFrame(loop);
++    })
++);
++console.log("SCRUB", JSON.stringify(stats(scrub)));
++
++// --- 3. state after full scrub: ended flag, kf count, act
++await new Promise((r) => setTimeout(r, 1600));
++console.log(
++  "END-STATE",
++  await page.evaluate(() => {
++    const st = document.querySelector(".stage");
++    return JSON.stringify({
++      act: st.dataset.act,
++      ended: st.dataset.ended,
++      kf: document.querySelector(".kf-count")?.textContent,
++      tc: document.querySelector(".tc-main")?.textContent,
++    });
++  })
++);
++
++// --- 4. transport: back-to-start, Space play, wheel takeover
++await page.click('.tbtn[aria-label="Back to start"]');
++await new Promise((r) => setTimeout(r, 1400));
++await page.evaluate(() => document.activeElement && document.activeElement.blur());
++await page.keyboard.press("Space");
++await new Promise((r) => setTimeout(r, 1500));
++const played = await page.evaluate(() => ({
++  y: Math.round(scrollY),
++  playing: document.querySelector(".tbtn-play")?.getAttribute("aria-pressed"),
++}));
++await page.mouse.wheel({ deltaY: 120 });
++await new Promise((r) => setTimeout(r, 300));
++const afterWheel = await page.evaluate(
++  () => document.querySelector(".tbtn-play")?.getAttribute("aria-pressed")
++);
++console.log("PLAY", JSON.stringify({ played, afterWheel }));
++
++// --- 5. playhead slider keyboard
++await page.evaluate(() => document.querySelector(".playhead").focus());
++await page.keyboard.press("ArrowRight");
++await new Promise((r) => setTimeout(r, 700));
++const slid = await page.evaluate(() => document.querySelector(".playhead").getAttribute("aria-valuenow"));
++console.log("SLIDER", slid);
++
++// --- 6. chapter click → act III region
++await page.evaluate(() => {
++  document.querySelectorAll(".chapter")[2].click();
++});
++await page.waitForFunction(() => document.querySelector(".stage").dataset.act === "2", { timeout: 8000 });
++console.log("CHAPTER-III", "ok");
++
++// --- 7. ruler pointer scrub (drag to ~75%)
++const band = await page.$(".ruler-band");
++const bb = await band.boundingBox();
++await page.mouse.move(bb.x + bb.width * 0.2, bb.y + bb.height / 2);
++await page.mouse.down();
++await page.mouse.move(bb.x + bb.width * 0.75, bb.y + bb.height / 2, { steps: 8 });
++await page.mouse.up();
++await new Promise((r) => setTimeout(r, 900));
++console.log(
++  "DRAG",
++  await page.evaluate(() => document.querySelector(".tc-main").textContent)
++);
++
++// --- 8. curve editor: keyboard edit propagates to readout + code panel
++await page.evaluate(() => document.querySelectorAll(".chapter")[2].click());
++await new Promise((r) => setTimeout(r, 1200));
++const before = await page.evaluate(() => document.querySelector(".ce-readout")?.textContent);
++await page.evaluate(() => document.querySelector(".ce-handle").focus());
++for (let i = 0; i < 3; i++) await page.keyboard.press("ArrowUp");
++const after = await page.evaluate(() => document.querySelector(".ce-readout")?.textContent);
++const codeHasCurve = await page.evaluate(() => {
++  const readout = document.querySelector(".ce-readout")?.textContent.replace(/\s/g, "");
++  const code = document.querySelector(".cp-pre")?.textContent.replace(/\s/g, "");
++  const m = readout && readout.match(/cubic-bezier\(([^)]*)\)/);
++  return m ? code.includes(`cubic-bezier(${m[1]})`) : "no-match";
++});
++console.log("CURVE", JSON.stringify({ before, after, codeHasCurve }));
++
++// --- 9. spring mode → code switches to linear()
++await page.evaluate(() => {
++  [...document.querySelectorAll(".chip-btn")].find((b) => b.textContent === "SPRING").click();
++});
++await new Promise((r) => setTimeout(r, 300));
++const springCode = await page.evaluate(() => document.querySelector(".cp-pre").textContent.includes("linear("));
++console.log("SPRING", springCode);
++
++// --- 10. a11y snapshot basics
++console.log(
++  "A11Y",
++  await page.evaluate(() => {
++    const q = (s) => document.querySelectorAll(s).length;
++    return JSON.stringify({
++      h1: q("h1"),
++      h2: q("h2"),
++      main: q("main"),
++      header: q("header"),
++      sliders: q("[role='slider']"),
++      skiplink: !!document.querySelector(".skip-link"),
++      canvasHidden: document.querySelector("canvas.world")?.getAttribute("aria-hidden"),
++    });
++  })
++);
++
++console.log("CONSOLE-ERRORS", errors.length ? JSON.stringify(errors.slice(0, 6)) : "none");
++await browser.close();
+diff --git a/scripts/shots.mjs b/scripts/shots.mjs
+new file mode 100644
+index 0000000..2e26bb7
+--- /dev/null
++++ b/scripts/shots.mjs
+@@ -0,0 +1,38 @@
++// Real-scroll screenshots (no virtual-time artifacts) against prod.
++import puppeteer from "puppeteer-core";
++const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
++const OUT = "/private/tmp/claude-501/-Users-bezzchen-Documents/37b75f5e-0330-4278-8117-fba2895b3c92/scratchpad/shots";
++const URL = process.env.QA_URL || "http://localhost:3022";
++const browser = await puppeteer.launch({
++  executablePath: CHROME,
++  headless: "new",
++  args: ["--use-angle=metal", "--hide-scrollbars"],
++  defaultViewport: { width: 1440, height: 900 },
++});
++const page = await browser.newPage();
++await page.goto(URL, { waitUntil: "networkidle0", timeout: 60000 });
++await page.waitForFunction(() => !document.querySelector(".boot"), { timeout: 30000 });
++await new Promise((r) => setTimeout(r, 600));
++for (const t of [0.5, 14, 21, 32, 45, 53, 59.9]) {
++  await page.evaluate((tt) => {
++    const max = document.documentElement.scrollHeight - innerHeight;
++    window.scrollTo(0, (tt / 60) * max);
++  }, t);
++  await new Promise((r) => setTimeout(r, 1900));
++  await page.screenshot({ path: `${OUT}/real${t}.png` });
++}
++// mobile real
++const mp = await browser.newPage();
++await mp.setViewport({ width: 390, height: 844, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
++await mp.goto(URL, { waitUntil: "networkidle0", timeout: 60000 });
++await mp.waitForFunction(() => !document.querySelector(".boot"), { timeout: 30000 });
++for (const t of [0.5, 32]) {
++  await mp.evaluate((tt) => {
++    const max = document.documentElement.scrollHeight - innerHeight;
++    window.scrollTo(0, (tt / 60) * max);
++  }, t);
++  await new Promise((r) => setTimeout(r, 1900));
++  await mp.screenshot({ path: `${OUT}/mreal${t}.png` });
++}
++console.log("shots done");
++await browser.close();

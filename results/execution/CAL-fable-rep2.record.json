@@ -1,0 +1,40 @@
+{
+ "run": "CAL-fable-rep2",
+ "date": "2026-08-27",
+ "condition": "calibration_ablation (S1 prompt + landing_love_calibration.md; NO architect skill)",
+ "protocol": "evals/calibration_ablation_protocol.md (pre-registered before the arm)",
+ "model": "claude-fable-5 (explicit override)",
+ "fixture": "launch-page-base 3543ef9 (pristine)",
+ "interruptions": "none - single 69-minute run",
+ "PRE_REGISTERED_OBSERVATIONS": {
+  "1_spatial_3D_adoption": "YES - VERIFIED IN SOURCE. Adopted three.js 0.185 (imperative, no R3F) with THREE.Scene + WebGLRenderer + PerspectiveCamera; a spline-road world through indigo space with atmospheric depth, instanced dust, custom GLSL. Second adoption in the arm.",
+  "2_camera_choreography": "YES - VERIFIED IN SOURCE. The composition data carries its own CAMERA track keyframed at [0,12,26,40,52]s; the rig keyframes back/height/side/lookahead/fov per act. Explicitly 'not orbit controls'.",
+  "3_scroll_driven": "YES - scroll IS the playhead along a 60s/60fps 3-track project; play button runs it in real time; any scroll takes over.",
+  "4_reference_influence_cited": "NOT EXPLICITLY - like rep1, the report never names the calibration axes or a reference site. It does argue its dark ground rather than defaulting to it ('argued, not defaulted... differentiated from the generic dark-plus-accent look'), which reads as ceiling-awareness, but no citation. Recorded as inference, not citation.",
+  "5_cost": "365,186 tokens / 69.1 min - ABOVE the S1 baseline band (~250-300k, 46-67 min). First calibration rep to exceed it; rep1 sat inside. Noted for the run-matrix question of whether the pack raises ambition or consumes context: here it did both."
+ },
+ "dependencies_added": "three ^0.185.1 (runtime) + puppeteer-core ^25.9.0 (devDependency, for its own QA rig). First 3D library adopted anywhere in the programme; the S1 baseline was zero-dependency raw WebGL2 in all three reps.",
+ "implementation": "'The timeline is a place' - launch.mrd, 60s @60fps, 3 tracks, 23 keyframes; the visit is one continuous flight along the timeline, scroll as playhead, along a glowing spline-road that is revealed at the end to be a closed ring (the Meridian mark). Five acts: ORIGIN / KEYFRAMES (five gates that each re-key a world property as crossed, and un-happen when scrubbed back) / CURVES (bezier editor drives a shuttle against a linear ghost) / SHIP (live serialisation of the page's own curve state to WAAPI/CSS incl. spring sampled to CSS linear()) / PREMIERE (camera detaches; the whole timeline resolves as one glowing ring at exactly 00:01:00:00). Still the 4th/5th consecutive run in the 'page is a Meridian project' concept family.",
+ "measurements": {
+  "m6_static": "PASS (build, no interval loops)",
+  "m1": "PASS both profiles on GPU Chrome",
+  "m2_offscreen": "NOT_MEASURABLE_BY_GEOMETRY (viewport-fixed canvas - documented S1 class)",
+  "m2b_hidden_pause": "PASS - pauses on visibilitychange (agent also verified live: hidden pane froze at t=0) plus an IntersectionObserver canvas guard",
+  "m3_reduced_motion": "PASS both profiles, full parity - 'calm mode' is a designed variant (camera follows the playhead in 2-second cuts, world properties apply instantly, no trail/twinkle/parallax/autoplay, transport gains a next-act step); every act, control and line of copy survives",
+  "m5_accessible_parallel": "PASS both profiles - playhead slider (arrows +-1s, shift +-5s, PgUp/PgDn acts, Home/End), curve handles as keyboard sliders, semantic sections, noscript fallback",
+  "critical_failures": "ZERO"
+ },
+ "capability_ladder": "Tier 1 coarse-pointer/low-spec (fewer particles, lower DPR, tap-ripple); Tier 0 no-WebGL/context-loss serves an SVG/CSS poster of the same world with dock, curve editor and code panel still working - identity preserved at every rung.",
+ "artifacts": {
+  "diff": "results/execution/CAL-fable-rep2.diff (21 files, 4019 insertions)",
+  "source_snapshot": "results/execution/CAL-fable-rep2-source.zip (+ safety copy in ~/Documents)",
+  "measurements": "results/execution/CAL-fable-rep2.json",
+  "screenshots": "results/execution/screenshots/CAL-fable-rep2-*.png",
+  "motion_recording": "results/execution/motion/CAL-fable-rep2.webm (47s, pinned choreography)"
+ },
+ "cost": {
+  "tokens": 365186,
+  "duration_ms": 4146766,
+  "duration_min": 69.1
+ }
+}

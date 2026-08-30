@@ -1,0 +1,2993 @@
+diff --git a/app/acts.jsx b/app/acts.jsx
+new file mode 100644
+index 0000000..4309c23
+--- /dev/null
++++ b/app/acts.jsx
+@@ -0,0 +1,471 @@
++"use client";
++
++import { useCallback, useMemo, useRef } from "react";
++import {
++  CHAPTERS,
++  CURVE_PRESETS,
++  KEY_COUNT,
++  TRACKS,
++  cubicBezier,
++  fmtTC,
++} from "@/lib/composition";
++
++/* ------------------------------------------------------------- curve editor */
++
++const GX = (x) => 20 + x * 300; // svg x for time 0..1  (viewBox 340 x 240)
++const GY = (v) => 190 - v * 140; // svg y for value
++
++function CurveEditor({ curve, onCurveChange, puckRef, liveRef }) {
++  const stageRef = useRef(null);
++  const dragRef = useRef(null);
++  const latest = useRef(curve);
++  latest.current = curve;
++
++  const toGraph = useCallback((e) => {
++    const r = stageRef.current.getBoundingClientRect();
++    const px = ((e.clientX - r.left) / r.width) * 340;
++    const py = ((e.clientY - r.top) / r.height) * 240;
++    return [
++      Math.min(1, Math.max(0, (px - 20) / 300)),
++      Math.min(1.35, Math.max(-0.35, (190 - py) / 140)),
++    ];
++  }, []);
++
++  const announce = useCallback(
++    (c) => {
++      if (liveRef.current) {
++        liveRef.current.textContent = `Ease set to cubic-bezier ${c
++          .map((v) => v.toFixed(2))
++          .join(", ")}`;
++      }
++    },
++    [liveRef]
++  );
++
++  const startDrag = (which) => (e) => {
++    e.preventDefault();
++    dragRef.current = which;
++    try {
++      e.currentTarget.setPointerCapture(e.pointerId);
++    } catch (err) {}
++  };
++  const moveDrag = (which) => (e) => {
++    if (dragRef.current !== which) return;
++    const [x, y] = toGraph(e);
++    const next = latest.current.slice();
++    next[which * 2] = x;
++    next[which * 2 + 1] = y;
++    latest.current = next;
++    onCurveChange(next, false);
++  };
++  const endDrag = (which) => (e) => {
++    if (dragRef.current !== which) return;
++    dragRef.current = null;
++    onCurveChange(latest.current.slice(), true);
++    announce(latest.current);
++  };
++  const keyNudge = (which) => (e) => {
++    const step = e.shiftKey ? 0.1 : 0.02;
++    const k = e.key.startsWith("Arrow") ? e.key.slice(5) : e.key;
++    let dx = 0,
++      dy = 0;
++    if (k === "Left") dx = -step;
++    else if (k === "Right") dx = step;
++    else if (k === "Up") dy = step;
++    else if (k === "Down") dy = -step;
++    else return;
++    e.preventDefault();
++    const next = latest.current.slice();
++    next[which * 2] = Math.min(1, Math.max(0, next[which * 2] + dx));
++    next[which * 2 + 1] = Math.min(1.35, Math.max(-0.35, next[which * 2 + 1] + dy));
++    latest.current = next;
++    onCurveChange(next, true);
++    announce(next);
++  };
++
++  const [x1, y1, x2, y2] = curve;
++  const path = `M ${GX(0)} ${GY(0)} C ${GX(x1)} ${GY(y1)} ${GX(x2)} ${GY(y2)} ${GX(1)} ${GY(1)}`;
++  const activePreset = CURVE_PRESETS.find((p) =>
++    p.v.every((v, i) => Math.abs(v - curve[i]) < 0.005)
++  );
++
++  const easeFn = useMemo(() => cubicBezier(...curve), [curve]);
++  const onion = useMemo(
++    () => Array.from({ length: 9 }, (_, i) => easeFn(i / 8)),
++    [easeFn]
++  );
++
++  return (
++    <div className="ce panel aside">
++      <div className="ce-head">
++        <span>ease · hero-entrance</span>
++        <span className="val">
++          cubic-bezier({curve.map((v) => v.toFixed(2)).join(", ")})
++        </span>
++      </div>
++      <div className="ce-stage" ref={stageRef}>
++        <svg className="ce-graph" viewBox="0 0 340 240" aria-hidden="true">
++          {[0.25, 0.5, 0.75].map((f) => (
++            <line
++              key={`v${f}`}
++              x1={GX(f)}
++              y1={GY(1.35)}
++              x2={GX(f)}
++              y2={GY(-0.35)}
++              stroke="rgba(148,166,212,0.07)"
++            />
++          ))}
++          {[0.25, 0.5, 0.75].map((f) => (
++            <line
++              key={`h${f}`}
++              x1={GX(0)}
++              y1={GY(f)}
++              x2={GX(1)}
++              y2={GY(f)}
++              stroke="rgba(148,166,212,0.07)"
++            />
++          ))}
++          <line x1={GX(0)} y1={GY(0)} x2={GX(1)} y2={GY(0)} stroke="rgba(148,166,212,0.22)" />
++          <line x1={GX(0)} y1={GY(1)} x2={GX(1)} y2={GY(1)} stroke="rgba(148,166,212,0.22)" />
++          <line
++            x1={GX(0)}
++            y1={GY(0)}
++            x2={GX(x1)}
++            y2={GY(y1)}
++            stroke="rgba(226,167,62,0.6)"
++            strokeDasharray="3 3"
++          />
++          <line
++            x1={GX(1)}
++            y1={GY(1)}
++            x2={GX(x2)}
++            y2={GY(y2)}
++            stroke="rgba(226,167,62,0.6)"
++            strokeDasharray="3 3"
++          />
++          <path d={path} fill="none" stroke="var(--beam)" strokeWidth="2.6" />
++          <circle cx={GX(0)} cy={GY(0)} r="4" fill="var(--paper)" />
++          <circle cx={GX(1)} cy={GY(1)} r="4" fill="var(--paper)" />
++        </svg>
++        {[0, 1].map((which) => (
++          <button
++            key={which}
++            type="button"
++            className="ce-handle"
++            style={{
++              left: `${(GX(curve[which * 2]) / 340) * 100}%`,
++              top: `${(GY(curve[which * 2 + 1]) / 240) * 100}%`,
++            }}
++            aria-label={`Control handle ${which + 1}: x ${curve[which * 2].toFixed(
++              2
++            )}, y ${curve[which * 2 + 1].toFixed(2)}. Arrow keys to bend the ease.`}
++            onPointerDown={startDrag(which)}
++            onPointerMove={moveDrag(which)}
++            onPointerUp={endDrag(which)}
++            onPointerCancel={endDrag(which)}
++            onKeyDown={keyNudge(which)}
++          />
++        ))}
++      </div>
++      <div className="ce-preview" aria-hidden="true">
++        <span className="ce-preview-track" />
++        <span className="ce-puck" ref={puckRef} />
++        <span className="ce-onion">
++          {onion.map((v, i) => (
++            <i
++              key={i}
++              style={{
++                left: `calc(5px + ${(v * 100).toFixed(2)}% - ${(v * 10).toFixed(2)}px)`,
++                opacity: 0.25 + (i / 8) * 0.75,
++              }}
++            />
++          ))}
++        </span>
++      </div>
++      <div className="ce-presets" role="group" aria-label="Ease presets">
++        {CURVE_PRESETS.map((p) => (
++          <button
++            key={p.id}
++            type="button"
++            className="chip"
++            aria-pressed={activePreset?.id === p.id}
++            onClick={() => {
++              onCurveChange(p.v.slice(), true);
++              announce(p.v);
++            }}
++          >
++            {p.name}
++          </button>
++        ))}
++      </div>
++    </div>
++  );
++}
++
++/* --------------------------------------------------------------- code panel */
++
++function CodePanel({ curve, codeRef }) {
++  const bz = `cubic-bezier(${curve.map((v) => v.toFixed(2)).join(", ")})`;
++  const lines = [
++    <span key="0" className="tok-c">{`/* meridian · export — hero-entrance.css */`}</span>,
++    <span key="1"><span className="tok-s">.hero</span> {"{"}</span>,
++    <span key="2">
++      {"  "}<span className="tok-k">animation</span>: <span className="tok-s">hero-rise 900ms</span>
++    </span>,
++    <span key="2b">
++      {"    "}<span className="tok-b">{bz}</span> <span className="tok-s">both</span>;
++    </span>,
++    <span key="3">{"}"}</span>,
++    <span key="4"><span className="tok-k">@keyframes</span> <span className="tok-s">hero-rise</span> {"{"}</span>,
++    <span key="5">
++      {"  "}<span className="tok-s">from</span> {"{"} <span className="tok-k">translate</span>:{" "}
++      <span className="tok-n">0 28px</span>; <span className="tok-k">opacity</span>:{" "}
++      <span className="tok-n">0</span>; {"}"}
++    </span>,
++    <span key="6">
++      {"  "}<span className="tok-s">to</span> {"  {"} <span className="tok-k">translate</span>:{" "}
++      <span className="tok-n">0 0</span>; {"  "}<span className="tok-k">opacity</span>:{" "}
++      <span className="tok-n">1</span>; {"}"}
++    </span>,
++    <span key="7">{"}"}</span>,
++    <span key="8">{" "}</span>,
++    <span key="9" className="tok-c">{`/* or straight to the Web Animations API */`}</span>,
++    <span key="10">
++      <span className="tok-s">el</span>.<span className="tok-k">animate</span>(rise, {"{"}
++    </span>,
++    <span key="11">
++      {"  "}<span className="tok-k">duration</span>: <span className="tok-n">900</span>,
++    </span>,
++    <span key="12">
++      {"  "}<span className="tok-k">easing</span>: <span className="tok-b">"{bz}"</span>,
++    </span>,
++    <span key="13">{"});"}</span>,
++  ];
++  return (
++    <div className="code panel aside">
++      <div className="code-head">compiled output — no runtime attached</div>
++      <pre>
++        <code ref={codeRef}>
++          {lines.map((l, i) => (
++            <span className="cl" key={i}>
++              {l}
++            </span>
++          ))}
++        </code>
++      </pre>
++    </div>
++  );
++}
++
++/* ---------------------------------------------------------------- the acts */
++
++export function Acts({
++  sectionRef,
++  headingRef,
++  curve,
++  onCurveChange,
++  puckRef,
++  liveRef,
++  codeRef,
++  statRefs,
++  onSeek,
++  onPlayFromStart,
++}) {
++  const ch = CHAPTERS;
++  const eb = (i) => (
++    <p className="t-eyebrow">
++      <span>
++        {ch[i].num} · {ch[i].name}
++      </span>
++      <span className="tc">{fmtTC(ch[i].start)}</span>
++    </p>
++  );
++
++  return (
++    <main id="main" className="acts">
++      {/* 00 — overture */}
++      <section
++        id="act-overture"
++        className="act act-overture"
++        ref={sectionRef(0)}
++        aria-labelledby="h-overture"
++      >
++        <div className="act-inner">
++          <p className="t-eyebrow" data-reveal style={{ transitionDelay: "0.1s" }}>
++            <span>Meridian</span>
++            <span className="tc">motion editor for the web · early access</span>
++          </p>
++          <h1 className="t-display" id="h-overture" tabIndex={-1} ref={headingRef(0)} data-reveal style={{ transitionDelay: "0.22s" }}>
++            Direct <em>time.</em>
++          </h1>
++          <p className="t-body lede" data-reveal style={{ transitionDelay: "0.36s" }}>
++            Meridian is a timeline editor for interface motion. Compose on real tracks,
++            sculpt easing by hand, and ship the result as the code you already write.
++          </p>
++          <div className="hero-cta" data-reveal style={{ transitionDelay: "0.5s" }}>
++            <a className="btn btn-primary" href="mailto:hello@meridian.tools?subject=Meridian%20early%20access">
++              Get early access
++            </a>
++            <button type="button" className="btn btn-ghost live-only" onClick={onPlayFromStart}>
++              Press play
++            </button>
++          </div>
++          <p className="hint" data-reveal style={{ transitionDelay: "0.64s" }}>
++            scroll to scrub · <kbd>space</kbd> to play
++          </p>
++        </div>
++      </section>
++
++      {/* 01 — the curve */}
++      <section
++        id="act-curve"
++        className="act act-curve"
++        ref={sectionRef(1)}
++        aria-labelledby="h-curve"
++      >
++        <div className="act-inner act-grid">
++          <div className="copy">
++            {eb(1)}
++            <h2 className="t-h2" id="h-curve" tabIndex={-1} ref={headingRef(1)}>
++              Easing you can <em>hold.</em>
++            </h2>
++            <p className="t-body">
++              Every motion in Meridian is a curve with handles. Pull one — the world behind
++              this panel takes your ease <strong>immediately</strong>, and keeps it for the
++              rest of this page.
++            </p>
++          </div>
++          <CurveEditor
++            curve={curve}
++            onCurveChange={onCurveChange}
++            puckRef={puckRef}
++            liveRef={liveRef}
++          />
++        </div>
++      </section>
++
++      {/* 02 — the timeline */}
++      <section
++        id="act-timeline"
++        className="act act-timeline"
++        ref={sectionRef(2)}
++        aria-labelledby="h-timeline"
++      >
++        <div className="act-inner act-grid">
++          <div className="copy panel">
++            {eb(2)}
++            <h2 className="t-h2" id="h-timeline" tabIndex={-1} ref={headingRef(2)}>
++              You&rsquo;re inside <em>one now.</em>
++            </h2>
++            <p className="t-body">
++              This page is a Meridian composition. The lanes around you are its real tracks —
++              the camera you&rsquo;re riding, the copy you&rsquo;re reading, the world itself —
++              and the brass blade is the playhead you&rsquo;ve been scrubbing.
++            </p>
++            <p className="t-mono-line" style={{ marginTop: "18px" }}>
++              {TRACKS.length} tracks · {KEY_COUNT} keyframes · 60 seconds
++            </p>
++          </div>
++        </div>
++      </section>
++
++      {/* 03 — the export */}
++      <section
++        id="act-export"
++        className="act act-export"
++        ref={sectionRef(3)}
++        aria-labelledby="h-export"
++      >
++        <div className="act-inner act-grid">
++          <div className="copy">
++            {eb(3)}
++            <h2 className="t-h2" id="h-export" tabIndex={-1} ref={headingRef(3)}>
++              Ship the curve, <em>not a runtime.</em>
++            </h2>
++            <p className="t-body">
++              Meridian compiles compositions to plain CSS and the Web Animations API.
++              The file beside this line is <strong>your curve from act 01</strong> —
++              exact values, zero dependencies.
++            </p>
++          </div>
++          <CodePanel curve={curve} codeRef={codeRef} />
++        </div>
++      </section>
++
++      {/* 04 — the budget */}
++      <section
++        id="act-budget"
++        className="act act-budget"
++        ref={sectionRef(4)}
++        aria-labelledby="h-budget"
++      >
++        <div className="act-inner">
++          {eb(4)}
++          <h2 className="t-h2" id="h-budget" tabIndex={-1} ref={headingRef(4)}>
++            Sixty frames, <em>honestly.</em>
++          </h2>
++          <p className="t-body">
++            The line behind this copy is this page&rsquo;s own render loop, plotted live.
++            Motion you ship from Meridian runs on the platform&rsquo;s compositor,
++            so the budget stays yours.
++          </p>
++          <div className="stats" role="group" aria-label="Live render statistics">
++            <div className="stat">
++              <div className="v"><span ref={statRefs.fps}>—</span></div>
++              <div className="l">frames / second</div>
++            </div>
++            <div className="stat">
++              <div className="v"><span ref={statRefs.ms}>—</span><em> ms</em></div>
++              <div className="l">frame time</div>
++            </div>
++            <div className="stat">
++              <div className="v"><span ref={statRefs.draws}>—</span></div>
++              <div className="l">draw calls</div>
++            </div>
++            <div className="stat">
++              <div className="v"><span ref={statRefs.count}>—</span></div>
++              <div className="l">particles</div>
++            </div>
++          </div>
++          <p className="t-mono-line" style={{ marginTop: "22px" }}>
++            measured on your machine, right now — not ours
++          </p>
++        </div>
++      </section>
++
++      {/* 05 — begin */}
++      <section
++        id="act-begin"
++        className="act act-begin"
++        ref={sectionRef(5)}
++        aria-labelledby="h-begin"
++      >
++        <div className="act-inner">
++          {eb(5)}
++          <h2 className="t-h2" id="h-begin" tabIndex={-1} ref={headingRef(5)}>
++            Your first composition <em>is empty.</em>
++          </h2>
++          <p className="t-body" style={{ margin: "0 auto", maxWidth: "32rem" }}>
++            Early access opens this fall. Bring the motion you can see
++            but can&rsquo;t type.
++          </p>
++          <div className="cta-row">
++            <a className="btn btn-primary" href="mailto:hello@meridian.tools?subject=Meridian%20early%20access">
++              Get early access
++            </a>
++            <button type="button" className="btn btn-ghost live-only" onClick={() => onSeek(0, true)}>
++              Watch again
++            </button>
++          </div>
++          <footer className="footer-line">
++            <span>© 2026 Meridian Systems</span>
++            <a href="mailto:hello@meridian.tools">hello@meridian.tools</a>
++            <span>
++              this page is a meridian composition — {TRACKS.length} tracks, {KEY_COUNT} keys
++            </span>
++          </footer>
++        </div>
++      </section>
++    </main>
++  );
++}
+diff --git a/app/dock.jsx b/app/dock.jsx
+new file mode 100644
+index 0000000..2c28761
+--- /dev/null
++++ b/app/dock.jsx
+@@ -0,0 +1,143 @@
++"use client";
++
++import { memo } from "react";
++import { CHAPTERS, DUR, TRACKS, fmtTC } from "@/lib/composition";
++
++const pct = (t) => `${((t / DUR) * 100).toFixed(3)}%`;
++
++function Ruler() {
++  const items = [];
++  for (let s = 0; s <= DUR; s++) {
++    const major = s % 5 === 0;
++    items.push(
++      <span
++        key={`t${s}`}
++        className={`dock-tick${major ? " major" : ""}`}
++        style={{ left: pct(s) }}
++      />
++    );
++    if (major && s < DUR) {
++      items.push(
++        <span
++          key={`l${s}`}
++          className={`dock-tick-label${s % 15 === 0 ? " q" : ""}`}
++          style={{ left: pct(s) }}
++        >
++          {fmtTC(s).slice(0, 5)}
++        </span>
++      );
++    }
++  }
++  return (
++    <div className="dock-ruler" aria-hidden="true">
++      {items}
++    </div>
++  );
++}
++
++export const Dock = memo(function Dock({
++  chapter,
++  playing,
++  onPlayToggle,
++  onChapter,
++  onScrubInput,
++  onScrubStart,
++  onScrubEnd,
++  tcRef,
++  playheadRef,
++  scrubRef,
++  fpsRef,
++}) {
++  return (
++    <div className="dock" data-reveal role="region" aria-label="Composition timeline">
++      <div className="dock-transport">
++        <button
++          type="button"
++          className="dock-play"
++          onClick={onPlayToggle}
++          aria-label={playing ? "Pause playback" : "Play the composition"}
++        >
++          {playing ? (
++            <svg width="12" height="14" viewBox="0 0 12 14" aria-hidden="true">
++              <rect x="1" y="1" width="3.4" height="12" fill="currentColor" />
++              <rect x="7.6" y="1" width="3.4" height="12" fill="currentColor" />
++            </svg>
++          ) : (
++            <svg width="13" height="14" viewBox="0 0 13 14" aria-hidden="true">
++              <path d="M1.5 1.2 L12 7 L1.5 12.8 Z" fill="currentColor" />
++            </svg>
++          )}
++        </button>
++        <div className="dock-tc">
++          <span ref={tcRef}>00:00:00</span>
++          <span className="dur">/ {fmtTC(DUR)} · 24 fps ruler</span>
++        </div>
++        <div className="dock-scene" aria-hidden="true">
++          {CHAPTERS[chapter].num} · {CHAPTERS[chapter].name}
++        </div>
++      </div>
++
++      <div className="dock-body">
++        <div className="dock-fps" ref={fpsRef} aria-hidden="true" />
++        <Ruler />
++        <div className="dock-lanes">
++          <div className="dock-lane dock-lane-scenes" role="group" aria-label="Scenes">
++            <span className="dock-lane-name" aria-hidden="true">
++              scenes
++            </span>
++            {CHAPTERS.map((c, i) => (
++              <button
++                key={c.id}
++                type="button"
++                className="dock-clip"
++                style={{
++                  left: pct(c.start),
++                  width: `calc(${(((c.end - c.start) / DUR) * 100).toFixed(3)}% - 3px)`,
++                }}
++                aria-current={i === chapter ? "true" : undefined}
++                aria-label={`${c.num} — ${c.name}, ${fmtTC(c.start)}`}
++                onClick={() => onChapter(i)}
++              >
++                <span className="num">{c.num}</span>
++                <span className="full">{c.name}</span>
++              </button>
++            ))}
++          </div>
++          {TRACKS.slice(1).map((track) => (
++            <div key={track.id} className="dock-lane dock-lane-mini" aria-hidden="true">
++              <span className="dock-lane-name">{track.name}</span>
++              {track.clips.map((cl, j) => (
++                <i
++                  key={`c${j}`}
++                  className="dock-mini-clip"
++                  style={{
++                    left: pct(cl.t0),
++                    width: `calc(${(((cl.t1 - cl.t0) / DUR) * 100).toFixed(3)}% - 2px)`,
++                  }}
++                />
++              ))}
++              {track.keys.map((t, j) => (
++                <i key={`k${j}`} className="dock-key" style={{ left: pct(t) }} />
++              ))}
++            </div>
++          ))}
++        </div>
++        <div className="dock-playhead" ref={playheadRef} style={{ left: 0 }} aria-hidden="true" />
++        <span className="dock-loop" title="Loop point — 01:00:00" aria-hidden="true" />
++        <input
++          ref={scrubRef}
++          className="dock-scrub"
++          type="range"
++          min="0"
++          max={DUR}
++          step="0.5"
++          defaultValue="0"
++          aria-label="Playhead — scrub the composition"
++          onPointerDown={onScrubStart}
++          onPointerUp={onScrubEnd}
++          onInput={(e) => onScrubInput(parseFloat(e.currentTarget.value))}
++        />
++      </div>
++    </div>
++  );
++});
+diff --git a/app/experience.jsx b/app/experience.jsx
+new file mode 100644
+index 0000000..4da0b2d
+--- /dev/null
++++ b/app/experience.jsx
+@@ -0,0 +1,710 @@
++"use client";
++
++import { useCallback, useEffect, useRef, useState } from "react";
++import {
++  CHAPTERS,
++  DEFAULT_CURVE,
++  DUR,
++  PX_PER_SEC,
++  STILL_T,
++  actState,
++  chapterAt,
++  clamp01,
++  cubicBezier,
++  easeIO,
++  evalCamera,
++  fmtTC,
++  solveBezierU,
++  typeReveal,
++} from "@/lib/composition";
++import { createEngine } from "@/lib/engine";
++import { Dock } from "./dock";
++import { Acts } from "./acts";
++
++const STORE_KEY = "mdn-motion";
++
++export default function Experience() {
++  const [motion, setMotion] = useState("full");
++  const [gfxOk, setGfxOk] = useState(true);
++  const [chapter, setChapter] = useState(0);
++  const [playing, setPlaying] = useState(false);
++  const [curve, setCurve] = useState(() => DEFAULT_CURVE.slice());
++
++  const canvasRef = useRef(null);
++  const engineRef = useRef(null);
++  const sections = useRef([]);
++  const headings = useRef([]);
++  const tcRef = useRef(null);
++  const playheadRef = useRef(null);
++  const scrubRef = useRef(null);
++  const fpsRef = useRef(null);
++  const puckRef = useRef(null);
++  const codeRef = useRef(null);
++  const liveRef = useRef(null);
++  const statRefs = {
++    fps: useRef(null),
++    ms: useRef(null),
++    draws: useRef(null),
++    count: useRef(null),
++  };
++
++  const st = useRef({
++    scrub: 0,
++    time: 4,
++    now: 0,
++    bootAt: 0,
++    playing: false,
++    motion: "full",
++    gfxOk: true,
++    curve: DEFAULT_CURVE.slice(),
++    curveFn: cubicBezier(...DEFAULT_CURVE),
++    onionU: new Float32Array(9),
++    pointer: [0, 0],
++    pointerT: [0, 0],
++    raf: 0,
++    running: false,
++    scrubbing: false,
++    scrubHold: 0,
++    pinned: null,
++    prevMode: null,
++    chapter: 0,
++    lastReveal: [],
++    lastHidden: [],
++    lastCodeN: -1,
++    lastStat: 0,
++    frame: 0,
++    hidden: false,
++    onscreen: true,
++    explicitMotion: false,
++    eye: [0, 0, 9],
++    tgt: [0, 0, 0],
++  }).current;
++
++  const staticMode = motion === "reduced" || !gfxOk;
++
++  const recomputeOnion = useCallback(() => {
++    for (let i = 0; i < 9; i++) {
++      st.onionU[i] = solveBezierU(st.curve[0], st.curve[2], i / 8);
++    }
++  }, [st]);
++
++  /* ------------------------------------------------------------ still frame */
++
++  const renderStill = useCallback(
++    (i) => {
++      const engine = engineRef.current;
++      if (!engine) return;
++      const t = STILL_T[i];
++      const a = actState(t);
++      const fov = evalCamera(t, st.eye, st.tgt);
++      const stage = canvasRef.current?.parentElement;
++      if (stage) engine.setSize(stage.clientWidth, stage.clientHeight);
++      engine.frame({
++        time: 6 + i * 5.3,
++        scrub: t,
++        boot: 1,
++        actA: a.a,
++        actB: a.b,
++        mix: a.mix,
++        curve: st.curve,
++        puckU: 0.5,
++        onion: true,
++        onionU: st.onionU,
++        camEye: st.eye,
++        camTgt: st.tgt,
++        fov,
++        pointer: [0, 0],
++        reduced: true,
++      });
++      if (playheadRef.current)
++        playheadRef.current.style.left = `${(CHAPTERS[i].start / DUR) * 100}%`;
++      if (tcRef.current) tcRef.current.textContent = fmtTC(CHAPTERS[i].start);
++    },
++    [st]
++  );
++
++  /* ----------------------------------------------------------------- seeks */
++
++  const stopPlay = useCallback(() => {
++    if (!st.playing) return;
++    st.playing = false;
++    setPlaying(false);
++  }, [st]);
++
++  const seek = useCallback(
++    (t, announce) => {
++      if (st.motion === "reduced" || !st.gfxOk) {
++        const i = chapterAt(t);
++        sections.current[i]?.scrollIntoView({ block: "start" });
++      } else {
++        window.scrollTo(0, t * PX_PER_SEC + 1);
++      }
++      if (announce && liveRef.current) {
++        const c = CHAPTERS[chapterAt(t)];
++        liveRef.current.textContent = `${c.num} — ${c.name}`;
++      }
++    },
++    [st]
++  );
++
++  const seekChapter = useCallback(
++    (i) => {
++      stopPlay();
++      seek(CHAPTERS[i].start + 0.05, true);
++      const h = headings.current[i];
++      if (h) setTimeout(() => h.focus({ preventScroll: true }), 350);
++    },
++    [seek, stopPlay]
++  );
++
++  const startPlay = useCallback(() => {
++    if (st.motion === "reduced" || !st.gfxOk) return;
++    if (window.scrollY >= DUR * PX_PER_SEC - 4) window.scrollTo(0, 0);
++    st.lastAutoY = null;
++    st.playing = true;
++    setPlaying(true);
++  }, [st]);
++
++  const onPlayToggle = useCallback(() => {
++    if (st.playing) stopPlay();
++    else startPlay();
++  }, [st, startPlay, stopPlay]);
++
++  const onPlayFromStart = useCallback(() => {
++    seek(0, false);
++    st.scrub = 0;
++    startPlay();
++  }, [seek, st, startPlay]);
++
++  const onCurveChange = useCallback(
++    (next, commit) => {
++      st.curve = next.slice();
++      st.curveFn = cubicBezier(...next);
++      recomputeOnion();
++      setCurve(next.slice());
++      if (commit && (st.motion === "reduced" || !st.gfxOk)) {
++        renderStill(st.chapter);
++      }
++    },
++    [st, recomputeOnion, renderStill]
++  );
++
++  const toggleMotion = useCallback(() => {
++    st.explicitMotion = true;
++    setMotion((m) => {
++      const next = m === "full" ? "reduced" : "full";
++      try {
++        localStorage.setItem(STORE_KEY, next);
++      } catch (e) {}
++      return next;
++    });
++  }, [st]);
++
++  /* -------------------------------------------------------- one-time setup */
++
++  useEffect(() => {
++    recomputeOnion();
++    // deep link: /?t=37 opens the composition at that second
++    let deepLinkTimer = 0;
++    try {
++      const q = new URLSearchParams(location.search).get("t");
++      if (q !== null && !Number.isNaN(parseFloat(q))) {
++        const t0 = Math.min(DUR, Math.max(0, parseFloat(q)));
++        deepLinkTimer = setTimeout(() => {
++          if (st.motion === "reduced" || !st.gfxOk) {
++            sections.current[chapterAt(t0)]?.scrollIntoView({ block: "start" });
++          } else {
++            window.scrollTo(0, t0 * PX_PER_SEC + 1);
++            st.scrub = t0;
++          }
++        }, 180);
++      }
++    } catch (e) {}
++    // QA hook: pin the playhead to a time regardless of scroll (null to release)
++    window.__mdnPin = (t) => {
++      st.pinned = typeof t === "number" ? Math.min(DUR, Math.max(0, t)) : null;
++    };
++    // QA hook: render one still frame at time t (works while the loop is paused)
++    window.__mdnStill = (t, mixOverride) => {
++      const engine0 = engineRef.current;
++      if (!engine0) return "no engine";
++      st.pinned = t;
++      st.scrub = t;
++      const a = actState(t);
++      const fov = evalCamera(t, st.eye, st.tgt);
++      applyReveals(t);
++      const phase = 0.35;
++      engine0.frame({
++        time: 5 + t * 0.7,
++        scrub: t,
++        boot: 1,
++        actA: a.a,
++        actB: a.b,
++        mix: mixOverride ?? a.mix,
++        curve: st.curve,
++        puckU: solveBezierU(st.curve[0], st.curve[2], phase),
++        onion: false,
++        onionU: st.onionU,
++        camEye: st.eye,
++        camTgt: st.tgt,
++        fov,
++        pointer: [0, 0],
++        reduced: true,
++      });
++      if (playheadRef.current)
++        playheadRef.current.style.left = `${((t / DUR) * 100).toFixed(3)}%`;
++      if (tcRef.current) tcRef.current.textContent = fmtTC(t);
++      if (codeRef.current) {
++        const rr = clamp01((t - 32.4) / 5.2);
++        const kids = codeRef.current.children;
++        const n = Math.min(kids.length, Math.floor(rr * (kids.length + 0.99)));
++        for (let i = 0; i < kids.length; i++) kids[i].classList.toggle("on", i < n);
++      }
++      const ci = chapterAt(t);
++      if (ci !== st.chapter) { st.chapter = ci; setChapter(ci); }
++      return "still@" + t;
++    };
++    const initialMotion = document.documentElement.dataset.motion === "reduced" ? "reduced" : "full";
++    setMotion(initialMotion);
++    st.motion = initialMotion;
++    try {
++      st.explicitMotion = !!localStorage.getItem(STORE_KEY);
++    } catch (e) {}
++
++    const coarse =
++      window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 820;
++    const engine = createEngine(canvasRef.current, coarse ? 2 : 0);
++    if (!engine) {
++      document.documentElement.dataset.gfx = "off";
++      st.gfxOk = false;
++      setGfxOk(false);
++    } else {
++      engineRef.current = engine;
++    }
++
++    const size = () => {
++      const stage = canvasRef.current?.parentElement;
++      if (stage && engineRef.current)
++        engineRef.current.setSize(stage.clientWidth, stage.clientHeight);
++    };
++    size();
++    window.addEventListener("resize", size);
++
++    // boot choreography
++    const bootNow = () => {
++      if (st.bootAt) return;
++      st.bootAt = performance.now();
++      document.documentElement.dataset.boot = "1";
++    };
++    const bootTimer = setTimeout(bootNow, 900);
++    if (document.fonts?.ready) document.fonts.ready.then(() => setTimeout(bootNow, 120));
++
++    // pointer sway (fine pointers only)
++    const fine = window.matchMedia("(pointer: fine)").matches;
++    const onMove = (e) => {
++      st.pointerT[0] = (e.clientX / window.innerWidth) * 2 - 1;
++      st.pointerT[1] = (e.clientY / window.innerHeight) * 2 - 1;
++    };
++    if (fine) window.addEventListener("pointermove", onMove, { passive: true });
++
++    // OS reduced-motion preference (only when the user hasn't chosen)
++    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
++    const onMq = () => {
++      if (!st.explicitMotion) setMotion(mq.matches ? "reduced" : "full");
++    };
++    mq.addEventListener?.("change", onMq);
++
++    // interrupt autoplay on user scroll intent
++    const interrupt = () => stopPlay();
++    window.addEventListener("wheel", interrupt, { passive: true });
++    window.addEventListener("touchmove", interrupt, { passive: true });
++
++    // transport keys
++    const onKey = (e) => {
++      if (st.motion === "reduced" || !st.gfxOk) return;
++      const el = e.target;
++      const onBody = el === document.body || el === document.documentElement;
++      const isSpace = e.code === "Space" || e.key === " " || e.key === "Spacebar";
++      if (isSpace && (onBody || el === scrubRef.current)) {
++        e.preventDefault();
++        st.playing ? stopPlay() : startPlay();
++      } else if (e.key === "Escape") {
++        stopPlay();
++      } else if (e.key === "Home" && onBody) {
++        e.preventDefault();
++        stopPlay();
++        seek(0, true);
++      } else if (e.key === "End" && onBody) {
++        e.preventDefault();
++        stopPlay();
++        seek(DUR, true);
++      }
++    };
++    window.addEventListener("keydown", onKey);
++
++    // pause when hidden / offscreen
++    const onVis = () => {
++      st.hidden = document.hidden;
++      syncLoop();
++    };
++    document.addEventListener("visibilitychange", onVis);
++    let io = null;
++    if ("IntersectionObserver" in window && canvasRef.current) {
++      io = new IntersectionObserver(
++        (entries) => {
++          st.onscreen = entries[0]?.isIntersecting !== false;
++          syncLoop();
++        },
++        { threshold: 0 }
++      );
++      io.observe(canvasRef.current);
++    }
++
++    function syncLoop() {
++      const want =
++        !st.hidden && st.onscreen && st.motion === "full" && st.gfxOk;
++      if (want && !st.running) {
++        st.running = true;
++        st.now = 0;
++        engineRef.current?.resetClock();
++        st.raf = requestAnimationFrame(tick);
++      } else if (!want && st.running) {
++        st.running = false;
++        cancelAnimationFrame(st.raf);
++      }
++    }
++    st.syncLoop = syncLoop;
++
++    function applyReveals(t) {
++      for (let i = 0; i < CHAPTERS.length; i++) {
++        const el = sections.current[i];
++        if (!el) continue;
++        const r = typeReveal(t, i);
++        if (Math.abs((st.lastReveal[i] ?? -1) - r) > 0.004) {
++          st.lastReveal[i] = r;
++          el.style.opacity = r.toFixed(3);
++          el.style.transform = r > 0.999 ? "none" : `translateY(${((1 - r) * 26).toFixed(2)}px)`;
++        }
++        const hide = r < 0.015;
++        if (st.lastHidden[i] !== hide) {
++          st.lastHidden[i] = hide;
++          el.dataset.hidden = hide ? "1" : "0";
++          el.inert = hide;
++        }
++      }
++    }
++
++    /* ------------------------------------------------------- the main loop */
++
++    const tick = (now) => {
++      if (!st.running) return;
++      st.raf = requestAnimationFrame(tick);
++      const dt = st.now ? Math.min(0.05, (now - st.now) / 1000) : 0.016;
++      st.now = now;
++      st.frame++;
++
++      const maxY = DUR * PX_PER_SEC;
++      if (st.playing) {
++        // a scroll we didn't write means the visitor took the wheel — yield
++        if (st.lastAutoY != null && Math.abs(window.scrollY - st.lastAutoY) > 6) {
++          stopPlay();
++          st.lastAutoY = null;
++        } else {
++          const y = window.scrollY + dt * PX_PER_SEC;
++          if (y >= maxY - 1) {
++            window.scrollTo(0, maxY);
++            stopPlay();
++            st.lastAutoY = null;
++          } else {
++            window.scrollTo(0, y);
++            st.lastAutoY = window.scrollY;
++          }
++        }
++      }
++
++      const target =
++        st.pinned != null
++          ? st.pinned
++          : Math.min(DUR, Math.max(0, window.scrollY / PX_PER_SEC));
++      const k = 1 - Math.exp(-dt * 6.5);
++      st.scrub += (target - st.scrub) * k;
++      if (Math.abs(target - st.scrub) < 0.0006) st.scrub = target;
++      st.time += dt;
++
++      st.pointer[0] += (st.pointerT[0] - st.pointer[0]) * (1 - Math.exp(-dt * 3.2));
++      st.pointer[1] += (st.pointerT[1] - st.pointer[1]) * (1 - Math.exp(-dt * 3.2));
++
++      const bootRaw = st.bootAt ? Math.min(1, (now - st.bootAt) / 2400) : 0;
++      const boot = easeIO(bootRaw);
++
++      const a = actState(st.scrub);
++      const fov = evalCamera(st.scrub, st.eye, st.tgt);
++
++      // evaluation comet + preview puck
++      const phase = (st.time * 0.4) % 1;
++      const eased = st.curveFn(phase);
++      const puckU = solveBezierU(st.curve[0], st.curve[2], phase);
++      if (puckRef.current) {
++        puckRef.current.style.left = `calc(5px + ${(eased * 100).toFixed(2)}% - ${(
++          eased * 10
++        ).toFixed(2)}px)`;
++      }
++
++      // type track -> section reveals
++      applyReveals(st.scrub);
++
++      // dock
++      if (playheadRef.current)
++        playheadRef.current.style.left = `${((st.scrub / DUR) * 100).toFixed(3)}%`;
++      if (tcRef.current && st.frame % 2 === 0)
++        tcRef.current.textContent = fmtTC(st.scrub);
++      if (scrubRef.current && !st.scrubbing && now > st.scrubHold) {
++        scrubRef.current.value = st.scrub;
++        if (st.frame % 12 === 0) {
++          const c = CHAPTERS[chapterAt(st.scrub)];
++          scrubRef.current.setAttribute(
++            "aria-valuetext",
++            `${fmtTC(st.scrub)} — ${c.num} ${c.name}`
++          );
++        }
++      }
++
++      const ci = chapterAt(st.scrub);
++      if (ci !== st.chapter) {
++        st.chapter = ci;
++        setChapter(ci);
++      }
++
++      // code typing (act 03)
++      if (codeRef.current) {
++        const rr = clamp01((st.scrub - 32.4) / 5.2);
++        const kids = codeRef.current.children;
++        const n = Math.min(kids.length, Math.floor(rr * (kids.length + 0.99)));
++        if (n !== st.lastCodeN) {
++          st.lastCodeN = n;
++          for (let i = 0; i < kids.length; i++) kids[i].classList.toggle("on", i < n);
++        }
++      }
++
++      // stats readouts (4 Hz)
++      const engine2 = engineRef.current;
++      if (engine2 && now - st.lastStat > 250) {
++        st.lastStat = now;
++        const s = engine2.stats;
++        if (fpsRef.current)
++          fpsRef.current.textContent = `${s.fps} fps · ${s.ms.toFixed(1)} ms · tier ${s.tier}`;
++        if (statRefs.fps.current) statRefs.fps.current.textContent = s.fps;
++        if (statRefs.ms.current) statRefs.ms.current.textContent = s.ms.toFixed(1);
++        if (statRefs.draws.current) statRefs.draws.current.textContent = s.draws;
++        if (statRefs.count.current)
++          statRefs.count.current.textContent = `${Math.round(s.count / 1000)}k`;
++      }
++
++      engine2?.frame({
++        time: st.time,
++        scrub: st.scrub,
++        boot,
++        actA: a.a,
++        actB: a.b,
++        mix: a.mix,
++        curve: st.curve,
++        puckU,
++        onion: false,
++        onionU: st.onionU,
++        camEye: st.eye,
++        camTgt: st.tgt,
++        fov,
++        pointer: st.pointer,
++        reduced: false,
++      });
++    };
++
++    syncLoop();
++
++    return () => {
++      st.running = false;
++      cancelAnimationFrame(st.raf);
++      clearTimeout(bootTimer);
++      clearTimeout(deepLinkTimer);
++      window.removeEventListener("resize", size);
++      if (fine) window.removeEventListener("pointermove", onMove);
++      mq.removeEventListener?.("change", onMq);
++      window.removeEventListener("wheel", interrupt);
++      window.removeEventListener("touchmove", interrupt);
++      window.removeEventListener("keydown", onKey);
++      document.removeEventListener("visibilitychange", onVis);
++      io?.disconnect();
++      engineRef.current?.dispose();
++      engineRef.current = null;
++    };
++    // eslint-disable-next-line react-hooks/exhaustive-deps
++  }, []);
++
++  /* ------------------------------------------------- mode (full/storyboard) */
++
++  useEffect(() => {
++    document.documentElement.dataset.motion = motion;
++    st.motion = motion;
++    const isStatic = motion === "reduced" || !gfxOk;
++    const from = st.prevMode;
++    st.prevMode = isStatic ? "static" : "full";
++
++    if (isStatic) {
++      stopPlay();
++      st.syncLoop?.();
++      document.documentElement.dataset.boot = "1";
++      if (!st.bootAt) st.bootAt = 1;
++      // clear any full-mode inline state
++      sections.current.forEach((el) => {
++        if (!el) return;
++        el.style.opacity = "";
++        el.style.transform = "";
++        el.dataset.hidden = "0";
++        el.inert = false;
++      });
++      st.lastReveal = [];
++      st.lastHidden = [];
++
++      let ioTimer = 0;
++      const io = new IntersectionObserver(
++        (entries) => {
++          const vis = entries
++            .filter((e) => e.isIntersecting)
++            .sort((x, y) => y.intersectionRatio - x.intersectionRatio)[0];
++          if (!vis) return;
++          const i = sections.current.indexOf(vis.target);
++          if (i >= 0 && i !== st.chapter) {
++            st.chapter = i;
++            setChapter(i);
++            clearTimeout(ioTimer);
++            ioTimer = setTimeout(() => renderStill(i), 60);
++          }
++        },
++        { threshold: [0.5] }
++      );
++      sections.current.forEach((el) => el && io.observe(el));
++
++      const onResize = () => renderStill(st.chapter);
++      window.addEventListener("resize", onResize);
++
++      const settle = setTimeout(() => {
++        if (from === "full") sections.current[st.chapter]?.scrollIntoView({ block: "start" });
++        renderStill(st.chapter);
++      }, 30);
++
++      return () => {
++        io.disconnect();
++        clearTimeout(ioTimer);
++        clearTimeout(settle);
++        window.removeEventListener("resize", onResize);
++      };
++    }
++
++    // full mode
++    const settle = setTimeout(() => {
++      if (from === "static") {
++        const t = CHAPTERS[st.chapter].start + 0.05;
++        window.scrollTo(0, t * PX_PER_SEC);
++        st.scrub = t;
++      }
++      st.syncLoop?.();
++    }, 30);
++    return () => clearTimeout(settle);
++    // eslint-disable-next-line react-hooks/exhaustive-deps
++  }, [motion, gfxOk]);
++
++  /* ---------------------------------------------------------------- render */
++
++  const sectionRef = (i) => (el) => {
++    sections.current[i] = el;
++  };
++  const headingRef = (i) => (el) => {
++    headings.current[i] = el;
++  };
++
++  return (
++    <>
++      <a
++        className="skip"
++        href="#act-overture"
++        onClick={() => headings.current[st.chapter]?.focus({ preventScroll: true })}
++      >
++        Skip to content
++      </a>
++
++      <header className="hdr">
++        <a className="wordmark" href="#act-overture" data-reveal onClick={(e) => {
++          if (st.motion === "full" && st.gfxOk) {
++            e.preventDefault();
++            stopPlay();
++            seek(0, true);
++          }
++        }}>
++          MERIDIAN
++        </a>
++        <div className="hdr-right" data-reveal style={{ transitionDelay: "0.2s" }}>
++          <button type="button" className="btn btn-ghost btn-sm" onClick={toggleMotion}>
++            motion · {motion === "full" ? "full" : "storyboard"}
++          </button>
++          <a
++            className="btn btn-primary btn-sm btn-cta"
++            href="mailto:hello@meridian.tools?subject=Meridian%20early%20access"
++          >
++            Early access
++          </a>
++        </div>
++      </header>
++
++      <div
++        className="scroll-space"
++        style={{ height: `calc(${DUR * PX_PER_SEC}px + 100vh)` }}
++        aria-hidden="true"
++      />
++
++      <div className="stage">
++        <canvas className="stage-canvas" ref={canvasRef} aria-hidden="true" />
++        <div className="stage-fx" aria-hidden="true" />
++        <Acts
++          sectionRef={sectionRef}
++          headingRef={headingRef}
++          curve={curve}
++          onCurveChange={onCurveChange}
++          puckRef={puckRef}
++          liveRef={liveRef}
++          codeRef={codeRef}
++          statRefs={statRefs}
++          onSeek={(t, a) => {
++            stopPlay();
++            seek(t, a);
++          }}
++          onPlayFromStart={onPlayFromStart}
++        />
++      </div>
++
++      <Dock
++        chapter={chapter}
++        playing={playing}
++        onPlayToggle={onPlayToggle}
++        onChapter={seekChapter}
++        onScrubInput={(v) => {
++          st.scrubHold = performance.now() + 700;
++          stopPlay();
++          seek(v, false);
++        }}
++        onScrubStart={() => {
++          st.scrubbing = true;
++          stopPlay();
++        }}
++        onScrubEnd={() => {
++          st.scrubbing = false;
++        }}
++        tcRef={tcRef}
++        playheadRef={playheadRef}
++        scrubRef={scrubRef}
++        fpsRef={fpsRef}
++      />
++
++      <p className="sr-only" aria-live="polite" ref={liveRef} />
++    </>
++  );
++}
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..a510426 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -1,26 +1,547 @@
+ @import "tailwindcss";
+ 
++/* ------------------------------------------------------------------ tokens */
++
+ :root {
+-  color-scheme: light dark;
+-  --background: #f5f5f3;
+-  --foreground: #161616;
+-  --muted: #6b6b66;
+-  --surface: #ffffff;
+-  --line: #deded8;
+-}
+-
+-@media (prefers-color-scheme: dark) {
+-  :root {
+-    --background: #111110;
+-    --foreground: #f5f5f2;
+-    --muted: #a0a099;
+-    --surface: #181817;
+-    --line: #31312f;
+-  }
++  color-scheme: dark;
++  --ink: #070b16;
++  --ink-2: #0a1224;
++  --panel: rgba(9, 14, 30, 0.82);
++  --line: rgba(148, 166, 212, 0.16);
++  --line-soft: rgba(148, 166, 212, 0.09);
++  --paper: #ece7da;
++  --text-2: #c2c8d8;
++  --dim: #98a1b8;
++  --faint: #5f6a86;
++  --brass: #e2a73e;
++  --brass-hi: #f2c069;
++  --beam: #8fd8f8;
++  --red: #ff5147;
++  --ease-sig: cubic-bezier(0.65, 0, 0.15, 1);
++  --dock-h: 96px;
++  --hdr-h: 60px;
+ }
+ 
++/* ------------------------------------------------------------------- base */
++
+ * { box-sizing: border-box; }
+-html { background: var(--background); color: var(--foreground); }
+-body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
++
++html {
++  background: var(--ink);
++  color: var(--paper);
++  scrollbar-color: #22304f var(--ink);
++}
++
++body {
++  margin: 0;
++  font-family: var(--font-sans), "Helvetica Neue", Arial, sans-serif;
++  font-size: 15px;
++  line-height: 1.68;
++  -webkit-font-smoothing: antialiased;
++  overflow-x: hidden;
++}
++
++::selection { background: rgba(226, 167, 62, 0.35); color: var(--paper); }
++
++:focus-visible {
++  outline: 2px solid var(--brass);
++  outline-offset: 2px;
++  border-radius: 4px;
++}
++
+ a { color: inherit; }
+-button, input { font: inherit; }
++button { font: inherit; color: inherit; background: none; border: none; padding: 0; cursor: pointer; }
++
++.sr-only {
++  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
++  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
++}
++
++.skip {
++  position: fixed; top: -48px; left: 16px; z-index: 90;
++  padding: 10px 16px; background: var(--brass); color: var(--ink);
++  font-family: var(--font-mono), monospace; font-size: 12px; letter-spacing: 0.08em;
++  border-radius: 0 0 8px 8px; transition: top 0.2s var(--ease-sig);
++}
++.skip:focus-visible { top: 0; }
++
++/* ------------------------------------------------------------------- type */
++
++.t-eyebrow {
++  font-family: var(--font-mono), monospace;
++  font-size: 11px; font-weight: 500;
++  letter-spacing: 0.22em; text-transform: uppercase;
++  color: var(--brass);
++  display: flex; align-items: center; gap: 10px;
++}
++.t-eyebrow::before {
++  content: ""; width: 7px; height: 7px; background: var(--brass);
++  transform: rotate(45deg); flex: none;
++}
++.t-eyebrow .tc { color: var(--faint); letter-spacing: 0.14em; }
++
++.t-display {
++  font-family: var(--font-serif), Georgia, serif;
++  font-weight: 400;
++  font-size: clamp(3.9rem, 9.2vw, 8.6rem);
++  line-height: 0.93;
++  letter-spacing: -0.015em;
++  margin: 0.35em 0 0.25em;
++  text-wrap: balance;
++}
++.t-display em { font-style: italic; color: var(--brass-hi); }
++
++.t-h2 {
++  font-family: var(--font-serif), Georgia, serif;
++  font-weight: 400;
++  font-size: clamp(2.3rem, 4.4vw, 3.7rem);
++  line-height: 1.0;
++  letter-spacing: -0.01em;
++  margin: 0.5em 0 0.4em;
++  text-wrap: balance;
++}
++.t-h2 em { font-style: italic; color: var(--beam); }
++
++.t-body { color: var(--text-2); max-width: 34rem; margin: 0; }
++.t-body strong { color: var(--paper); font-weight: 500; }
++
++.t-mono-line {
++  font-family: var(--font-mono), monospace;
++  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
++  color: var(--dim);
++}
++
++/* ----------------------------------------------------------------- header */
++
++.hdr {
++  position: fixed; inset: 0 0 auto 0; height: var(--hdr-h); z-index: 60;
++  display: flex; align-items: center; justify-content: space-between;
++  padding: 0 22px;
++  background: linear-gradient(to bottom, rgba(4, 6, 14, 0.85), rgba(4, 6, 14, 0));
++  pointer-events: none;
++}
++.hdr > * { pointer-events: auto; }
++
++.wordmark {
++  font-family: var(--font-mono), monospace;
++  font-size: 13px; font-weight: 600; letter-spacing: 0.34em;
++  color: var(--paper); text-decoration: none;
++  display: flex; align-items: center; gap: 10px;
++}
++.wordmark::before {
++  content: ""; width: 8px; height: 8px; background: var(--brass); transform: rotate(45deg);
++}
++
++.hdr-right { display: flex; gap: 10px; align-items: center; }
++
++/* ---------------------------------------------------------------- buttons */
++
++.btn {
++  font-family: var(--font-mono), monospace;
++  font-size: 12px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase;
++  padding: 13px 22px; border-radius: 6px; border: 1px solid transparent;
++  display: inline-flex; align-items: center; gap: 10px;
++  transition: border-color 0.16s ease, background 0.16s ease, color 0.16s ease, filter 0.16s ease;
++  text-decoration: none;
++}
++.btn-primary { background: var(--brass); color: #140f05; border-color: var(--brass-hi); }
++.btn-primary:hover { filter: brightness(1.09); }
++.btn-ghost { background: rgba(19, 27, 51, 0.55); color: var(--paper); border-color: var(--line); }
++.btn-ghost:hover { border-color: rgba(236, 231, 218, 0.4); }
++.btn-sm { padding: 9px 14px; font-size: 11px; }
++
++/* ------------------------------------------------------------------ stage */
++
++.scroll-space { width: 1px; }
++
++.stage { position: fixed; inset: 0; z-index: 1; }
++
++.stage-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
++
++.stage-fx {
++  position: absolute; inset: 0; z-index: 2; pointer-events: none;
++  background: radial-gradient(120% 95% at 50% 38%, transparent 52%, rgba(2, 4, 10, 0.55) 100%);
++}
++.stage-fx::after {
++  content: ""; position: absolute; inset: 0; opacity: 0.05; mix-blend-mode: overlay;
++  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
++}
++
++/* CSS backdrop when WebGL is unavailable */
++html[data-gfx="off"] .stage-canvas { display: none; }
++html[data-gfx="off"] .stage::before {
++  content: ""; position: fixed; inset: 0;
++  background:
++    radial-gradient(90% 60% at 50% 30%, rgba(70, 100, 180, 0.16), transparent 60%),
++    linear-gradient(rgba(148, 166, 212, 0.05) 1px, transparent 1px),
++    linear-gradient(90deg, rgba(148, 166, 212, 0.05) 1px, transparent 1px),
++    linear-gradient(#0a1124, #070b16);
++  background-size: auto, 44px 44px, 44px 44px, auto;
++}
++
++/* ------------------------------------------------------------------- acts */
++
++.acts { display: contents; }
++
++.act {
++  position: absolute; inset: 0; z-index: 10;
++  display: flex; align-items: center;
++  padding: calc(var(--hdr-h) + 12px) clamp(20px, 5vw, 72px) calc(var(--dock-h) + 24px);
++  pointer-events: none;
++}
++.act[data-hidden="1"] { visibility: hidden; }
++.act .panel, .act a, .act button { pointer-events: auto; }
++
++.act-inner { width: 100%; max-width: 1180px; margin: 0 auto; }
++
++.panel {
++  background: var(--panel);
++  border: 1px solid var(--line);
++  border-radius: 12px;
++  padding: 26px 30px;
++  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
++}
++
++/* per-act composition */
++.act-overture { text-align: center; justify-content: center; }
++.act-overture .act-inner { max-width: 980px; }
++.act-overture .t-eyebrow { justify-content: center; }
++.act-overture .lede { margin: 0 auto; max-width: 37rem; }
++.hero-cta { display: flex; gap: 14px; justify-content: center; margin-top: 34px; flex-wrap: wrap; }
++.hint {
++  margin-top: 26px; font-family: var(--font-mono), monospace; font-size: 11px;
++  letter-spacing: 0.18em; text-transform: uppercase; color: var(--faint);
++}
++.hint kbd {
++  font: inherit; color: var(--dim); border: 1px solid var(--line);
++  border-radius: 4px; padding: 2px 7px; margin: 0 2px;
++}
++
++.act-grid {
++  display: grid; grid-template-columns: minmax(0, 30rem) minmax(0, 1fr);
++  gap: clamp(24px, 4vw, 64px); align-items: center;
++}
++.copy {
++  text-shadow: 0 1px 14px rgba(4, 6, 14, 0.9), 0 0 42px rgba(4, 6, 14, 0.65);
++}
++.act-grid > .aside { justify-self: end; }
++.act-grid-flip { grid-template-columns: minmax(0, 1fr) minmax(0, 30rem); }
++.act-grid-flip > .copy { order: 2; }
++.act-grid-flip > .aside { order: 1; justify-self: start; }
++
++.act-budget .act-inner { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
++.act-budget .t-body { max-width: 40rem; }
++
++.act-begin { text-align: center; justify-content: center; }
++.act-begin .t-eyebrow { justify-content: center; }
++.act-begin .cta-row { display: flex; gap: 14px; justify-content: center; margin-top: 30px; flex-wrap: wrap; }
++
++.footer-line {
++  margin-top: 56px;
++  font-family: var(--font-mono), monospace; font-size: 11px; letter-spacing: 0.1em;
++  color: var(--dim); display: flex; gap: 22px; justify-content: center; flex-wrap: wrap;
++}
++.footer-line a { text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 1px; }
++.footer-line a:hover { color: var(--dim); }
++
++/* --------------------------------------------------------- boot reveal */
++
++[data-reveal] {
++  opacity: 0; transform: translateY(24px);
++  transition: opacity 0.9s var(--ease-sig), transform 0.9s var(--ease-sig);
++}
++html[data-boot="1"] [data-reveal] { opacity: 1; transform: none; }
++
++.dock[data-reveal] { transform: translateY(102%); transition-delay: 0.5s; }
++html[data-boot="1"] .dock[data-reveal] { transform: none; }
++
++/* ----------------------------------------------------------- curve editor */
++
++.ce { width: min(380px, 100%); }
++.ce-head {
++  display: flex; flex-direction: column; gap: 4px;
++  font-family: var(--font-mono), monospace; font-size: 10px; letter-spacing: 0.16em;
++  text-transform: uppercase; color: var(--dim); margin-bottom: 12px;
++}
++.ce-head .val {
++  color: var(--beam); letter-spacing: 0.02em; font-size: 12px;
++  text-transform: none; white-space: nowrap;
++}
++
++.ce-stage { position: relative; }
++.ce-graph { display: block; width: 100%; height: auto; border: 1px solid var(--line-soft); border-radius: 8px; background: rgba(5, 9, 20, 0.6); }
++
++.ce-handle {
++  position: absolute; width: 30px; height: 30px; margin: -15px 0 0 -15px;
++  border-radius: 50%; cursor: grab; touch-action: none;
++  background: radial-gradient(circle at 35% 35%, var(--brass-hi), var(--brass) 65%);
++  border: 2px solid rgba(7, 11, 22, 0.9);
++  box-shadow: 0 0 0 1px rgba(226, 167, 62, 0.5), 0 0 18px rgba(226, 167, 62, 0.45);
++}
++.ce-handle:active { cursor: grabbing; }
++.ce-handle::after {
++  content: ""; position: absolute; inset: 9px; border-radius: 50%;
++  background: rgba(7, 11, 22, 0.55);
++}
++
++.ce-preview { position: relative; height: 40px; margin-top: 14px; }
++.ce-preview-track {
++  position: absolute; left: 5px; right: 5px; top: 50%; height: 1px;
++  background: var(--line);
++}
++.ce-puck {
++  position: absolute; top: 50%; left: 5px; width: 12px; height: 12px; margin: -6px 0 0 -6px;
++  border-radius: 50%; background: var(--brass);
++  box-shadow: 0 0 14px rgba(226, 167, 62, 0.8);
++}
++.ce-onion { display: none; }
++.ce-onion i {
++  position: absolute; top: 50%; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px;
++  border-radius: 50%; background: var(--brass);
++}
++
++.ce-presets { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
++.chip {
++  font-family: var(--font-mono), monospace; font-size: 10px; letter-spacing: 0.14em;
++  text-transform: uppercase; color: var(--dim);
++  padding: 7px 12px; border: 1px solid var(--line); border-radius: 999px;
++  transition: color 0.15s, border-color 0.15s;
++}
++.chip:hover { color: var(--paper); }
++.chip[aria-pressed="true"] { color: var(--beam); border-color: rgba(143, 216, 248, 0.55); }
++
++/* ------------------------------------------------------------- code panel */
++
++.code {
++  width: min(480px, 100%);
++  font-family: var(--font-mono), monospace; font-size: 12px; line-height: 1.8;
++  padding: 22px 26px;
++}
++.code-head {
++  display: flex; gap: 8px; align-items: center; margin-bottom: 14px;
++  font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint);
++}
++.code-head::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--beam); }
++.code pre { margin: 0; overflow-x: auto; scrollbar-width: none; }
++.code pre::-webkit-scrollbar { display: none; }
++.code .cl { display: block; opacity: 0; transform: translateX(10px); transition: opacity 0.4s var(--ease-sig), transform 0.4s var(--ease-sig); min-height: 1.8em; white-space: pre; }
++.code .cl.on { opacity: 1; transform: none; }
++.tok-c { color: var(--faint); }
++.tok-k { color: var(--dim); }
++.tok-s { color: var(--paper); }
++.tok-n { color: var(--beam); }
++.tok-b { color: var(--brass-hi); }
++
++/* -------------------------------------------------------------- stats row */
++
++.stats {
++  display: flex; gap: clamp(20px, 4vw, 56px); justify-content: center;
++  margin-top: 30px; flex-wrap: wrap;
++}
++.stat { text-align: center; }
++.stat .v {
++  font-family: var(--font-serif), Georgia, serif; font-size: clamp(2rem, 3.6vw, 3.1rem);
++  line-height: 1; color: var(--paper); font-variant-numeric: tabular-nums;
++}
++.stat .v em { font-style: normal; color: var(--beam); }
++.stat .l {
++  margin-top: 8px; font-family: var(--font-mono), monospace; font-size: 10px;
++  letter-spacing: 0.18em; text-transform: uppercase; color: var(--faint);
++}
++
++/* ------------------------------------------------------------------- dock */
++
++.dock {
++  position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
++  height: var(--dock-h);
++  display: grid; grid-template-columns: 236px minmax(0, 1fr);
++  background: linear-gradient(to top, rgba(3, 5, 12, 0.95), rgba(3, 5, 12, 0.82));
++  border-top: 1px solid var(--line);
++}
++
++.dock-transport {
++  display: flex; align-items: center; gap: 14px; padding: 0 16px 0 20px;
++  border-right: 1px solid var(--line-soft);
++}
++.dock-play {
++  width: 38px; height: 38px; flex: none; border-radius: 8px;
++  border: 1px solid rgba(226, 167, 62, 0.55); color: var(--brass);
++  display: grid; place-items: center;
++  transition: background 0.15s, color 0.15s;
++}
++.dock-play:hover { background: rgba(226, 167, 62, 0.14); }
++.dock-tc {
++  font-family: var(--font-mono), monospace; font-variant-numeric: tabular-nums;
++  font-size: 13px; color: var(--paper); line-height: 1.3; white-space: nowrap;
++}
++.dock-tc .dur { color: var(--faint); font-size: 10px; display: block; letter-spacing: 0.08em; }
++.dock-scene {
++  font-family: var(--font-mono), monospace; font-size: 10px; letter-spacing: 0.16em;
++  text-transform: uppercase; color: var(--brass); white-space: nowrap; overflow: hidden;
++}
++
++.dock-body { position: relative; margin: 10px 18px 10px 14px; }
++
++.dock-ruler { position: absolute; inset: 0 0 auto 0; height: 16px; }
++.dock-tick { position: absolute; bottom: 0; width: 1px; height: 5px; background: var(--line); }
++.dock-tick.major { height: 9px; background: rgba(148, 166, 212, 0.35); }
++.dock-tick-label {
++  position: absolute; top: -3px; transform: translateX(-50%);
++  font-family: var(--font-mono), monospace; font-size: 8.5px; letter-spacing: 0.08em;
++  color: var(--faint);
++}
++
++.dock-lanes { position: absolute; inset: 20px 0 0 0; display: flex; flex-direction: column; gap: 3px; }
++.dock-lane { position: relative; flex: none; }
++.dock-lane-scenes { height: 26px; }
++.dock-lane-mini { height: 8px; }
++.dock-lane-name {
++  position: absolute; left: -4px; top: 50%; transform: translate(-100%, -50%);
++  font-family: var(--font-mono), monospace; font-size: 7.5px; letter-spacing: 0.14em;
++  text-transform: uppercase; color: var(--faint); display: none;
++}
++
++.dock-clip {
++  position: absolute; top: 0; bottom: 0;
++  border: 1px solid var(--line); border-radius: 4px;
++  background: rgba(26, 36, 66, 0.55);
++  font-family: var(--font-mono), monospace; font-size: 9px; letter-spacing: 0.1em;
++  text-transform: uppercase; color: var(--dim);
++  display: flex; align-items: center; padding: 0 8px; gap: 6px;
++  overflow: hidden; white-space: nowrap;
++  transition: border-color 0.15s, background 0.15s, color 0.15s;
++}
++.dock-clip:hover { border-color: rgba(226, 167, 62, 0.5); color: var(--paper); }
++.dock-clip[aria-current="true"] {
++  border-color: rgba(226, 167, 62, 0.8); background: rgba(226, 167, 62, 0.13); color: var(--brass-hi);
++}
++.dock-clip .num { color: var(--faint); }
++.dock-clip[aria-current="true"] .num { color: var(--brass); }
++
++.dock-mini-clip {
++  position: absolute; top: 1px; bottom: 1px; border-radius: 2px;
++  background: rgba(148, 166, 212, 0.14);
++}
++.dock-key {
++  position: absolute; top: 50%; width: 5px; height: 5px;
++  background: var(--dim); transform: translate(-50%, -50%) rotate(45deg);
++}
++
++.dock-playhead {
++  position: absolute; top: -2px; bottom: -2px; width: 1px; z-index: 3;
++  background: var(--brass);
++  box-shadow: 0 0 10px rgba(226, 167, 62, 0.7);
++  pointer-events: none;
++}
++.dock-playhead::before {
++  content: ""; position: absolute; top: -1px; left: -4.5px;
++  border: 5px solid transparent; border-top: 7px solid var(--brass);
++}
++
++.dock-loop {
++  position: absolute; right: -3px; top: 4px; width: 6px; height: 6px; z-index: 2;
++  border-radius: 50%; background: var(--red); box-shadow: 0 0 8px rgba(255, 81, 71, 0.8);
++}
++
++.dock-scrub {
++  position: absolute; inset: 0; z-index: 4; width: 100%; height: 100%;
++  opacity: 0; margin: 0; cursor: ew-resize;
++  -webkit-appearance: none; appearance: none; background: transparent;
++}
++.dock-scrub:focus-visible { opacity: 1; }
++.dock-scrub:focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; }
++.dock-scrub::-webkit-slider-thumb {
++  -webkit-appearance: none; width: 14px; height: 100%;
++  background: transparent; border-left: 2px solid var(--brass-hi);
++}
++.dock-scrub::-moz-range-thumb { width: 14px; height: 60px; background: transparent; border: none; border-left: 2px solid var(--brass-hi); border-radius: 0; }
++
++.dock-fps {
++  position: absolute; right: 20px; top: -24px;
++  font-family: var(--font-mono), monospace; font-size: 9.5px; letter-spacing: 0.12em;
++  color: var(--faint); pointer-events: none;
++}
++
++/* -------------------------------------------- storyboard / static variants */
++
++:is(html[data-motion="reduced"], html.no-js, html[data-gfx="off"]) .scroll-space { display: none; }
++
++:is(html[data-motion="reduced"], html.no-js, html[data-gfx="off"]) .stage {
++  position: static;
++}
++:is(html[data-motion="reduced"], html.no-js, html[data-gfx="off"]) .stage-canvas,
++:is(html[data-motion="reduced"], html.no-js, html[data-gfx="off"]) .stage-fx {
++  position: fixed;
++}
++:is(html[data-motion="reduced"], html.no-js, html[data-gfx="off"]) .act {
++  position: relative; inset: auto; min-height: 100svh;
++  opacity: 1 !important; transform: none !important; visibility: visible !important;
++}
++:is(html[data-motion="reduced"], html.no-js, html[data-gfx="off"]) .panel {
++  background: rgba(8, 12, 26, 0.93);
++}
++:is(html[data-motion="reduced"], html.no-js, html[data-gfx="off"]) .copy:not(.panel) {
++  background: rgba(8, 12, 26, 0.9);
++  border: 1px solid var(--line-soft);
++  border-radius: 12px;
++  padding: 22px 26px;
++}
++:is(html[data-motion="reduced"], html.no-js, html[data-gfx="off"]) .hint,
++:is(html[data-motion="reduced"], html.no-js, html[data-gfx="off"]) .dock-fps { display: none; }
++:is(html[data-motion="reduced"], html.no-js, html[data-gfx="off"]) .ce-puck { display: none; }
++:is(html[data-motion="reduced"], html.no-js, html[data-gfx="off"]) .ce-onion { display: block; }
++:is(html[data-motion="reduced"], html.no-js, html[data-gfx="off"]) .code .cl { opacity: 1; transform: none; }
++:is(html[data-motion="reduced"], html.no-js, html[data-gfx="off"]) [data-reveal] { opacity: 1; transform: none; transition: none; }
++
++html[data-motion="reduced"] *, html.no-js * {
++  transition-duration: 0.01ms !important;
++  animation-duration: 0.01ms !important;
++  scroll-behavior: auto !important;
++}
++
++html.no-js .stage-canvas, html.no-js .dock-play, html.no-js .dock-scrub { display: none; }
++
++/* ----------------------------------------------------------------- mobile */
++
++@media (max-width: 900px) {
++  :root { --dock-h: 78px; }
++  .act { padding-left: 18px; padding-right: 18px; align-items: flex-end; }
++  .act-overture, .act-begin { align-items: center; }
++  .act-grid, .act-grid-flip { display: flex; flex-direction: column; align-items: stretch; gap: 18px; }
++  .act-grid-flip > .copy { order: 1; }
++  .act-grid-flip > .aside { order: 2; }
++  .act-grid > .aside { justify-self: stretch; }
++  .panel { padding: 20px 22px; }
++  .copy:not(.panel) {
++    background: rgba(7, 11, 22, 0.78);
++    border: 1px solid var(--line-soft);
++    border-radius: 12px;
++    padding: 18px 20px;
++  }
++  .hdr { padding: 0 16px; }
++  .hdr .btn-cta { display: none; }
++  .dock { grid-template-columns: 128px minmax(0, 1fr); }
++  .dock-scene, .dock-tc .dur { display: none; }
++  .dock-transport { gap: 10px; padding: 0 10px 0 14px; }
++  .dock-lane-mini, .dock-fps { display: none; }
++  .dock-lanes { inset: 18px 0 6px 0; }
++  .dock-lane-scenes { height: 100%; }
++  .dock-clip { padding: 0 6px; }
++  .dock-clip .full { display: none; }
++  .dock-body { margin: 8px 12px 8px 10px; }
++  .dock-tick-label { display: none; }
++  .dock-tick-label.q { display: block; }
++  .code { font-size: 11px; }
++}
++
++@media (min-width: 1150px) {
++  .dock-lane-name { display: block; }
++  .dock-body { margin-left: 64px; }
++}
++
++/* late additions */
++:is(html[data-motion="reduced"], html.no-js, html[data-gfx="off"]) .live-only,
++html[data-motion="reduced"] .dock-play,
++html[data-gfx="off"] .dock-play,
++html[data-motion="reduced"] .dock-scrub,
++html[data-gfx="off"] .dock-scrub { display: none; }
+diff --git a/app/icon.svg b/app/icon.svg
+new file mode 100644
+index 0000000..b2f8173
+--- /dev/null
++++ b/app/icon.svg
+@@ -0,0 +1,5 @@
++<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
++  <rect width="64" height="64" rx="14" fill="#070B16"/>
++  <path d="M32 6v52" stroke="#E2A73E" stroke-width="3"/>
++  <rect x="24.8" y="24.8" width="14.4" height="14.4" transform="rotate(45 32 32)" fill="#8FD8F8"/>
++</svg>
+diff --git a/app/layout.jsx b/app/layout.jsx
+index 35fc217..3dc150e 100644
+--- a/app/layout.jsx
++++ b/app/layout.jsx
+@@ -1,13 +1,62 @@
+ import "./globals.css";
++import { Instrument_Serif, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
++
++const serif = Instrument_Serif({
++  weight: "400",
++  style: ["normal", "italic"],
++  subsets: ["latin"],
++  variable: "--font-serif",
++  display: "swap",
++});
++const sans = IBM_Plex_Sans({
++  weight: ["400", "500"],
++  subsets: ["latin"],
++  variable: "--font-sans",
++  display: "swap",
++});
++const mono = IBM_Plex_Mono({
++  weight: ["400", "500", "600"],
++  subsets: ["latin"],
++  variable: "--font-mono",
++  display: "swap",
++});
+ 
+ export const metadata = {
+-  title: "Meridian",
+-  description: "Meridian is a timeline-based motion editor for the web. Design animation visually, ship production code.",
++  title: "Meridian — Direct time.",
++  description:
++    "Meridian is a timeline-based motion editor for the web. Compose animation on real tracks, sculpt easing by hand, and ship it as production CSS and Web Animations API code.",
++};
++
++export const viewport = {
++  themeColor: "#070b16",
++  width: "device-width",
++  initialScale: 1,
+ };
+ 
++const bootScript = `
++document.documentElement.classList.remove('no-js');
++try {
++  var pref = null;
++  try { pref = localStorage.getItem('mdn-motion'); } catch (e) {}
++  var m = pref === 'full' || pref === 'reduced'
++    ? pref
++    : (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches ? 'reduced' : 'full');
++  document.documentElement.dataset.motion = m;
++} catch (e) {
++  document.documentElement.dataset.motion = 'full';
++}
++`;
++
+ export default function RootLayout({ children }) {
+   return (
+-    <html lang="en">
++    <html
++      lang="en"
++      className={`no-js ${serif.variable} ${sans.variable} ${mono.variable}`}
++      suppressHydrationWarning
++    >
++      <head>
++        <script dangerouslySetInnerHTML={{ __html: bootScript }} />
++      </head>
+       <body>{children}</body>
+     </html>
+   );
+diff --git a/app/page.jsx b/app/page.jsx
+index 6f15aef..46d62dc 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -1,31 +1,5 @@
+-export default function Home() {
+-  return (
+-    <main className="mx-auto max-w-3xl space-y-16 px-6 py-24">
+-      <section className="space-y-4">
+-        <h1 className="text-4xl font-semibold">Meridian</h1>
+-        <p className="text-lg text-[var(--muted)]">
+-          A timeline-based motion editor for the web. Design animation visually, ship production code.
+-        </p>
+-        <a
+-          className="inline-block rounded-md bg-[var(--foreground)] px-4 py-2 text-[var(--background)]"
+-          href="#get-access"
+-        >
+-          Get early access
+-        </a>
+-      </section>
+-
+-      <section className="space-y-6">
+-        <h2 className="text-2xl font-semibold">What it does</h2>
+-        <ul className="space-y-4 text-[var(--muted)]">
+-          <li>Visual timeline editing for springs, keyframes, and gesture-driven motion.</li>
+-          <li>One-click export to production JavaScript and CSS with no runtime lock-in.</li>
+-          <li>Live preview across breakpoints, with reduced-motion variants built in.</li>
+-        </ul>
+-      </section>
++import Experience from "./experience";
+ 
+-      <footer className="border-t border-[var(--line)] pt-8 text-sm text-[var(--muted)]" id="get-access">
+-        <p>Meridian is in private beta. hello@meridian.tools</p>
+-      </footer>
+-    </main>
+-  );
++export default function Home() {
++  return <Experience />;
+ }
+diff --git a/lib/composition.js b/lib/composition.js
+new file mode 100644
+index 0000000..c368f01
+--- /dev/null
++++ b/lib/composition.js
+@@ -0,0 +1,215 @@
++// ---------------------------------------------------------------------------
++// composition.js — the master composition file for the Meridian launch page.
++// This page *is* a Meridian composition: every camera move, world formation
++// and copy reveal below is a keyframe on a track, and the timeline dock at
++// the bottom of the page renders this exact data.
++// ---------------------------------------------------------------------------
++
++export const DUR = 60;          // seconds
++export const FPS = 24;          // ruler frame rate (film-style timecode)
++export const PX_PER_SEC = 132;  // scroll distance that equals one second
++
++// --- easing ----------------------------------------------------------------
++
++export function cubicBezier(x1, y1, x2, y2) {
++  // CSS-compatible cubic-bezier easing: solve x(u) = t for u, return y(u).
++  const ax = 3 * x1 - 3 * x2 + 1, bx = 3 * x2 - 6 * x1, cx = 3 * x1;
++  const ay = 3 * y1 - 3 * y2 + 1, by = 3 * y2 - 6 * y1, cy = 3 * y1;
++  const sampleX = (u) => ((ax * u + bx) * u + cx) * u;
++  const sampleY = (u) => ((ay * u + by) * u + cy) * u;
++  const slopeX = (u) => (3 * ax * u + 2 * bx) * u + cx;
++  const solve = (t) => {
++    let u = t;
++    for (let i = 0; i < 5; i++) {
++      const s = slopeX(u);
++      if (Math.abs(s) < 1e-6) break;
++      u -= (sampleX(u) - t) / s;
++    }
++    if (u < 0 || u > 1 || Math.abs(sampleX(u) - t) > 1e-4) {
++      let lo = 0, hi = 1;
++      u = t;
++      for (let i = 0; i < 24; i++) {
++        if (sampleX(u) < t) lo = u; else hi = u;
++        u = (lo + hi) / 2;
++      }
++    }
++    return Math.min(1, Math.max(0, u));
++  };
++  return (t) => (t <= 0 ? 0 : t >= 1 ? 1 : sampleY(solve(t)));
++}
++
++export function solveBezierU(x1, x2, t) {
++  // parameter u at which x(u) === t  (used to place the evaluation comet)
++  const ax = 3 * x1 - 3 * x2 + 1, bx = 3 * x2 - 6 * x1, cx = 3 * x1;
++  const sampleX = (u) => ((ax * u + bx) * u + cx) * u;
++  let lo = 0, hi = 1, u = t;
++  for (let i = 0; i < 20; i++) {
++    if (sampleX(u) < t) lo = u; else hi = u;
++    u = (lo + hi) / 2;
++  }
++  return u;
++}
++
++export const DEFAULT_CURVE = [0.65, 0.0, 0.15, 1.0]; // the Meridian signature ease
++export const easeSig = cubicBezier(...DEFAULT_CURVE);
++export const easeIO = cubicBezier(0.45, 0, 0.25, 1);
++export const clamp01 = (v) => Math.min(1, Math.max(0, v));
++
++export const CURVE_PRESETS = [
++  { id: "linear",    name: "Linear",    v: [0.0, 0.0, 1.0, 1.0] },
++  { id: "glide",     name: "Glide",     v: [0.65, 0.0, 0.15, 1.0] },
++  { id: "snap",      name: "Snap",      v: [0.9, 0.02, 0.16, 0.98] },
++  { id: "overshoot", name: "Overshoot", v: [0.34, 0.0, 0.18, 1.32] },
++];
++
++// --- chapters (the SCENES track) --------------------------------------------
++
++export const CHAPTERS = [
++  { id: "overture", num: "00", name: "Overture",     start: 0,  end: 7 },
++  { id: "curve",    num: "01", name: "The Curve",    start: 7,  end: 19 },
++  { id: "timeline", num: "02", name: "The Timeline", start: 19, end: 31 },
++  { id: "export",   num: "03", name: "The Export",   start: 31, end: 43 },
++  { id: "budget",   num: "04", name: "The Budget",   start: 43, end: 52 },
++  { id: "begin",    num: "05", name: "Begin",        start: 52, end: 60 },
++];
++
++const TRANS = 2.4; // world crossfade width, centered on chapter boundaries
++
++export function chapterAt(t) {
++  for (let i = CHAPTERS.length - 1; i >= 0; i--) {
++    if (t >= CHAPTERS[i].start) return i;
++  }
++  return 0;
++}
++
++export function actState(t) {
++  const i = chapterAt(t);
++  const ch = CHAPTERS[i];
++  const half = TRANS / 2;
++  if (i > 0 && t < ch.start + half) {
++    const m = (t - (ch.start - half)) / TRANS;
++    return { a: i - 1, b: i, mix: easeIO(clamp01(m)) };
++  }
++  if (i < CHAPTERS.length - 1 && t > ch.end - half) {
++    const m = (t - (ch.end - half)) / TRANS;
++    return { a: i, b: i + 1, mix: easeIO(clamp01(m)) };
++  }
++  return { a: i, b: i, mix: 0 };
++}
++
++// copy reveal window for a chapter (the TYPE track)
++export function typeReveal(t, i) {
++  const ch = CHAPTERS[i];
++  const inA = ch.start === 0 ? 0 : ch.start + 0.55;
++  const inB = ch.start === 0 ? 0.01 : ch.start + 1.9;
++  const last = i === CHAPTERS.length - 1;
++  const outA = ch.end - 1.7, outB = ch.end - 0.45;
++  const up = easeIO(clamp01((t - inA) / Math.max(0.01, inB - inA)));
++  const down = last ? 1 : 1 - easeIO(clamp01((t - outA) / (outB - outA)));
++  return Math.min(up, down);
++}
++
++// --- the CAMERA track --------------------------------------------------------
++
++export const CAM_KEYS = [
++  { t: 0,    eye: [0.0, 0.45, 9.2],  tgt: [0.0, 0.12, 0.0],  fov: 44 },
++  { t: 7,    eye: [0.5, 0.62, 7.8],  tgt: [0.0, 0.10, 0.0],  fov: 44 },
++  { t: 11,   eye: [2.7, 1.15, 6.2],  tgt: [-0.5, 0.15, 0.0], fov: 43 },
++  { t: 17,   eye: [-2.9, 0.78, 5.9], tgt: [0.4, 0.10, 0.0],  fov: 43 },
++  { t: 20.5, eye: [0.0, 3.6, 9.0],   tgt: [0.0, -0.3, -1.5], fov: 50 },
++  { t: 26,   eye: [0.4, 1.5, 2.5],   tgt: [0.0, 0.1, -8.0],  fov: 56 },
++  { t: 30,   eye: [-1.8, 2.5, -1.6], tgt: [2.4, 0.3, -6.0],  fov: 52 },
++  { t: 33.5, eye: [-4.8, 1.35, 4.0], tgt: [-0.2, 0.35, -0.4], fov: 45 },
++  { t: 42,   eye: [-3.0, 1.0, 5.6],  tgt: [-0.4, 0.3, 0.0],  fov: 44 },
++  { t: 44.5, eye: [0.0, 4.6, 11.5],  tgt: [0.0, 0.35, -0.5], fov: 40 },
++  { t: 52,   eye: [0.0, 0.85, 8.8],  tgt: [0.0, 0.25, 0.0],  fov: 43 },
++  { t: 60,   eye: [0.0, 0.32, 7.0],  tgt: [0.0, 0.20, 0.0],  fov: 43 },
++];
++
++const lerp = (a, b, m) => a + (b - a) * m;
++
++export function evalCamera(t, outEye, outTgt) {
++  const K = CAM_KEYS;
++  let i = 0;
++  while (i < K.length - 2 && t >= K[i + 1].t) i++;
++  const a = K[i], b = K[i + 1];
++  const m = easeSig(clamp01((t - a.t) / Math.max(0.001, b.t - a.t)));
++  for (let c = 0; c < 3; c++) {
++    outEye[c] = lerp(a.eye[c], b.eye[c], m);
++    outTgt[c] = lerp(a.tgt[c], b.tgt[c], m);
++  }
++  return lerp(a.fov, b.fov, m);
++}
++
++// the still frame each chapter is rendered at in storyboard (reduced-motion) mode
++export const STILL_T = [3.5, 13, 25.5, 37, 47.5, 57];
++
++// --- world geometry shared by the GPU scene and the dock ---------------------
++
++export const WORLD = {
++  X_MIN: -6, X_MAX: 6,           // the composition mapped across world x
++  LANE_Y: -0.55,
++  LANE_Z0: 1.1, LANE_DZ: -1.35,  // four lanes receding in z
++  GRAPH: { cx: 0, cy: 0, sx: 3.6, sy: 1.4 }, // act-01 easing graph plane
++};
++
++export const timeToX = (t) => WORLD.X_MIN + (t / DUR) * (WORLD.X_MAX - WORLD.X_MIN);
++
++// --- tracks rendered in the dock (and spatialised in act 02) -----------------
++
++const typeWindows = CHAPTERS.map((ch, i) => ({
++  t0: ch.start === 0 ? 0 : ch.start + 0.55,
++  t1: i === CHAPTERS.length - 1 ? DUR : ch.end - 0.45,
++}));
++
++export const TRACKS = [
++  { id: "scenes", name: "scenes", clips: CHAPTERS.map((c) => ({ t0: c.start, t1: c.end })), keys: [] },
++  { id: "camera", name: "camera", clips: [], keys: CAM_KEYS.map((k) => k.t) },
++  { id: "world",  name: "world",  clips: CHAPTERS.map((c) => ({ t0: c.start, t1: c.end })),
++    keys: CHAPTERS.slice(1).map((c) => c.start) },
++  { id: "type",   name: "type",   clips: typeWindows, keys: typeWindows.flatMap((w) => [w.t0, w.t1]) },
++];
++
++export const KEY_COUNT =
++  CAM_KEYS.length + TRACKS[2].keys.length + TRACKS[3].keys.length + 4; // +4: the ease itself
++
++// world-space keyframe diamonds for act 02 (lane index -> z)
++export function worldDiamonds() {
++  const out = [];
++  const lanes = [1, 2, 3]; // camera, world, type lanes carry diamonds
++  lanes.forEach((laneIdx) => {
++    TRACKS[laneIdx].keys.forEach((t) => {
++      out.push({
++        x: timeToX(t),
++        y: WORLD.LANE_Y + 0.02,
++        z: WORLD.LANE_Z0 + laneIdx * WORLD.LANE_DZ + 0.001,
++        t,
++      });
++    });
++  });
++  return out;
++}
++
++// clip windows handed to the particle shader (lane, t0, t1) — max 12
++export function worldClips() {
++  const out = [];
++  CHAPTERS.forEach((c) => out.push([0, c.t0 ?? c.start, c.t1 ?? c.end]));
++  // lanes 1..3 get their densest spans
++  out.push([1, 0, 60], [2, 0, 60], [3, 7, 57]);
++  return out.slice(0, 12);
++}
++
++// --- timecode ----------------------------------------------------------------
++
++export function fmtTC(t) {
++  const tt = Math.max(0, Math.min(DUR, t));
++  const m = Math.floor(tt / 60);
++  const s = Math.floor(tt % 60);
++  const f = Math.floor((tt - Math.floor(tt)) * FPS);
++  const p = (n) => String(n).padStart(2, "0");
++  return `${p(m)}:${p(s)}:${p(f)}`;
++}
++
++export function fmtBezier(c, digits = 2) {
++  return `cubic-bezier(${c.map((v) => v.toFixed(digits)).join(", ")})`;
++}
+diff --git a/lib/engine.js b/lib/engine.js
+new file mode 100644
+index 0000000..e020411
+--- /dev/null
++++ b/lib/engine.js
+@@ -0,0 +1,733 @@
++// ---------------------------------------------------------------------------
++// engine.js — a purpose-built WebGL2 renderer for the Meridian composition.
++// No library: one particle system, one ribbon system, a procedural stage,
++// and a quality governor. Everything moves on the GPU from uniforms only.
++// ---------------------------------------------------------------------------
++
++import { WORLD, DUR, timeToX, worldDiamonds, worldClips } from "./composition";
++
++// ---- tiny mat4 / vec3 -------------------------------------------------------
++
++function perspective(out, fovDeg, aspect, near, far) {
++  const f = 1 / Math.tan((fovDeg * Math.PI) / 360);
++  out.fill(0);
++  out[0] = f / aspect; out[5] = f;
++  out[10] = (far + near) / (near - far); out[11] = -1;
++  out[14] = (2 * far * near) / (near - far);
++  return out;
++}
++function norm3(v) { const l = Math.hypot(v[0], v[1], v[2]) || 1; v[0] /= l; v[1] /= l; v[2] /= l; return v; }
++function cross3(o, a, b) { o[0] = a[1] * b[2] - a[2] * b[1]; o[1] = a[2] * b[0] - a[0] * b[2]; o[2] = a[0] * b[1] - a[1] * b[0]; return o; }
++function dot3(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
++function lookAt(out, eye, tgt, up) {
++  const z = norm3([eye[0] - tgt[0], eye[1] - tgt[1], eye[2] - tgt[2]]);
++  const x = norm3(cross3([0, 0, 0], up, z));
++  const y = cross3([0, 0, 0], z, x);
++  out[0] = x[0]; out[1] = y[0]; out[2] = z[0]; out[3] = 0;
++  out[4] = x[1]; out[5] = y[1]; out[6] = z[1]; out[7] = 0;
++  out[8] = x[2]; out[9] = y[2]; out[10] = z[2]; out[11] = 0;
++  out[12] = -dot3(x, eye); out[13] = -dot3(y, eye); out[14] = -dot3(z, eye); out[15] = 1;
++  return out;
++}
++
++// ---- GLSL -------------------------------------------------------------------
++
++const PALETTE = `
++const vec3 BRASS = vec3(0.886, 0.655, 0.243);
++const vec3 BEAM  = vec3(0.561, 0.847, 0.973);
++const vec3 PAPER = vec3(0.925, 0.906, 0.855);
++const vec3 DIM   = vec3(0.415, 0.470, 0.610);
++const vec3 RED   = vec3(1.0, 0.318, 0.278);
++`;
++
++const BEZ_GRAPH = `
++uniform vec4 uCurve;   // x1 y1 x2 y2 in graph space
++uniform vec4 uGraph;   // cx cy sx sy
++vec3 bezGraph(float u){
++  vec2 p0 = vec2(-1.0, -1.0);
++  vec2 p3 = vec2( 1.0,  1.0);
++  vec2 p1 = vec2(-1.0 + uCurve.x * 2.0, -1.0 + uCurve.y * 2.0);
++  vec2 p2 = vec2(-1.0 + uCurve.z * 2.0, -1.0 + uCurve.w * 2.0);
++  float v = 1.0 - u;
++  vec2 q = v*v*v*p0 + 3.0*v*v*u*p1 + 3.0*v*u*u*p2 + u*u*u*p3;
++  return vec3(uGraph.x + q.x * uGraph.z, uGraph.y + q.y * uGraph.w, 0.0);
++}
++`;
++
++const VS_BG = `#version 300 es
++out vec2 vUV;
++void main(){
++  vec2 p = vec2((gl_VertexID<<1 & 2), (gl_VertexID & 2));
++  vUV = p; gl_Position = vec4(p*2.0-1.0, 0.999, 1.0);
++}`;
++
++const FS_BG = `#version 300 es
++precision mediump float;
++in vec2 vUV; out vec4 o;
++uniform float uAspect; uniform float uBoot;
++float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233)))*43758.5453); }
++void main(){
++  vec3 deep = vec3(0.016, 0.024, 0.055);
++  vec3 low  = vec3(0.043, 0.070, 0.145);
++  vec3 c = mix(deep, low, smoothstep(1.05, 0.12, vUV.y));
++  vec2 d = (vUV - vec2(0.5, 0.30)) * vec2(uAspect, 1.0);
++  c += vec3(0.045, 0.075, 0.150) * exp(-dot(d,d) * 4.5) * (0.35 + 0.65*uBoot);
++  c += vec3(0.060, 0.048, 0.028) * exp(-dot(d - vec2(0.0,-0.06), d - vec2(0.0,-0.06)) * 22.0) * 0.5 * uBoot;
++  float v = length((vUV - 0.5) * vec2(1.15, 1.3));
++  c *= 1.0 - 0.42 * smoothstep(0.42, 1.0, v);
++  c += (hash(gl_FragCoord.xy) - 0.5) * (2.0/255.0);
++  o = vec4(c, 1.0);
++}`;
++
++const VS_GRID = `#version 300 es
++uniform mat4 uProj, uView;
++out vec3 vP;
++const vec2 C[4] = vec2[4](vec2(-24.,-18.), vec2(24.,-18.), vec2(-24., 20.), vec2(24., 20.));
++void main(){
++  vec2 c = C[gl_VertexID];
++  vP = vec3(c.x, -0.6, c.y);
++  gl_Position = uProj * uView * vec4(vP, 1.0);
++}`;
++
++const FS_GRID = `#version 300 es
++precision highp float;
++${PALETTE}
++in vec3 vP; out vec4 o;
++uniform float uBoot, uPlayX, uSeam;
++float lines(vec2 c){
++  vec2 g = abs(fract(c - 0.5) - 0.5) / fwidth(c);
++  return 1.0 - min(min(g.x, g.y), 1.0);
++}
++void main(){
++  float minor = lines(vP.xz * 2.0);
++  float major = lines(vP.xz * 0.4);
++  float r = length(vP.xz);
++  float fade = exp(-r * r * 0.0045);
++  float reveal = smoothstep(uBoot * 34.0, uBoot * 34.0 - 3.0, r);
++  float a = (minor * 0.05 + major * 0.085) * fade * reveal;
++  vec3 col = vec3(0.32, 0.40, 0.60);
++  float seam = exp(-(vP.x - uPlayX) * (vP.x - uPlayX) * 2.2) * uSeam;
++  col = mix(col, BRASS, seam);
++  a += seam * 0.10 * fade;
++  o = vec4(col, a);
++}`;
++
++const VS_RIBBON = `#version 300 es
++precision highp float;
++${BEZ_GRAPH}
++layout(location=0) in float aU; layout(location=1) in float aSide;
++uniform mat4 uProj, uView;
++uniform int uMode;
++uniform vec3 uP0, uP1, uP2, uP3;
++uniform sampler2D uWave;
++uniform float uWaveHead;
++uniform vec2 uViewport;
++uniform float uWidth;
++out float vSide; out float vU; out float vMs;
++vec3 cubic3(float u){
++  float v = 1.0 - u;
++  return v*v*v*uP0 + 3.0*v*v*u*uP1 + 3.0*v*u*u*uP2 + u*u*u*uP3;
++}
++vec3 evalP(float u){
++  if (uMode == 0) return bezGraph(u);
++  if (uMode == 2) {
++    float idx = fract(u + uWaveHead);
++    float ms = texture(uWave, vec2(idx, 0.5)).r;
++    vMs = ms;
++    return vec3(mix(-5.2, 5.2, u), 2.05 - ms * 0.075, -1.2);
++  }
++  return cubic3(u);
++}
++void main(){
++  vMs = 0.0;
++  float e = 1.0 / 200.0;
++  vec3 P  = evalP(aU);
++  vec3 Pb = evalP(clamp(aU + e, 0.0, 1.0));
++  vec3 Pa = evalP(clamp(aU - e, 0.0, 1.0));
++  vec4 c  = uProj * uView * vec4(P, 1.0);
++  vec4 cb = uProj * uView * vec4(Pb, 1.0);
++  vec4 ca = uProj * uView * vec4(Pa, 1.0);
++  if (c.w < 0.06) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); vSide = aSide; vU = aU; return; }
++  vec2 sn = cb.xy / cb.w - ca.xy / ca.w;
++  sn.x *= uViewport.x / uViewport.y;
++  vec2 n = normalize(vec2(-sn.y, sn.x));
++  n.x /= uViewport.x / uViewport.y;
++  c.xy += n * aSide * (uWidth * 2.0 / uViewport.y) * c.w;
++  gl_Position = c;
++  vSide = aSide; vU = aU;
++}`;
++
++const FS_RIBBON = `#version 300 es
++precision mediump float;
++precision highp int;
++${PALETTE}
++in float vSide; in float vU; in float vMs;
++out vec4 o;
++uniform vec3 uColor; uniform float uAlpha, uSoft, uShimmer, uTime;
++uniform int uMode;
++void main(){
++  float edge = 1.0 - abs(vSide);
++  float core = pow(edge, uSoft);
++  float taper = smoothstep(0.0, 0.05, vU) * smoothstep(1.0, 0.95, vU);
++  float sh = 1.0 - uShimmer * 0.5 * (0.5 + 0.5 * sin(vU * 42.0 - uTime * 2.6));
++  vec3 col = uColor;
++  if (uMode == 2) col = mix(uColor, RED, smoothstep(22.0, 34.0, vMs));
++  float a = uAlpha * core * taper * sh;
++  o = vec4(col * a, a);
++}`;
++
++const VS_POINTS = `#version 300 es
++precision highp float;
++${PALETTE}
++${BEZ_GRAPH}
++layout(location=0) in vec4 aSeed;
++uniform mat4 uProj, uView;
++uniform float uTime, uScrub, uBoot, uMix, uHasMix, uPlayX, uPuckU, uPtScale;
++uniform int uActA, uActB;
++uniform vec3 uClips[12];
++out vec3 vC; out float vA; out float vSh;
++
++vec3 fieldPos(vec4 s, float amp){
++  vec2 g = vec2((s.x - 0.5) * 22.0, (s.y - 0.5) * 16.0 - 2.0);
++  vec2 snapped = floor(g * 2.0 + 0.5) / 2.0;
++  vec2 xz = mix(g, snapped, 0.85);
++  float wob = sin(xz.x * 0.6 + uTime * 0.5) * cos(xz.y * 0.5 + uTime * 0.33);
++  return vec3(xz.x, -0.55 + wob * amp + s.w * 0.05, xz.y);
++}
++
++void form(int act, vec4 s, out vec3 P, out vec3 C, out float A, out float SZ, out float SH){
++  SH = 0.0;
++  if (act == 0) {
++    P = fieldPos(s, 0.055);
++    float tw = 0.5 + 0.5 * sin(uTime * (0.5 + s.w * 1.2) + s.x * 40.0);
++    C = mix(DIM, PAPER, s.z * 0.45);
++    A = (0.05 + 0.15 * tw) * (0.35 + 0.65 * s.z);
++    if (s.w > 0.975) { C = BRASS; A = 0.35 + 0.3 * tw; }
++    SZ = 1.0 + s.z * 1.7;
++  } else if (act == 1) {
++    if (s.w > 0.86) {
++      P = fieldPos(s, 0.04); C = DIM; A = 0.06; SZ = 1.0 + s.z;
++    } else {
++      float u = fract(s.x + uTime * 0.03 * (0.4 + s.z));
++      vec3 c = bezGraph(u);
++      P = c + vec3(0.0, (s.y - 0.5) * 0.24 * (0.3 + s.z), (s.z - 0.5) * 0.6);
++      float head = exp(-abs(u - uPuckU) * 16.0);
++      C = mix(mix(BEAM, PAPER, s.y * 0.35), BRASS, head * 0.6);
++      A = 0.055 + 0.16 * s.z + head * 0.75;
++      SZ = 1.0 + s.z * 1.8 + head * 2.2;
++    }
++  } else if (act == 2) {
++    float lane = floor(s.y * 4.0);
++    float x = -6.0 + s.x * 12.0;
++    float tt = s.x * 60.0;
++    float z = 1.1 - lane * 1.35;
++    float inside = 0.0;
++    for (int i = 0; i < 12; i++) {
++      vec3 cw = uClips[i];
++      if (abs(cw.x - lane) < 0.5 && tt >= cw.y && tt <= cw.z) inside = 1.0;
++    }
++    float lift = inside * abs(s.z - 0.5) * 0.45;
++    P = vec3(x, -0.53 + lift, z);
++    float glow = exp(-(x - uPlayX) * (x - uPlayX) * 1.5);
++    if (s.w > 0.90) {
++      P = vec3(uPlayX + (s.x - 0.5) * 0.15, -0.5 + s.y * 1.9, mix(1.4, -3.4, s.z));
++      glow = 1.0;
++    }
++    C = mix(mix(DIM, PAPER, s.z * 0.8), BRASS, glow * 0.85);
++    A = inside * 0.22 + 0.05 + glow * 0.45;
++    SZ = 1.0 + s.z * 1.8 + glow * 1.5;
++  } else if (act == 3) {
++    if (s.w > 0.82) {
++      float u = fract(s.x + uTime * 0.05);
++      P = bezGraph(u) * vec3(0.42, 0.42, 1.0) + vec3(-3.05, 0.62, 0.2);
++      P.z += (s.z - 0.5) * 0.3;
++      C = BEAM; A = 0.07 + 0.20 * s.z; SZ = 1.0 + s.z * 1.4;
++    } else {
++      float col = floor(s.y * 7.0);
++      float speed = 0.10 + fract(col * 0.371) * 0.17;
++      float y = 1.95 - fract(s.x + uTime * speed) * 4.1;
++      P = vec3(-1.7 + col * 0.5 + (s.z - 0.5) * 0.12, y, -0.4 + (s.w - 0.5) * 0.9);
++      float vis = smoothstep(-2.15, -1.55, y) * smoothstep(1.95, 1.35, y);
++      C = mix(BEAM, PAPER, s.z * 0.5);
++      A = vis * (0.09 + 0.28 * s.z);
++      SZ = 1.5 + s.z * 1.5; SH = 1.0;
++    }
++  } else if (act == 4) {
++    P = fieldPos(s, 0.02);
++    float tw = 0.5 + 0.5 * sin(uTime * (0.4 + s.w) + s.x * 30.0);
++    C = mix(DIM, PAPER, s.z * 0.5);
++    A = (0.05 + 0.12 * tw) * (0.4 + 0.6 * s.z);
++    SZ = 1.0 + s.z * 1.6;
++    if (s.w > 0.965) {
++      P.x = floor(P.x / 2.5 + 0.5) * 2.5;
++      P.y += fract(uTime * 0.07 + s.x * 3.0) * 1.6;
++      C = BEAM; A = 0.28 * (1.0 - fract(uTime * 0.07 + s.x * 3.0));
++    }
++  } else {
++    float ang = s.x * 6.28318 + uTime * 0.06;
++    float r = 2.7 + (s.y - 0.5) * 0.55 + s.z * 0.2;
++    P = vec3(cos(ang) * r, sin(ang) * r * 0.52 + 0.05, -0.6 + (s.w - 0.5) * 1.2);
++    C = mix(PAPER, BRASS, s.w * 0.6);
++    A = (0.055 + 0.18 * s.z) * (0.55 + 0.45 * sin(ang * 3.0 + uTime * 0.8));
++    SZ = 1.0 + s.z * 2.1;
++  }
++}
++
++void main(){
++  vec3 Pa, Ca; float Aa, Sa, Ha;
++  form(uActA, aSeed, Pa, Ca, Aa, Sa, Ha);
++  vec3 P = Pa; vec3 C = Ca; float A = Aa; float SZ = Sa; float SH = Ha;
++  if (uHasMix > 0.5) {
++    vec3 Pb, Cb; float Ab, Sb, Hb;
++    form(uActB, aSeed, Pb, Cb, Ab, Sb, Hb);
++    float e = uMix;
++    vec3 dir = normalize(aSeed.xyz - 0.5 + 0.001);
++    P = mix(Pa, Pb, e) + dir * sin(e * 3.14159) * (0.3 + aSeed.w * 0.55);
++    C = mix(Ca, Cb, e); A = mix(Aa, Ab, e); SZ = mix(Sa, Sb, e); SH = mix(Ha, Hb, e);
++  }
++  vec3 scatter = vec3((aSeed.x - 0.5) * 34.0, (aSeed.y - 0.5) * 20.0, (aSeed.z - 0.5) * 12.0 - 5.0);
++  float bootE = 1.0 - pow(1.0 - uBoot, 3.0);
++  P = mix(scatter, P, bootE);
++  A *= 0.1 + 0.9 * bootE;
++  vec4 clip = uProj * uView * vec4(P, 1.0);
++  gl_Position = clip;
++  float w = max(clip.w, 0.1);
++  gl_PointSize = clamp(SZ * uPtScale / w, 0.75, 22.0);
++  vC = C; vA = A; vSh = SH;
++}`;
++
++const FS_POINTS = `#version 300 es
++precision mediump float;
++in vec3 vC; in float vA; in float vSh;
++out vec4 o;
++void main(){
++  vec2 q = gl_PointCoord * 2.0 - 1.0;
++  float disc = exp(-dot(q, q) * 3.2);
++  float bar = exp(-q.x * q.x * 14.0) * exp(-q.y * q.y * 1.4);
++  float m = mix(disc, bar, vSh);
++  float a = vA * m;
++  if (a < 0.004) discard;
++  o = vec4(vC * a, a);
++}`;
++
++const VS_MARKS = `#version 300 es
++precision highp float;
++layout(location=0) in vec3 aPos; layout(location=1) in float aKT;
++uniform mat4 uProj, uView;
++uniform float uScrub, uPtScale;
++out float vPulse;
++void main(){
++  float pulse = exp(-abs(uScrub - aKT) * 2.0);
++  vPulse = pulse;
++  vec4 clip = uProj * uView * vec4(aPos, 1.0);
++  gl_Position = clip;
++  gl_PointSize = clamp((2.6 + pulse * 5.5) * uPtScale / max(clip.w, 0.1), 2.0, 30.0);
++}`;
++
++const FS_MARKS = `#version 300 es
++precision mediump float;
++${PALETTE}
++in float vPulse; out vec4 o;
++uniform float uAlpha;
++void main(){
++  vec2 q = abs(gl_PointCoord * 2.0 - 1.0);
++  float m = 1.0 - (q.x + q.y);
++  if (m <= 0.0) discard;
++  float a = uAlpha * (0.30 + 0.70 * vPulse) * smoothstep(0.0, 0.3, m);
++  vec3 c = mix(PAPER, BRASS, vPulse);
++  o = vec4(c * a, a);
++}`;
++
++const VS_PUCK = `#version 300 es
++precision highp float;
++${BEZ_GRAPH}
++uniform mat4 uProj, uView;
++uniform float uPuckU, uOnion, uPtScale, uOnionU[9];
++out float vI;
++void main(){
++  float u = uOnion > 0.5 ? uOnionU[gl_VertexID] : uPuckU;
++  float on = uOnion > 0.5 ? (0.25 + 0.75 * float(gl_VertexID) / 8.0) : (gl_VertexID == 0 ? 1.0 : 0.0);
++  vI = on;
++  vec3 P = bezGraph(u);
++  vec4 clip = uProj * uView * vec4(P, 1.0);
++  gl_Position = clip;
++  gl_PointSize = clamp(9.0 * uPtScale / max(clip.w, 0.1), 4.0, 44.0);
++}`;
++
++const FS_PUCK = `#version 300 es
++precision mediump float;
++${PALETTE}
++in float vI; out vec4 o;
++uniform float uAlpha;
++void main(){
++  vec2 q = gl_PointCoord * 2.0 - 1.0;
++  float d = dot(q, q);
++  float halo = exp(-d * 2.2) * 0.5;
++  float core = exp(-d * 14.0);
++  float a = uAlpha * vI * (halo + core);
++  if (a < 0.004) discard;
++  o = vec4(mix(BRASS, vec3(1.0, 0.92, 0.75), core) * a, a);
++}`;
++
++// ---- helpers ----------------------------------------------------------------
++
++function compile(gl, type, src) {
++  const s = gl.createShader(type);
++  gl.shaderSource(s, src);
++  gl.compileShader(s);
++  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
++    const log = gl.getShaderInfoLog(s);
++    throw new Error("shader: " + log + "\n" + src.split("\n").map((l, i) => `${i + 1}: ${l}`).join("\n"));
++  }
++  return s;
++}
++function program(gl, vs, fs) {
++  const p = gl.createProgram();
++  gl.attachShader(p, compile(gl, gl.VERTEX_SHADER, vs));
++  gl.attachShader(p, compile(gl, gl.FRAGMENT_SHADER, fs));
++  gl.linkProgram(p);
++  if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error("link: " + gl.getProgramInfoLog(p));
++  const uni = {};
++  const n = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS);
++  for (let i = 0; i < n; i++) {
++    const info = gl.getActiveUniform(p, i);
++    const name = info.name.replace(/\[0\]$/, "");
++    uni[name] = gl.getUniformLocation(p, info.name);
++  }
++  return { p, uni };
++}
++
++const TIERS = [
++  { n: 42000, dpr: 1.75 },
++  { n: 26000, dpr: 1.5 },
++  { n: 14000, dpr: 1.25 },
++  { n: 7000, dpr: 1.0 },
++];
++
++export function createEngine(canvas, initialTier = 0) {
++  let gl;
++  try {
++    gl = canvas.getContext("webgl2", {
++      alpha: false, antialias: true, depth: false, stencil: false,
++      powerPreference: "high-performance",
++    });
++  } catch (e) { gl = null; }
++  if (!gl) return null;
++
++  gl.disable(gl.DEPTH_TEST);
++  gl.clearColor(0.027, 0.043, 0.086, 1);
++
++  const pBg = program(gl, VS_BG, FS_BG);
++  const pGrid = program(gl, VS_GRID, FS_GRID);
++  const pRib = program(gl, VS_RIBBON, FS_RIBBON);
++  const pPts = program(gl, VS_POINTS, FS_POINTS);
++  const pMarks = program(gl, VS_MARKS, FS_MARKS);
++  const pPuck = program(gl, VS_PUCK, FS_PUCK);
++
++  // empty VAO for attribute-less draws
++  const vaoEmpty = gl.createVertexArray();
++
++  // ribbon strip
++  const SEG = 200;
++  const ribData = new Float32Array((SEG + 1) * 2 * 2);
++  for (let i = 0; i <= SEG; i++) {
++    const u = i / SEG;
++    ribData[i * 4 + 0] = u; ribData[i * 4 + 1] = 1;
++    ribData[i * 4 + 2] = u; ribData[i * 4 + 3] = -1;
++  }
++  const vaoRib = gl.createVertexArray();
++  gl.bindVertexArray(vaoRib);
++  const bufRib = gl.createBuffer();
++  gl.bindBuffer(gl.ARRAY_BUFFER, bufRib);
++  gl.bufferData(gl.ARRAY_BUFFER, ribData, gl.STATIC_DRAW);
++  gl.enableVertexAttribArray(0);
++  gl.vertexAttribPointer(0, 1, gl.FLOAT, false, 8, 0);
++  gl.enableVertexAttribArray(1);
++  gl.vertexAttribPointer(1, 1, gl.FLOAT, false, 8, 4);
++  const ribCount = (SEG + 1) * 2;
++
++  // particles
++  let tier = initialTier;
++  let vaoPts = null, bufPts = null, ptsCount = 0;
++  function buildParticles() {
++    if (bufPts) { gl.deleteBuffer(bufPts); gl.deleteVertexArray(vaoPts); }
++    ptsCount = TIERS[tier].n;
++    const seeds = new Float32Array(ptsCount * 4);
++    let s = 1234567;
++    const rnd = () => ((s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
++    for (let i = 0; i < seeds.length; i++) seeds[i] = rnd();
++    vaoPts = gl.createVertexArray();
++    gl.bindVertexArray(vaoPts);
++    bufPts = gl.createBuffer();
++    gl.bindBuffer(gl.ARRAY_BUFFER, bufPts);
++    gl.bufferData(gl.ARRAY_BUFFER, seeds, gl.STATIC_DRAW);
++    gl.enableVertexAttribArray(0);
++    gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 16, 0);
++  }
++  buildParticles();
++
++  // keyframe diamonds
++  const dmd = worldDiamonds();
++  const dmdData = new Float32Array(dmd.length * 4);
++  dmd.forEach((d, i) => { dmdData.set([d.x, d.y, d.z, d.t], i * 4); });
++  const vaoMarks = gl.createVertexArray();
++  gl.bindVertexArray(vaoMarks);
++  const bufMarks = gl.createBuffer();
++  gl.bindBuffer(gl.ARRAY_BUFFER, bufMarks);
++  gl.bufferData(gl.ARRAY_BUFFER, dmdData, gl.STATIC_DRAW);
++  gl.enableVertexAttribArray(0);
++  gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 16, 0);
++  gl.enableVertexAttribArray(1);
++  gl.vertexAttribPointer(1, 1, gl.FLOAT, false, 16, 12);
++
++  // clip windows for the lane shader
++  const clipArr = new Float32Array(36);
++  worldClips().forEach((c, i) => clipArr.set(c, i * 3));
++
++  // live frame-time ring buffer -> R32F texture
++  const WAVE_N = 128;
++  const wave = new Float32Array(WAVE_N).fill(16.7);
++  let waveHead = 0;
++  const waveTex = gl.createTexture();
++  gl.bindTexture(gl.TEXTURE_2D, waveTex);
++  gl.texImage2D(gl.TEXTURE_2D, 0, gl.R32F, WAVE_N, 1, 0, gl.RED, gl.FLOAT, wave);
++  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
++  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
++  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
++  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
++
++  const proj = new Float32Array(16);
++  const view = new Float32Array(16);
++
++  let cssW = 1, cssH = 1, dpr = 1;
++  function setSize(w, h) {
++    cssW = w; cssH = h;
++    dpr = Math.min(typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1, TIERS[tier].dpr);
++    const W = Math.max(2, Math.round(w * dpr));
++    const H = Math.max(2, Math.round(h * dpr));
++    if (canvas.width !== W || canvas.height !== H) {
++      canvas.width = W; canvas.height = H;
++    }
++  }
++
++  function setTier(t) {
++    tier = Math.max(0, Math.min(TIERS.length - 1, t));
++    buildParticles();
++    setSize(cssW, cssH);
++    warmup = 120; winSum = 0; winN = 0; strikes = 0;
++  }
++
++  // stats + governor
++  let prevNow = 0, ms = 16.7, warmup = 120, winSum = 0, winN = 0, draws = 0, strikes = 0;
++  const stats = { fps: 60, ms: 16.7, draws: 0, count: ptsCount, tier: 0 };
++
++  function frame(st) {
++    const now = performance.now();
++    let dt = prevNow ? now - prevNow : 16.7;
++    prevNow = now;
++    dt = Math.min(dt, 50);
++    if (!st.reduced) {
++      ms += (dt - ms) * 0.06;
++      wave[waveHead] = dt; waveHead = (waveHead + 1) % WAVE_N;
++      gl.bindTexture(gl.TEXTURE_2D, waveTex);
++      gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, WAVE_N, 1, gl.RED, gl.FLOAT, wave);
++      if (warmup > 0) warmup--;
++      else if (dt < 45) {
++        // frames above 45ms are scheduler gaps (throttled tab), not render cost
++        winSum += dt; winN++;
++        if (winN >= 120) {
++          const avg = winSum / winN;
++          winSum = 0; winN = 0;
++          strikes = avg > 24 ? strikes + 1 : 0;
++          if (strikes >= 2 && tier < TIERS.length - 1) {
++            strikes = 0;
++            setTier(tier + 1);
++          }
++        }
++      }
++    }
++    draws = 0;
++
++    const W = canvas.width, H = canvas.height;
++    gl.viewport(0, 0, W, H);
++    const aspect = W / H;
++    perspective(proj, st.fov, aspect, 0.1, 100);
++
++    // pointer sway
++    const eye = st.camEye.slice(), tgt = st.camTgt.slice();
++    const fwd = norm3([tgt[0] - eye[0], tgt[1] - eye[1], tgt[2] - eye[2]]);
++    const right = norm3(cross3([0, 0, 0], fwd, [0, 1, 0]));
++    const sx = st.pointer[0], sy = st.pointer[1];
++    eye[0] += right[0] * sx * 0.35; eye[1] += sy * 0.22; eye[2] += right[2] * sx * 0.35;
++    tgt[0] -= right[0] * sx * 0.12; tgt[1] -= sy * 0.08; tgt[2] -= right[2] * sx * 0.12;
++    lookAt(view, eye, tgt, [0, 1, 0]);
++
++    const wOf = (i) => (st.actA === i ? 1 - st.mix : 0) + (st.actB === i ? st.mix : 0);
++    const w0 = wOf(0), w1 = wOf(1), w2 = wOf(2), w3 = wOf(3), w4 = wOf(4), w5 = wOf(5);
++    const playX = timeToX(st.scrub);
++    const ptScale = (H * 0.5) / Math.tan((st.fov * Math.PI) / 360) * 0.021;
++
++    gl.clear(gl.COLOR_BUFFER_BIT);
++
++    // sky
++    gl.disable(gl.BLEND);
++    gl.useProgram(pBg.p);
++    gl.bindVertexArray(vaoEmpty);
++    gl.uniform1f(pBg.uni.uAspect, aspect);
++    gl.uniform1f(pBg.uni.uBoot, st.boot);
++    gl.drawArrays(gl.TRIANGLES, 0, 3); draws++;
++
++    // floor
++    gl.enable(gl.BLEND);
++    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
++    gl.useProgram(pGrid.p);
++    gl.uniformMatrix4fv(pGrid.uni.uProj, false, proj);
++    gl.uniformMatrix4fv(pGrid.uni.uView, false, view);
++    gl.uniform1f(pGrid.uni.uBoot, st.boot);
++    gl.uniform1f(pGrid.uni.uPlayX, playX);
++    gl.uniform1f(pGrid.uni.uSeam, w2 * 0.9 + w4 * 0.25);
++    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); draws++;
++
++    // additive pass
++    gl.blendFunc(gl.ONE, gl.ONE);
++
++    const rib = (mode, opts) => {
++      gl.useProgram(pRib.p);
++      gl.bindVertexArray(vaoRib);
++      gl.uniformMatrix4fv(pRib.uni.uProj, false, proj);
++      gl.uniformMatrix4fv(pRib.uni.uView, false, view);
++      gl.uniform1i(pRib.uni.uMode, mode);
++      gl.uniform2f(pRib.uni.uViewport, W, H);
++      gl.uniform1f(pRib.uni.uTime, st.time);
++      gl.uniform1f(pRib.uni.uWidth, (opts.width || 4) * dpr);
++      gl.uniform3fv(pRib.uni.uColor, opts.color);
++      gl.uniform1f(pRib.uni.uAlpha, opts.alpha);
++      gl.uniform1f(pRib.uni.uSoft, opts.soft ?? 1.6);
++      gl.uniform1f(pRib.uni.uShimmer, opts.shimmer ?? 0);
++      if (mode === 0) {
++        gl.uniform4fv(pRib.uni.uCurve, st.curve);
++        gl.uniform4fv(pRib.uni.uGraph, opts.graph);
++      } else if (mode === 1) {
++        gl.uniform3fv(pRib.uni.uP0, opts.p[0]);
++        gl.uniform3fv(pRib.uni.uP1, opts.p[1]);
++        gl.uniform3fv(pRib.uni.uP2, opts.p[2]);
++        gl.uniform3fv(pRib.uni.uP3, opts.p[3]);
++      } else if (mode === 2) {
++        gl.activeTexture(gl.TEXTURE0);
++        gl.bindTexture(gl.TEXTURE_2D, waveTex);
++        gl.uniform1i(pRib.uni.uWave, 0);
++        gl.uniform1f(pRib.uni.uWaveHead, waveHead / WAVE_N);
++      }
++      gl.drawArrays(gl.TRIANGLE_STRIP, 0, ribCount); draws++;
++    };
++
++    const BRASS = [0.886, 0.655, 0.243], BEAM = [0.561, 0.847, 0.973], DIMC = [0.415, 0.47, 0.61];
++    const G = WORLD.GRAPH;
++    const graphMain = [G.cx, G.cy, G.sx, G.sy];
++
++    if (w0 > 0.01) {
++      const sweep = { p: [[-10, 0.4, -6], [-3, 1.8, -2], [3, -0.5, 2], [10, 0.9, -4]] };
++      rib(1, { ...sweep, width: 22, color: BEAM, alpha: 0.05 * w0 * st.boot, soft: 1.1 });
++      rib(1, { ...sweep, width: 2.6, color: BEAM, alpha: 0.5 * w0 * st.boot, soft: 2.2, shimmer: 0.5 });
++    }
++    if (w1 > 0.01) {
++      rib(0, { graph: graphMain, width: 26, color: BEAM, alpha: 0.07 * w1, soft: 1.1 });
++      rib(0, { graph: graphMain, width: 4.2, color: BEAM, alpha: 0.85 * w1, soft: 2.4, shimmer: 0.35 });
++    }
++    if (w3 > 0.01) {
++      rib(0, { graph: [-3.05, 0.62, 0.42, 0.42], width: 2.0, color: BEAM, alpha: 0.32 * w3, soft: 2.0 });
++    }
++    if (w2 > 0.01) {
++      for (let l = 0; l < 4; l++) {
++        const z = WORLD.LANE_Z0 + l * WORLD.LANE_DZ;
++        const y = WORLD.LANE_Y;
++        rib(1, {
++          p: [[-6, y, z], [-2, y, z], [2, y, z], [6, y, z]],
++          width: 1.6, color: DIMC, alpha: 0.85 * w2, soft: 1.4,
++        });
++      }
++      const bz = WORLD.LANE_Z0 + 1.5 * WORLD.LANE_DZ;
++      rib(1, {
++        p: [[playX, -0.62, bz], [playX, 0.2, bz], [playX, 1.0, bz], [playX, 1.9, bz]],
++        width: 20, color: BRASS, alpha: 0.15 * w2, soft: 1.1,
++      });
++      rib(1, {
++        p: [[playX, -0.62, bz], [playX, 0.2, bz], [playX, 1.0, bz], [playX, 1.9, bz]],
++        width: 2.4, color: BRASS, alpha: 0.9 * w2, soft: 2.2,
++      });
++    }
++    if (w4 > 0.01) {
++      rib(1, {
++        p: [[-5.2, 0.8, -1.2], [-1.7, 0.8, -1.2], [1.7, 0.8, -1.2], [5.2, 0.8, -1.2]],
++        width: 1.2, color: DIMC, alpha: 0.5 * w4, soft: 1.3,
++      }); // 16.7ms reference line
++      rib(2, { width: 18, color: BEAM, alpha: 0.06 * w4, soft: 1.1 });
++      rib(2, { width: 2.6, color: BEAM, alpha: 0.8 * w4, soft: 2.2 });
++    }
++
++    // keyframe diamonds
++    if (w2 > 0.01) {
++      gl.useProgram(pMarks.p);
++      gl.bindVertexArray(vaoMarks);
++      gl.uniformMatrix4fv(pMarks.uni.uProj, false, proj);
++      gl.uniformMatrix4fv(pMarks.uni.uView, false, view);
++      gl.uniform1f(pMarks.uni.uScrub, st.scrub);
++      gl.uniform1f(pMarks.uni.uPtScale, ptScale);
++      gl.uniform1f(pMarks.uni.uAlpha, w2);
++      gl.drawArrays(gl.POINTS, 0, dmd.length); draws++;
++    }
++
++    // particles
++    gl.useProgram(pPts.p);
++    gl.bindVertexArray(vaoPts);
++    gl.uniformMatrix4fv(pPts.uni.uProj, false, proj);
++    gl.uniformMatrix4fv(pPts.uni.uView, false, view);
++    gl.uniform1f(pPts.uni.uTime, st.time);
++    gl.uniform1f(pPts.uni.uScrub, st.scrub);
++    gl.uniform1f(pPts.uni.uBoot, st.boot);
++    gl.uniform1f(pPts.uni.uMix, st.mix);
++    gl.uniform1f(pPts.uni.uHasMix, st.actA !== st.actB ? 1 : 0);
++    gl.uniform1i(pPts.uni.uActA, st.actA);
++    gl.uniform1i(pPts.uni.uActB, st.actB);
++    gl.uniform1f(pPts.uni.uPlayX, playX);
++    gl.uniform1f(pPts.uni.uPuckU, st.puckU);
++    gl.uniform1f(pPts.uni.uPtScale, ptScale);
++    gl.uniform4fv(pPts.uni.uCurve, st.curve);
++    gl.uniform4fv(pPts.uni.uGraph, graphMain);
++    gl.uniform3fv(pPts.uni.uClips, clipArr);
++    gl.drawArrays(gl.POINTS, 0, ptsCount); draws++;
++
++    // evaluation comet
++    const puckA = w1 + (st.onion ? 0 : 0);
++    if (puckA > 0.01) {
++      gl.useProgram(pPuck.p);
++      gl.bindVertexArray(vaoEmpty);
++      gl.uniformMatrix4fv(pPuck.uni.uProj, false, proj);
++      gl.uniformMatrix4fv(pPuck.uni.uView, false, view);
++      gl.uniform4fv(pPuck.uni.uCurve, st.curve);
++      gl.uniform4fv(pPuck.uni.uGraph, graphMain);
++      gl.uniform1f(pPuck.uni.uPuckU, st.puckU);
++      gl.uniform1f(pPuck.uni.uOnion, st.onion ? 1 : 0);
++      gl.uniform1f(pPuck.uni.uPtScale, ptScale);
++      gl.uniform1fv(pPuck.uni.uOnionU, st.onionU);
++      gl.drawArrays(gl.POINTS, 0, 9); draws++;
++    }
++
++    stats.fps = Math.round(1000 / ms);
++    stats.ms = ms;
++    stats.draws = draws;
++    stats.count = ptsCount;
++    stats.tier = tier;
++  }
++
++  return {
++    setSize, setTier, frame, stats,
++    get tier() { return tier; },
++    resetClock() { prevNow = 0; },
++    dispose() {
++      try {
++        gl.getExtension("WEBGL_lose_context")?.loseContext();
++      } catch (e) {}
++    },
++  };
++}

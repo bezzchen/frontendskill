@@ -98,9 +98,40 @@ the project's **first strictly condition-blind comparison** — every previous r
 same-condition artifacts only. Caveat on the record: the owner has previously seen the three
 baseline W1s labelled, so those may be recognisable; the three with-skill pages are new.
 
-## Status
+## RESULT: criterion F FAILED (owner ruling, 2026-08-27)
 
-Criterion F is **instrument-clean and awaiting the owner's scores**: Q1 median register fit
+The pooled blind ranking was completed and unsealed. Owner ranking, best to worst:
+**E (baseline), F (with-skill), D (baseline), A (with-skill), B (baseline), C (with-skill)** —
+a perfectly alternating result.
+
+- baseline ranks 1, 3, 5 → median **3**
+- with-skill ranks 2, 4, 6 → median **4**
+
+F.2 requires the with-skill median rank not to sit below baseline. It does. **Criterion F is
+recorded as FAILED**, on the owner's explicit ruling, taking the pre-registered result at face
+value rather than revising the criterion after seeing it.
+
+**Recorded alongside, as context and not as an excuse:** the pattern is indistinguishable from
+chance. An exact rank-sum test over the 20 equally likely 3-v-3 splits gives **two-sided
+p = 0.70**. With three items per condition and near-equivalent outputs, one condition must take
+the odd ranks and the other the even ranks; which one lands better is close to a coin flip. The
+owner's own calibration note says the same thing in words: *"All of them don't really reach the
+pinnacle of design. To me they are actually all quite similar in terms of level. I feel like the
+difference in quality would be up to personal taste."*
+
+The honest reading is therefore narrow and worth stating precisely: **the skill was not shown to
+improve expressive quality, and this measurement had no power to show it either way.** That is
+consistent with every other result in the project — the skill reliably changes what agents *do*
+(catalog search, register weighing, pause discipline: three 0/3 → 3/3 flips) and has not been
+shown to change how good the output *looks*. Those are different claims and only the first is
+evidenced.
+
+Still outstanding for completeness (they cannot change the verdict, since F.2's rank clause
+already failed): the Q1 register-fit medians and the per-run signature-moment binaries.
+
+## Status (superseded — see result above)
+
+Criterion F was **instrument-clean and awaiting the owner's scores**: Q1 median register fit
 (baseline and with-skill), the W1 pooled ranking, and the signature-moment binaries. Until those
 land, F is neither passed nor failed — and per F.3 it fails outright if either register was bought
 at the other's expense, which is precisely what the pooled set is designed to reveal.

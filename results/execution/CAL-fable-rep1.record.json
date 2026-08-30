@@ -1,0 +1,39 @@
+{
+ "run": "CAL-fable-rep1",
+ "date": "2026-08-27",
+ "condition": "calibration_ablation (S1 prompt + references/landing_love_calibration.md; NO architect skill)",
+ "protocol": "evals/calibration_ablation_protocol.md (pre-registered 2026-08-27 before this run)",
+ "control_arm": "existing S1 baseline x3 (no skill, no calibration) - not re-run",
+ "model": "claude-fable-5 (explicit override)",
+ "fixture": "launch-page-base 3543ef9 (pristine)",
+ "interruptions": "none - single 58-minute run",
+ "PRE_REGISTERED_OBSERVATIONS": {
+  "1_spatial_3D_adoption": "YES - VERIFIED IN SOURCE, not from the report's prose. Hand-rolled WebGL2 with a real perspective pipeline: perspective() + lookAt() building uProj/uView (17 and 24 references), mat4 math, animated fov. A 3D world with sky and graph-paper floor, not a 2D/2.5D field. CONTRAST: S1 baseline was 0/3 - all three were 2.5D playhead-driven particle fields with no camera.",
+  "2_camera_choreography": "YES - VERIFIED IN SOURCE. 12 authored camera keyframes across 60s (CAM_KEYS), each with eye XYZ, target XYZ and fov: eye z travels 9.2 -> 2.5 -> -1.6 (passing through the scene), y 0.45 -> 4.6, x -4.8 -> 2.7, fov 40 -> 56. Consumed per frame via perspective/lookAt with additive pointer sway. Authored travel, not default orbit controls.",
+  "3_scroll_driven": "YES - scroll scrubs the 60s composition; Space acts as transport; deep-links by timecode (/?t=31).",
+  "4_reference_influence_cited": "NOT EXPLICITLY. The final report does not name the calibration axes (world premise, material language, interaction causality, signature memory) or any reference site. Influence is inferred from the output's shape, not from cited reasoning - recorded as such rather than assumed.",
+  "5_cost": "305,157 tokens / 57.8 min - inside the S1 baseline band (~250-300k, 46-67 min). No evidence the pack merely consumed context."
+ },
+ "implementation": "'The launch page is itself a Meridian composition' - 4th consecutive run in this concept family. Real keyframe engine (lib/composition.js: tracks, clips, cubic-bezier with CSS-compatible solver) drives camera, world formations, copy and an editor-grade timeline dock whose ruler/4 tracks/33 diamonds are the actual animating data. Six acts (Overture / The Curve / The Timeline / The Export / The Budget / Begin). Signature: bend an easing curve and the world, an evaluation comet, and the exported CSS/WAAPI all inherit it. ~730-line WebGL2 engine, ZERO dependencies, 6-14 draw calls, all six formations computed in-vertex-shader from seeds+uniforms.",
+ "measurements": {
+  "m6_static": "PASS (build, cleanup path, no interval loops)",
+  "m1": "PASS both profiles on GPU Chrome",
+  "m2_offscreen": "NOT_MEASURABLE_BY_GEOMETRY (viewport-fixed canvas - the documented S1 class)",
+  "m2b_hidden_pause": "PASS - rAF fully cancels on visibilitychange and on canvas exit (IntersectionObserver)",
+  "m3_reduced_motion": "PASS both profiles, full parity - a designed 'storyboard mode' (stacked full-viewport stills, one rendered frame per chapter, onion-skin dots), not a gutted page",
+  "m5_accessible_parallel": "PASS both profiles - labeled slider playhead with aria-valuetext timecode, named chapter buttons, focusable curve handles with arrow nudging, inactive acts inert",
+  "critical_failures": "ZERO"
+ },
+ "artifacts": {
+  "diff": "results/execution/CAL-fable-rep1.diff",
+  "source_snapshot": "results/execution/CAL-fable-rep1-source.zip (+ safety copy in ~/Documents)",
+  "measurements": "results/execution/CAL-fable-rep1.json",
+  "screenshots": "results/execution/screenshots/CAL-fable-rep1-*.png",
+  "motion_recording": "results/execution/motion/CAL-fable-rep1.webm (46s, pinned choreography)"
+ },
+ "cost": {
+  "tokens": 305157,
+  "duration_ms": 3466899,
+  "duration_min": 57.8
+ }
+}
