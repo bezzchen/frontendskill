@@ -17,7 +17,7 @@ contested the contest is named.
 | **G2** S0 register recognition | **MET** | 3/3 with-skill classified into the S register and proposed a realtime graphical system, vs 0/3 baseline (bar was ≥2/3). |
 | **G3** D1 catalog decision quality | **Met in substance, not in form** | No standalone with-skill D1 arm was run; the three D0 with-skill reps each produced verdicts meeting D1's evidence bar (cited sweeps, license gates, "adapt" over unjustified adoption). Recorded as a form gap so the owner can decide whether a D1 arm is still wanted. |
 | **G4** D0 unprompted discovery | **MET** | 3/3 searched catalogs unprompted and met D1-grade decision quality, vs 0/3 baseline (bar was ≥2/3). |
-| **G5** D2 abundance resistance | **Blocked on runs** | Baseline established (3/3 resisted, zero derivative drift vs controls). No with-skill D2 arm. |
+| **G5** D2 abundance resistance | **MET** (non-regression, ceiling-limited) | With-skill 3/3 custom, 0 catalog primitives adopted vs baseline's 1; derivative flags 0 in all 9 cells. Baseline was already at ceiling, so no-harm is the strongest supported claim. See results/G5_D2_WITHSKILL_FINDINGS.md. |
 
 ## Reading the board
 
