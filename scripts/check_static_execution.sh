@@ -29,15 +29,26 @@ else
   note "M6 no-interval-render-loop" "PASS"
 fi
 
-# --- Cleanup path present in effects that own a loop/instance ---
-owners=$(grep -lE "requestAnimationFrame|new Application|createScope|createTimer|createDraggable|WebGLRenderingContext|getContext\(" $SRC 2>/dev/null)
+# --- Cleanup path present for loop/instance owners (rubric amendment 2026-08-30) ---
+# Ownership requires a PERSISTENT loop or instance marker. `getContext(` alone is deliberately
+# excluded: it also matches throwaway readback canvases created inside pure functions, and helpers
+# that draw on a canvas they do not own. Teardown may live in the owning file or elsewhere in the
+# project - cross-file ownership is legitimate. Runtime teardown is M4's job.
+teardown_re="return \(\) =>|\.destroy\(|\.revert\(|cancelAnimationFrame|\.dispose\(|removeEventListener"
+owners=$(grep -lE "requestAnimationFrame|new Application|createScope|createTimer|createDraggable|new WebGLRenderer|WebGLRenderingContext" $SRC 2>/dev/null)
 if [ -n "$owners" ]; then
-  missing=""
-  for f in $owners; do grep -qE "return \(\) =>|\.destroy\(|\.revert\(|cancelAnimationFrame" "$f" || missing="$missing $f"; done
-  if [ -n "$missing" ]; then
-    note "M6 cleanup-path-present" "FAIL"; for m in $missing; do echo "    no teardown in $m"; done; fail=1
-  else
+  project_teardown=$(grep -lE "$teardown_re" $SRC 2>/dev/null | head -3)
+  local_missing=""
+  for f in $owners; do grep -qE "$teardown_re" "$f" || local_missing="$local_missing $f"; done
+  if [ -z "$local_missing" ]; then
     note "M6 cleanup-path-present" "PASS"
+  elif [ -n "$project_teardown" ]; then
+    note "M6 cleanup-path-present" "PASS (cross-file ownership)"
+    for m in $local_missing; do echo "    no local teardown in $m"; done
+    echo "    teardown found in project:"; for t in $project_teardown; do echo "      $t"; done
+  else
+    note "M6 cleanup-path-present" "FAIL"
+    for m in $local_missing; do echo "    no teardown in $m, and none anywhere in the project"; done; fail=1
   fi
 else
   note "M6 cleanup-path-present" "NOT_MEASURED (no loop/instance owner found)"

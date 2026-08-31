@@ -83,6 +83,58 @@ Applies to: **Performance Judgment**, alongside M2. Scroll-away pausing (M2) and
 pausing (M2b) are distinct behaviors; for viewport-fixed surfaces only M2b is measurable, and for
 scrollable sections both apply.
 
+
+### M3 amendment — content parity measured as content, not controls (2026-08-30)
+
+**Why.** M3's parity test counted accessible names on `button, a, ul li` and raised a *critical*
+failure whenever that count fell. It therefore could not distinguish:
+
+- **content loss** — a section, item or copy removed under reduced motion (genuinely critical), from
+- **control loss** — an interactive affordance whose referent no longer exists once motion stops
+  (legitimate: a "replay" button with nothing to replay, a "take the camera to its plate" control
+  with no moving camera).
+
+Three runs produced false criticals on this (W1-fable-rep2, THORN-demo1, THORN-demo2). Worse, the
+check is *blind in the other direction*: it passed THORN-demo1, whose reduced-motion hero shipped
+with the display title overlapping the bottle and the sub-copy cut mid-sentence — a P1 composition
+defect a name count cannot see. A test that fires on legitimate changes and misses real ones is
+measuring the wrong quantity.
+
+**Revised measurement.** Content parity is now judged on content:
+
+1. **Headings** — every heading (`h1`–`h6`) present with motion must be present under reduced
+   motion. Additions are allowed; omissions are not.
+2. **Body text volume** — reduced-motion `innerText` length must be **≥ 90%** of the motion-on
+   length. The margin absorbs legitimate label changes (a toggle reading "Motion on" → "Motion
+   off"), while the loss of a section or list moves far more than 10%.
+
+`contentParity` passes only when both hold. **A critical failure is raised only when content parity
+fails.** The accessible-name delta is still recorded, as `controlDelta`, and is explicitly an
+informational signal that never raises a critical.
+
+The motion-stops half of M3 is unchanged, as is its ≤20% threshold. **No threshold is loosened by
+this amendment**; a measurement is replaced with one that tests the property the rubric actually
+names ("Losing content under reduced motion is a critical failure"). Validated against smoke
+controls in both directions before use — a page that drops only controls must pass, and a page that
+drops a real section must still fail.
+
+### M6 amendment — cross-file ownership (2026-08-30)
+
+**Why.** The static cleanup check required teardown in the *same file* as any loop/instance marker,
+so legitimate cross-file ownership failed: a pure function that creates a throwaway canvas to read
+pixels, or a helper that draws on a canvas it does not own, while the engine module holds the real
+`dispose()`. Four occurrences (S1 class, I5ws-rep1, THORN-demo1, THORN-demo2), each adjudicated by
+hand.
+
+**Revised check.** `getContext(` alone no longer marks a file an owner — it is too weak a signal,
+matching transient readback canvases. Ownership requires a persistent loop or instance marker.
+For each owner, teardown may live in that file **or elsewhere in the project**; cross-file
+ownership reports PASS with a note naming where teardown was found. The check FAILS only when a
+loop/instance owner exists and **no** cleanup path exists anywhere in the project.
+
+This keeps the property the check exists for — a cleanup path exists — while removing a
+file-locality artifact. Runtime teardown remains M4's job, which is unchanged.
+
 ### M3 — Reduced motion
 
 Reload with `prefers-reduced-motion: reduce`.

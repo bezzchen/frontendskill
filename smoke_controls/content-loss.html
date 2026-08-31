@@ -1,0 +1,16 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><title>Content loss</title></head><body>
+<h1>Ardent</h1><h2>The botanicals</h2>
+<ul><li>Juniper — pine and cold air</li><li>Coriander — citrus and pepper</li><li>Angelica — earth and dryness</li></ul>
+<h2 id=made>How it is made</h2><p id=madep>One copper still. A slow run, cut by taste rather than by clock, roughly four hundred bottles a batch and every one of them numbered by hand in the book we keep by the door.</p>
+<h2>Stockists</h2><p>Independent merchants, mostly. Write to us and we will tell you who has it.</p>
+<canvas id=c width=300 height=150></canvas>
+<script>
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const cx = document.getElementById("c").getContext("2d"); let t=0, raf=0;
+function loop(){ cx.clearRect(0,0,300,150); cx.fillStyle="#a37"; cx.fillRect((t++%280),60,20,20); raf=requestAnimationFrame(loop); }
+if (reduced) { // GENUINE content loss: a whole section disappears
+  document.getElementById("made").remove(); document.getElementById("madep").remove();
+  document.querySelector("ul").remove();
+  cx.fillStyle="#a37"; cx.fillRect(140,60,20,20);
+} else loop();
+</script></body></html>

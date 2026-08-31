@@ -1,5 +1,44 @@
 # Changelog
 
+## v3.6 — 2026-08-30
+
+**Instrument release: the two checks that were producing false positives on every asset-bearing
+run are repaired, validated in both directions, and the historical cases re-measured.** No
+threshold was loosened; two measurements were replaced with ones that test the property the rubric
+actually names. Amendments pre-registered in `rubrics/execution_measurement.md` before any code
+changed.
+
+- **M3 now measures content, not controls.** It counted accessible names on `button, a, ul li` and
+  raised a *critical* whenever that count fell — unable to tell content loss from the legitimate
+  disappearance of a control whose referent no longer exists. Parity is now: every motion-on
+  heading must survive, and body text (**excluding** buttons, since controls are not content) must
+  retain ≥90% of its volume. The name delta is still reported as `controlDelta`, explicitly
+  informational, and **can no longer raise a critical**.
+- **The check was also blind in the other direction**, which is the stronger argument: it *passed*
+  THORN-demo1, whose reduced-motion hero shipped with the display title overlapping the bottle and
+  the sub-copy cut mid-sentence. A name count cannot see a composition defect.
+- **M6 accepts cross-file ownership.** `getContext(` no longer marks a file an owner — it matched
+  throwaway readback canvases in pure functions and helpers drawing on canvases they do not own.
+  Ownership now requires a persistent loop/instance marker, teardown may live in the owner or
+  anywhere in the project (reported as "PASS (cross-file ownership)"), and the check FAILS only
+  when **no** cleanup path exists anywhere. Runtime teardown remains M4's job, unchanged.
+- **Validated in both directions before use**, smoke controls banked in `smoke_controls/`:
+  - `controls-only.html` — drops three buttons under reduced motion, keeps all content → **PASS**
+    (textRatio 1.00, controlDelta −3). This is the false-positive class.
+  - `content-loss.html` — removes a whole section and a list → **FAIL**, critical raised
+    (1 heading missing, textRatio 0.28). Real losses still fail.
+  - `m6-negative/engine.js` — a loop owner with no teardown anywhere → **FAIL** on
+    `cleanup-path-present` specifically, with the correct message.
+  - The first threshold I chose (0.9 on full body text) failed its own smoke control at 0.885,
+    because on a short page three button labels are 11% of the text. That is what prompted
+    excluding controls from the content measure — the fix came from the test, not from taste.
+- **Historical cases re-measured:** THORN-demo1 and THORN-demo2 both go from 2 criticals to
+  **0 criticals, m3 PASS**, with `textRatio` of **1.21** and **1.18** — the reduced-motion folio
+  contains *more* readable content than the motion view, which the old check scored as content
+  loss. The three prior hand-adjudications (W1-fable-rep2, THORN-demo1, THORN-demo2) and four M6
+  adjudications are now mechanically reproduced rather than argued.
+
+
 ## v3.5 — 2026-08-30
 
 **Calibration ablation — the pinnacle probe. The reference pack moves the ceiling: spatial-3D

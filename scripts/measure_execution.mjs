@@ -242,6 +242,20 @@ async function profile(browser, profileName) {
     const nodes = [...document.querySelectorAll('[role="listbox"] [role="option"], ul li, button, a')];
     return nodes.map((n) => (n.getAttribute("aria-label") || n.textContent || "").trim()).filter(Boolean).length;
   });
+  // Content snapshot for the M3 parity amendment (2026-08-30): headings + body text volume.
+  const CONTENT = () => {
+    // Content excludes interactive controls: a control whose referent stops existing under
+    // reduced motion is a legitimate change, so its label must not count as lost content
+    // (rubric amendment 2026-08-30). Buttons are stripped; prose links stay, being content.
+    const clone = document.body.cloneNode(true);
+    clone.querySelectorAll('button, [role="button"], script, style').forEach((n) => n.remove());
+    return {
+      headings: [...document.querySelectorAll("h1,h2,h3,h4,h5,h6")]
+        .map((h) => (h.textContent || "").replace(/\s+/g, " ").trim()).filter(Boolean),
+      textLen: (clone.textContent || "").replace(/\s+/g, " ").trim().length,
+    };
+  };
+  const axContent = await page.evaluate(CONTENT);
   const focusables = await page.evaluate(
     () => document.querySelectorAll('a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])').length
   );
@@ -267,6 +281,12 @@ async function profile(browser, profileName) {
     const nodes = [...document.querySelectorAll('[role="listbox"] [role="option"], ul li, button, a')];
     return nodes.map((n) => (n.getAttribute("aria-label") || n.textContent || "").trim()).filter(Boolean).length;
   });
+  const rmContent = await rmPage.evaluate(CONTENT);
+  // Parity is judged on CONTENT, never on control counts (rubric amendment 2026-08-30):
+  // every motion-on heading must survive, and body text must retain >= 90% of its volume.
+  const missingHeadings = axContent.headings.filter((h) => !rmContent.headings.includes(h));
+  const textRatio = axContent.textLen ? rmContent.textLen / axContent.textLen : 1;
+  const contentParity = missingHeadings.length === 0 && textRatio >= 0.9;
   // Content parity is required of every implementation, animated or not. The motion-stops
   // half only applies when there is continuous motion to stop.
   const motionStops = !hasContinuousAnimation || rmRate / onscreenRate <= THRESHOLDS.reducedMotionRatio;
@@ -274,11 +294,20 @@ async function profile(browser, profileName) {
     reducedMotionRafPerSec: rmRate,
     ratio: onscreenRate ? rmRate / onscreenRate : null,
     accessibleNameCount: rmNames,
-    contentParity: rmNames >= axNames,
+    contentParity,
+    headingsMotionOn: axContent.headings.length,
+    headingsReduced: rmContent.headings.length,
+    missingHeadings,
+    textLengthRatio: Number(textRatio.toFixed(3)),
+    // Informational only. A control whose referent stops existing under reduced motion is a
+    // legitimate change and must never raise a critical (rubric amendment 2026-08-30).
+    controlDelta: rmNames - axNames,
     motionStops,
-    pass: motionStops && rmNames >= axNames,
+    pass: motionStops && contentParity,
     scope: hasContinuousAnimation ? "full" : "content-parity-only (no continuous animation present)",
-    criticalFailure: rmNames < axNames ? "content lost under reduced motion" : null,
+    criticalFailure: contentParity
+      ? null
+      : `content lost under reduced motion (${missingHeadings.length} heading(s) missing, text ratio ${textRatio.toFixed(2)})`,
   };
   await rmCtx.close();
 
@@ -323,7 +352,7 @@ const report = {
   url: URL_,
   section_selector: SECTION,
   measured_at: new Date().toISOString(),
-  protocol: "rubrics/execution_measurement.md (pre-registered 2026-08-11; M2 geometry gate + M2b amendment 2026-08-24)",
+  protocol: "rubrics/execution_measurement.md (pre-registered 2026-08-11; M2 geometry gate + M2b amendment 2026-08-24; M3 content-parity amendment 2026-08-30)",
   desktop: await profile(browser, "desktop"),
   mobile: await profile(browser, "mobile"),
   m4_teardown: await teardownCheck(browser),
