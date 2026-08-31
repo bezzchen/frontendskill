@@ -1,0 +1,41 @@
+{
+ "run": "THORN-demo2-directed",
+ "date": "2026-08-30",
+ "status": "CAPABILITY DEMONSTRATION - director critique+revise pass. Not an eval run; no pre-registered criteria, no baseline; not admissible as evidence of skill efficacy.",
+ "condition": "architect skill (non-negotiables only) + Impeccable v4.1.1 as design director, pinned at registry SHA f88b2837a7d7, read from disk incl. its 42KB reference/critique.md",
+ "input": "THORN-demo1 (first draft), preserved unmodified for comparison",
+ "model": "claude-fable-5",
+ "interruptions": "2 stream-watchdog stalls + 1 notification-routing stall (child assessment agent completed to the orchestrator, relayed verbatim); resumed from transcript each time",
+ "what_the_director_did": "Ran its own method: two isolated sub-assessments (unanchored design review + mechanical detector), synthesised with parent observations, scored 29/36 'Good - explicitly not arrived', persisted to .impeccable/critique/ for future polish runs. Wrote CRITIQUE.md (127 lines) BEFORE editing, then revised 19 files (~2977 insertions) with NO new dependencies, fonts or primitives.",
+ "critique_headline": "'Authored at the core, interchangeable at the edges.' The premise-to-pixel chain (ink-sampled particles, one bottle profile for glass and condensation, runtime label) is real world-building; the vapour rendered as lime-green additive glitter, the still was an anonymous copper onion, and the tail was premium-template boilerplate that would work for a candle brand with the nouns swapped.",
+ "VERIFIED_BY_ORCHESTRATOR": {
+  "P1_folio_collision_FIXED": "CONFIRMED by measurement and by eye. BEFORE: display title spanned x 101-581 at 1440x900 with the bottle centre-left - the word 'Thornmere' overlapped the glass and the sub-copy was cut mid-sentence ('...in copper. What' running into the bottle). AFTER: title ends x=517 (matching the director's own reported figure exactly), bottle repositioned to the right, copy fully legible, no overlap. Screenshots: THORN-demo1-folio-1440.png vs THORN-demo2-folio-1440.png.",
+  "P1_glass_material_FIXED": "CONFIRMED visually. The bottle reads as green glass with visible transmission and rim light in the revision; in the first draft it was near-black against the void, beside copy claiming the spirit 'runs perfectly clear'.",
+  "beat_correction_PARTIAL": "Captions advance coherently through the botanical sequence under real scrolling (juniper -> angelica -> orris -> lemon across p=0.10/0.149/0.20/0.247). Whether the caption now matches the specific plate being FRAMED could not be independently confirmed: WebGL canvases do not read back after presentation (preserveDrawingBuffer:false), so the orchestrator cannot see which plate is centred. Recorded as partially verified - the director's own numeric proof stands unchallenged but unreplicated.",
+  "no_dependency_drift": "CONFIRMED - package.json diff identical to the first draft (three only)."
+ },
+ "measurements": {
+  "m1": "PASS both profiles",
+  "m2_offscreen": "NOT_MEASURABLE_BY_GEOMETRY (viewport-fixed canvas)",
+  "m2b_hidden_pause": "PASS ratio 0.00",
+  "m5_accessible_parallel": "PASS",
+  "m3_reduced_motion": "REPORTED FAIL, 2 criticals - ADJUDICATED FALSE POSITIVE AGAIN (same class, now 3rd occurrence programme-wide). Verified: all five botanicals present in reduced-motion text; heading list IDENTICAL (14 vs 14); the entire delta is five scene-navigation controls ('<botanical> - take the camera to its plate') plus the motion toggle relabelling. Name counts actually ROSE both sides (18 vs 13, was 13 vs 8) because the director added an act rail.",
+  "m6_static": "REPORTED FAIL - label.js only; same documented cross-file ownership blind spot (4th occurrence). engine.js holds the real dispose().",
+  "console_errors": "zero"
+ },
+ "instrument_consequence": "Two checks have now produced false positives on every asset-bearing run: M3's parity test counts CONTROLS not CONTENT, and M6's cleanup test cannot see cross-file ownership. Neither was changed - thresholds are frozen and this is a demo - but the case for fixing both is now strong, and M3's blindness is doubly evidenced: it passed the first draft while the folio hero shipped with type crashing into the bottle, a P1 defect it structurally cannot detect.",
+ "the_finding": "The architect skill gets the architecture right and the battery green; it took a DIRECTOR to notice the page was the wrong colour, that the reduced-motion composition was broken, and that the tail was interchangeable. This is the first evidence in the programme for the design-director role that ARCHITECTURE_V2 always specified and no run had ever exercised.",
+ "environment_residue": "The director added a 'thorn2-dev' entry to /Users/bezzchen/Documents/.claude/launch.json (outside the run dir). Harmless, noted for cleanup.",
+ "artifacts": {
+  "critique": "CRITIQUE.md in the run dir (+ ~/Documents/THORN-CRITIQUE.md)",
+  "source_snapshot": "results/execution/THORN-demo2-source.zip (+ ~/Documents/THORN-demo2-directed-FINAL.zip)",
+  "measurements": "results/execution/THORN-demo2.json",
+  "screenshots": "results/execution/screenshots/THORN-demo2-*.png incl. folio before/after pair",
+  "motion_recording": "results/execution/motion/THORN-demo2.webm (47s)"
+ },
+ "cost": {
+  "tokens": 392531,
+  "duration_ms": 1173597,
+  "note": "plus a 199k-token child assessment agent"
+ }
+}
