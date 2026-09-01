@@ -1,0 +1,92 @@
+{
+  "wave": "routing-baseline-reps-2-3",
+  "date_launched": "2026-09-01",
+  "why": "Criterion A cannot be computed from rep 1 alone; its own text requires three baseline repetitions. Discovered 2026-09-01 that the success-bar board wrongly recorded baselines as complete.",
+  "condition": "baseline_no_skill",
+  "model_arm": "Fable",
+  "mode": "plan-only",
+  "delivery_wrapper": "Work in the repository at <path>.\\n\\n<verbatim pinned prompt from evals/routing_evals.json>",
+  "wrapper_parity_note": "Same minimal wrapper shape used for the with-skill arms, per the baseline-wrapper parity assumption documented in evals/withskill_protocol.md.",
+  "fixtures": {
+    "E1": "next-tailwind-base@edf3be4",
+    "E2": "anime-v4-portfolio@6f5dcaa",
+    "E3": "next-tailwind-base@edf3be4",
+    "E4": "next-tailwind-base@edf3be4",
+    "E5": "next-tailwind-base@edf3be4",
+    "E6": "next-tailwind-base@edf3be4"
+  },
+  "fixture_integrity_at_launch": "PASSED (all four fixtures clean at pinned SHAs)",
+  "rep2_launched": [
+    "E1",
+    "E2",
+    "E3",
+    "E4",
+    "E5",
+    "E6"
+  ],
+  "rep3_launched": [
+    "E1",
+    "E2",
+    "E3",
+    "E4",
+    "E5",
+    "E6"
+  ],
+  "rep3_hold_reason": "Held as a checkpoint rather than running 12 concurrent Fable agents; owner's Fable limit has been exhausted twice in this programme.",
+  "incident": "An authoring-only script (scripts/freeze_fixtures.sh) was executed accidentally by an orchestrator glob loop before launch. Verified no damage: FIXTURE_MANIFEST.json byte-identical to the committed copy, all four fixture worktrees clean at pinned SHAs, integrity check PASSED. Recorded because it was a genuine risk to the programme's pins.",
+  "scoring_note": "Layer B: only Conceptual Fit, Architectural Restraint, Existing-Stack Respect are load-bearing (rubrics/scoring_rubric.md). Other dimensions recorded as plan-quality signals with no decision weight.",
+  "rep2_completed": [
+    "E1",
+    "E2",
+    "E3",
+    "E4",
+    "E5"
+  ],
+  "rep2_failures": [
+    {
+      "eval": "E2",
+      "cause": "API error - host machine slept mid-response",
+      "resolution": "relaunched on clean dir, byte-identical prompt; completed"
+    },
+    {
+      "eval": "E3",
+      "cause": "stream watchdog stall (600s no progress)",
+      "resolution": "relaunched on clean dir, byte-identical prompt; completed"
+    },
+    {
+      "eval": "E6",
+      "cause": "stream watchdog stall (600s no progress)",
+      "resolution": "relaunched; the relaunch then VIOLATED the plan-only protocol - see results/deviations/E6base-rep2-protocol-violation.md - discarded and relaunched again"
+    }
+  ],
+  "plan_only_compliance_check": "git status --porcelain on every run dir after completion; MANDATORY. Caught the E6 violation.",
+  "unscored_observation_pause_discipline": "Offscreen/hidden pause discipline appeared UNPROMPTED in 3 of 5 completed baselines (E2, E3, E5) with no skill loaded; E2 additionally cited animejs engine.pauseOnDocumentHidden as an existing library default. Layer-B plan-quality signal only, no decision weight under the described-not-demonstrated rule.",
+  "unscored_observation_dependencies": "All 5 completed baselines chose ZERO new runtime dependencies, several with explicit cost reasoning (E1 priced Framer Motion at ~35kB and rejected it; E3 rejected framer-motion ~30kB and GSAP ScrollTrigger; E4 rejected three.js ~150KB/R3F/OGL; E5 rejected WebGL libraries; E2 rejected Framer Motion and physics engines). Consistent with criterion A's near-ceiling baseline.",
+  "rep3_completed": [
+    "E1",
+    "E2",
+    "E3",
+    "E4",
+    "E5"
+  ],
+  "plan_only_compliance_results": {
+    "method": "git status --porcelain + git diff --stat on every run dir after completion",
+    "clean_zero_dirty": [
+      "E1-rep2",
+      "E2-rep2",
+      "E3-rep2",
+      "E4-rep2",
+      "E5-rep2",
+      "E1-rep3",
+      "E3-rep3",
+      "E4-rep3",
+      "E5-rep3"
+    ],
+    "E2-rep3": "one untracked line (?? node_modules/) from an npm ci run for package introspection; git diff --stat EMPTY, zero tracked source changes; ruled NOT a violation - inspection, not implementation",
+    "E6-rep2-first-relaunch": "VIOLATION - 5 source files modified, 2 new components, production build, dev server left running; discarded and rerun"
+  },
+  "convergence_observation": "Between-rep convergence is very high in every cell with two reps. E1: identical defect list, identical zero-dep decision with Framer Motion priced, identical derived-dirty model, and both reps used the phrase 'reward early, punish late'. E3: both sticky-track zero-dep, both rejected animation-timeline:scroll() on browser support, both split continuous CSS-var from discrete data-attribute channels, both used pathLength=1 to avoid getTotalLength(); act boundaries differ by 0.04. E4: both one shared viewport WebGL2 overlay synced to data-project-media rects, both rejected per-card canvases on the context-limit argument and R3F on the 'shader is identical either way' argument, both spotted that a page-wide canvas is what lets the open transition escape the card box. E5: both Canvas 2D + sprite atlas + React-free typed-array engine with WebGL as swappable escalation. E2: both identified animejs as v4 not v3, both chose the same two-nested-layer single-writer transform architecture, both used createScope mediaQueries with revert() cleanup. IMPLICATION FOR CRITERION A: the baseline is not merely near-ceiling, it is LOW-VARIANCE near-ceiling, so a three-rep median will have almost no spread and the 0.10-tolerance test becomes trivially easy to pass. The only cell with real discriminating power is E6.",
+  "zero_new_dependencies": "10 of 10 completed baselines chose zero new runtime dependencies, each with explicit cost reasoning.",
+  "E6_status": "BLOCKED - 3/3 attempts implemented instead of proposing. Root cause identified as an eval-design defect: E6's delivered prompt ends 'before implementing anything' while E1-E5 end 'Do not implement yet.' See results/deviations/E6_PROMPT_DEFECT.md. Owner decision required (freeze-rule).",
+  "wave_result": "10 of 12 baseline runs banked (E1-E5 x rep2, rep3). E6 x rep2, rep3 unobtainable under the pinned prompt."
+}

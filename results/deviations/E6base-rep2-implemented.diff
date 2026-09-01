@@ -1,0 +1,1471 @@
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..0caaae2 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -1,26 +1,697 @@
+ @import "tailwindcss";
+ 
++/* ---------------------------------------------------------------------------
++   Jordan Lee — plot-sheet design system
++   Paper + ink tokens, engineering-drawing vocabulary, figure draw-in motion.
++--------------------------------------------------------------------------- */
++
+ :root {
+   color-scheme: light dark;
+-  --background: #f5f5f3;
+-  --foreground: #161616;
+-  --muted: #6b6b66;
++
++  --paper: #f6f7f4;
++  --plot-bg: #fbfcf9;
+   --surface: #ffffff;
+-  --line: #deded8;
++  --ink: #171b21;
++  --fig-ink: #262e39;
++  --muted: #5b6470;
++  --line: #d9dfe5;
++  --hairline: #c8d1d9;
++  --accent: #2743d6;
++  --accent-strong: #1d34ad;
++  --accent-soft: rgba(39, 67, 214, 0.08);
++  --red: #d8442b;
++  --grid-major: rgba(39, 67, 214, 0.085);
++  --grid-minor: rgba(39, 67, 214, 0.042);
++
++  --font-display: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
++  --font-body: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
++  --font-annot: var(--font-plex-mono), "SFMono-Regular", Menlo, Consolas, monospace;
+ }
+ 
+ @media (prefers-color-scheme: dark) {
+   :root {
+-    --background: #111110;
+-    --foreground: #f5f5f2;
+-    --muted: #a0a099;
+-    --surface: #181817;
+-    --line: #31312f;
++    --paper: #0e1116;
++    --plot-bg: #10141a;
++    --surface: #151a21;
++    --ink: #e8ecf4;
++    --fig-ink: #c3ccda;
++    --muted: #96a0ae;
++    --line: #242c36;
++    --hairline: #2d3643;
++    --accent: #8fa2ff;
++    --accent-strong: #aab8ff;
++    --accent-soft: rgba(143, 162, 255, 0.11);
++    --red: #ff6b4a;
++    --grid-major: rgba(143, 162, 255, 0.06);
++    --grid-minor: rgba(143, 162, 255, 0.028);
+   }
+ }
+ 
+ * { box-sizing: border-box; }
+-html { background: var(--background); color: var(--foreground); }
+-body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
++
++html {
++  background: var(--paper);
++  color: var(--ink);
++}
++
++@media (prefers-reduced-motion: no-preference) {
++  html { scroll-behavior: smooth; }
++}
++
++body {
++  margin: 0;
++  font-family: var(--font-body);
++  font-size: 1rem;
++  line-height: 1.6;
++  background-color: var(--paper);
++  /* millimeter paper: major + minor rules */
++  background-image:
++    linear-gradient(var(--grid-major) 1px, transparent 1px),
++    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px),
++    linear-gradient(var(--grid-minor) 1px, transparent 1px),
++    linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px);
++  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
++  -webkit-font-smoothing: antialiased;
++}
++
+ a { color: inherit; }
+ button, input { font: inherit; }
++
++::selection { background: var(--accent-soft); color: var(--ink); }
++
++:focus-visible {
++  outline: 2px solid var(--accent);
++  outline-offset: 2px;
++  border-radius: 2px;
++}
++
++/* ------------------------------------------------------------------ layout */
++
++.sheet {
++  max-width: 76rem;
++  margin: 0 auto;
++  padding-inline: clamp(1.25rem, 4vw, 2.5rem);
++}
++
++section { scroll-margin-top: 5rem; }
++
++/* ------------------------------------------------------------------ type */
++
++.eyebrow {
++  font-family: var(--font-annot);
++  font-size: 0.72rem;
++  font-weight: 500;
++  letter-spacing: 0.16em;
++  text-transform: uppercase;
++  color: var(--accent);
++}
++
++.annot {
++  font-family: var(--font-annot);
++  font-size: 0.72rem;
++  letter-spacing: 0.05em;
++  color: var(--muted);
++}
++
++.display {
++  font-family: var(--font-display);
++  font-stretch: 123%;
++  font-weight: 800;
++  letter-spacing: -0.015em;
++  line-height: 0.95;
++  text-transform: uppercase;
++}
++
++/* ------------------------------------------------------------------ topbar */
++
++.topbar {
++  border-bottom: 1px solid var(--line);
++  background: color-mix(in srgb, var(--paper) 82%, transparent);
++  backdrop-filter: blur(6px);
++}
++
++.topbar-inner {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  gap: 1rem;
++  padding-block: 0.7rem;
++}
++
++.wordmark {
++  display: inline-flex;
++  align-items: center;
++  gap: 0.65rem;
++  text-decoration: none;
++}
++
++.monogram {
++  display: inline-grid;
++  place-items: center;
++  width: 1.7rem;
++  height: 1.7rem;
++  border: 1.5px solid var(--ink);
++  font-family: var(--font-display);
++  font-stretch: 120%;
++  font-weight: 800;
++  font-size: 0.72rem;
++  letter-spacing: 0.04em;
++}
++
++.wordmark-name {
++  font-family: var(--font-annot);
++  font-size: 0.74rem;
++  letter-spacing: 0.12em;
++  text-transform: uppercase;
++  color: var(--muted);
++}
++
++.topnav {
++  display: flex;
++  gap: 1.5rem;
++}
++
++.topnav a {
++  font-family: var(--font-annot);
++  font-size: 0.72rem;
++  letter-spacing: 0.14em;
++  text-transform: uppercase;
++  text-decoration: none;
++  color: var(--muted);
++  padding-block: 0.25rem;
++  border-bottom: 1.5px solid transparent;
++  transition: color 0.2s ease, border-color 0.2s ease;
++}
++
++.topnav a:hover { color: var(--accent); border-color: var(--accent); }
++
++/* ------------------------------------------------------------------ hero */
++
++.hero {
++  position: relative;
++  overflow: hidden;
++  border-bottom: 1px solid var(--line);
++}
++
++.hero-inner {
++  position: relative;
++  padding-block: clamp(4.5rem, 11vh, 8.5rem) clamp(3.5rem, 8vh, 6rem);
++}
++
++.hero-fig {
++  position: absolute;
++  inset: 0;
++  display: block;
++  width: 100%;
++  height: 100%;
++  color: var(--fig-ink);
++  opacity: 0.34;
++  pointer-events: none;
++}
++
++.hero-fig .hero-curve {
++  stroke-dasharray: 1;
++  stroke-dashoffset: 1;
++  animation: draw-in 3.2s cubic-bezier(0.62, 0.04, 0.22, 1) 0.35s forwards;
++}
++
++.penhead {
++  fill: var(--red);
++  offset-rotate: 0deg;
++  animation: pen-travel 26s linear 3.6s infinite;
++  opacity: 0;
++}
++
++@keyframes pen-travel {
++  0% { offset-distance: 0%; opacity: 1; }
++  100% { offset-distance: 100%; opacity: 1; }
++}
++
++@keyframes draw-in {
++  to { stroke-dashoffset: 0; }
++}
++
++.hero-copy { position: relative; max-width: 46rem; }
++
++.hero-copy .eyebrow { display: block; margin-bottom: 1.1rem; }
++
++.hero-title {
++  margin: 0;
++  font-size: clamp(3.1rem, 9.2vw, 6.8rem);
++}
++
++.hero-sub {
++  margin: 1.4rem 0 0;
++  max-width: 34rem;
++  font-size: clamp(1.02rem, 1.5vw, 1.16rem);
++  line-height: 1.65;
++  color: var(--muted);
++  text-wrap: balance;
++}
++
++.hero-sub strong { color: var(--ink); font-weight: 600; }
++
++/* staged entrance */
++.rise { opacity: 0; transform: translateY(14px); animation: rise 0.75s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
++.rise-1 { animation-delay: 0.05s; }
++.rise-2 { animation-delay: 0.16s; }
++.rise-3 { animation-delay: 0.3s; }
++.rise-4 { animation-delay: 0.48s; }
++
++@keyframes rise {
++  to { opacity: 1; transform: none; }
++}
++
++/* drafting title block */
++.titleblock {
++  display: grid;
++  grid-template-columns: repeat(2, minmax(0, 1fr));
++  width: fit-content;
++  margin-top: clamp(2.2rem, 5vh, 3.4rem);
++  border: 1px solid var(--hairline);
++  background: color-mix(in srgb, var(--surface) 72%, transparent);
++}
++
++@media (min-width: 640px) {
++  .titleblock { grid-template-columns: repeat(4, minmax(0, 1fr)); }
++}
++
++.tb-cell {
++  padding: 0.55rem 1rem 0.6rem;
++  border-right: 1px solid var(--hairline);
++  border-bottom: 1px solid var(--hairline);
++}
++
++.tb-cell:last-child { border-right: 0; }
++
++@media (max-width: 639px) {
++  .tb-cell:nth-child(even) { border-right: 0; }
++  .tb-cell:nth-child(n + 3) { border-bottom: 0; }
++}
++
++@media (min-width: 640px) {
++  .tb-cell { border-bottom: 0; }
++}
++
++.tb-label {
++  display: block;
++  font-family: var(--font-annot);
++  font-size: 0.58rem;
++  letter-spacing: 0.14em;
++  text-transform: uppercase;
++  color: var(--muted);
++}
++
++.tb-value {
++  display: block;
++  margin-top: 0.15rem;
++  font-family: var(--font-annot);
++  font-size: 0.78rem;
++  font-weight: 600;
++  letter-spacing: 0.04em;
++  color: var(--ink);
++  white-space: nowrap;
++}
++
++/* ------------------------------------------------------------- section head */
++
++.shead {
++  display: flex;
++  flex-wrap: wrap;
++  align-items: baseline;
++  justify-content: space-between;
++  gap: 0.5rem 1.5rem;
++  margin: 0 0 0.9rem;
++}
++
++.shead h2 {
++  margin: 0.35rem 0 0;
++  font-family: var(--font-display);
++  font-stretch: 118%;
++  font-weight: 750;
++  font-size: clamp(1.65rem, 3.2vw, 2.3rem);
++  letter-spacing: -0.01em;
++  line-height: 1.05;
++}
++
++.shead .annot { margin-left: auto; }
++
++.section-note {
++  margin: 0 0 2.2rem;
++  max-width: 40rem;
++  color: var(--muted);
++  font-size: 0.98rem;
++}
++
++.rule { border: 0; border-top: 1px solid var(--line); margin: 0 0 1.6rem; }
++
++/* ------------------------------------------------------------------ plates */
++
++.plate-grid {
++  display: grid;
++  gap: 1.4rem;
++  grid-template-columns: 1fr;
++}
++
++@media (min-width: 720px) {
++  .plate-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
++}
++
++.plate {
++  position: relative;
++  border: 1px solid var(--line);
++  background: var(--surface);
++  border-radius: 6px;
++}
++
++.plate-link {
++  display: block;
++  padding: 0.9rem 0.9rem 1.15rem;
++  text-decoration: none;
++  height: 100%;
++}
++
++/* plot area = a small sheet inside the plate */
++.plotarea {
++  position: relative;
++  border: 1px solid var(--hairline);
++  border-radius: 3px;
++  background-color: var(--plot-bg);
++  background-image:
++    linear-gradient(var(--grid-minor) 1px, transparent 1px),
++    linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px);
++  background-size: 20px 20px;
++  overflow: hidden;
++}
++
++.plotarea svg {
++  display: block;
++  width: 100%;
++  height: auto;
++  color: var(--fig-ink);
++}
++
++.plotarea path {
++  fill: none;
++  stroke: currentColor;
++  stroke-width: 1.4;
++  stroke-linecap: round;
++  stroke-linejoin: round;
++  vector-effect: non-scaling-stroke;
++  stroke-dasharray: 1;
++  stroke-dashoffset: 0;
++  transition:
++    stroke-dashoffset 1.5s cubic-bezier(0.6, 0.05, 0.25, 1) calc(0.12s + var(--i, 0) * 90ms),
++    stroke 0.35s ease;
++}
++
++.plotarea circle {
++  fill: currentColor;
++  transform-box: fill-box;
++  transform-origin: center;
++  transition:
++    transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) calc(0.3s + var(--i, 0) * 24ms),
++    opacity 0.4s ease calc(0.3s + var(--i, 0) * 24ms),
++    fill 0.35s ease;
++}
++
++/* figure caption row */
++.figcap {
++  display: flex;
++  align-items: baseline;
++  gap: 0.8rem;
++  margin-top: 0.85rem;
++}
++
++.fig-no {
++  font-family: var(--font-annot);
++  font-size: 0.7rem;
++  font-weight: 600;
++  letter-spacing: 0.12em;
++  color: var(--accent);
++  white-space: nowrap;
++}
++
++.fig-params {
++  margin-left: auto;
++  font-family: var(--font-annot);
++  font-size: 0.66rem;
++  letter-spacing: 0.03em;
++  color: var(--muted);
++  white-space: nowrap;
++  overflow: hidden;
++  text-overflow: ellipsis;
++}
++
++.plate h3 {
++  margin: 0.55rem 0 0;
++  font-family: var(--font-display);
++  font-stretch: 112%;
++  font-weight: 730;
++  font-size: 1.22rem;
++  letter-spacing: 0.005em;
++  line-height: 1.2;
++}
++
++.plate-summary {
++  margin: 0.45rem 0 0;
++  font-size: 0.92rem;
++  line-height: 1.55;
++  color: var(--muted);
++}
++
++.plate-meta {
++  margin-top: 0.8rem;
++  font-family: var(--font-annot);
++  font-size: 0.68rem;
++  letter-spacing: 0.08em;
++  text-transform: uppercase;
++  color: var(--muted);
++}
++
++/* hover: re-ink */
++@media (hover: hover) {
++  .plate {
++    transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease;
++  }
++  .plate:hover {
++    transform: translateY(-3px);
++    border-color: var(--accent);
++    box-shadow: 0 10px 30px -18px color-mix(in srgb, var(--accent) 55%, transparent);
++  }
++  .plate:hover .plotarea { color: var(--accent); }
++  .plate:hover .fig-no { color: var(--accent-strong); }
++}
++
++/* ------------------------------------------------ scroll reveal (JS-armed) */
++
++[data-reveal] {
++  transition: opacity 0.65s ease var(--d, 0ms), transform 0.65s cubic-bezier(0.2, 0.7, 0.2, 1) var(--d, 0ms);
++}
++
++.reveal-armed [data-reveal]:not(.in) {
++  opacity: 0;
++  transform: translateY(16px);
++  transition: none;
++}
++
++.reveal-armed [data-reveal]:not(.in) .plotarea path {
++  stroke-dashoffset: 1;
++  transition: none;
++}
++
++.reveal-armed [data-reveal]:not(.in) .plotarea circle {
++  transform: scale(0);
++  opacity: 0;
++  transition: none;
++}
++
++/* ---------------------------------------------------------------- settings */
++
++.panel {
++  border: 1px solid var(--line);
++  background: var(--surface);
++  border-radius: 6px;
++  padding: clamp(1.3rem, 3vw, 2rem);
++}
++
++.panel fieldset {
++  border: 0;
++  margin: 0 0 1.7rem;
++  padding: 0;
++}
++
++.panel fieldset:last-of-type { margin-bottom: 0; }
++
++.panel legend {
++  padding: 0;
++  margin-bottom: 0.75rem;
++  font-weight: 650;
++  font-size: 0.95rem;
++}
++
++.lbl {
++  display: block;
++  font-size: 0.82rem;
++  font-weight: 550;
++  color: var(--muted);
++  margin-bottom: 0.3rem;
++}
++
++.field {
++  width: 100%;
++  padding: 0.55rem 0.75rem;
++  border: 1px solid var(--line);
++  border-radius: 4px;
++  background: var(--paper);
++  color: var(--ink);
++  transition: border-color 0.2s ease, box-shadow 0.2s ease;
++}
++
++.field::placeholder { color: color-mix(in srgb, var(--muted) 70%, transparent); }
++
++.field:focus-visible {
++  outline: none;
++  border-color: var(--accent);
++  box-shadow: 0 0 0 3px var(--accent-soft);
++}
++
++.field-row { margin-bottom: 0.9rem; }
++.field-row:last-child { margin-bottom: 0; }
++
++.toggle-row {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  gap: 1rem;
++  padding: 0.85rem 1rem;
++  border: 1px solid var(--line);
++  border-radius: 4px;
++  background: var(--paper);
++  cursor: pointer;
++}
++
++.toggle-title { font-size: 0.92rem; font-weight: 550; }
++.toggle-desc { display: block; font-size: 0.8rem; color: var(--muted); margin-top: 0.1rem; }
++
++.switch {
++  appearance: none;
++  -webkit-appearance: none;
++  flex: none;
++  width: 2.5rem;
++  height: 1.45rem;
++  margin: 0;
++  border-radius: 999px;
++  background: var(--line);
++  border: 1px solid var(--hairline);
++  position: relative;
++  cursor: pointer;
++  transition: background 0.2s ease, border-color 0.2s ease;
++}
++
++.switch::after {
++  content: "";
++  position: absolute;
++  top: 50%;
++  left: 3px;
++  width: 1.02rem;
++  height: 1.02rem;
++  border-radius: 50%;
++  background: var(--surface);
++  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
++  transform: translateY(-50%);
++  transition: left 0.18s cubic-bezier(0.2, 0.7, 0.2, 1);
++}
++
++.switch:checked { background: var(--accent); border-color: var(--accent); }
++.switch:checked::after { left: calc(100% - 1.02rem - 3px); background: #fff; }
++
++.form-actions {
++  display: flex;
++  align-items: center;
++  gap: 0.9rem;
++  margin-top: 1.7rem;
++  padding-top: 1.4rem;
++  border-top: 1px solid var(--line);
++}
++
++.btn-primary {
++  padding: 0.55rem 1.15rem;
++  border: 1px solid transparent;
++  border-radius: 4px;
++  background: var(--accent);
++  color: #fff;
++  font-weight: 600;
++  font-size: 0.92rem;
++  cursor: pointer;
++  transition: background 0.2s ease, transform 0.15s ease;
++}
++
++@media (prefers-color-scheme: dark) {
++  .btn-primary { color: #0e1116; }
++}
++
++.btn-primary:hover { background: var(--accent-strong); }
++.btn-primary:active { transform: translateY(1px); }
++
++.save-chip {
++  display: inline-flex;
++  align-items: center;
++  gap: 0.35rem;
++  font-size: 0.82rem;
++  color: var(--muted);
++}
++
++.save-chip svg { color: var(--accent); }
++
++/* ---------------------------------------------------------------- footer */
++
++.footer {
++  margin-top: clamp(4rem, 9vh, 7rem);
++  border-top: 1px solid var(--line);
++}
++
++.footer-inner {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 0.6rem 2rem;
++  align-items: baseline;
++  justify-content: space-between;
++  padding-block: 1.4rem 1.8rem;
++}
++
++.footer a { text-decoration-color: var(--hairline); text-underline-offset: 3px; }
++.footer a:hover { color: var(--accent); }
++
++/* ------------------------------------------------------------ reduced motion */
++
++@media (prefers-reduced-motion: reduce) {
++  html { scroll-behavior: auto; }
++
++  .rise,
++  .hero-fig .hero-curve {
++    animation: none;
++    opacity: 1;
++    transform: none;
++    stroke-dashoffset: 0;
++  }
++
++  .penhead { display: none; }
++
++  [data-reveal],
++  .plotarea path,
++  .plotarea circle,
++  .plate,
++  .switch,
++  .switch::after {
++    transition: none !important;
++  }
++
++  .reveal-armed [data-reveal]:not(.in) {
++    opacity: 1;
++    transform: none;
++  }
++
++  .reveal-armed [data-reveal]:not(.in) .plotarea path { stroke-dashoffset: 0; }
++  .reveal-armed [data-reveal]:not(.in) .plotarea circle { transform: none; opacity: 1; }
++}
+diff --git a/app/layout.jsx b/app/layout.jsx
+index e857e02..94d7a2b 100644
+--- a/app/layout.jsx
++++ b/app/layout.jsx
+@@ -1,13 +1,29 @@
++import { Archivo, IBM_Plex_Mono } from "next/font/google";
+ import "./globals.css";
+ 
++const archivo = Archivo({
++  subsets: ["latin"],
++  axes: ["wdth"],
++  variable: "--font-archivo",
++  display: "swap",
++});
++
++const plexMono = IBM_Plex_Mono({
++  subsets: ["latin"],
++  weight: ["400", "500", "600"],
++  variable: "--font-plex-mono",
++  display: "swap",
++});
++
+ export const metadata = {
+-  title: "Jordan Lee",
+-  description: "Selected projects and experience of Jordan Lee, software engineer.",
++  title: "Jordan Lee — Systems & Computational Design",
++  description:
++    "Selected projects of Jordan Lee, software engineer working across systems, interfaces, and computational design. Every figure on the page is plotted by code.",
+ };
+ 
+ export default function RootLayout({ children }) {
+   return (
+-    <html lang="en">
++    <html lang="en" className={`${archivo.variable} ${plexMono.variable}`}>
+       <body>{children}</body>
+     </html>
+   );
+diff --git a/app/page.jsx b/app/page.jsx
+index 52f37fd..f54ff8a 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -1,23 +1,129 @@
+ import { SettingsPanel } from "@/components/SettingsPanel";
+ import { ProjectGrid } from "@/components/ProjectGrid";
++import { Reveal } from "@/components/Reveal";
++import { heroCurve, HERO_W, HERO_H } from "@/components/figures";
+ 
+ export default function Home() {
++  const heroD = heroCurve();
++
+   return (
+-    <main className="mx-auto max-w-6xl space-y-24 px-6 py-16">
+-      <header className="max-w-3xl space-y-4">
+-        <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted)]">Portfolio</p>
+-        <h1 className="text-5xl font-semibold tracking-tight md:text-7xl">Jordan Lee</h1>
+-        <p className="max-w-2xl text-lg leading-8 text-[var(--muted)]">
+-          Software engineer working across systems, interfaces, and computational design.
+-        </p>
++    <>
++      <header className="topbar">
++        <div className="sheet topbar-inner">
++          <a className="wordmark" href="#top" aria-label="Jordan Lee — back to top">
++            <span className="monogram" aria-hidden="true">JL</span>
++            <span className="wordmark-name">Jordan Lee — Engineer</span>
++          </a>
++          <nav className="topnav" aria-label="Sections">
++            <a href="#figures">Figures</a>
++            <a href="#settings">Settings</a>
++          </nav>
++        </div>
+       </header>
+ 
+-      <ProjectGrid />
++      <main id="top">
++        <section className="hero" aria-labelledby="hero-title">
++          <svg
++            className="hero-fig"
++            viewBox={`0 0 ${HERO_W} ${HERO_H}`}
++            preserveAspectRatio="xMidYMid slice"
++            xmlns="http://www.w3.org/2000/svg"
++            aria-hidden="true"
++          >
++            <path
++              className="hero-curve"
++              d={heroD}
++              pathLength="1"
++              fill="none"
++              stroke="currentColor"
++              strokeWidth="1.1"
++            />
++            <circle
++              className="penhead"
++              r="5"
++              style={{ offsetPath: `path("${heroD}")` }}
++            />
++          </svg>
++
++          <div className="sheet hero-inner">
++            <div className="hero-copy">
++              <p className="eyebrow rise rise-1">Portfolio — 2026</p>
++              <h1 id="hero-title" className="display hero-title rise rise-2">
++                Jordan<br />Lee
++              </h1>
++              <p className="hero-sub rise rise-3">
++                Software engineer working across <strong>systems</strong>,{" "}
++                <strong>interfaces</strong>, and <strong>computational design</strong> —
++                code that runs fast, and code that draws.
++              </p>
++            </div>
++
++            <div className="titleblock rise rise-4" role="presentation">
++              <div className="tb-cell">
++                <span className="tb-label">Drawn by</span>
++                <span className="tb-value">J. Lee</span>
++              </div>
++              <div className="tb-cell">
++                <span className="tb-label">Sheet</span>
++                <span className="tb-value">01 of 01</span>
++              </div>
++              <div className="tb-cell">
++                <span className="tb-label">Scale</span>
++                <span className="tb-value">1 : 1</span>
++              </div>
++              <div className="tb-cell">
++                <span className="tb-label">Rev</span>
++                <span className="tb-value">2026.09</span>
++              </div>
++            </div>
++          </div>
++        </section>
++
++        <section id="figures" className="sheet" aria-labelledby="figures-title" style={{ paddingTop: "4.5rem" }}>
++          <div className="shead" data-reveal>
++            <div>
++              <p className="eyebrow" style={{ margin: 0 }}>Figures 01–08</p>
++              <h2 id="figures-title">Selected work</h2>
++            </div>
++            <span className="annot">8 plates</span>
++          </div>
++          <hr className="rule" />
++          <p className="section-note" data-reveal>
++            No screenshots here: every figure below is plotted at build time from the
++            parameters printed in its caption. The thumbnails are the work.
++          </p>
++          <ProjectGrid />
++        </section>
++
++        <section
++          id="settings"
++          className="sheet"
++          aria-labelledby="settings-title"
++          style={{ paddingTop: "5.5rem", maxWidth: "44rem" }}
++        >
++          <div className="shead" data-reveal>
++            <div>
++              <p className="eyebrow" style={{ margin: 0 }}>Admin</p>
++              <h2 id="settings-title">Account settings</h2>
++            </div>
++          </div>
++          <hr className="rule" />
++          <SettingsPanel />
++        </section>
++      </main>
++
++      <footer className="footer">
++        <div className="sheet footer-inner">
++          <p className="annot" style={{ margin: 0 }}>
++            © 2026 Jordan Lee · <a href="mailto:jordan@example.com">jordan@example.com</a>
++          </p>
++          <p className="annot" style={{ margin: 0 }}>
++            Sheet 01/01 · Set in Archivo &amp; IBM Plex Mono · Figures plotted at build
++          </p>
++        </div>
++      </footer>
+ 
+-      <section className="max-w-2xl space-y-6" aria-labelledby="settings-title">
+-        <h2 id="settings-title" className="text-3xl font-semibold">Account settings</h2>
+-        <SettingsPanel />
+-      </section>
+-    </main>
++      <Reveal />
++    </>
+   );
+ }
+diff --git a/components/FigureSvg.jsx b/components/FigureSvg.jsx
+new file mode 100644
+index 0000000..41fd106
+--- /dev/null
++++ b/components/FigureSvg.jsx
+@@ -0,0 +1,18 @@
++import { FIG_W, FIG_H } from "./figures";
++
++// Server component: renders one pre-computed figure as inline SVG.
++// pathLength=1 normalizes every stroke so CSS can draw it in with a single rule.
++export function FigureSvg({ fig }) {
++  return (
++    <div className="plotarea" aria-hidden="true">
++      <svg viewBox={`0 0 ${FIG_W} ${FIG_H}`} xmlns="http://www.w3.org/2000/svg" role="presentation">
++        {fig.strokes.map((s, i) => (
++          <path key={`s${i}`} d={s.d} pathLength="1" style={{ "--i": i }} />
++        ))}
++        {fig.dots.map((c, i) => (
++          <circle key={`c${i}`} cx={c.cx} cy={c.cy} r={c.r} style={{ "--i": i }} />
++        ))}
++      </svg>
++    </div>
++  );
++}
+diff --git a/components/ProjectGrid.jsx b/components/ProjectGrid.jsx
+index 025aff2..f177b78 100644
+--- a/components/ProjectGrid.jsx
++++ b/components/ProjectGrid.jsx
+@@ -1,30 +1,113 @@
+-const projects = Array.from({ length: 8 }, (_, index) => ({
+-  id: index + 1,
+-  title: `Project ${String(index + 1).padStart(2, "0")}`,
+-  summary: "Case study notes on the research, design, and engineering behind this project.",
+-}));
++import { buildFigure } from "./figures";
++import { FigureSvg } from "./FigureSvg";
++
++// Each project pairs with the figure family that diagrams it.
++// Swap in real work here: the layout, figures, and captions all key off this array.
++const projects = [
++  {
++    slug: "phaseplot",
++    title: "Phaseplot",
++    kind: "lissajous",
++    year: "2025",
++    stack: "WebAudio · Canvas",
++    summary:
++      "A browser oscilloscope that draws live audio as phase-space curves — stereo in, geometry out.",
++  },
++  {
++    slug: "copperline",
++    title: "Copperline",
++    kind: "copper",
++    year: "2024",
++    stack: "Rust · KiCad",
++    summary:
++      "Autorouting studies: search heuristics tuned until the finished board is something you'd frame.",
++  },
++  {
++    slug: "terrane",
++    title: "Terrane",
++    kind: "ridgeline",
++    year: "2024",
++    stack: "WebGL · DEM tiles",
++    summary:
++      "Streaming elevation tiles rendered as ridgeline maps, held at 60 fps on mid-range phones.",
++  },
++  {
++    slug: "pendula",
++    title: "Pendula",
++    kind: "harmonograph",
++    year: "2023",
++    stack: "TypeScript · SVG",
++    summary:
++      "Simulated drawing machines — damped oscillators you tune by hand, then let plot themselves out.",
++  },
++  {
++    slug: "stackwise",
++    title: "Stackwise",
++    kind: "isometric",
++    year: "2025",
++    stack: "Go · SVG",
++    summary:
++      "Isometric service diagrams generated nightly from the deploy graph, not from anyone's memory.",
++  },
++  {
++    slug: "isopleth",
++    title: "Isopleth",
++    kind: "contours",
++    year: "2023",
++    stack: "WASM · Canvas",
++    summary:
++      "A marching-squares engine that contours and labels live weather fields in real time.",
++  },
++  {
++    slug: "gridwalk",
++    title: "Gridwalk",
++    kind: "gridwalk",
++    seed: 41,
++    year: "2022",
++    stack: "Rust · Canvas",
++    summary:
++      "Path-sampling visualizer for routing simulations: a million random walks, one legible picture.",
++  },
++  {
++    slug: "halftone",
++    title: "Halftone",
++    kind: "stipple",
++    year: "2022",
++    stack: "Python · AxiDraw",
++    summary:
++      "A print-shader toolkit that reduces renders to stipple fields a pen plotter can actually draw.",
++  },
++];
+ 
+ export function ProjectGrid() {
+   return (
+-    <section aria-labelledby="projects-title" className="space-y-6">
+-      <h2 id="projects-title" className="text-3xl font-semibold">Selected projects</h2>
+-      <div className="grid gap-5 md:grid-cols-2">
+-        {projects.map((project) => (
+-          <a
+-            href={`#project-${project.id}`}
+-            key={project.id}
+-            className="group block rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4"
++    <div className="plate-grid">
++      {projects.map((project, index) => {
++        const fig = buildFigure(project.kind, project.seed ?? index * 9973 + 11);
++        const figNo = String(index + 1).padStart(2, "0");
++        return (
++          <article
++            key={project.slug}
++            id={project.slug}
++            className="plate"
++            data-reveal
++            style={{ "--d": `${(index % 2) * 90}ms` }}
+           >
+-            <div
+-              aria-hidden="true"
+-              className="aspect-[16/10] rounded-lg bg-[linear-gradient(135deg,#d8d8d2,#a7a79f)]"
+-              data-project-media
+-            />
+-            <h3 className="mt-4 text-xl font-semibold">{project.title}</h3>
+-            <p className="mt-2 text-sm text-[var(--muted)]">{project.summary}</p>
+-          </a>
+-        ))}
+-      </div>
+-    </section>
++            <a className="plate-link" href={`#${project.slug}`}>
++              <FigureSvg fig={fig} />
++              <div className="figcap">
++                <span className="fig-no">FIG. {figNo}</span>
++                <span className="fig-params">{fig.caption}</span>
++              </div>
++              <h3>{project.title}</h3>
++              <p className="plate-summary">{project.summary}</p>
++              <p className="plate-meta">
++                {project.year} — {project.stack}
++              </p>
++            </a>
++          </article>
++        );
++      })}
++    </div>
+   );
+ }
+diff --git a/components/Reveal.jsx b/components/Reveal.jsx
+new file mode 100644
+index 0000000..3cb5a8f
+--- /dev/null
++++ b/components/Reveal.jsx
+@@ -0,0 +1,38 @@
++"use client";
++
++import { useEffect } from "react";
++
++// Arms scroll-reveal only when JS is running; without JS everything stays visible.
++export function Reveal() {
++  useEffect(() => {
++    const root = document.documentElement;
++    const items = Array.from(document.querySelectorAll("[data-reveal]"));
++    if (items.length === 0) return undefined;
++
++    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
++    if (reduced) return undefined;
++
++    root.classList.add("reveal-armed");
++
++    const io = new IntersectionObserver(
++      (entries) => {
++        for (const entry of entries) {
++          if (entry.isIntersecting) {
++            entry.target.classList.add("in");
++            io.unobserve(entry.target);
++          }
++        }
++      },
++      { threshold: 0.18, rootMargin: "0px 0px -6% 0px" }
++    );
++
++    items.forEach((el) => io.observe(el));
++
++    return () => {
++      io.disconnect();
++      root.classList.remove("reveal-armed");
++    };
++  }, []);
++
++  return null;
++}
+diff --git a/components/SettingsPanel.jsx b/components/SettingsPanel.jsx
+index 3cd24b9..d8f3ee4 100644
+--- a/components/SettingsPanel.jsx
++++ b/components/SettingsPanel.jsx
+@@ -2,66 +2,92 @@
+ 
+ import { useState } from "react";
+ 
++// Deliberately quiet: this is a tool, not a showcase. Plain controls,
++// visible focus, one clear confirmation.
+ export function SettingsPanel() {
+   const [notifications, setNotifications] = useState(true);
+   const [saved, setSaved] = useState(false);
+ 
+   return (
+     <form
+-      className="space-y-8"
++      className="panel"
++      data-reveal
+       onSubmit={(event) => {
+         event.preventDefault();
+         setSaved(true);
+       }}
++      onChange={() => setSaved(false)}
+     >
+-      <section className="space-y-3">
+-        <h2 className="text-lg font-semibold">Profile</h2>
+-        <label className="grid gap-2">
+-          <span>Name</span>
++      <fieldset>
++        <legend>Profile</legend>
++        <div className="field-row">
++          <label className="lbl" htmlFor="settings-name">Name</label>
++          <input className="field" id="settings-name" defaultValue="Jordan Lee" name="name" />
++        </div>
++        <div className="field-row">
++          <label className="lbl" htmlFor="settings-email">Email</label>
+           <input
+-            className="rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 py-2"
+-            defaultValue="Jordan Lee"
+-            name="name"
+-          />
+-        </label>
+-        <label className="grid gap-2">
+-          <span>Email</span>
+-          <input
+-            className="rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 py-2"
++            className="field"
++            id="settings-email"
+             defaultValue="jordan@example.com"
+             name="email"
+             type="email"
+           />
+-        </label>
+-      </section>
++        </div>
++      </fieldset>
+ 
+-      <section className="space-y-3">
+-        <h2 className="text-lg font-semibold">Notifications</h2>
+-        <label className="flex items-center justify-between gap-4 rounded-lg border border-[var(--line)] p-4">
+-          <span>Email notifications</span>
++      <fieldset>
++        <legend>Notifications</legend>
++        <label className="toggle-row">
++          <span>
++            <span className="toggle-title">Email notifications</span>
++            <span className="toggle-desc">A note when someone replies or a report is ready.</span>
++          </span>
+           <input
++            className="switch"
+             checked={notifications}
+             onChange={(event) => setNotifications(event.target.checked)}
+             type="checkbox"
++            role="switch"
++            aria-checked={notifications}
+           />
+         </label>
+-      </section>
++      </fieldset>
+ 
+-      <section className="space-y-3">
+-        <h2 className="text-lg font-semibold">Password</h2>
+-        <input
+-          className="w-full rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 py-2"
+-          placeholder="New password"
+-          type="password"
+-        />
+-      </section>
++      <fieldset>
++        <legend>Password</legend>
++        <div className="field-row">
++          <label className="lbl" htmlFor="settings-password">New password</label>
++          <input
++            className="field"
++            id="settings-password"
++            placeholder="At least 12 characters"
++            type="password"
++            autoComplete="new-password"
++          />
++        </div>
++      </fieldset>
+ 
+-      <div className="flex items-center gap-3">
+-        <button className="rounded-md bg-[var(--foreground)] px-4 py-2 text-[var(--background)]" type="submit">
++      <div className="form-actions">
++        <button className="btn-primary" type="submit">
+           Save changes
+         </button>
+-        <span aria-live="polite" className="text-sm text-[var(--muted)]">
+-          {saved ? "Saved" : ""}
++        <span aria-live="polite" className="save-chip">
++          {saved ? (
++            <>
++              <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
++                <path
++                  d="M2.5 7.5l3 3 6-6.5"
++                  fill="none"
++                  stroke="currentColor"
++                  strokeWidth="1.8"
++                  strokeLinecap="round"
++                  strokeLinejoin="round"
++                />
++              </svg>
++              Changes saved
++            </>
++          ) : null}
+         </span>
+       </div>
+     </form>
+diff --git a/components/figures.js b/components/figures.js
+new file mode 100644
+index 0000000..d910fe2
+--- /dev/null
++++ b/components/figures.js
+@@ -0,0 +1,228 @@
++// Deterministic generative figures. Server-side only: pure math -> SVG path data.
++// Every figure is plotted from the parameters shown in its caption.
++
++function mulberry32(seed) {
++  let a = seed >>> 0;
++  return function () {
++    a |= 0;
++    a = (a + 0x6d2b79f5) | 0;
++    let t = Math.imul(a ^ (a >>> 15), 1 | a);
++    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
++    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
++  };
++}
++
++const W = 320;
++const H = 200;
++const f = (n) => Math.round(n * 10) / 10;
++
++function poly(points) {
++  return points
++    .map(([x, y], i) => `${i === 0 ? "M" : "L"}${f(x)} ${f(y)}`)
++    .join("");
++}
++
++// FIG. 01 - Lissajous 3:2
++function lissajous() {
++  const pts = [];
++  for (let i = 0; i <= 420; i++) {
++    const t = (i / 420) * Math.PI * 2;
++    pts.push([160 + 122 * Math.sin(3 * t + Math.PI / 2), 100 + 72 * Math.sin(2 * t)]);
++  }
++  return { strokes: [{ d: poly(pts) }], dots: [], caption: "x=sin 3t · y=sin 2t · δ=π/2" };
++}
++
++// FIG. 02 - PCB autoroute: nets left to right, 45° chamfered jogs, pads at ends
++function copper(seed) {
++  const rnd = mulberry32(seed);
++  const strokes = [];
++  const dots = [];
++  const lanes = [32, 60, 88, 116, 144, 172];
++  for (let n = 0; n < 6; n++) {
++    let x = 20;
++    let y = lanes[n];
++    const pts = [[x, y]];
++    dots.push({ cx: x, cy: y, r: 4 });
++    while (x < 284) {
++      x += 18 + Math.floor(rnd() * 3) * 14;
++      if (x > 284) x = 284;
++      pts.push([x, y]);
++      if (x < 270 && rnd() < 0.6) {
++        const dy = (rnd() < 0.5 ? -1 : 1) * (12 + Math.floor(rnd() * 2) * 12);
++        const ny = Math.min(180, Math.max(20, y + dy));
++        const c = Math.min(10, Math.abs(ny - y) / 2);
++        pts.push([x + c, y + Math.sign(ny - y) * c]);
++        pts.push([x + c, ny - Math.sign(ny - y) * 0]); // vertical run
++        y = ny;
++        x += c;
++      }
++    }
++    pts.push([300, y]);
++    dots.push({ cx: 300, cy: y, r: 4 });
++    strokes.push({ d: poly(pts) });
++  }
++  return { strokes, dots, caption: "6 nets · 45° bends · grid 12" };
++}
++
++// FIG. 03 - ridgeline terrain
++function ridgeline(seed) {
++  const rnd = mulberry32(seed);
++  const strokes = [];
++  const rows = 9;
++  const phases = Array.from({ length: rows }, () => [rnd() * 6.3, rnd() * 6.3, rnd() * 6.3]);
++  for (let r = 0; r < rows; r++) {
++    const base = 44 + r * 16;
++    const pts = [];
++    for (let x = 16; x <= 304; x += 4) {
++      const u = (x - 160) / 118;
++      const env = Math.exp(-u * u * 1.7);
++      const nz =
++        Math.sin(x * 0.045 + phases[r][0]) * 0.55 +
++        Math.sin(x * 0.11 + phases[r][1]) * 0.3 +
++        Math.sin(x * 0.23 + phases[r][2]) * 0.15;
++      pts.push([x, base - Math.max(0, env * (26 + 20 * nz))]);
++    }
++    strokes.push({ d: poly(pts) });
++  }
++  return { strokes, dots: [], caption: "9 traces · gaussian mass · σ≈42" };
++}
++
++// FIG. 04 - harmonograph, damped
++function harmonograph() {
++  const pts = [];
++  for (let i = 0; i <= 900; i++) {
++    const t = i * 0.09;
++    const d = Math.exp(-0.011 * t);
++    pts.push([
++      160 + d * (92 * Math.sin(3.01 * t + 1.1) + 34 * Math.sin(2.0 * t)),
++      100 + d * (62 * Math.sin(2.0 * t + 0.4) + 22 * Math.sin(3.0 * t + 2.0)),
++    ]);
++  }
++  return { strokes: [{ d: poly(pts) }], dots: [], caption: "f=3.01:2.00 · decay 0.011" };
++}
++
++// FIG. 05 - isometric lattice of cells with varying height
++function isometric(seed) {
++  const rnd = mulberry32(seed);
++  const strokes = [];
++  const ix = 15; // iso x step
++  const iy = 8.6;
++  const ox = 160;
++  const oy = 58;
++  const cells = [];
++  for (let r = 0; r < 4; r++)
++    for (let c = 0; c < 5; c++) cells.push([c, r, 10 + Math.floor(rnd() * 4) * 9]);
++  cells.sort((a, b) => a[0] + a[1] - (b[0] + b[1]));
++  for (const [c, r, h] of cells) {
++    const x = ox + (c - r) * ix * 1.9;
++    const y = oy + (c + r) * iy * 1.9;
++    const L = ix * 1.55;
++    const T = iy * 1.55;
++    const top = `M${f(x)} ${f(y)}L${f(x + L)} ${f(y + T)}L${f(x)} ${f(y + T * 2)}L${f(x - L)} ${f(y + T)}Z`;
++    const left = `M${f(x - L)} ${f(y + T)}L${f(x - L)} ${f(y + T + h)}L${f(x)} ${f(y + T * 2 + h)}L${f(x)} ${f(y + T * 2)}`;
++    const right = `M${f(x + L)} ${f(y + T)}L${f(x + L)} ${f(y + T + h)}L${f(x)} ${f(y + T * 2 + h)}`;
++    strokes.push({ d: top + left + right });
++  }
++  return { strokes, dots: [], caption: "iso 30° · 20 cells · h∈{10..37}" };
++}
++
++// FIG. 06 - contour rings, modulated radii
++function contours(seed) {
++  const rnd = mulberry32(seed);
++  const strokes = [];
++  const ph = [rnd() * 6.3, rnd() * 6.3, rnd() * 6.3];
++  for (let k = 1; k <= 7; k++) {
++    const base = 11 + k * 12.5;
++    const pts = [];
++    for (let i = 0; i <= 240; i++) {
++      const a = (i / 240) * Math.PI * 2;
++      const m =
++        Math.sin(a * 3 + ph[0]) * 0.16 +
++        Math.sin(a * 5 + ph[1]) * 0.08 +
++        Math.sin(a * 2 + ph[2]) * 0.1;
++      const rr = base * (1 + m * (k / 7));
++      pts.push([160 + rr * 1.35 * Math.cos(a), 100 + rr * 0.86 * Math.sin(a)]);
++    }
++    strokes.push({ d: poly(pts) + "Z" });
++  }
++  return { strokes, dots: [], caption: "7 isolines · Δ=12.5" };
++}
++
++// FIG. 07 - seeded walk on a 12px grid, momentum-biased, crossings allowed
++function gridwalk(seed) {
++  const rnd = mulberry32(seed);
++  const step = 12;
++  let x = 28;
++  let y = 100;
++  let dir = 0; // 0 E, 1 S, 2 W, 3 N
++  const pts = [[x, y]];
++  let steps = 0;
++  for (let i = 0; i < 240; i++) {
++    const candidates = rnd() < 0.55 ? [dir, (dir + 1) % 4, (dir + 3) % 4] : rnd() < 0.5 ? [(dir + 1) % 4, dir, (dir + 3) % 4] : [(dir + 3) % 4, dir, (dir + 1) % 4];
++    for (const nd of candidates) {
++      const nx = x + (nd === 0 ? step : nd === 2 ? -step : 0);
++      const ny = y + (nd === 1 ? step : nd === 3 ? -step : 0);
++      if (nx < 24 || nx > 296 || ny < 20 || ny > 180) continue;
++      x = nx; y = ny; dir = nd;
++      pts.push([x, y]);
++      steps++;
++      break;
++    }
++  }
++  return {
++    strokes: [{ d: poly(pts) }],
++    dots: [{ cx: pts[0][0], cy: pts[0][1], r: 4 }, { cx: x, cy: y, r: 4 }],
++    caption: `walk · ${steps} steps · grid 12 · seed ${seed}`,
++  };
++}
++
++// FIG. 08 - stipple field, radius modulated by a standing wave
++function stipple() {
++  const dots = [];
++  for (let gy = 0; gy < 11; gy++) {
++    for (let gx = 0; gx < 20; gx++) {
++      const x = 24 + gx * 14.3;
++      const y = 24 + gy * 15.4;
++      const u = (x - 160) / 150;
++      const v = (y - 100) / 90;
++      const w = 0.5 + 0.5 * Math.sin(x * 0.055 + Math.sin(y * 0.045) * 2.4);
++      const fall = Math.max(0, 1 - (u * u + v * v) * 0.55);
++      const r = 0.5 + 4.6 * w * fall;
++      if (r > 0.7) dots.push({ cx: f(x), cy: f(y), r: f(r) });
++    }
++  }
++  return { strokes: [], dots, caption: `${dots.length} pts · r ∝ sin(x + sin y)` };
++}
++
++export const FIG_W = W;
++export const FIG_H = H;
++
++export function buildFigure(kind, seed) {
++  switch (kind) {
++    case "lissajous": return lissajous();
++    case "copper": return copper(seed);
++    case "ridgeline": return ridgeline(seed);
++    case "harmonograph": return harmonograph();
++    case "isometric": return isometric(seed);
++    case "contours": return contours(seed);
++    case "gridwalk": return gridwalk(seed);
++    case "stipple": return stipple();
++    default: return lissajous();
++  }
++}
++
++// Hero curve: a 5:4 Lissajous, drawn once on load; the pen head follows this exact path.
++export const HERO_W = 960;
++export const HERO_H = 520;
++
++export function heroCurve() {
++  const pts = [];
++  for (let i = 0; i <= 780; i++) {
++    const t = (i / 780) * Math.PI * 2;
++    pts.push([
++      480 + 430 * Math.sin(5 * t + Math.PI / 6),
++      260 + 205 * Math.sin(4 * t),
++    ]);
++  }
++  return poly(pts);
++}

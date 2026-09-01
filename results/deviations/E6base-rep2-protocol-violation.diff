@@ -1,0 +1,1820 @@
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..3856597 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -2,25 +2,206 @@
+ 
+ :root {
+   color-scheme: light dark;
+-  --background: #f5f5f3;
+-  --foreground: #161616;
+-  --muted: #6b6b66;
+-  --surface: #ffffff;
+-  --line: #deded8;
++
++  /* Atlas paper (light) */
++  --background: #f2f1ec;
++  --foreground: #1d1c16;
++  --muted: #6d6a5e;
++  --surface: #faf9f4;
++  --line: #d9d5c6;
++  --grid-line: rgba(29, 28, 22, 0.06);
++  --brass: #8a5f1c;
++  --halo: rgba(138, 95, 28, 0.16);
++
++  /* Discipline hues: used only where they encode data */
++  --cat-engineering: #3d6a8f;
++  --cat-research: #a04f35;
++  --cat-design: #67793a;
++  --cat-math: #6f6a9c;
++
++  --font-display: "Young Serif", "Iowan Old Style", Georgia, serif;
++  --font-body: "Albert Sans", "Avenir Next", "Segoe UI", system-ui, sans-serif;
++  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+ }
+ 
+ @media (prefers-color-scheme: dark) {
+   :root {
+-    --background: #111110;
+-    --foreground: #f5f5f2;
+-    --muted: #a0a099;
+-    --surface: #181817;
+-    --line: #31312f;
++    /* Night sky (dark) */
++    --background: #0f1215;
++    --foreground: #eae8dd;
++    --muted: #a09c8e;
++    --surface: #161a20;
++    --line: #2b3038;
++    --grid-line: rgba(234, 232, 221, 0.05);
++    --brass: #d9b45b;
++    --halo: rgba(217, 180, 91, 0.18);
++
++    --cat-engineering: #6f9cc4;
++    --cat-research: #c98263;
++    --cat-design: #99a862;
++    --cat-math: #a09ac9;
+   }
+ }
+ 
+ * { box-sizing: border-box; }
+-html { background: var(--background); color: var(--foreground); }
+-body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
++
++html {
++  background: var(--background);
++  color: var(--foreground);
++  scroll-behavior: smooth;
++}
++
++body {
++  margin: 0;
++  font-family: var(--font-body);
++  line-height: 1.6;
++  -webkit-font-smoothing: antialiased;
++}
++
+ a { color: inherit; }
+ button, input { font: inherit; }
++
++::selection {
++  background: var(--brass);
++  color: var(--background);
++}
++
++:focus-visible {
++  outline: 2px solid var(--brass);
++  outline-offset: 2px;
++  border-radius: 2px;
++}
++
++[id] { scroll-margin-top: 5rem; }
++
++/* Type voices */
++.type-display {
++  font-family: var(--font-display);
++  font-weight: 400;
++  letter-spacing: -0.01em;
++}
++
++.type-mono {
++  font-family: var(--font-mono);
++  font-weight: 400;
++}
++
++.kicker {
++  font-family: var(--font-mono);
++  font-size: 0.6875rem;
++  letter-spacing: 0.22em;
++  text-transform: uppercase;
++  color: var(--muted);
++}
++
++/* Plotting-grid ground for the observation chart */
++.chart-grid {
++  background-image:
++    linear-gradient(var(--grid-line) 1px, transparent 1px),
++    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
++  background-size: 3rem 3rem;
++}
++
++.hero-scrim {
++  background:
++    radial-gradient(120% 90% at 18% 88%, var(--background) 0%, transparent 55%),
++    linear-gradient(to bottom, transparent 55%, var(--background) 100%);
++}
++
++/* One-time scroll reveals */
++.reveal {
++  opacity: 0;
++  transform: translateY(14px);
++  transition: opacity 0.65s ease, transform 0.65s ease;
++}
++.reveal.is-in {
++  opacity: 1;
++  transform: none;
++}
++
++/* Project plates */
++.plate-card {
++  transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
++}
++.plate-card:hover {
++  transform: translateY(-3px);
++  border-color: color-mix(in srgb, var(--brass) 55%, var(--line));
++  box-shadow: 0 12px 32px -18px rgba(0, 0, 0, 0.35);
++}
++.plate-card svg {
++  transition: transform 0.5s ease;
++}
++.plate-card:hover svg {
++  transform: scale(1.025);
++}
++
++/* Toggle switch */
++.switch {
++  appearance: none;
++  position: relative;
++  width: 2.75rem;
++  height: 1.5rem;
++  flex: none;
++  border-radius: 999px;
++  border: 1px solid var(--line);
++  background: var(--background);
++  cursor: pointer;
++  transition: background 0.25s ease, border-color 0.25s ease;
++}
++.switch::after {
++  content: "";
++  position: absolute;
++  top: 50%;
++  left: 3px;
++  width: 1.05rem;
++  height: 1.05rem;
++  border-radius: 999px;
++  background: var(--muted);
++  transform: translateY(-50%);
++  transition: left 0.25s ease, background 0.25s ease;
++}
++.switch:checked {
++  background: color-mix(in srgb, var(--brass) 24%, var(--background));
++  border-color: var(--brass);
++}
++.switch:checked::after {
++  left: calc(100% - 1.05rem - 3px);
++  background: var(--brass);
++}
++
++/* Primary action */
++.btn-brass {
++  font-family: var(--font-mono);
++  font-size: 0.8125rem;
++  letter-spacing: 0.08em;
++  text-transform: uppercase;
++  background: var(--brass);
++  color: var(--background);
++  border: none;
++  border-radius: 6px;
++  padding: 0.65rem 1.25rem;
++  cursor: pointer;
++  transition: filter 0.2s ease, transform 0.15s ease;
++}
++.btn-brass:hover { filter: brightness(1.08); }
++.btn-brass:active { transform: translateY(1px); }
++
++/* Form fields */
++.field {
++  width: 100%;
++  border-radius: 6px;
++  border: 1px solid var(--line);
++  background: var(--surface);
++  padding: 0.6rem 0.75rem;
++  transition: border-color 0.2s ease;
++}
++.field:hover { border-color: color-mix(in srgb, var(--muted) 50%, var(--line)); }
++.field:focus-visible { outline-offset: 0; }
++
++@media (prefers-reduced-motion: reduce) {
++  html { scroll-behavior: auto; }
++  .reveal { opacity: 1; transform: none; transition: none; }
++  .plate-card, .plate-card svg, .switch, .switch::after, .btn-brass { transition: none; }
++  .plate-card:hover { transform: none; }
++  .plate-card:hover svg { transform: none; }
++}
+diff --git a/app/layout.jsx b/app/layout.jsx
+index e857e02..de085e5 100644
+--- a/app/layout.jsx
++++ b/app/layout.jsx
+@@ -1,14 +1,23 @@
+ import "./globals.css";
+ 
+ export const metadata = {
+-  title: "Jordan Lee",
+-  description: "Selected projects and experience of Jordan Lee, software engineer.",
++  title: "Jordan Lee — Software Engineer",
++  description:
++    "Systems, interfaces, and computational design. Selected projects and working notes of Jordan Lee.",
+ };
+ 
+ export default function RootLayout({ children }) {
+   return (
+     <html lang="en">
+-      <body>{children}</body>
++      <body>
++        <link rel="preconnect" href="https://fonts.googleapis.com" />
++        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
++        <link
++          href="https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=Young+Serif&display=swap"
++          rel="stylesheet"
++        />
++        {children}
++      </body>
+     </html>
+   );
+ }
+diff --git a/app/page.jsx b/app/page.jsx
+index 52f37fd..c2b47d1 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -1,23 +1,84 @@
+-import { SettingsPanel } from "@/components/SettingsPanel";
++import { Constellation } from "@/components/Constellation";
+ import { ProjectGrid } from "@/components/ProjectGrid";
++import { Reveal } from "@/components/Reveal";
++import { SettingsPanel } from "@/components/SettingsPanel";
+ 
+ export default function Home() {
+   return (
+-    <main className="mx-auto max-w-6xl space-y-24 px-6 py-16">
+-      <header className="max-w-3xl space-y-4">
+-        <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted)]">Portfolio</p>
+-        <h1 className="text-5xl font-semibold tracking-tight md:text-7xl">Jordan Lee</h1>
+-        <p className="max-w-2xl text-lg leading-8 text-[var(--muted)]">
+-          Software engineer working across systems, interfaces, and computational design.
+-        </p>
++    <>
++      <header className="chart-grid relative overflow-hidden">
++        <Constellation />
++        <div aria-hidden="true" className="hero-scrim pointer-events-none absolute inset-0 z-[1]" />
++
++        <div className="relative z-[5] mx-auto flex min-h-[92svh] max-w-6xl flex-col px-6">
++          <nav
++            aria-label="Site"
++            className="type-mono flex items-center justify-between py-6 text-xs uppercase tracking-[0.18em]"
++          >
++            <span>J. Lee</span>
++            <div className="flex items-center gap-6">
++              <a className="hover:text-[var(--brass)]" href="#projects">
++                Projects
++              </a>
++              <a className="hover:text-[var(--brass)]" href="#settings">
++                Settings
++              </a>
++              <a className="hover:text-[var(--brass)]" href="mailto:jordan@example.com">
++                Email
++              </a>
++            </div>
++          </nav>
++
++          <div className="flex-1" />
++
++          <div className="max-w-2xl space-y-5 pb-20">
++            <p className="kicker">Portfolio</p>
++            <h1 className="type-display text-[clamp(3.25rem,9vw,7rem)] leading-[0.95] tracking-tight">
++              Jordan Lee
++            </h1>
++            <p className="max-w-xl text-lg leading-8 text-[var(--muted)]">
++              Software engineer working across systems, interfaces, and computational design. The
++              chart behind this page is live — a map of five hundred working notes, plotted by
++              discipline.
++            </p>
++          </div>
++        </div>
+       </header>
+ 
+-      <ProjectGrid />
++      <main className="mx-auto max-w-6xl space-y-28 px-6 py-24">
++        <div id="projects">
++          <ProjectGrid />
++        </div>
++
++        <section aria-labelledby="settings-title" className="max-w-2xl space-y-8" id="settings">
++          <Reveal>
++            <div className="space-y-3">
++              <p className="kicker">Housekeeping</p>
++              <h2 className="type-display text-3xl md:text-4xl" id="settings-title">
++                Account settings
++              </h2>
++              <p className="text-[var(--muted)]">
++                Profile, notification, and password controls for this site.
++              </p>
++            </div>
++          </Reveal>
++          <Reveal delay={90}>
++            <SettingsPanel />
++          </Reveal>
++        </section>
++      </main>
+ 
+-      <section className="max-w-2xl space-y-6" aria-labelledby="settings-title">
+-        <h2 id="settings-title" className="text-3xl font-semibold">Account settings</h2>
+-        <SettingsPanel />
+-      </section>
+-    </main>
++      <footer className="border-t border-[var(--line)]">
++        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-10 md:flex-row md:items-baseline md:justify-between">
++          <p className="text-sm text-[var(--muted)]">
++            Jordan Lee — systems, interfaces, computational design.
++          </p>
++          <p className="type-mono text-xs text-[var(--muted)]">
++            Set in Young Serif, Albert Sans &amp; IBM Plex Mono · chart plotted from 500 notes · ©
++            2026
++          </p>
++        </div>
++      </footer>
++    </>
+   );
+ }
+diff --git a/components/Constellation.jsx b/components/Constellation.jsx
+new file mode 100644
+index 0000000..c11ff9b
+--- /dev/null
++++ b/components/Constellation.jsx
+@@ -0,0 +1,441 @@
++"use client";
++
++import { useEffect, useRef, useState } from "react";
++import { constellationItems } from "./ConstellationData";
++
++const CATEGORIES = ["engineering", "research", "design", "math"];
++
++const CATEGORY_VARS = {
++  engineering: "--cat-engineering",
++  research: "--cat-research",
++  design: "--cat-design",
++  math: "--cat-math",
++};
++
++/* Cluster anchors as fractions of the canvas. */
++const ANCHORS = {
++  engineering: [0.3, 0.34],
++  research: [0.74, 0.3],
++  design: [0.62, 0.72],
++  math: [0.4, 0.78],
++};
++
++const COUNTS = constellationItems.reduce((acc, item) => {
++  acc[item.category] = (acc[item.category] || 0) + 1;
++  return acc;
++}, {});
++
++function mulberry32(seed) {
++  let a = seed | 0;
++  return function next() {
++    a = (a + 0x6d2b79f5) | 0;
++    let t = Math.imul(a ^ (a >>> 15), 1 | a);
++    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
++    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
++  };
++}
++
++function buildField(width, height) {
++  const spread = Math.min(width, height) * 0.17;
++  const nodes = constellationItems.map((item) => {
++    const rng = mulberry32(item.id * 7919 + 17);
++    const [ax, ay] = ANCHORS[item.category];
++    /* Box-Muller gaussian jitter around the cluster anchor */
++    const u1 = Math.max(rng(), 1e-6);
++    const u2 = rng();
++    const mag = Math.sqrt(-2 * Math.log(u1));
++    let x = ax * width + Math.cos(2 * Math.PI * u2) * mag * spread;
++    let y = ay * height + Math.sin(2 * Math.PI * u2) * mag * spread * 0.82;
++
++    /* A few nodes lean out toward a neighboring discipline */
++    const bridgeTo =
++      item.id % 17 === 0
++        ? CATEGORIES[(CATEGORIES.indexOf(item.category) + 1 + (item.id % 3)) % 4]
++        : null;
++    if (bridgeTo) {
++      const [bx, by] = ANCHORS[bridgeTo];
++      const t = 0.35 + rng() * 0.3;
++      x = x + (bx * width - x) * t;
++      y = y + (by * height - y) * t;
++    }
++
++    const radius = 0.7 + rng() ** 2 * 1.8;
++    return {
++      id: item.id,
++      label: item.label,
++      category: item.category,
++      bridgeTo,
++      x,
++      y,
++      radius,
++      bright: radius > 2.15,
++      twinklePhase: rng() * Math.PI * 2,
++      twinkleSpeed: 0.4 + rng() * 0.9,
++      delay: 0,
++      px: x,
++      py: y,
++    };
++  });
++
++  /* Draw-in delay grows with distance from the field's center of mass */
++  const cx = nodes.reduce((s, n) => s + n.x, 0) / nodes.length;
++  const cy = nodes.reduce((s, n) => s + n.y, 0) / nodes.length;
++  let maxDist = 1;
++  for (const n of nodes) {
++    n.dist = Math.hypot(n.x - cx, n.y - cy);
++    if (n.dist > maxDist) maxDist = n.dist;
++  }
++  for (const n of nodes) {
++    const rng = mulberry32(n.id * 31 + 7);
++    n.delay = (n.dist / maxDist) * 1100 + rng() * 300;
++  }
++
++  /* Links: nearest same-discipline neighbor, plus bridge chords */
++  const links = [];
++  const seen = new Set();
++  const maxLink = Math.min(width, height) * 0.085 + 36;
++  for (const cat of CATEGORIES) {
++    const group = nodes.filter((n) => n.category === cat);
++    for (const n of group) {
++      let best = null;
++      let bestDist = Infinity;
++      for (const m of group) {
++        if (m.id === n.id) continue;
++        const d = Math.hypot(m.x - n.x, m.y - n.y);
++        if (d < bestDist) {
++          bestDist = d;
++          best = m;
++        }
++      }
++      if (best && bestDist < maxLink) {
++        const key = n.id < best.id ? `${n.id}-${best.id}` : `${best.id}-${n.id}`;
++        if (!seen.has(key)) {
++          seen.add(key);
++          links.push({ a: n, b: best, bridge: false, category: cat });
++        }
++      }
++    }
++  }
++  for (const n of nodes) {
++    if (!n.bridgeTo) continue;
++    let best = null;
++    let bestDist = Infinity;
++    for (const m of nodes) {
++      if (m.category !== n.bridgeTo) continue;
++      const d = Math.hypot(m.x - n.x, m.y - n.y);
++      if (d < bestDist) {
++        bestDist = d;
++        best = m;
++      }
++    }
++    if (best && bestDist < maxLink * 2.2) {
++      links.push({ a: n, b: best, bridge: true, category: n.category });
++    }
++  }
++
++  return { nodes, links };
++}
++
++function readColors() {
++  const styles = getComputedStyle(document.documentElement);
++  const get = (name) => styles.getPropertyValue(name).trim();
++  return {
++    ink: get("--foreground"),
++    brass: get("--brass"),
++    engineering: get("--cat-engineering"),
++    research: get("--cat-research"),
++    design: get("--cat-design"),
++    math: get("--cat-math"),
++  };
++}
++
++export function Constellation() {
++  const rootRef = useRef(null);
++  const canvasRef = useRef(null);
++  const fieldRef = useRef(null);
++  const colorsRef = useRef(null);
++  const mouseRef = useRef({ x: -9999, y: -9999, active: false });
++  const activeRef = useRef(null);
++  const hoveredRef = useRef(null);
++  const startRef = useRef(null);
++  const rafRef = useRef(0);
++  const runningRef = useRef(false);
++  const reducedRef = useRef(false);
++
++  const [active, setActive] = useState(null);
++  const [hovered, setHovered] = useState(null);
++
++  activeRef.current = active;
++
++  useEffect(() => {
++    const root = rootRef.current;
++    const canvas = canvasRef.current;
++    if (!root || !canvas) return undefined;
++    const ctx = canvas.getContext("2d");
++    const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
++    const darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
++    reducedRef.current = reducedQuery.matches;
++    colorsRef.current = readColors();
++
++    const setup = () => {
++      const rect = root.getBoundingClientRect();
++      const dpr = Math.min(window.devicePixelRatio || 1, 2);
++      canvas.width = Math.max(1, Math.round(rect.width * dpr));
++      canvas.height = Math.max(1, Math.round(rect.height * dpr));
++      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
++      fieldRef.current = buildField(rect.width, rect.height);
++    };
++
++    const draw = () => {
++      const field = fieldRef.current;
++      const colors = colorsRef.current;
++      if (!field || !colors) return;
++      const rect = root.getBoundingClientRect();
++      const now = performance.now();
++      if (startRef.current === null) startRef.current = now;
++      const elapsed = now - startRef.current;
++      const reduced = reducedRef.current;
++      const activeCat = activeRef.current;
++      const mouse = mouseRef.current;
++
++      ctx.clearRect(0, 0, rect.width, rect.height);
++
++      const driftX = reduced ? 0 : Math.sin(now * 0.00012) * 4;
++      const driftY = reduced ? 0 : Math.cos(now * 0.00009) * 3;
++
++      /* Compute frame positions first so links and nodes agree */
++      for (const n of field.nodes) {
++        const depth = 0.4 + (n.radius / 2.5) * 0.8;
++        let x = n.x + driftX * depth;
++        let y = n.y + driftY * depth;
++        if (!reduced && mouse.active) {
++          const dx = x - mouse.x;
++          const dy = y - mouse.y;
++          const d = Math.hypot(dx, dy);
++          if (d < 110 && d > 0.001) {
++            const push = ((110 - d) / 110) ** 2 * 14;
++            x += (dx / d) * push;
++            y += (dy / d) * push;
++          }
++        }
++        n.px = x;
++        n.py = y;
++        const p = reduced ? 1 : Math.min(Math.max((elapsed - n.delay) / 700, 0), 1);
++        n.appear = p * p * (3 - 2 * p); /* smoothstep */
++      }
++
++      ctx.lineWidth = 1;
++      for (const link of field.links) {
++        const catAlpha = activeCat && link.category !== activeCat ? 0.1 : 1;
++        const appear = Math.min(link.a.appear, link.b.appear);
++        if (appear <= 0 || catAlpha <= 0) continue;
++        ctx.strokeStyle = link.bridge ? colors.ink : colors[link.category];
++        ctx.globalAlpha = (link.bridge ? 0.16 : 0.26) * appear * catAlpha;
++        ctx.beginPath();
++        ctx.moveTo(link.a.px, link.a.py);
++        ctx.lineTo(link.b.px, link.b.py);
++        ctx.stroke();
++      }
++
++      for (const n of field.nodes) {
++        if (n.appear <= 0) continue;
++        const catAlpha = activeCat && n.category !== activeCat ? 0.12 : 1;
++        let alpha = 0.85 * n.appear * catAlpha;
++        if (n.bright && !reduced) {
++          alpha *= 0.75 + 0.25 * Math.sin(now * 0.001 * n.twinkleSpeed + n.twinklePhase);
++        }
++        const color = colors[n.category];
++        if (n.bright) {
++          ctx.globalAlpha = 0.1 * n.appear * catAlpha;
++          ctx.fillStyle = color;
++          ctx.beginPath();
++          ctx.arc(n.px, n.py, n.radius * 3.2, 0, Math.PI * 2);
++          ctx.fill();
++        }
++        ctx.globalAlpha = Math.max(alpha, 0);
++        ctx.fillStyle = color;
++        ctx.beginPath();
++        ctx.arc(n.px, n.py, n.radius, 0, Math.PI * 2);
++        ctx.fill();
++      }
++
++      const hoveredNode = hoveredRef.current
++        ? field.nodes.find((n) => n.id === hoveredRef.current.id)
++        : null;
++      if (hoveredNode) {
++        ctx.globalAlpha = 0.9;
++        ctx.strokeStyle = colors.brass;
++        ctx.beginPath();
++        ctx.arc(hoveredNode.px, hoveredNode.py, hoveredNode.radius + 5, 0, Math.PI * 2);
++        ctx.stroke();
++      }
++      ctx.globalAlpha = 1;
++    };
++
++    const tick = () => {
++      if (!runningRef.current) return;
++      draw();
++      rafRef.current = requestAnimationFrame(tick);
++    };
++
++    const start = () => {
++      if (runningRef.current || reducedRef.current) return;
++      runningRef.current = true;
++      rafRef.current = requestAnimationFrame(tick);
++    };
++
++    const stop = () => {
++      runningRef.current = false;
++      cancelAnimationFrame(rafRef.current);
++    };
++
++    setup();
++    if (reducedRef.current) {
++      draw();
++    }
++
++    const io = new IntersectionObserver(
++      ([entry]) => {
++        if (entry.isIntersecting) start();
++        else stop();
++      },
++      { threshold: 0.05 }
++    );
++    io.observe(root);
++
++    let resizeTimer = 0;
++    const ro = new ResizeObserver(() => {
++      window.clearTimeout(resizeTimer);
++      resizeTimer = window.setTimeout(() => {
++        setup();
++        if (reducedRef.current) draw();
++      }, 150);
++    });
++    ro.observe(root);
++
++    const onPointerMove = (event) => {
++      const rect = canvasRef.current.getBoundingClientRect();
++      const x = event.clientX - rect.left;
++      const y = event.clientY - rect.top;
++      const inside = x >= 0 && y >= 0 && x <= rect.width && y <= rect.height;
++      mouseRef.current = { x, y, active: inside };
++      if (!inside) {
++        if (hoveredRef.current) {
++          hoveredRef.current = null;
++          setHovered(null);
++        }
++        return;
++      }
++      const field = fieldRef.current;
++      if (!field) return;
++      let best = null;
++      let bestDist = 48;
++      for (const n of field.nodes) {
++        const d = Math.hypot(n.px - x, n.py - y);
++        if (d < bestDist) {
++          bestDist = d;
++          best = n;
++        }
++      }
++      const next = best ? { id: best.id, label: best.label, category: best.category } : null;
++      if (next?.id !== hoveredRef.current?.id) {
++        hoveredRef.current = next;
++        setHovered(next);
++        if (reducedRef.current) draw();
++      }
++    };
++    window.addEventListener("pointermove", onPointerMove, { passive: true });
++
++    const onScheme = () => {
++      colorsRef.current = readColors();
++      if (reducedRef.current) draw();
++    };
++    darkQuery.addEventListener("change", onScheme);
++
++    const onReduced = () => {
++      reducedRef.current = reducedQuery.matches;
++      if (reducedQuery.matches) {
++        stop();
++        draw();
++      } else {
++        start();
++      }
++    };
++    reducedQuery.addEventListener("change", onReduced);
++
++    const redrawStatic = () => {
++      if (reducedRef.current) draw();
++    };
++    root.addEventListener("constellation:redraw", redrawStatic);
++
++    return () => {
++      stop();
++      io.disconnect();
++      ro.disconnect();
++      window.clearTimeout(resizeTimer);
++      window.removeEventListener("pointermove", onPointerMove);
++      darkQuery.removeEventListener("change", onScheme);
++      reducedQuery.removeEventListener("change", onReduced);
++      root.removeEventListener("constellation:redraw", redrawStatic);
++    };
++  }, []);
++
++  /* Static (reduced-motion) canvases still reflect discipline isolation */
++  useEffect(() => {
++    const root = rootRef.current;
++    if (root) root.dispatchEvent(new Event("constellation:redraw"));
++  }, [active]);
++
++  const toggleCategory = (cat) => {
++    setActive((current) => (current === cat ? null : cat));
++  };
++
++  return (
++    <div ref={rootRef} className="pointer-events-none absolute inset-0">
++      <canvas
++        ref={canvasRef}
++        role="img"
++        aria-label="Constellation chart plotting 500 working notes across engineering, research, design, and math."
++        className="absolute inset-0 h-full w-full"
++      />
++      <div className="pointer-events-auto absolute bottom-6 right-6 z-10 hidden w-64 rounded-lg border border-[var(--line)] bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] p-4 backdrop-blur-sm lg:block">
++        <p className="kicker">Observation chart</p>
++        <p className="type-mono mt-1 text-xs text-[var(--muted)]">
++          500 notes · 4 disciplines · plotted 2026
++        </p>
++        <div className="mt-3 grid gap-1" role="group" aria-label="Isolate a discipline">
++          {CATEGORIES.map((cat) => (
++            <button
++              key={cat}
++              type="button"
++              aria-pressed={active === cat}
++              onClick={() => toggleCategory(cat)}
++              className="type-mono flex items-center justify-between rounded px-2 py-1 text-left text-xs uppercase tracking-[0.14em] transition-opacity hover:bg-[var(--background)]"
++              style={active && active !== cat ? { opacity: 0.45 } : undefined}
++            >
++              <span className="flex items-center gap-2">
++                <span
++                  aria-hidden="true"
++                  className="h-2 w-2 rounded-full"
++                  style={{ background: `var(${CATEGORY_VARS[cat]})` }}
++                />
++                {cat}
++              </span>
++              <span className="text-[var(--muted)]">{COUNTS[cat]}</span>
++            </button>
++          ))}
++        </div>
++        <p
++          aria-live="polite"
++          className="type-mono mt-3 border-t border-[var(--line)] pt-2 text-xs text-[var(--muted)]"
++        >
++          {hovered
++            ? `${hovered.label} · ${hovered.category}`
++            : active
++              ? `${active} isolated — click again to clear`
++              : "hover the field · click a discipline"}
++        </p>
++      </div>
++    </div>
++  );
++}
+diff --git a/components/ProjectGrid.jsx b/components/ProjectGrid.jsx
+index 025aff2..aef665e 100644
+--- a/components/ProjectGrid.jsx
++++ b/components/ProjectGrid.jsx
+@@ -1,28 +1,379 @@
+-const projects = Array.from({ length: 8 }, (_, index) => ({
+-  id: index + 1,
+-  title: `Project ${String(index + 1).padStart(2, "0")}`,
+-  summary: "Case study notes on the research, design, and engineering behind this project.",
+-}));
++import { Reveal } from "./Reveal";
++
++const CATEGORY_VARS = {
++  engineering: "--cat-engineering",
++  research: "--cat-research",
++  design: "--cat-design",
++  math: "--cat-math",
++};
++
++function mulberry32(seed) {
++  let a = seed | 0;
++  return function next() {
++    a = (a + 0x6d2b79f5) | 0;
++    let t = Math.imul(a ^ (a >>> 15), 1 | a);
++    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
++    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
++  };
++}
++
++/* Each plate is a small deterministic drawing in a 320x200 frame. */
++
++function plateMeridian(rng) {
++  const rows = [];
++  let depth = 0;
++  for (let i = 0; i < 12; i += 1) {
++    depth = Math.max(0, Math.min(6, depth + (rng() > 0.6 ? 1 : rng() > 0.5 ? -1 : 0)));
++    const x = 24 + depth * 16 + rng() * 18;
++    const width = 26 + rng() * Math.max(20, 250 - x);
++    rows.push(
++      <rect
++        key={i}
++        x={x}
++        y={22 + i * 13.5}
++        width={width}
++        height={5}
++        rx={2.5}
++        fill={i === 7 ? "var(--brass)" : "currentColor"}
++        opacity={i === 7 ? 0.9 : 0.16 + rng() * 0.24}
++      />
++    );
++  }
++  return rows;
++}
++
++function plateHalftone(rng) {
++  const dots = [];
++  const fx = 235 + rng() * 20;
++  const fy = 55 + rng() * 20;
++  for (let gx = 0; gx < 16; gx += 1) {
++    for (let gy = 0; gy < 10; gy += 1) {
++      const x = 20 + gx * 18.5;
++      const y = 18 + gy * 18;
++      const d = Math.hypot(x - fx, y - fy);
++      const r = Math.max(0.7, 6.4 - d / 36);
++      dots.push(
++        <circle
++          key={`${gx}-${gy}`}
++          cx={x}
++          cy={y}
++          r={r}
++          fill={d < 20 ? "var(--brass)" : "currentColor"}
++          opacity={d < 20 ? 0.85 : 0.42}
++        />
++      );
++    }
++  }
++  return dots;
++}
++
++function plateLedgerline(rng) {
++  const marks = [];
++  for (let i = 0; i < 11; i += 1) {
++    const y = 22 + i * 15.5;
++    marks.push(
++      <line key={`l${i}`} x1={52} x2={78} y1={y} y2={y} stroke="currentColor" strokeOpacity={0.3} />,
++      <line key={`r${i}`} x1={242} x2={268} y1={y} y2={y} stroke="currentColor" strokeOpacity={0.3} />
++    );
++  }
++  for (let i = 0; i < 6; i += 1) {
++    const y1 = 22 + Math.floor(rng() * 11) * 15.5;
++    const y2 = 22 + Math.floor(rng() * 11) * 15.5;
++    marks.push(
++      <path
++        key={`c${i}`}
++        d={`M 78 ${y1} C 140 ${y1}, 180 ${y2}, 242 ${y2}`}
++        fill="none"
++        stroke={i === 2 ? "var(--brass)" : "currentColor"}
++        strokeOpacity={i === 2 ? 0.85 : 0.22}
++      />
++    );
++  }
++  return marks;
++}
++
++function plateIsarithm(rng) {
++  const rings = [];
++  for (let k = 1; k <= 7; k += 1) {
++    const base = 13 * k;
++    const p1 = rng() * Math.PI * 2;
++    const p2 = rng() * Math.PI * 2;
++    const points = [];
++    for (let s = 0; s <= 64; s += 1) {
++      const t = (s / 64) * Math.PI * 2;
++      const r = base + Math.sin(t * 3 + p1) * 6 + Math.sin(t * 5 + p2) * 3.5;
++      points.push(
++        `${(160 + Math.cos(t) * r * 1.25).toFixed(1)},${(100 + Math.sin(t) * r * 0.82).toFixed(1)}`
++      );
++    }
++    rings.push(
++      <polyline
++        key={k}
++        points={points.join(" ")}
++        fill="none"
++        stroke={k === 4 ? "var(--brass)" : "currentColor"}
++        strokeOpacity={k === 4 ? 0.8 : 0.32}
++      />
++    );
++  }
++  return rings;
++}
++
++function plateQuorum(rng) {
++  const parts = [];
++  const nodes = [];
++  for (let i = 0; i < 9; i += 1) {
++    const t = (i / 9) * Math.PI * 2 - Math.PI / 2;
++    nodes.push([160 + Math.cos(t) * 88, 100 + Math.sin(t) * 66]);
++  }
++  for (let i = 0; i < 9; i += 1) {
++    for (let j = i + 2; j < 9; j += 1) {
++      if (rng() > 0.62) {
++        parts.push(
++          <line
++            key={`e${i}-${j}`}
++            x1={nodes[i][0]}
++            y1={nodes[i][1]}
++            x2={nodes[j][0]}
++            y2={nodes[j][1]}
++            stroke="currentColor"
++            strokeOpacity={0.16}
++          />
++        );
++      }
++    }
++  }
++  nodes.forEach(([x, y], i) => {
++    const majority = i < 5;
++    parts.push(
++      <circle
++        key={`n${i}`}
++        cx={x}
++        cy={y}
++        r={5}
++        fill={majority ? "var(--brass)" : "var(--surface)"}
++        stroke={majority ? "var(--brass)" : "currentColor"}
++        strokeOpacity={majority ? 1 : 0.5}
++      />
++    );
++  });
++  return parts;
++}
++
++function plateTypograph(rng) {
++  const bars = [];
++  [52, 100, 148].forEach((y, i) => {
++    bars.push(
++      <line key={`rule${i}`} x1={16} x2={304} y1={y} y2={y} stroke="currentColor" strokeOpacity={0.22} />
++    );
++  });
++  for (let i = 0; i < 12; i += 1) {
++    const width = 3 + (Math.sin((i / 11) * Math.PI) + rng() * 0.12) * 12;
++    bars.push(
++      <rect
++        key={`b${i}`}
++        x={30 + i * 22.5 - width / 2}
++        y={52}
++        width={width}
++        height={96}
++        fill={i === 8 ? "var(--brass)" : "currentColor"}
++        opacity={i === 8 ? 0.9 : 0.68}
++      />
++    );
++  }
++  return bars;
++}
++
++function plateResidual(rng) {
++  const parts = [];
++  const curve = [];
++  for (let x = 30; x <= 290; x += 5) {
++    const y = 156 - ((x - 160) / 130) ** 2 * 118;
++    curve.push(`${x},${y.toFixed(1)}`);
++  }
++  parts.push(
++    <polyline key="bowl" points={curve.join(" ")} fill="none" stroke="currentColor" strokeOpacity={0.4} />
++  );
++  let offset = -122 - rng() * 4;
++  let prev = null;
++  for (let i = 0; i < 8; i += 1) {
++    const x = 160 + offset;
++    const y = 156 - (offset / 130) ** 2 * 118;
++    if (prev) {
++      parts.push(
++        <line
++          key={`s${i}`}
++          x1={prev[0]}
++          y1={prev[1]}
++          x2={x}
++          y2={y}
++          stroke="var(--brass)"
++          strokeOpacity={0.55}
++        />
++      );
++    }
++    parts.push(
++      <circle key={`d${i}`} cx={x} cy={y} r={3.4 - i * 0.24} fill="var(--brass)" opacity={0.95 - i * 0.07} />
++    );
++    prev = [x, y];
++    offset *= -0.82;
++  }
++  return parts;
++}
++
++function plateFieldbook(rng) {
++  const parts = [];
++  const dots = [];
++  for (let i = 0; i < 42; i += 1) {
++    const cluster = i % 3;
++    const cx = [90, 220, 165][cluster];
++    const cy = [70, 88, 148][cluster];
++    dots.push([cx + (rng() - 0.5) * 96, cy + (rng() - 0.5) * 64, 0.8 + rng() * 1.8]);
++  }
++  dots.forEach(([x, y], i) => {
++    let best = null;
++    let bestDist = 46;
++    dots.forEach(([mx, my], j) => {
++      if (i === j) return;
++      const d = Math.hypot(mx - x, my - y);
++      if (d < bestDist) {
++        bestDist = d;
++        best = [mx, my];
++      }
++    });
++    if (best && i % 2 === 0) {
++      parts.push(
++        <line key={`l${i}`} x1={x} y1={y} x2={best[0]} y2={best[1]} stroke="currentColor" strokeOpacity={0.24} />
++      );
++    }
++  });
++  dots.forEach(([x, y, r], i) => {
++    parts.push(
++      <circle
++        key={`p${i}`}
++        cx={x}
++        cy={y}
++        r={r}
++        fill={i % 13 === 0 ? "var(--brass)" : "currentColor"}
++        opacity={i % 13 === 0 ? 0.95 : 0.55}
++      />
++    );
++  });
++  return parts;
++}
++
++const projects = [
++  {
++    id: 1,
++    title: "Meridian",
++    year: "2026",
++    category: "engineering",
++    summary: "Distributed tracing console that renders ten-thousand-span traces as navigable waterfalls.",
++    plate: plateMeridian,
++  },
++  {
++    id: 2,
++    title: "Halftone",
++    year: "2025",
++    category: "design",
++    summary: "A screen-print halftone engine for the browser — live dithering on the GPU.",
++    plate: plateHalftone,
++  },
++  {
++    id: 3,
++    title: "Ledgerline",
++    year: "2024",
++    category: "engineering",
++    summary: "Sync layer that reconciles offline double-entry edits without conflicts.",
++    plate: plateLedgerline,
++  },
++  {
++    id: 4,
++    title: "Isarithm",
++    year: "2025",
++    category: "math",
++    summary: "Turns raw elevation tiles into printable contour-line drawings.",
++    plate: plateIsarithm,
++  },
++  {
++    id: 5,
++    title: "Quorum",
++    year: "2023",
++    category: "research",
++    summary: "Step-by-step visual walkthroughs of consensus protocols, from Paxos to Raft.",
++    plate: plateQuorum,
++  },
++  {
++    id: 6,
++    title: "Typograph",
++    year: "2024",
++    category: "design",
++    summary: "Variable-font specimen tool that animates weight and width axes in sync.",
++    plate: plateTypograph,
++  },
++  {
++    id: 7,
++    title: "Residual",
++    year: "2023",
++    category: "math",
++    summary: "Interactive explainer of gradient-descent failure modes and how to read them.",
++    plate: plateResidual,
++  },
++  {
++    id: 8,
++    title: "Fieldbook",
++    year: "2026",
++    category: "research",
++    summary: "Note graph that maps 500 working notes by discipline — it plots the chart above.",
++    plate: plateFieldbook,
++  },
++];
+ 
+ export function ProjectGrid() {
+   return (
+-    <section aria-labelledby="projects-title" className="space-y-6">
+-      <h2 id="projects-title" className="text-3xl font-semibold">Selected projects</h2>
++    <section aria-labelledby="projects-title" className="space-y-8">
++      <Reveal>
++        <div className="space-y-3">
++          <p className="kicker">Plates 01–08</p>
++          <h2 id="projects-title" className="type-display text-3xl md:text-4xl">
++            Selected projects
++          </h2>
++          <div aria-hidden="true" className="h-px w-full bg-[var(--line)]" />
++        </div>
++      </Reveal>
+       <div className="grid gap-5 md:grid-cols-2">
+-        {projects.map((project) => (
+-          <a
+-            href={`#project-${project.id}`}
+-            key={project.id}
+-            className="group block rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4"
+-          >
+-            <div
+-              aria-hidden="true"
+-              className="aspect-[16/10] rounded-lg bg-[linear-gradient(135deg,#d8d8d2,#a7a79f)]"
+-              data-project-media
+-            />
+-            <h3 className="mt-4 text-xl font-semibold">{project.title}</h3>
+-            <p className="mt-2 text-sm text-[var(--muted)]">{project.summary}</p>
+-          </a>
++        {projects.map((project, index) => (
++          <Reveal key={project.id} delay={(index % 2) * 90}>
++            <a
++              href={`#project-${project.id}`}
++              id={`project-${project.id}`}
++              className="plate-card group block rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4"
++            >
++              <div
++                aria-hidden="true"
++                className="aspect-[16/10] overflow-hidden rounded-lg border border-[var(--line)] bg-[var(--background)] text-[var(--foreground)]"
++                data-project-media
++              >
++                <svg viewBox="0 0 320 200" className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
++                  {project.plate(mulberry32(project.id * 2654435761 + 3))}
++                </svg>
++              </div>
++              <div className="type-mono mt-4 flex items-baseline justify-between text-xs text-[var(--muted)]">
++                <span>PL. {String(project.id).padStart(2, "0")}</span>
++                <span>{project.year}</span>
++              </div>
++              <h3 className="type-display mt-2 text-2xl">{project.title}</h3>
++              <p className="mt-2 text-sm leading-6 text-[var(--muted)]">{project.summary}</p>
++              <p className="type-mono mt-3 flex items-center gap-2 text-[0.6875rem] uppercase tracking-[0.16em] text-[var(--muted)]">
++                <span
++                  aria-hidden="true"
++                  className="h-2 w-2 rounded-full"
++                  style={{ background: `var(${CATEGORY_VARS[project.category]})` }}
++                />
++                {project.category}
++              </p>
++            </a>
++          </Reveal>
+         ))}
+       </div>
+     </section>
+diff --git a/components/Reveal.jsx b/components/Reveal.jsx
+new file mode 100644
+index 0000000..0c08ab1
+--- /dev/null
++++ b/components/Reveal.jsx
+@@ -0,0 +1,37 @@
++"use client";
++
++import { useEffect, useRef } from "react";
++
++export function Reveal({ children, delay = 0, className = "" }) {
++  const ref = useRef(null);
++
++  useEffect(() => {
++    const el = ref.current;
++    if (!el) return undefined;
++    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
++      el.classList.add("is-in");
++      return undefined;
++    }
++    const observer = new IntersectionObserver(
++      ([entry]) => {
++        if (entry.isIntersecting) {
++          el.classList.add("is-in");
++          observer.disconnect();
++        }
++      },
++      { threshold: 0.12 }
++    );
++    observer.observe(el);
++    return () => observer.disconnect();
++  }, []);
++
++  return (
++    <div
++      ref={ref}
++      className={`reveal ${className}`}
++      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
++    >
++      {children}
++    </div>
++  );
++}
+diff --git a/components/SettingsPanel.jsx b/components/SettingsPanel.jsx
+index 3cd24b9..45b8ab6 100644
+--- a/components/SettingsPanel.jsx
++++ b/components/SettingsPanel.jsx
+@@ -8,59 +8,53 @@ export function SettingsPanel() {
+ 
+   return (
+     <form
+-      className="space-y-8"
++      className="space-y-8 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-6 md:p-8"
+       onSubmit={(event) => {
+         event.preventDefault();
+         setSaved(true);
+       }}
+     >
+-      <section className="space-y-3">
+-        <h2 className="text-lg font-semibold">Profile</h2>
++      <section className="space-y-4">
++        <h2 className="kicker">Profile</h2>
+         <label className="grid gap-2">
+-          <span>Name</span>
+-          <input
+-            className="rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 py-2"
+-            defaultValue="Jordan Lee"
+-            name="name"
+-          />
++          <span className="text-sm font-medium">Name</span>
++          <input className="field" defaultValue="Jordan Lee" name="name" />
+         </label>
+         <label className="grid gap-2">
+-          <span>Email</span>
+-          <input
+-            className="rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 py-2"
+-            defaultValue="jordan@example.com"
+-            name="email"
+-            type="email"
+-          />
++          <span className="text-sm font-medium">Email</span>
++          <input className="field" defaultValue="jordan@example.com" name="email" type="email" />
+         </label>
+       </section>
+ 
+-      <section className="space-y-3">
+-        <h2 className="text-lg font-semibold">Notifications</h2>
+-        <label className="flex items-center justify-between gap-4 rounded-lg border border-[var(--line)] p-4">
+-          <span>Email notifications</span>
++      <section className="space-y-4">
++        <h2 className="kicker">Notifications</h2>
++        <label className="flex items-center justify-between gap-4 rounded-lg border border-[var(--line)] bg-[var(--background)] p-4">
++          <span className="grid gap-0.5">
++            <span className="text-sm font-medium">Email notifications</span>
++            <span className="text-xs text-[var(--muted)]">Project updates, at most monthly.</span>
++          </span>
+           <input
+             checked={notifications}
++            className="switch"
+             onChange={(event) => setNotifications(event.target.checked)}
+             type="checkbox"
+           />
+         </label>
+       </section>
+ 
+-      <section className="space-y-3">
+-        <h2 className="text-lg font-semibold">Password</h2>
+-        <input
+-          className="w-full rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 py-2"
+-          placeholder="New password"
+-          type="password"
+-        />
++      <section className="space-y-4">
++        <h2 className="kicker">Password</h2>
++        <label className="grid gap-2">
++          <span className="text-sm font-medium">New password</span>
++          <input className="field" placeholder="At least 12 characters" type="password" />
++        </label>
+       </section>
+ 
+-      <div className="flex items-center gap-3">
+-        <button className="rounded-md bg-[var(--foreground)] px-4 py-2 text-[var(--background)]" type="submit">
++      <div className="flex items-center gap-3 border-t border-[var(--line)] pt-6">
++        <button className="btn-brass" type="submit">
+           Save changes
+         </button>
+-        <span aria-live="polite" className="text-sm text-[var(--muted)]">
++        <span aria-live="polite" className="type-mono text-xs uppercase tracking-[0.14em] text-[var(--brass)]">
+           {saved ? "Saved" : ""}
+         </span>
+       </div>
+=== NEW FILE: components/Constellation.jsx ===
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { constellationItems } from "./ConstellationData";
+
+const CATEGORIES = ["engineering", "research", "design", "math"];
+
+const CATEGORY_VARS = {
+  engineering: "--cat-engineering",
+  research: "--cat-research",
+  design: "--cat-design",
+  math: "--cat-math",
+};
+
+/* Cluster anchors as fractions of the canvas. */
+const ANCHORS = {
+  engineering: [0.3, 0.34],
+  research: [0.74, 0.3],
+  design: [0.62, 0.72],
+  math: [0.4, 0.78],
+};
+
+const COUNTS = constellationItems.reduce((acc, item) => {
+  acc[item.category] = (acc[item.category] || 0) + 1;
+  return acc;
+}, {});
+
+function mulberry32(seed) {
+  let a = seed | 0;
+  return function next() {
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function buildField(width, height) {
+  const spread = Math.min(width, height) * 0.17;
+  const nodes = constellationItems.map((item) => {
+    const rng = mulberry32(item.id * 7919 + 17);
+    const [ax, ay] = ANCHORS[item.category];
+    /* Box-Muller gaussian jitter around the cluster anchor */
+    const u1 = Math.max(rng(), 1e-6);
+    const u2 = rng();
+    const mag = Math.sqrt(-2 * Math.log(u1));
+    let x = ax * width + Math.cos(2 * Math.PI * u2) * mag * spread;
+    let y = ay * height + Math.sin(2 * Math.PI * u2) * mag * spread * 0.82;
+
+    /* A few nodes lean out toward a neighboring discipline */
+    const bridgeTo =
+      item.id % 17 === 0
+        ? CATEGORIES[(CATEGORIES.indexOf(item.category) + 1 + (item.id % 3)) % 4]
+        : null;
+    if (bridgeTo) {
+      const [bx, by] = ANCHORS[bridgeTo];
+      const t = 0.35 + rng() * 0.3;
+      x = x + (bx * width - x) * t;
+      y = y + (by * height - y) * t;
+    }
+
+    const radius = 0.7 + rng() ** 2 * 1.8;
+    return {
+      id: item.id,
+      label: item.label,
+      category: item.category,
+      bridgeTo,
+      x,
+      y,
+      radius,
+      bright: radius > 2.15,
+      twinklePhase: rng() * Math.PI * 2,
+      twinkleSpeed: 0.4 + rng() * 0.9,
+      delay: 0,
+      px: x,
+      py: y,
+    };
+  });
+
+  /* Draw-in delay grows with distance from the field's center of mass */
+  const cx = nodes.reduce((s, n) => s + n.x, 0) / nodes.length;
+  const cy = nodes.reduce((s, n) => s + n.y, 0) / nodes.length;
+  let maxDist = 1;
+  for (const n of nodes) {
+    n.dist = Math.hypot(n.x - cx, n.y - cy);
+    if (n.dist > maxDist) maxDist = n.dist;
+  }
+  for (const n of nodes) {
+    const rng = mulberry32(n.id * 31 + 7);
+    n.delay = (n.dist / maxDist) * 1100 + rng() * 300;
+  }
+
+  /* Links: nearest same-discipline neighbor, plus bridge chords */
+  const links = [];
+  const seen = new Set();
+  const maxLink = Math.min(width, height) * 0.085 + 36;
+  for (const cat of CATEGORIES) {
+    const group = nodes.filter((n) => n.category === cat);
+    for (const n of group) {
+      let best = null;
+      let bestDist = Infinity;
+      for (const m of group) {
+        if (m.id === n.id) continue;
+        const d = Math.hypot(m.x - n.x, m.y - n.y);
+        if (d < bestDist) {
+          bestDist = d;
+          best = m;
+        }
+      }
+      if (best && bestDist < maxLink) {
+        const key = n.id < best.id ? `${n.id}-${best.id}` : `${best.id}-${n.id}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          links.push({ a: n, b: best, bridge: false, category: cat });
+        }
+      }
+    }
+  }
+  for (const n of nodes) {
+    if (!n.bridgeTo) continue;
+    let best = null;
+    let bestDist = Infinity;
+    for (const m of nodes) {
+      if (m.category !== n.bridgeTo) continue;
+      const d = Math.hypot(m.x - n.x, m.y - n.y);
+      if (d < bestDist) {
+        bestDist = d;
+        best = m;
+      }
+    }
+    if (best && bestDist < maxLink * 2.2) {
+      links.push({ a: n, b: best, bridge: true, category: n.category });
+    }
+  }
+
+  return { nodes, links };
+}
+
+function readColors() {
+  const styles = getComputedStyle(document.documentElement);
+  const get = (name) => styles.getPropertyValue(name).trim();
+  return {
+    ink: get("--foreground"),
+    brass: get("--brass"),
+    engineering: get("--cat-engineering"),
+    research: get("--cat-research"),
+    design: get("--cat-design"),
+    math: get("--cat-math"),
+  };
+}
+
+export function Constellation() {
+  const rootRef = useRef(null);
+  const canvasRef = useRef(null);
+  const fieldRef = useRef(null);
+  const colorsRef = useRef(null);
+  const mouseRef = useRef({ x: -9999, y: -9999, active: false });
+  const activeRef = useRef(null);
+  const hoveredRef = useRef(null);
+  const startRef = useRef(null);
+  const rafRef = useRef(0);
+  const runningRef = useRef(false);
+  const reducedRef = useRef(false);
+
+  const [active, setActive] = useState(null);
+  const [hovered, setHovered] = useState(null);
+
+  activeRef.current = active;
+
+  useEffect(() => {
+    const root = rootRef.current;
+    const canvas = canvasRef.current;
+    if (!root || !canvas) return undefined;
+    const ctx = canvas.getContext("2d");
+    const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    reducedRef.current = reducedQuery.matches;
+    colorsRef.current = readColors();
+
+    const setup = () => {
+      const rect = root.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.max(1, Math.round(rect.width * dpr));
+      canvas.height = Math.max(1, Math.round(rect.height * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      fieldRef.current = buildField(rect.width, rect.height);
+    };
+
+    const draw = () => {
+      const field = fieldRef.current;
+      const colors = colorsRef.current;
+      if (!field || !colors) return;
+      const rect = root.getBoundingClientRect();
+      const now = performance.now();
+      if (startRef.current === null) startRef.current = now;
+      const elapsed = now - startRef.current;
+      const reduced = reducedRef.current;
+      const activeCat = activeRef.current;
+      const mouse = mouseRef.current;
+
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      const driftX = reduced ? 0 : Math.sin(now * 0.00012) * 4;
+      const driftY = reduced ? 0 : Math.cos(now * 0.00009) * 3;
+
+      /* Compute frame positions first so links and nodes agree */
+      for (const n of field.nodes) {
+        const depth = 0.4 + (n.radius / 2.5) * 0.8;
+        let x = n.x + driftX * depth;
+        let y = n.y + driftY * depth;
+        if (!reduced && mouse.active) {
+          const dx = x - mouse.x;
+          const dy = y - mouse.y;
+          const d = Math.hypot(dx, dy);
+          if (d < 110 && d > 0.001) {
+            const push = ((110 - d) / 110) ** 2 * 14;
+            x += (dx / d) * push;
+            y += (dy / d) * push;
+          }
+        }
+        n.px = x;
+        n.py = y;
+        const p = reduced ? 1 : Math.min(Math.max((elapsed - n.delay) / 700, 0), 1);
+        n.appear = p * p * (3 - 2 * p); /* smoothstep */
+      }
+
+      ctx.lineWidth = 1;
+      for (const link of field.links) {
+        const catAlpha = activeCat && link.category !== activeCat ? 0.1 : 1;
+        const appear = Math.min(link.a.appear, link.b.appear);
+        if (appear <= 0 || catAlpha <= 0) continue;
+        ctx.strokeStyle = link.bridge ? colors.ink : colors[link.category];
+        ctx.globalAlpha = (link.bridge ? 0.16 : 0.26) * appear * catAlpha;
+        ctx.beginPath();
+        ctx.moveTo(link.a.px, link.a.py);
+        ctx.lineTo(link.b.px, link.b.py);
+        ctx.stroke();
+      }
+
+      for (const n of field.nodes) {
+        if (n.appear <= 0) continue;
+        const catAlpha = activeCat && n.category !== activeCat ? 0.12 : 1;
+        let alpha = 0.85 * n.appear * catAlpha;
+        if (n.bright && !reduced) {
+          alpha *= 0.75 + 0.25 * Math.sin(now * 0.001 * n.twinkleSpeed + n.twinklePhase);
+        }
+        const color = colors[n.category];
+        if (n.bright) {
+          ctx.globalAlpha = 0.1 * n.appear * catAlpha;
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          ctx.arc(n.px, n.py, n.radius * 3.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.globalAlpha = Math.max(alpha, 0);
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(n.px, n.py, n.radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      const hoveredNode = hoveredRef.current
+        ? field.nodes.find((n) => n.id === hoveredRef.current.id)
+        : null;
+      if (hoveredNode) {
+        ctx.globalAlpha = 0.9;
+        ctx.strokeStyle = colors.brass;
+        ctx.beginPath();
+        ctx.arc(hoveredNode.px, hoveredNode.py, hoveredNode.radius + 5, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    };
+
+    const tick = () => {
+      if (!runningRef.current) return;
+      draw();
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    const start = () => {
+      if (runningRef.current || reducedRef.current) return;
+      runningRef.current = true;
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    const stop = () => {
+      runningRef.current = false;
+      cancelAnimationFrame(rafRef.current);
+    };
+
+    setup();
+    if (reducedRef.current) {
+      draw();
+    }
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) start();
+        else stop();
+      },
+      { threshold: 0.05 }
+    );
+    io.observe(root);
+
+    let resizeTimer = 0;
+    const ro = new ResizeObserver(() => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        setup();
+        if (reducedRef.current) draw();
+      }, 150);
+    });
+    ro.observe(root);
+
+    const onPointerMove = (event) => {
+      const rect = canvasRef.current.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const inside = x >= 0 && y >= 0 && x <= rect.width && y <= rect.height;
+      mouseRef.current = { x, y, active: inside };
+      if (!inside) {
+        if (hoveredRef.current) {
+          hoveredRef.current = null;
+          setHovered(null);
+        }
+        return;
+      }
+      const field = fieldRef.current;
+      if (!field) return;
+      let best = null;
+      let bestDist = 48;
+      for (const n of field.nodes) {
+        const d = Math.hypot(n.px - x, n.py - y);
+        if (d < bestDist) {
+          bestDist = d;
+          best = n;
+        }
+      }
+      const next = best ? { id: best.id, label: best.label, category: best.category } : null;
+      if (next?.id !== hoveredRef.current?.id) {
+        hoveredRef.current = next;
+        setHovered(next);
+        if (reducedRef.current) draw();
+      }
+    };
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+
+    const onScheme = () => {
+      colorsRef.current = readColors();
+      if (reducedRef.current) draw();
+    };
+    darkQuery.addEventListener("change", onScheme);
+
+    const onReduced = () => {
+      reducedRef.current = reducedQuery.matches;
+      if (reducedQuery.matches) {
+        stop();
+        draw();
+      } else {
+        start();
+      }
+    };
+    reducedQuery.addEventListener("change", onReduced);
+
+    const redrawStatic = () => {
+      if (reducedRef.current) draw();
+    };
+    root.addEventListener("constellation:redraw", redrawStatic);
+
+    return () => {
+      stop();
+      io.disconnect();
+      ro.disconnect();
+      window.clearTimeout(resizeTimer);
+      window.removeEventListener("pointermove", onPointerMove);
+      darkQuery.removeEventListener("change", onScheme);
+      reducedQuery.removeEventListener("change", onReduced);
+      root.removeEventListener("constellation:redraw", redrawStatic);
+    };
+  }, []);
+
+  /* Static (reduced-motion) canvases still reflect discipline isolation */
+  useEffect(() => {
+    const root = rootRef.current;
+    if (root) root.dispatchEvent(new Event("constellation:redraw"));
+  }, [active]);
+
+  const toggleCategory = (cat) => {
+    setActive((current) => (current === cat ? null : cat));
+  };
+
+  return (
+    <div ref={rootRef} className="pointer-events-none absolute inset-0">
+      <canvas
+        ref={canvasRef}
+        role="img"
+        aria-label="Constellation chart plotting 500 working notes across engineering, research, design, and math."
+        className="absolute inset-0 h-full w-full"
+      />
+      <div className="pointer-events-auto absolute bottom-6 right-6 z-10 hidden w-64 rounded-lg border border-[var(--line)] bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] p-4 backdrop-blur-sm lg:block">
+        <p className="kicker">Observation chart</p>
+        <p className="type-mono mt-1 text-xs text-[var(--muted)]">
+          500 notes · 4 disciplines · plotted 2026
+        </p>
+        <div className="mt-3 grid gap-1" role="group" aria-label="Isolate a discipline">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              type="button"
+              aria-pressed={active === cat}
+              onClick={() => toggleCategory(cat)}
+              className="type-mono flex items-center justify-between rounded px-2 py-1 text-left text-xs uppercase tracking-[0.14em] transition-opacity hover:bg-[var(--background)]"
+              style={active && active !== cat ? { opacity: 0.45 } : undefined}
+            >
+              <span className="flex items-center gap-2">
+                <span
+                  aria-hidden="true"
+                  className="h-2 w-2 rounded-full"
+                  style={{ background: `var(${CATEGORY_VARS[cat]})` }}
+                />
+                {cat}
+              </span>
+              <span className="text-[var(--muted)]">{COUNTS[cat]}</span>
+            </button>
+          ))}
+        </div>
+        <p
+          aria-live="polite"
+          className="type-mono mt-3 border-t border-[var(--line)] pt-2 text-xs text-[var(--muted)]"
+        >
+          {hovered
+            ? `${hovered.label} · ${hovered.category}`
+            : active
+              ? `${active} isolated — click again to clear`
+              : "hover the field · click a discipline"}
+        </p>
+      </div>
+    </div>
+  );
+}
+=== NEW FILE: components/Reveal.jsx ===
+"use client";
+
+import { useEffect, useRef } from "react";
+
+export function Reveal({ children, delay = 0, className = "" }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return undefined;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.classList.add("is-in");
+      return undefined;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add("is-in");
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.12 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={`reveal ${className}`}
+      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
+    >
+      {children}
+    </div>
+  );
+}

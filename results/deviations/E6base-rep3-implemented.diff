@@ -1,0 +1,1309 @@
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..8e7090c 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -1,26 +1,200 @@
+ @import "tailwindcss";
+ 
++@theme inline {
++  --font-sans: var(--font-instrument), "Avenir Next", "Segoe UI", system-ui, sans-serif;
++  --font-display: var(--font-bricolage), "Avenir Next", "Segoe UI", system-ui, sans-serif;
++  --font-mono: var(--font-spline), ui-monospace, "SF Mono", Menlo, Consolas, monospace;
++}
++
+ :root {
+   color-scheme: light dark;
+-  --background: #f5f5f3;
+-  --foreground: #161616;
+-  --muted: #6b6b66;
+-  --surface: #ffffff;
+-  --line: #deded8;
++
++  /* Day chart — blue-black ink on drafting paper */
++  --background: #e9edf2;
++  --foreground: #16202e;
++  --muted: #55677c;
++  --surface: #f6f9fc;
++  --line: #c7d2de;
++  --accent: #b23018;
++  --accent-contrast: #f6f9fc;
++
++  /* Sky-chart plotting colors (read by canvas + SVG figures) */
++  --chart-line: rgba(23, 33, 47, 0.16);
++  --chart-faint: rgba(23, 33, 47, 0.07);
++  --star-engineering: #2e4e74;
++  --star-research: #22303f;
++  --star-design: #8a6a1f;
++  --star-math: #9c3d22;
++  --bg-rgb: 233, 237, 242;
+ }
+ 
+ @media (prefers-color-scheme: dark) {
+   :root {
+-    --background: #111110;
+-    --foreground: #f5f5f2;
+-    --muted: #a0a099;
+-    --surface: #181817;
+-    --line: #31312f;
++    /* Night chart — starlight on deep navy */
++    --background: #0b1322;
++    --foreground: #e7edf6;
++    --muted: #93a5bb;
++    --surface: #111b2c;
++    --line: #24344b;
++    --accent: #ff6d4d;
++    --accent-contrast: #14100e;
++
++    --chart-line: rgba(148, 176, 214, 0.16);
++    --chart-faint: rgba(148, 176, 214, 0.07);
++    --star-engineering: #9cc2ff;
++    --star-research: #e9f0fb;
++    --star-design: #ffd48f;
++    --star-math: #ff9c78;
++    --bg-rgb: 11, 19, 34;
+   }
+ }
+ 
+ * { box-sizing: border-box; }
+-html { background: var(--background); color: var(--foreground); }
+-body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
++
++html {
++  background: var(--background);
++  color: var(--foreground);
++  scroll-behavior: smooth;
++}
++
++body {
++  margin: 0;
++  font-family: var(--font-sans);
++  -webkit-font-smoothing: antialiased;
++  text-rendering: optimizeLegibility;
++}
++
+ a { color: inherit; }
+-button, input { font: inherit; }
++button, input { font: inherit; color: inherit; }
++
++::selection {
++  background: var(--accent);
++  color: var(--accent-contrast);
++}
++
++:focus-visible {
++  outline: 2px solid var(--accent);
++  outline-offset: 3px;
++}
++
++/* ---- Scroll reveals (progressive enhancement; JS adds .is-pending) ---- */
++.reveal-item {
++  opacity: 1;
++  transform: none;
++  transition:
++    opacity 0.7s ease,
++    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
++  transition-delay: var(--reveal-delay, 0ms);
++}
++.reveal-item.is-pending {
++  opacity: 0;
++  transform: translateY(18px);
++  transition: none;
++}
++
++/* ---- Project card figures: accent trace draws in on hover/focus ---- */
++.figure-trace {
++  stroke-dasharray: 1;
++  stroke-dashoffset: 1;
++  transition: stroke-dashoffset 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.05s;
++}
++.project-card:hover .figure-trace,
++.project-card:focus-visible .figure-trace {
++  stroke-dashoffset: 0;
++}
++
++.project-card .figure-plot {
++  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
++  transform-origin: 50% 50%;
++}
++.project-card:hover .figure-plot,
++.project-card:focus-visible .figure-plot {
++  transform: scale(1.035) rotate(-0.4deg);
++}
++
++.project-card {
++  transition:
++    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
++    border-color 0.45s ease,
++    box-shadow 0.45s ease;
++}
++.project-card:hover {
++  transform: translateY(-4px);
++  border-color: color-mix(in oklab, var(--accent) 55%, var(--line));
++  box-shadow: 0 18px 40px -24px color-mix(in oklab, var(--foreground) 45%, transparent);
++}
++
++.card-arrow {
++  opacity: 0;
++  transform: translate(-4px, 4px);
++  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
++}
++.project-card:hover .card-arrow,
++.project-card:focus-visible .card-arrow {
++  opacity: 1;
++  transform: translate(0, 0);
++}
++
++/* ---- Hero scroll cue ---- */
++@keyframes cue-drift {
++  0%, 100% { transform: translateY(0); opacity: 0.7; }
++  50% { transform: translateY(6px); opacity: 1; }
++}
++.scroll-cue { animation: cue-drift 2.6s ease-in-out infinite; }
++
++/* ---- Settings switch (native checkbox, styled) ---- */
++.switch {
++  appearance: none;
++  position: relative;
++  width: 2.6rem;
++  height: 1.5rem;
++  flex: none;
++  border-radius: 999px;
++  border: 1px solid var(--line);
++  background: color-mix(in oklab, var(--foreground) 10%, var(--surface));
++  cursor: pointer;
++  transition: background 0.25s ease, border-color 0.25s ease;
++}
++.switch::before {
++  content: "";
++  position: absolute;
++  top: 50%;
++  left: 0.2rem;
++  width: 1.05rem;
++  height: 1.05rem;
++  border-radius: 999px;
++  background: var(--surface);
++  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.28);
++  transform: translateY(-50%);
++  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
++}
++.switch:checked {
++  background: var(--accent);
++  border-color: var(--accent);
++}
++.switch:checked::before { transform: translate(1.08rem, -50%); }
++
++/* ---- Saved confirmation ---- */
++@keyframes saved-pop {
++  from { opacity: 0; transform: translateY(4px); }
++  to { opacity: 1; transform: translateY(0); }
++}
++.saved-note { animation: saved-pop 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
++
++@media (prefers-reduced-motion: reduce) {
++  html { scroll-behavior: auto; }
++  .reveal-item,
++  .reveal-item.is-pending {
++    opacity: 1;
++    transform: none;
++    transition: none;
++  }
++  .scroll-cue { animation: none; }
++  .figure-trace { transition: none; stroke-dashoffset: 0; }
++  .project-card,
++  .project-card .figure-plot,
++  .card-arrow { transition: none; }
++  .project-card:hover { transform: none; }
++  .project-card:hover .figure-plot { transform: none; }
++  .saved-note { animation: none; }
++}
+diff --git a/app/layout.jsx b/app/layout.jsx
+index e857e02..38cb9f4 100644
+--- a/app/layout.jsx
++++ b/app/layout.jsx
+@@ -1,13 +1,32 @@
++import { Bricolage_Grotesque, Instrument_Sans, Spline_Sans_Mono } from "next/font/google";
+ import "./globals.css";
+ 
++const display = Bricolage_Grotesque({
++  subsets: ["latin"],
++  variable: "--font-bricolage",
++  display: "swap",
++});
++
++const body = Instrument_Sans({
++  subsets: ["latin"],
++  variable: "--font-instrument",
++  display: "swap",
++});
++
++const mono = Spline_Sans_Mono({
++  subsets: ["latin"],
++  variable: "--font-spline",
++  display: "swap",
++});
++
+ export const metadata = {
+-  title: "Jordan Lee",
++  title: "Jordan Lee — Software Engineer",
+   description: "Selected projects and experience of Jordan Lee, software engineer.",
+ };
+ 
+ export default function RootLayout({ children }) {
+   return (
+-    <html lang="en">
++    <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
+       <body>{children}</body>
+     </html>
+   );
+diff --git a/components/LocalClock.jsx b/components/LocalClock.jsx
+new file mode 100644
+index 0000000..225b7a4
+--- /dev/null
++++ b/components/LocalClock.jsx
+@@ -0,0 +1,28 @@
++"use client";
++
++import { useEffect, useState } from "react";
++
++/* Small instrument readout in the nav: the viewer's own local time. */
++export function LocalClock() {
++  const [time, setTime] = useState(null);
++
++  useEffect(() => {
++    const tick = () =>
++      setTime(
++        new Date().toLocaleTimeString("en-GB", {
++          hour: "2-digit",
++          minute: "2-digit",
++          second: "2-digit",
++        })
++      );
++    tick();
++    const id = setInterval(tick, 1000);
++    return () => clearInterval(id);
++  }, []);
++
++  return (
++    <span className="tabular-nums text-[var(--muted)]" aria-hidden="true">
++      LOCAL {time ?? "--:--:--"}
++    </span>
++  );
++}
+diff --git a/components/ProjectGrid.jsx b/components/ProjectGrid.jsx
+index 025aff2..4d62956 100644
+--- a/components/ProjectGrid.jsx
++++ b/components/ProjectGrid.jsx
+@@ -1,28 +1,399 @@
+-const projects = Array.from({ length: 8 }, (_, index) => ({
+-  id: index + 1,
+-  title: `Project ${String(index + 1).padStart(2, "0")}`,
+-  summary: "Case study notes on the research, design, and engineering behind this project.",
+-}));
++import { Reveal } from "./Reveal";
++
++const projects = [
++  {
++    id: 1,
++    title: "Meridian",
++    summary:
++      "Distributed tracing console that renders a service mesh as a navigable time-map, from edge to database.",
++    tag: "Systems",
++    year: 2025,
++    featured: true,
++  },
++  {
++    id: 2,
++    title: "Isopleth",
++    summary: "Contour rendering engine for live weather and terrain fields, drawn entirely in the browser.",
++    tag: "Computational design",
++    year: 2024,
++  },
++  {
++    id: 3,
++    title: "Caliper",
++    summary: "Design-token pipeline that measures drift between the spec and the shipped interface.",
++    tag: "Interfaces",
++    year: 2024,
++  },
++  {
++    id: 4,
++    title: "Traverse",
++    summary: "Graph query planner with a visual cost-model explorer for debugging slow paths.",
++    tag: "Systems",
++    year: 2023,
++  },
++  {
++    id: 5,
++    title: "Vellum",
++    summary: "Multiplayer canvas with CRDT sync and pressure-aware ink, built for design critiques.",
++    tag: "Interfaces",
++    year: 2023,
++  },
++  {
++    id: 6,
++    title: "Halftone",
++    summary: "Print-inspired shader library for dithered gradients, duotones, and paper grain.",
++    tag: "Computational design",
++    year: 2022,
++  },
++  {
++    id: 7,
++    title: "Almanac",
++    summary: "Study of team capacity plotted as seasonal charts; shipped as a scheduling engine.",
++    tag: "Research",
++    year: 2021,
++  },
++  {
++    id: 8,
++    title: "Octave",
++    summary: "Browser DSP playground pairing audio analysis with type that responds to sound.",
++    tag: "Research",
++    year: 2020,
++  },
++];
++
++function mulberry32(seed) {
++  let a = seed | 0;
++  return function () {
++    a = (a + 0x6d2b79f5) | 0;
++    let t = Math.imul(a ^ (a >>> 15), 1 | a);
++    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
++    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
++  };
++}
++
++const f = (x) => Math.round(x * 100) / 100;
++
++/* Shared chart-frame ticks so all plates read as one atlas. */
++function FrameTicks() {
++  const ticks = [];
++  for (let i = 1; i < 8; i++) {
++    const x = f((320 / 8) * i);
++    ticks.push(`M${x} 0V5`, `M${x} 200V195`);
++  }
++  for (let i = 1; i < 5; i++) {
++    const y = f((200 / 5) * i);
++    ticks.push(`M0 ${y}H5`, `M320 ${y}H315`);
++  }
++  return <path d={ticks.join("")} stroke="var(--chart-line)" strokeWidth="1" fill="none" />;
++}
++
++/* Systems: circuit-trace walks across a survey grid. */
++function LatticeFigure({ seed }) {
++  const rng = mulberry32(seed * 7919 + 17);
++  const cols = 13;
++  const rows = 8;
++  const mx = 26;
++  const my = 24;
++  const sx = (320 - mx * 2) / (cols - 1);
++  const sy = (200 - my * 2) / (rows - 1);
++  const pt = (c, r) => [f(mx + c * sx), f(my + r * sy)];
++
++  const walk = (steps) => {
++    let c = 1 + Math.floor(rng() * (cols - 2));
++    let r = 1 + Math.floor(rng() * (rows - 2));
++    let horizontal = rng() < 0.5;
++    const pts = [pt(c, r)];
++    for (let i = 0; i < steps; i++) {
++      const d = (1 + Math.floor(rng() * 3)) * (rng() < 0.5 ? -1 : 1);
++      if (horizontal) c = Math.max(0, Math.min(cols - 1, c + d));
++      else r = Math.max(0, Math.min(rows - 1, r + d));
++      horizontal = !horizontal;
++      pts.push(pt(c, r));
++    }
++    return pts;
++  };
++  const toPath = (pts) => "M" + pts.map(([x, y]) => `${x} ${y}`).join("L");
++
++  const inkWalks = Array.from({ length: 4 }, () => walk(5 + Math.floor(rng() * 3)));
++  const accent = walk(8);
++
++  const dots = [];
++  for (let c = 0; c < cols; c++)
++    for (let r = 0; r < rows; r++) {
++      const [x, y] = pt(c, r);
++      dots.push(<circle key={`${c}-${r}`} cx={x} cy={y} r="1" fill="var(--chart-line)" />);
++    }
++
++  return (
++    <g>
++      {dots}
++      {inkWalks.map((pts, i) => (
++        <path
++          key={i}
++          d={toPath(pts)}
++          fill="none"
++          stroke="currentColor"
++          strokeOpacity={0.5 - i * 0.08}
++          strokeWidth="1"
++          strokeLinejoin="round"
++        />
++      ))}
++      <path
++        className="figure-trace"
++        d={toPath(accent)}
++        pathLength="1"
++        fill="none"
++        stroke="var(--accent)"
++        strokeWidth="1.5"
++        strokeLinejoin="round"
++      />
++      <circle cx={accent[0][0]} cy={accent[0][1]} r="2.6" fill="var(--accent)" />
++      <circle
++        cx={accent[accent.length - 1][0]}
++        cy={accent[accent.length - 1][1]}
++        r="2.6"
++        fill="none"
++        stroke="var(--accent)"
++        strokeWidth="1.2"
++      />
++    </g>
++  );
++}
++
++/* Computational design: distorted isoline contours around a survey mark. */
++function IsolineFigure({ seed }) {
++  const rng = mulberry32(seed * 104729 + 3);
++  const cx = 160 + (rng() - 0.5) * 36;
++  const cy = 102 + (rng() - 0.5) * 24;
++  const p1 = rng() * Math.PI * 2;
++  const p2 = rng() * Math.PI * 2;
++  const squash = 0.72 + rng() * 0.12;
++
++  const ring = (k) => {
++    const base = 13 + k * 11.5;
++    const a1 = (2.5 + rng() * 4) * (0.35 + k / 7);
++    const a2 = (1.2 + rng() * 2.4) * (0.35 + k / 7);
++    let d = "";
++    for (let deg = 0; deg <= 360; deg += 5) {
++      const th = (deg * Math.PI) / 180;
++      const r = base + a1 * Math.sin(3 * th + p1) + a2 * Math.sin(5 * th + p2);
++      const x = f(cx + r * Math.cos(th));
++      const y = f(cy + r * Math.sin(th) * squash);
++      d += (deg === 0 ? "M" : "L") + `${x} ${y}`;
++    }
++    return d + "Z";
++  };
++
++  const rings = Array.from({ length: 8 }, (_, k) => ring(k));
++  const accentD = rings[3];
++
++  return (
++    <g>
++      {rings.map((d, k) => (
++        <path
++          key={k}
++          d={d}
++          fill="none"
++          stroke="currentColor"
++          strokeOpacity={f(0.52 - k * 0.045)}
++          strokeWidth="1"
++        />
++      ))}
++      <path
++        className="figure-trace"
++        d={accentD}
++        pathLength="1"
++        fill="none"
++        stroke="var(--accent)"
++        strokeWidth="1.4"
++      />
++      <path
++        d={`M${f(cx - 5)} ${f(cy)}H${f(cx + 5)}M${f(cx)} ${f(cy - 5)}V${f(cy + 5)}`}
++        stroke="currentColor"
++        strokeOpacity="0.7"
++        strokeWidth="1"
++      />
++    </g>
++  );
++}
++
++/* Interfaces: pen-tool easing curves with visible control handles. */
++function EasingFigure({ seed }) {
++  const rng = mulberry32(seed * 15485863 + 11);
++  const x0 = 38;
++  const x1 = 282;
++
++  const curves = Array.from({ length: 3 }, () => {
++    const y0 = 150 + (rng() - 0.5) * 28;
++    const y1 = 46 + (rng() - 0.5) * 28;
++    const c1x = x0 + 55 + rng() * 55;
++    const c1y = y0 - 30 - rng() * 70;
++    const c2x = x1 - 55 - rng() * 55;
++    const c2y = y1 + 30 + rng() * 70;
++    return { y0: f(y0), y1: f(y1), c1x: f(c1x), c1y: f(c1y), c2x: f(c2x), c2y: f(c2y) };
++  });
++  const a = curves[1];
++  const d = (c) => `M${x0} ${c.y0}C${c.c1x} ${c.c1y} ${c.c2x} ${c.c2y} ${x1} ${c.y1}`;
++
++  const rules = Array.from({ length: 5 }, (_, i) => f(30 + i * 35));
++
++  return (
++    <g>
++      {rules.map((y) => (
++        <line key={y} x1="24" x2="296" y1={y} y2={y} stroke="var(--chart-faint)" strokeWidth="1" />
++      ))}
++      {curves.map((c, i) =>
++        i === 1 ? null : (
++          <path key={i} d={d(c)} fill="none" stroke="currentColor" strokeOpacity="0.4" strokeWidth="1" />
++        )
++      )}
++      <line x1={x0} y1={a.y0} x2={a.c1x} y2={a.c1y} stroke="var(--chart-line)" strokeDasharray="3 3" />
++      <line x1={x1} y1={a.y1} x2={a.c2x} y2={a.c2y} stroke="var(--chart-line)" strokeDasharray="3 3" />
++      <path
++        className="figure-trace"
++        d={d(a)}
++        pathLength="1"
++        fill="none"
++        stroke="var(--accent)"
++        strokeWidth="1.6"
++      />
++      <circle cx={a.c1x} cy={a.c1y} r="2.6" fill="var(--surface)" stroke="var(--muted)" strokeWidth="1" />
++      <circle cx={a.c2x} cy={a.c2y} r="2.6" fill="var(--surface)" stroke="var(--muted)" strokeWidth="1" />
++      <rect x={x0 - 2.5} y={a.y0 - 2.5} width="5" height="5" fill="currentColor" />
++      <rect x={x1 - 2.5} y={a.y1 - 2.5} width="5" height="5" fill="currentColor" />
++    </g>
++  );
++}
++
++/* Research: annotated scatter with a fitted trace. */
++function ScatterFigure({ seed }) {
++  const rng = mulberry32(seed * 6700417 + 29);
++  const pts = Array.from({ length: 24 }, () => ({
++    x: f(30 + rng() * 260),
++    y: f(34 + rng() * 136),
++    r: f(1.2 + rng() * 1.9),
++    open: rng() < 0.18,
++  }));
++  const fit = [...pts]
++    .sort((p, q) => p.x - q.x)
++    .filter((_, i) => i % 3 === 0);
++  const fitD = "M" + fit.map((p) => `${p.x} ${f(p.y * 0.4 + 60)}`).join("L");
++  const mark = pts[Math.floor(rng() * pts.length)];
++  const flip = mark.x > 220;
++
++  return (
++    <g>
++      {pts.map((p, i) =>
++        p.open ? (
++          <circle key={i} cx={p.x} cy={p.y} r={p.r + 1} fill="none" stroke="currentColor" strokeOpacity="0.55" strokeWidth="1" />
++        ) : (
++          <circle key={i} cx={p.x} cy={p.y} r={p.r} fill="currentColor" fillOpacity="0.55" />
++        )
++      )}
++      <path className="figure-trace" d={fitD} pathLength="1" fill="none" stroke="var(--accent)" strokeWidth="1.4" strokeLinejoin="round" />
++      <circle cx={mark.x} cy={mark.y} r="6" fill="none" stroke="var(--muted)" strokeWidth="1" />
++      <line
++        x1={f(mark.x + (flip ? -6 : 6))}
++        y1={mark.y}
++        x2={f(mark.x + (flip ? -30 : 30))}
++        y2={mark.y}
++        stroke="var(--muted)"
++        strokeWidth="1"
++      />
++      <text
++        x={f(mark.x + (flip ? -34 : 34))}
++        y={f(mark.y + 2.5)}
++        textAnchor={flip ? "end" : "start"}
++        fill="var(--muted)"
++        style={{ font: "7px var(--font-spline), monospace", letterSpacing: "0.08em" }}
++      >
++        OBS {String(seed).padStart(2, "0")}
++      </text>
++    </g>
++  );
++}
++
++const FIGURES = {
++  Systems: LatticeFigure,
++  "Computational design": IsolineFigure,
++  Interfaces: EasingFigure,
++  Research: ScatterFigure,
++};
++
++function PlateFigure({ project }) {
++  const Figure = FIGURES[project.tag];
++  return (
++    <svg
++      viewBox="0 0 320 200"
++      preserveAspectRatio="xMidYMid slice"
++      aria-hidden="true"
++      focusable="false"
++      className="h-full w-full text-[var(--foreground)]"
++    >
++      <FrameTicks />
++      <g className="figure-plot">
++        <Figure seed={project.id} />
++      </g>
++    </svg>
++  );
++}
+ 
+ export function ProjectGrid() {
+   return (
+-    <section aria-labelledby="projects-title" className="space-y-6">
+-      <h2 id="projects-title" className="text-3xl font-semibold">Selected projects</h2>
++    <section aria-labelledby="projects-title" className="space-y-8">
++      <Reveal>
++        <div className="flex flex-wrap items-end justify-between gap-4 border-b border-[var(--line)] pb-5">
++          <div className="space-y-2">
++            <p className="font-mono text-[0.7rem] uppercase tracking-[0.22em] text-[var(--accent)]">
++              Charted work
++            </p>
++            <h2 id="projects-title" className="font-display text-3xl font-semibold tracking-tight md:text-4xl">
++              Selected projects
++            </h2>
++          </div>
++          <p className="font-mono text-[0.7rem] uppercase tracking-[0.22em] text-[var(--muted)]">
++            08 plates / 2020–2025
++          </p>
++        </div>
++      </Reveal>
++
+       <div className="grid gap-5 md:grid-cols-2">
+-        {projects.map((project) => (
+-          <a
+-            href={`#project-${project.id}`}
++        {projects.map((project, index) => (
++          <Reveal
+             key={project.id}
+-            className="group block rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4"
++            delay={(index % 2) * 90}
++            className={project.featured ? "md:col-span-2" : ""}
+           >
+-            <div
+-              aria-hidden="true"
+-              className="aspect-[16/10] rounded-lg bg-[linear-gradient(135deg,#d8d8d2,#a7a79f)]"
+-              data-project-media
+-            />
+-            <h3 className="mt-4 text-xl font-semibold">{project.title}</h3>
+-            <p className="mt-2 text-sm text-[var(--muted)]">{project.summary}</p>
+-          </a>
++            <a
++              href={`#project-${project.id}`}
++              className="project-card group block overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--surface)]"
++            >
++              <div
++                data-project-media
++                className={`relative overflow-hidden border-b border-[var(--line)] ${
++                  project.featured ? "aspect-[16/10] md:aspect-[16/6]" : "aspect-[16/10]"
++                }`}
++              >
++                <PlateFigure project={project} />
++                <span className="absolute left-4 top-3 font-mono text-[0.62rem] uppercase tracking-[0.24em] text-[var(--muted)]">
++                  Plate {String(project.id).padStart(2, "0")}
++                </span>
++              </div>
++              <div className="p-5 md:p-6">
++                <h3 className="font-display text-xl font-semibold tracking-tight md:text-2xl">
++                  {project.title}
++                  <span aria-hidden="true" className="card-arrow ml-2 inline-block text-[var(--accent)]">
++                    ↗
++                  </span>
++                </h3>
++                <p className="mt-2 max-w-xl text-sm leading-6 text-[var(--muted)]">{project.summary}</p>
++                <p className="mt-4 flex flex-wrap gap-x-5 gap-y-1 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-[var(--muted)]">
++                  <span className="text-[var(--accent)]">{project.tag}</span>
++                  <span>{project.year}</span>
++                </p>
++              </div>
++            </a>
++          </Reveal>
+         ))}
+       </div>
+     </section>
+diff --git a/components/Reveal.jsx b/components/Reveal.jsx
+new file mode 100644
+index 0000000..b37da0c
+--- /dev/null
++++ b/components/Reveal.jsx
+@@ -0,0 +1,40 @@
++"use client";
++
++import { useEffect, useRef } from "react";
++
++/*
++ * Progressive-enhancement scroll reveal: content is visible by default
++ * (no-JS safe), hidden only once JS confirms it is below the fold, and
++ * revealed on intersection. Skipped entirely under prefers-reduced-motion.
++ */
++export function Reveal({ children, delay = 0, className = "" }) {
++  const ref = useRef(null);
++
++  useEffect(() => {
++    const el = ref.current;
++    if (!el) return;
++    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
++    if (el.getBoundingClientRect().top < window.innerHeight * 0.92) return;
++
++    el.classList.add("is-pending");
++    const io = new IntersectionObserver(
++      (entries) => {
++        for (const entry of entries) {
++          if (entry.isIntersecting) {
++            el.classList.remove("is-pending");
++            io.disconnect();
++          }
++        }
++      },
++      { rootMargin: "0px 0px -8% 0px" }
++    );
++    io.observe(el);
++    return () => io.disconnect();
++  }, []);
++
++  return (
++    <div ref={ref} className={`reveal-item ${className}`} style={{ "--reveal-delay": `${delay}ms` }}>
++      {children}
++    </div>
++  );
++}
+diff --git a/components/SettingsPanel.jsx b/components/SettingsPanel.jsx
+index 3cd24b9..52f1660 100644
+--- a/components/SettingsPanel.jsx
++++ b/components/SettingsPanel.jsx
+@@ -2,66 +2,97 @@
+ 
+ import { useState } from "react";
+ 
++/*
++ * Utility surface: deliberately quiet. Clear labels, visible focus,
++ * no spectacle — the portfolio above is where the theatre lives.
++ */
+ export function SettingsPanel() {
+   const [notifications, setNotifications] = useState(true);
+   const [saved, setSaved] = useState(false);
+ 
++  const inputClass =
++    "rounded-lg border border-[var(--line)] bg-[var(--background)] px-3.5 py-2.5 transition-colors " +
++    "placeholder:text-[color-mix(in_oklab,var(--muted)_70%,transparent)] " +
++    "focus:border-[var(--accent)] focus:outline-none focus-visible:outline-none " +
++    "focus:ring-2 focus:ring-[color-mix(in_oklab,var(--accent)_30%,transparent)]";
++
+   return (
+     <form
+-      className="space-y-8"
++      className="space-y-8 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-6 md:p-8"
+       onSubmit={(event) => {
+         event.preventDefault();
+         setSaved(true);
+       }}
++      onChange={() => setSaved(false)}
+     >
+-      <section className="space-y-3">
+-        <h2 className="text-lg font-semibold">Profile</h2>
+-        <label className="grid gap-2">
+-          <span>Name</span>
+-          <input
+-            className="rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 py-2"
+-            defaultValue="Jordan Lee"
+-            name="name"
+-          />
+-        </label>
+-        <label className="grid gap-2">
+-          <span>Email</span>
+-          <input
+-            className="rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 py-2"
+-            defaultValue="jordan@example.com"
+-            name="email"
+-            type="email"
+-          />
+-        </label>
+-      </section>
++      <fieldset className="m-0 min-w-0 border-0 p-0">
++        <legend className="mb-3 p-0 font-mono text-[0.68rem] uppercase tracking-[0.2em] text-[var(--muted)]">
++          Profile
++        </legend>
++        <div className="space-y-4">
++          <label className="grid gap-1.5 text-sm font-medium">
++            <span>Name</span>
++            <input className={inputClass} defaultValue="Jordan Lee" name="name" autoComplete="name" />
++          </label>
++          <label className="grid gap-1.5 text-sm font-medium">
++            <span>Email</span>
++            <input
++              className={inputClass}
++              defaultValue="jordan@example.com"
++              name="email"
++              type="email"
++              autoComplete="email"
++            />
++          </label>
++        </div>
++      </fieldset>
+ 
+-      <section className="space-y-3">
+-        <h2 className="text-lg font-semibold">Notifications</h2>
+-        <label className="flex items-center justify-between gap-4 rounded-lg border border-[var(--line)] p-4">
+-          <span>Email notifications</span>
++      <fieldset className="m-0 min-w-0 border-0 p-0">
++        <legend className="mb-3 p-0 font-mono text-[0.68rem] uppercase tracking-[0.2em] text-[var(--muted)]">
++          Notifications
++        </legend>
++        <label className="flex cursor-pointer items-center justify-between gap-4 rounded-lg border border-[var(--line)] bg-[var(--background)] px-4 py-3.5">
++          <span className="text-sm font-medium">
++            Email notifications
++            <span className="mt-0.5 block text-[0.8rem] font-normal text-[var(--muted)]">
++              Occasional updates when new work is charted.
++            </span>
++          </span>
+           <input
+             checked={notifications}
+             onChange={(event) => setNotifications(event.target.checked)}
+             type="checkbox"
++            className="switch"
++            name="notifications"
+           />
+         </label>
+-      </section>
++      </fieldset>
+ 
+-      <section className="space-y-3">
+-        <h2 className="text-lg font-semibold">Password</h2>
+-        <input
+-          className="w-full rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 py-2"
+-          placeholder="New password"
+-          type="password"
+-        />
+-      </section>
++      <fieldset className="m-0 min-w-0 border-0 p-0">
++        <legend className="mb-3 p-0 font-mono text-[0.68rem] uppercase tracking-[0.2em] text-[var(--muted)]">
++          Password
++        </legend>
++        <label className="grid gap-1.5 text-sm font-medium">
++          <span className="sr-only">New password</span>
++          <input
++            className={`${inputClass} w-full`}
++            placeholder="New password"
++            type="password"
++            name="password"
++            autoComplete="new-password"
++          />
++        </label>
++      </fieldset>
+ 
+-      <div className="flex items-center gap-3">
+-        <button className="rounded-md bg-[var(--foreground)] px-4 py-2 text-[var(--background)]" type="submit">
++      <div className="flex items-center gap-4 border-t border-[var(--line)] pt-6">
++        <button
++          className="rounded-lg bg-[var(--foreground)] px-5 py-2.5 text-sm font-medium text-[var(--background)] transition-colors hover:bg-[var(--accent)] hover:text-[var(--accent-contrast)] active:translate-y-px"
++          type="submit"
++        >
+           Save changes
+         </button>
+-        <span aria-live="polite" className="text-sm text-[var(--muted)]">
+-          {saved ? "Saved" : ""}
++        <span aria-live="polite" className="font-mono text-[0.7rem] uppercase tracking-[0.18em] text-[var(--muted)]">
++          {saved ? <span className="saved-note inline-block text-[var(--accent)]">Saved</span> : ""}
+         </span>
+       </div>
+     </form>
+diff --git a/components/SiteNav.jsx b/components/SiteNav.jsx
+new file mode 100644
+index 0000000..0f41a78
+--- /dev/null
++++ b/components/SiteNav.jsx
+@@ -0,0 +1,33 @@
++import { LocalClock } from "./LocalClock";
++
++export function SiteNav() {
++  return (
++    <header className="fixed inset-x-0 top-0 z-40 border-b border-[color-mix(in_oklab,var(--line)_70%,transparent)] bg-[rgba(var(--bg-rgb),0.78)] backdrop-blur-md">
++      <nav
++        aria-label="Site"
++        className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-3"
++      >
++        <a href="#top" className="flex items-center gap-2.5 no-underline">
++          <svg viewBox="0 0 16 16" aria-hidden="true" className="h-3.5 w-3.5 text-[var(--accent)]">
++            <path
++              d="M8 0C8.7 4.5 11.5 7.3 16 8c-4.5 0.7-7.3 3.5-8 8-0.7-4.5-3.5-7.3-8-8 4.5-0.7 7.3-3.5 8-8Z"
++              fill="currentColor"
++            />
++          </svg>
++          <span className="font-display text-sm font-semibold tracking-tight">Jordan Lee</span>
++        </a>
++        <div className="flex items-center gap-6 font-mono text-[0.68rem] uppercase tracking-[0.2em]">
++          <a href="#work" className="no-underline transition-colors hover:text-[var(--accent)]">
++            Work
++          </a>
++          <a href="#contact" className="no-underline transition-colors hover:text-[var(--accent)]">
++            Contact
++          </a>
++          <span className="hidden sm:inline">
++            <LocalClock />
++          </span>
++        </div>
++      </nav>
++    </header>
++  );
++}
+diff --git a/components/SkyChart.jsx b/components/SkyChart.jsx
+new file mode 100644
+index 0000000..dbf7823
+--- /dev/null
++++ b/components/SkyChart.jsx
+@@ -0,0 +1,364 @@
++"use client";
++
++import { useEffect, useRef } from "react";
++import { constellationItems } from "./ConstellationData";
++
++const CATEGORIES = ["engineering", "research", "design", "math"];
++
++function mulberry32(seed) {
++  let a = seed | 0;
++  return function () {
++    a = (a + 0x6d2b79f5) | 0;
++    let t = Math.imul(a ^ (a >>> 15), 1 | a);
++    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
++    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
++  };
++}
++
++/* Deterministic star field derived from the dataset. */
++function buildStars() {
++  const rng = mulberry32(20260901);
++  return constellationItems.map((item) => {
++    const z = 0.35 + rng() * 0.65; // depth: parallax + size
++    return {
++      item,
++      cat: CATEGORIES.indexOf(item.category),
++      x0: rng(),
++      y0: Math.pow(rng(), 1.18), // slightly denser sky toward the top
++      z,
++      r: (0.5 + rng() * 0.9) * (0.6 + z * 0.8),
++      bright: rng() < 0.045,
++      tw: rng() * Math.PI * 2,
++      twf: 0.5 + rng() * 1.4,
++      amp: 1.5 + rng() * 3.5,
++      amp2: 1.5 + rng() * 3.5,
++      ph: rng() * Math.PI * 2,
++      ph2: rng() * Math.PI * 2,
++      sp: 0.08 + rng() * 0.14,
++      sp2: 0.08 + rng() * 0.14,
++    };
++  });
++}
++
++/* Constellation links: nearest same-category neighbours, computed once. */
++function buildLinks(stars) {
++  const cell = 0.05;
++  const grid = new Map();
++  stars.forEach((s, i) => {
++    const key = `${Math.floor(s.x0 / cell)},${Math.floor(s.y0 / cell)}`;
++    if (!grid.has(key)) grid.set(key, []);
++    grid.get(key).push(i);
++  });
++  const rng = mulberry32(4145);
++  const pairs = new Set();
++  const links = [];
++  stars.forEach((s, i) => {
++    const cx = Math.floor(s.x0 / cell);
++    const cy = Math.floor(s.y0 / cell);
++    const near = [];
++    for (let gx = cx - 1; gx <= cx + 1; gx++) {
++      for (let gy = cy - 1; gy <= cy + 1; gy++) {
++        const bucket = grid.get(`${gx},${gy}`);
++        if (!bucket) continue;
++        for (const j of bucket) {
++          if (j === i || stars[j].cat !== s.cat) continue;
++          const dx = stars[j].x0 - s.x0;
++          const dy = stars[j].y0 - s.y0;
++          const d = dx * dx + dy * dy;
++          if (d < 0.055 * 0.055) near.push([d, j]);
++        }
++      }
++    }
++    near.sort((a, b) => a[0] - b[0]);
++    const take = near.length > 1 && rng() < 0.3 ? 2 : 1;
++    for (let k = 0; k < Math.min(take, near.length); k++) {
++      const j = near[k][1];
++      const key = i < j ? `${i}-${j}` : `${j}-${i}`;
++      if (!pairs.has(key) && links.length < 420) {
++        pairs.add(key);
++        links.push([Math.min(i, j), Math.max(i, j)]);
++      }
++    }
++  });
++  return links;
++}
++
++export function SkyChart() {
++  const canvasRef = useRef(null);
++  const wrapRef = useRef(null);
++
++  useEffect(() => {
++    const canvas = canvasRef.current;
++    const wrap = wrapRef.current;
++    if (!canvas || !wrap) return;
++    const ctx = canvas.getContext("2d");
++
++    const stars = buildStars();
++    const links = buildLinks(stars);
++    const n = stars.length;
++    const px = new Float32Array(n);
++    const py = new Float32Array(n);
++
++    let w = 0;
++    let h = 0;
++    let dpr = 1;
++    let count = n;
++
++    let palette = null;
++    let monoFam = "monospace";
++
++    const pointer = { x: -1, y: -1, inside: false };
++    const par = { x: 0, y: 0, tx: 0, ty: 0 };
++    let hovered = -1;
++
++    let raf = 0;
++    let running = false;
++    let inView = true;
++    const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
++    let reduced = reducedQuery.matches;
++
++    const shoot = { active: false, x: 0, y: 0, vx: 0, vy: 0, born: 0, next: 5 + Math.random() * 8 };
++
++    function readPalette() {
++      const cs = getComputedStyle(document.documentElement);
++      const v = (name, fallback) => (cs.getPropertyValue(name) || fallback).trim();
++      palette = {
++        stars: [
++          v("--star-engineering", "#8ab"),
++          v("--star-research", "#cde"),
++          v("--star-design", "#da8"),
++          v("--star-math", "#d87"),
++        ],
++        line: v("--chart-line", "rgba(128,128,128,0.15)"),
++        accent: v("--accent", "#f64"),
++        fg: v("--foreground", "#ccc"),
++        muted: v("--muted", "#889"),
++      };
++      const fam = v("--font-spline", "");
++      monoFam = fam ? `${fam}, monospace` : "monospace";
++    }
++
++    function resize() {
++      const rect = wrap.getBoundingClientRect();
++      w = Math.max(1, rect.width);
++      h = Math.max(1, rect.height);
++      dpr = Math.min(window.devicePixelRatio || 1, 2);
++      canvas.width = Math.round(w * dpr);
++      canvas.height = Math.round(h * dpr);
++      count = w < 640 ? 300 : n;
++      if (reduced) draw(0);
++    }
++
++    function draw(t) {
++      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
++      ctx.clearRect(0, 0, w, h);
++
++      par.x += (par.tx - par.x) * 0.06;
++      par.y += (par.ty - par.y) * 0.06;
++
++      for (let i = 0; i < count; i++) {
++        const s = stars[i];
++        px[i] = s.x0 * w + Math.sin(t * s.sp + s.ph) * s.amp + par.x * 26 * s.z;
++        py[i] = s.y0 * h + Math.cos(t * s.sp2 + s.ph2) * s.amp2 + par.y * 18 * s.z;
++      }
++
++      // Constellation lines
++      ctx.strokeStyle = palette.line;
++      ctx.lineWidth = 1;
++      ctx.beginPath();
++      for (const [i, j] of links) {
++        if (i >= count || j >= count) continue;
++        ctx.moveTo(px[i], py[i]);
++        ctx.lineTo(px[j], py[j]);
++      }
++      ctx.stroke();
++
++      // Stars
++      for (let i = 0; i < count; i++) {
++        const s = stars[i];
++        const twinkle = reduced ? 0.75 : 0.62 + 0.38 * Math.sin(t * s.twf + s.tw);
++        ctx.globalAlpha = 0.35 + 0.6 * Math.max(0, twinkle);
++        ctx.fillStyle = palette.stars[s.cat];
++        if (s.bright) {
++          ctx.shadowBlur = 9;
++          ctx.shadowColor = palette.stars[s.cat];
++        }
++        ctx.beginPath();
++        ctx.arc(px[i], py[i], s.bright ? s.r * 2 : s.r, 0, Math.PI * 2);
++        ctx.fill();
++        if (s.bright) ctx.shadowBlur = 0;
++      }
++      ctx.globalAlpha = 1;
++
++      // Shooting star
++      if (!reduced && shoot.active) {
++        const age = t - shoot.born;
++        if (age > 0.9) {
++          shoot.active = false;
++          shoot.next = t + 6 + Math.random() * 9;
++        } else {
++          const sx = shoot.x + shoot.vx * age;
++          const sy = shoot.y + shoot.vy * age;
++          const grad = ctx.createLinearGradient(sx, sy, sx - shoot.vx * 0.14, sy - shoot.vy * 0.14);
++          grad.addColorStop(0, palette.stars[1]);
++          grad.addColorStop(1, "rgba(0,0,0,0)");
++          ctx.strokeStyle = grad;
++          ctx.lineWidth = 1.2;
++          ctx.globalAlpha = Math.sin((age / 0.9) * Math.PI);
++          ctx.beginPath();
++          ctx.moveTo(sx, sy);
++          ctx.lineTo(sx - shoot.vx * 0.14, sy - shoot.vy * 0.14);
++          ctx.stroke();
++          ctx.globalAlpha = 1;
++        }
++      } else if (!reduced && t > shoot.next) {
++        shoot.active = true;
++        shoot.born = t;
++        shoot.x = w * (0.15 + Math.random() * 0.7);
++        shoot.y = h * (0.05 + Math.random() * 0.3);
++        const ang = Math.PI * (0.15 + Math.random() * 0.2);
++        const speed = 260 + Math.random() * 160;
++        shoot.vx = Math.cos(ang) * speed * (Math.random() < 0.5 ? -1 : 1);
++        shoot.vy = Math.sin(ang) * speed;
++      }
++
++      // Hover pick: nearest star, instrument-style readout
++      hovered = -1;
++      if (pointer.inside) {
++        let best = 28 * 28;
++        for (let i = 0; i < count; i++) {
++          const dx = px[i] - pointer.x;
++          const dy = py[i] - pointer.y;
++          const d = dx * dx + dy * dy;
++          if (d < best) {
++            best = d;
++            hovered = i;
++          }
++        }
++      }
++      if (hovered >= 0) {
++        const s = stars[hovered];
++        const hx = px[hovered];
++        const hy = py[hovered];
++        ctx.strokeStyle = palette.accent;
++        ctx.lineWidth = 1;
++        ctx.beginPath();
++        ctx.arc(hx, hy, 7, 0, Math.PI * 2);
++        ctx.stroke();
++        const flip = hx > w - 170;
++        const lx = hx + (flip ? -14 : 14);
++        ctx.beginPath();
++        ctx.moveTo(hx + (flip ? -8 : 8), hy);
++        ctx.lineTo(lx, hy);
++        ctx.stroke();
++        ctx.font = `10px ${monoFam}`;
++        ctx.textAlign = flip ? "right" : "left";
++        ctx.textBaseline = "middle";
++        ctx.fillStyle = palette.accent;
++        const label = `${s.item.label} / ${s.item.category}`.toUpperCase();
++        ctx.fillText(label, lx + (flip ? -5 : 5), hy);
++      }
++    }
++
++    function frame(now) {
++      raf = 0;
++      if (!running) return;
++      draw(now / 1000);
++      raf = requestAnimationFrame(frame);
++    }
++
++    function setRunning(on) {
++      const next = on && inView && !document.hidden && !reduced;
++      if (next === running) return;
++      running = next;
++      if (running && !raf) raf = requestAnimationFrame(frame);
++      if (!running && raf) {
++        cancelAnimationFrame(raf);
++        raf = 0;
++      }
++    }
++
++    function onPointerMove(e) {
++      const rect = canvas.getBoundingClientRect();
++      const x = e.clientX - rect.left;
++      const y = e.clientY - rect.top;
++      const inside = x >= 0 && y >= 0 && x <= rect.width && y <= rect.height;
++      pointer.x = x;
++      pointer.y = y;
++      pointer.inside = inside;
++      if (inside) {
++        par.tx = x / rect.width - 0.5;
++        par.ty = y / rect.height - 0.5;
++      } else {
++        par.tx = 0;
++        par.ty = 0;
++      }
++      if (reduced) draw(0);
++    }
++    function onPointerLeave(e) {
++      if (e.relatedTarget) return; // only when leaving the window
++      pointer.inside = false;
++      par.tx = 0;
++      par.ty = 0;
++      if (reduced) draw(0);
++    }
++
++    const onScheme = () => {
++      readPalette();
++      if (reduced) draw(0);
++    };
++    const darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
++
++    const onReduced = () => {
++      reduced = reducedQuery.matches;
++      if (reduced) {
++        setRunning(false);
++        par.x = par.tx = 0;
++        par.y = par.ty = 0;
++        draw(0);
++      } else {
++        setRunning(true);
++      }
++    };
++
++    const io = new IntersectionObserver(
++      (entries) => {
++        inView = entries[0]?.isIntersecting ?? true;
++        setRunning(true);
++      },
++      { threshold: 0 }
++    );
++    const ro = new ResizeObserver(resize);
++    const onVisibility = () => setRunning(true);
++
++    readPalette();
++    resize();
++    if (reduced) draw(0);
++    else setRunning(true);
++
++    io.observe(canvas);
++    ro.observe(wrap);
++    window.addEventListener("pointermove", onPointerMove, { passive: true });
++    window.addEventListener("pointerout", onPointerLeave, { passive: true });
++    document.addEventListener("visibilitychange", onVisibility);
++    darkQuery.addEventListener("change", onScheme);
++    reducedQuery.addEventListener("change", onReduced);
++
++    return () => {
++      setRunning(false);
++      io.disconnect();
++      ro.disconnect();
++      window.removeEventListener("pointermove", onPointerMove);
++      window.removeEventListener("pointerout", onPointerLeave);
++      document.removeEventListener("visibilitychange", onVisibility);
++      darkQuery.removeEventListener("change", onScheme);
++      reducedQuery.removeEventListener("change", onReduced);
++    };
++  }, []);
++
++  return (
++    <div ref={wrapRef} aria-hidden="true" className="absolute inset-0 overflow-hidden">
++      <canvas ref={canvasRef} className="block h-full w-full" />
++    </div>
++  );
++}

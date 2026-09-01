@@ -6,7 +6,7 @@ contested the contest is named.
 
 | Criterion | Status | Evidence / what's missing |
 |---|---|---|
-| **A** Routing guardrail | **Blocked on runs** | Baselines complete (Fable load-bearing median 3.833, Opus 4.000, 18 per-run records). No with-skill routing arm exists yet — it is the cheapest remaining arm (~95k tokens, ~8 min/run). Its weak-case sub-rule additionally waits on the E6 rescore. |
+| **A** Routing guardrail | **Blocked on runs** | **CORRECTED 2026-09-01: baselines are NOT complete.** Criterion A opens "After all three baseline repetitions exist"; only **rep 1** exists — `BLIND_SCORING_REP1.json` scores exactly 12 runs, one rep per eval per arm (Fable median 3.833, Opus 4.000). The earlier "18 per-run records" counted the discarded coached wave. The arm is therefore ~30 Fable runs (12 baseline reps 2-3, then 18 with-skill), and double that to also close the Opus arm, which criterion A requires separately ("for each model arm"). Baseline reps 2-3 launched 2026-09-01. Weak-case sub-rule additionally waits on the E6 rescore. |
 | **A**′ E6 weak-case rule | **Waiting on owner** | `results/E6_RESCORE_DOSSIER.md`. Only a score of 4 lifts E6 above 3.50; 2→3 keeps the rule binding. E6 reps 2–3 also unrun, so the case stays single-observation either way. |
 | **B** Specialist-execution value | **Half-settled** | Measurement-gated dimensions are fully populated both conditions (`I2I5_WITHSKILL_FINDINGS.md`). On measurements: I2 0/3→3/3 operative pause, I5 1/3→2/3 binding, with two M3 flags against. The ≥ +0.50 composite needs the owner's scored judgment dimensions; the "convert a critical/version/build failure" clause is not triggered (baselines had none). |
 | **C** Activation quality | **MET** | 70/70 across 14 queries × 5 fresh-context reps; all core positives 5/5, all near-miss negatives correct in every rep (`SECTION_D_FINDINGS.md`). |
@@ -34,7 +34,7 @@ claim is narrow: *the skill was not shown to improve expressive quality*. Separa
 with-skill rep failed a pause measurement (I5ws-rep2) and three M-flags are recorded across the
 programme.
 
-**The gating shape is lopsided:** of the nine unsettled rows, five need only the Fable arm to
+**The gating shape is lopsided:** of the unsettled rows, most need only the Fable arm to
 resume, and four need a human sitting down with recordings and screenshots for perhaps an hour
 (`results/OWNER_SCORING_WORKSHEET.md`). No row is blocked on analysis or tooling.
 
