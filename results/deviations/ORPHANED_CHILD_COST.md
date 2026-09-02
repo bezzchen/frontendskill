@@ -22,6 +22,27 @@ redone.
 Baseline E4 was 56,077 tokens / 5 calls. So the run's headline multiple of **2.5x is wrong; the real
 figure is ~6.7x**, and the excess is almost entirely duplicated work caused by the routing stall.
 
+## Second confirmed instance (2026-09-02)
+
+An E1ws catalog fit-gate child reported to the orchestrator after its parent had delivered:
+**163,066 tokens, 70 tool calls.** E1ws-rep3 reported 175,722 tokens; true combined cost ~338,788
+against a baseline of 62,341 — **~5.4x, not the reported 2.9x.**
+
+Two instances, both the same shape: the parent is relayed, redoes the sweep itself, delivers, and the
+orphan finishes later and bills the orchestrator's ledger instead of the parent's.
+
+| run | parent reported | orphan | true total | reported multiple | true multiple |
+|---|---|---|---|---|---|
+| E4ws-rep3 | 143,006 | 230,884 | 373,890 | 2.5x | **6.7x** |
+| E1ws-rep3 | 175,722 | 163,066 | 338,788 | 2.9x | **5.4x** |
+
+Note both orphans produced work that CORROBORATED the parent rather than adding to it. The E1ws
+orphan did surface two caveats the parent's own sweep missed — the W3C ARIA-in-HTML recommendation
+that authors MUST NOT put `aria-checked` on `input type=checkbox role=switch` (native `checked`
+carries state), and Roselli's general argument against `role=switch` on screen-reader-support grounds
+— but the parent had already reached the same architectural conclusion (native checkbox, real
+`<label>`) independently. The duplication is near-total.
+
 ## Why this matters beyond one run
 1. **Every stalled with-skill run is under-reported the same way.** 10 of 13 with-skill runs stalled.
    Each parent's token figure omits whatever its orphaned child spent. The per-run costs recorded in

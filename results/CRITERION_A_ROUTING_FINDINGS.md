@@ -70,9 +70,10 @@ Arm-independent. Likewise zero-new-dependencies at 25/25. Neither is evidence fo
 ### 4. Cost — and why the headline multiples are wrong
 `results/deviations/ORPHANED_CHILD_COST.md`: 10 of 15 with-skill runs stalled by delegating the
 mandated catalog sweep to a child and parking. Each was resumed by a neutral relay, then usually
-performed the sweep itself — while the orphan kept running and billing. Demonstrated at E4ws-rep3:
-parent reported 143,006 tokens; the orphan spent a further **230,884**. True cost ~374k = **~6.7x
-baseline, not the reported 2.5x.**
+performed the sweep itself — while the orphan kept running and billing. Two instances measured:
+E4ws-rep3 parent 143,006 + orphan 230,884 = ~374k (**6.7x**, reported 2.5x); E1ws-rep3 parent 175,722
++ orphan 163,066 = ~339k (**5.4x**, reported 2.9x). In both, the orphan's findings corroborated the
+parent's own sweep rather than adding to it.
 
 **Every stalled run's recorded cost is a lower bound.** Only four runs never delegated and therefore
 have complete totals:
