@@ -1,0 +1,2646 @@
+diff --git a/README.md b/README.md
+index 15e09ae..66c9478 100644
+--- a/README.md
++++ b/README.md
+@@ -2,7 +2,26 @@
+ 
+ Launch page for Meridian, a timeline-based motion editor for the web.
+ 
+-Built with Next.js, React, and Tailwind CSS.
++The page is itself a Meridian document: a 24-second timeline at 24 fps in five acts. Scroll
++position is the playhead; one WebGL point cloud (up to 65,536 points, one draw call) is the
++globe of meridians, the four property tracks, the spring bundle, the filmstrip and the closing
++line in turn. Keyframes dragged in act II and spring constants set in act III change the field
++on the next frame and are printed as plain CSS and JavaScript in act IV.
++
++Built with Next.js, React, Tailwind CSS and OGL (a thin WebGL wrapper; all visuals live in
++`components/field/shaders.js`).
++
++## Layout
++
++- `app/` — layout, page, global stylesheet (palette, type, ruler, lanes, reduced-motion rules)
++- `components/Stage.jsx` — scroll-to-playhead mapping, render loop with pause guards
++  (IntersectionObserver + `visibilitychange`), pointer physics, adaptive quality tiers
++- `components/field/` — `Field.js` (OGL renderer, tiers, context loss) and `shaders.js`
++- `components/acts/` — the five acts' content and controls (keyframe editor, spring sliders,
++  code export)
++- `components/Ruler.jsx` — timecode, transport, act regions, range-input scrubber
++- `lib/` — the shared spring solution (JS and GLSL), the document model and exporters, act
++  spans and screen geometry, a tiny store, the motion-preference hook
+ 
+ ## Development
+ 
+@@ -10,3 +29,16 @@ Built with Next.js, React, and Tailwind CSS.
+ npm install
+ npm run dev
+ ```
++
++`npm run build && npm start` for the production server.
++
++## Behaviour notes
++
++- Full motion: opening sequence, ambient globe rotation, pointer lens and velocity, spring
++  transitions between acts, smoothed playhead, Space plays the timeline.
++- Reduced motion (OS setting or the page's own toggle): the same acts and controls, the field
++  follows scroll 1:1, cross-dissolve transitions, no ambient or pointer motion, the transport
++  steps between acts instead of playing.
++- The loop stops when the canvas is scrolled out of view or the document is hidden, draws at
++  half rate when idle, and steps down device-pixel ratio and point count if frames run long.
++- Without WebGL the globe is drawn as an SVG and every act's content and controls remain.
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..55a49df 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -1,26 +1,381 @@
+ @import "tailwindcss";
+ 
++/* Palette: an observatory at night. Midnight ground, ivory light, brass for anything that
++   measures time (playhead, keyframes, focus). One accent, spent on the instrument. */
+ :root {
+-  color-scheme: light dark;
+-  --background: #f5f5f3;
+-  --foreground: #161616;
+-  --muted: #6b6b66;
+-  --surface: #ffffff;
+-  --line: #deded8;
+-}
+-
+-@media (prefers-color-scheme: dark) {
+-  :root {
+-    --background: #111110;
+-    --foreground: #f5f5f2;
+-    --muted: #a0a099;
+-    --surface: #181817;
+-    --line: #31312f;
+-  }
++  color-scheme: dark;
++  --midnight: #0b1020;
++  --deep: #121a30;
++  --ivory: #f1ece1;
++  --slate: #8e97ab;
++  --brass: #e6b455;
++  --brass-dim: #9a7838;
++  --line: rgba(241, 236, 225, 0.14);
++  --line-soft: rgba(241, 236, 225, 0.07);
++  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", "URW Palladio L", Georgia, serif;
++  --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
++  --ruler-h: 64px;
++  --gutter: clamp(1.25rem, 5vw, 5rem);
++  --vh: 100vh;
++  --motion: 1;
++  --dur: 320ms;
++}
++@supports (height: 100dvh) {
++  :root { --vh: 100dvh; }
++}
++@media (prefers-reduced-motion: reduce) {
++  :root { --motion: 0; }
++}
++:root[data-motion="reduced"] { --motion: 0; }
++:root[data-motion="full"] { --motion: 1; }
++@media (max-width: 767px) {
++  :root { --ruler-h: 52px; }
+ }
+ 
+ * { box-sizing: border-box; }
+-html { background: var(--background); color: var(--foreground); }
+-body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
++html {
++  background: var(--midnight);
++  color: var(--ivory);
++  scroll-behavior: auto;
++  -webkit-text-size-adjust: 100%;
++}
++body {
++  margin: 0;
++  font-family: var(--serif);
++  font-size: 1.0625rem;
++  line-height: 1.55;
++  overflow-x: hidden;
++}
+ a { color: inherit; }
+-button, input { font: inherit; }
++button, input, output { font: inherit; color: inherit; }
++button { cursor: pointer; }
++::selection { background: rgba(230, 180, 85, 0.35); }
++
++:focus-visible {
++  outline: 2px solid var(--brass);
++  outline-offset: 3px;
++  border-radius: 2px;
++}
++
++.sr-only {
++  position: absolute !important;
++  width: 1px; height: 1px; padding: 0; margin: -1px;
++  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
++}
++
++.skip {
++  position: fixed; top: 0.75rem; left: var(--gutter); z-index: 60;
++  padding: 0.5rem 0.9rem; background: var(--brass); color: var(--midnight);
++  transform: translateY(-160%); transition: transform 150ms;
++}
++.skip:focus { transform: none; }
++
++/* Header: burn-in over the stage. */
++.top {
++  position: fixed; inset: 0 0 auto 0; z-index: 40;
++  display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
++  padding: 1.1rem var(--gutter);
++  pointer-events: none;
++}
++.top > * { pointer-events: auto; }
++.brand {
++  font-size: 1.25rem; letter-spacing: 0.01em; text-decoration: none;
++  display: inline-flex; align-items: baseline; gap: 0.55rem;
++}
++.brand i {
++  display: inline-block; width: 1px; height: 1.05em; background: var(--brass); transform: translateY(0.15em);
++}
++.top-nav { display: flex; align-items: center; gap: 1.5rem; }
++.top-link {
++  text-decoration: none; border-bottom: 1px solid var(--brass-dim); padding-bottom: 1px;
++}
++.top-link:hover { border-color: var(--brass); }
++
++.motion { border: 0; padding: 0; margin: 0; display: flex; align-items: center; gap: 0.6rem; }
++.motion-legend { float: left; color: var(--slate); font-size: 0.9rem; padding-right: 0.2rem; }
++.motion-options {
++  display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 2px;
++}
++.motion-option {
++  position: relative; padding: 0.15rem 0.7rem; border-radius: 999px; font-size: 0.85rem; color: var(--slate);
++  cursor: pointer;
++}
++.motion-option.is-on { background: var(--ivory); color: var(--midnight); }
++.motion-option input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
++.motion-option:has(input:focus-visible) { outline: 2px solid var(--brass); outline-offset: 2px; }
++
++/* The stage: a sticky viewport with the field, and the acts scrolling over it. */
++.stage { position: relative; }
++.view {
++  position: sticky; top: 0; height: var(--vh); width: 100%; overflow: hidden;
++  background: var(--midnight);
++}
++.view canvas { display: block; width: 100%; height: 100%; }
++.view.is-hidden canvas { opacity: 0; }
++.view canvas { transition: opacity calc(var(--motion) * 600ms + 200ms) ease-out; }
++
++.acts { position: relative; margin-top: calc(-1 * var(--vh)); z-index: 2; }
++.act { position: relative; }
++.pin {
++  position: sticky; top: 0; height: var(--vh);
++  display: flex; flex-direction: column; justify-content: center;
++  padding: 5.5rem var(--gutter) calc(var(--ruler-h) + 1.5rem);
++}
++.act-ship .pin { justify-content: flex-end; }
++
++.copy { max-width: 34rem; }
++.copy-hero { max-width: 38rem; }
++.copy > * + * { margin-top: 1.1rem; }
++.display {
++  font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 400; line-height: 1.02;
++  letter-spacing: -0.015em; margin: 0; text-wrap: balance;
++}
++.headline {
++  font-size: clamp(1.85rem, 3.6vw, 3.1rem); font-weight: 400; line-height: 1.08;
++  letter-spacing: -0.01em; margin: 0; text-wrap: balance;
++}
++.lede { font-size: clamp(1.0625rem, 1.15vw, 1.25rem); color: var(--ivory); max-width: 30rem; }
++.hint { color: var(--slate); font-size: 0.95rem; }
++.copy-hero .lede { margin-top: 1.6rem; }
++
++.cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem 1.75rem; margin-top: 1.8rem; }
++.cta {
++  display: inline-block; padding: 0.8rem 1.35rem; background: var(--brass); color: var(--midnight);
++  text-decoration: none; border-radius: 3px; font-size: 1.05rem;
++}
++.cta:hover { background: #f0c46a; }
++.quiet-link { color: var(--slate); text-decoration: none; border-bottom: 1px solid var(--line); }
++.quiet-link:hover { color: var(--ivory); }
++
++/* Keyframe lane: positioned with the same numbers the shader uses. */
++.lane {
++  position: absolute;
++  left: var(--tracks-x); top: var(--tracks-y); width: var(--tracks-w); height: var(--tracks-h);
++}
++.lane-row { position: absolute; left: 0; right: 0; height: 25%; border-top: 1px solid var(--line-soft); }
++.lane-row:last-child { border-bottom: 1px solid var(--line-soft); }
++.lane-label {
++  position: absolute; left: 1.1rem; top: 0.35rem; color: var(--slate); font-size: 0.85rem; font-style: italic;
++}
++.lane-range {
++  position: absolute; right: 0; top: 0.3rem; bottom: 0.3rem; color: var(--slate);
++  font-family: var(--mono); font-size: 0.68rem; line-height: 1.2; text-align: right; opacity: 0.8;
++  display: flex; flex-direction: column; justify-content: space-between;
++}
++.key {
++  position: absolute; width: 44px; height: 44px; margin: -22px 0 0 -22px; padding: 0;
++  background: transparent; border: 0; border-radius: 50%; touch-action: none;
++}
++.key::before {
++  content: ""; position: absolute; left: 50%; top: 50%; width: 13px; height: 13px;
++  margin: -6.5px 0 0 -6.5px; background: var(--brass); border: 1px solid var(--midnight);
++  transform: rotate(45deg); box-shadow: 0 0 0 1px rgba(230, 180, 85, 0.35);
++  transition: transform calc(var(--motion) * 120ms);
++}
++.key:hover::before, .key.is-active::before { transform: rotate(45deg) scale(1.25); }
++.key:focus-visible { outline: none; }
++.key:focus-visible::before { box-shadow: 0 0 0 3px var(--midnight), 0 0 0 5px var(--brass); }
++.key-readout {
++  position: absolute; left: 50%; bottom: 100%; transform: translate(-50%, 6px);
++  display: none; flex-direction: column; align-items: center; white-space: nowrap;
++  font-family: var(--mono); font-size: 0.72rem; color: var(--ivory);
++  background: rgba(11, 16, 32, 0.92); border: 1px solid var(--line); padding: 0.3rem 0.5rem; border-radius: 3px;
++}
++.key-readout b { font-weight: 500; color: var(--brass); }
++.key.is-active .key-readout, .key:focus-visible .key-readout { display: flex; }
++
++/* Spring controls */
++.controls { margin-top: 1.5rem; display: grid; gap: 0.75rem; max-width: 26rem; }
++.control { display: grid; grid-template-columns: 6.5rem 1fr 3.2rem; align-items: center; gap: 0.75rem; }
++.control-name { color: var(--slate); }
++.control-value { font-family: var(--mono); font-size: 0.85rem; text-align: right; color: var(--brass); }
++.control-note { color: var(--slate); font-size: 0.9rem; margin: 0.15rem 0 0; }
++input[type="range"] {
++  -webkit-appearance: none; appearance: none; width: 100%; height: 22px; background: transparent; margin: 0;
++}
++input[type="range"]::-webkit-slider-runnable-track { height: 1px; background: var(--line); }
++input[type="range"]::-moz-range-track { height: 1px; background: var(--line); }
++input[type="range"]::-webkit-slider-thumb {
++  -webkit-appearance: none; width: 14px; height: 14px; margin-top: -6.5px; border-radius: 50%;
++  background: var(--ivory); border: 1px solid var(--midnight);
++}
++input[type="range"]::-moz-range-thumb {
++  width: 12px; height: 12px; border-radius: 50%; background: var(--ivory); border: 1px solid var(--midnight);
++}
++.ring {
++  position: absolute; left: 0; top: 0; width: 26px; height: 26px; margin: -13px 0 0 -13px;
++  border: 1px solid var(--brass); border-radius: 50%; opacity: 0; pointer-events: none;
++  will-change: transform;
++}
++.ring::after {
++  content: ""; position: absolute; left: 50%; top: 50%; width: 3px; height: 3px; margin: -1.5px 0 0 -1.5px;
++  background: var(--brass); border-radius: 50%;
++}
++
++/* Filmstrip frame numbers and the export panel */
++.film-labels {
++  position: absolute; left: var(--film-x); top: calc(var(--film-y) + var(--film-h)); width: var(--film-w);
++  display: grid; grid-template-columns: repeat(var(--n), 1fr); padding-top: 0.35rem;
++  font-family: var(--mono); font-size: 0.62rem; color: var(--slate); text-align: center; opacity: 0.75;
++}
++.export {
++  position: absolute; left: var(--tracks-x); right: var(--gutter); bottom: calc(var(--ruler-h) + 1.5rem);
++  top: calc(var(--film-y) + var(--film-h) + 3.2rem);
++  display: flex; flex-direction: column; min-height: 0;
++  border: 1px solid var(--line); border-radius: 4px; background: rgba(11, 16, 32, 0.78);
++}
++.export-bar {
++  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
++  padding: 0.5rem 0.6rem 0.5rem 0.75rem; border-bottom: 1px solid var(--line);
++}
++.tabs { display: inline-flex; gap: 0.25rem; }
++.tab {
++  background: transparent; border: 0; padding: 0.3rem 0.7rem; border-radius: 3px; color: var(--slate); font-size: 0.9rem;
++}
++.tab.is-on { color: var(--ivory); background: var(--deep); }
++.export-actions { display: inline-flex; align-items: center; gap: 0.35rem; position: relative; }
++.ghost {
++  background: transparent; border: 1px solid var(--line); border-radius: 3px; padding: 0.3rem 0.7rem;
++  font-size: 0.85rem; color: var(--ivory);
++}
++.ghost:hover { border-color: var(--brass-dim); }
++.copied {
++  position: absolute; right: 0; top: 100%; margin-top: 0.5rem; font-size: 0.8rem; color: var(--brass);
++  background: var(--midnight); padding: 0.15rem 0.5rem; border: 1px solid var(--line); border-radius: 3px;
++}
++.export-body { display: grid; grid-template-columns: 1fr 9.5rem; min-height: 0; flex: 1; }
++.export pre {
++  margin: 0; padding: 0.9rem 1rem; overflow: auto; font-family: var(--mono); font-size: 0.74rem; line-height: 1.5;
++  color: var(--ivory); tab-size: 2; white-space: pre; min-height: 0;
++}
++.export pre:focus-visible { outline-offset: -2px; }
++.preview {
++  border-left: 1px solid var(--line); display: grid; place-items: center; padding: 1rem; overflow: hidden;
++}
++.preview-card {
++  width: 5.5rem; height: 3.6rem; border-radius: 6px; border: 1px solid var(--brass);
++  background: rgba(230, 180, 85, 0.08); display: grid; gap: 0.35rem; align-content: end; padding: 0.55rem;
++}
++.preview-card span { display: block; height: 3px; border-radius: 2px; background: var(--brass); width: 70%; }
++.preview-card span:last-child { width: 45%; opacity: 0.6; }
++.preview-card.is-idle { border-style: dashed; opacity: 0.45; }
++
++/* Ruler */
++.ruler {
++  position: fixed; left: 0; right: 0; bottom: 0; z-index: 45; height: var(--ruler-h);
++  display: grid; grid-template-columns: auto auto 1fr; align-items: stretch;
++  background: rgba(11, 16, 32, 0.9); border-top: 1px solid var(--line);
++}
++.tc {
++  display: flex; align-items: center; padding: 0 1rem 0 var(--gutter);
++  font-family: var(--mono); font-size: 0.95rem; letter-spacing: 0.04em; color: var(--brass);
++  font-variant-numeric: tabular-nums; border-right: 1px solid var(--line);
++}
++.transport {
++  display: inline-flex; align-items: center; gap: 0.5rem; padding: 0 1rem; background: transparent; border: 0;
++  border-right: 1px solid var(--line); color: var(--ivory); font-size: 0.9rem;
++}
++.transport:hover { color: var(--brass); }
++.transport:focus-visible { outline-offset: -4px; }
++.track { position: relative; min-width: 0; }
++.regions { position: absolute; inset: 0; }
++.region {
++  position: absolute; top: 0; bottom: 0; border-left: 1px solid var(--line-soft);
++  display: flex; align-items: center; padding-left: 0.85rem; overflow: hidden;
++}
++.region-name { font-style: italic; font-size: 0.9rem; color: var(--slate); white-space: nowrap; transition: color 200ms; }
++.region.is-current .region-name { color: var(--ivory); }
++.marker {
++  position: absolute; left: -3.5px; bottom: 6px; width: 6px; height: 6px; background: var(--brass-dim); transform: rotate(45deg);
++}
++.region.is-current .marker { background: var(--brass); }
++.playhead {
++  position: absolute; top: 0; bottom: 0; left: 0; width: 1px; background: var(--brass); pointer-events: none;
++  will-change: transform;
++}
++.playhead::before {
++  content: ""; position: absolute; top: 0; left: -4.5px; border: 5px solid transparent; border-top: 6px solid var(--brass); border-bottom: 0;
++}
++.scrub {
++  position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize;
++}
++.track:has(.scrub:focus-visible) { box-shadow: inset 0 0 0 2px var(--brass); }
++
++/* Colophon, after the stage: a full viewport, so the field leaves the screen entirely here
++   and stops rendering. */
++.foot {
++  position: relative; z-index: 2; min-height: var(--vh);
++  padding: 5rem var(--gutter) calc(var(--ruler-h) + 3rem);
++  border-top: 1px solid var(--line); background: var(--midnight);
++  display: grid; gap: 2rem 4rem; grid-template-columns: 1fr 1fr; align-content: center; max-width: 100%;
++}
++.foot p { margin: 0; color: var(--slate); max-width: 34rem; }
++.foot a { color: var(--ivory); text-decoration: none; border-bottom: 1px solid var(--brass-dim); }
++.foot .stat { font-family: var(--mono); font-size: 0.8rem; }
++
++/* Short viewports (landscape phones, split screens): give the field the room. */
++@media (max-height: 600px) {
++  .hint { display: none; }
++  .lede { font-size: 0.95rem; }
++  .copy > * + * { margin-top: 0.6rem; }
++  .controls { margin-top: 0.6rem; gap: 0.25rem; }
++  .control-note { display: none; }
++  .pin { padding-top: 4rem; }
++}
++
++/* No WebGL */
++.fallback { position: absolute; inset: 0; color: var(--ivory); opacity: 0.55; }
++.fallback-globe {
++  position: absolute; left: var(--globe-cx); top: var(--globe-cy); width: calc(var(--globe-r) * 2); height: calc(var(--globe-r) * 2);
++  transform: translate(-50%, -50%);
++}
++
++/* Narrow desktops and tablets: a slimmer column, the field further right. */
++@media (min-width: 768px) and (max-width: 1199px) {
++  .copy { max-width: min(34rem, 42vw); }
++  .copy-hero { max-width: min(38rem, 46vw); }
++  .display { font-size: clamp(2rem, 4.6vw, 4.5rem); }
++  .headline { font-size: clamp(1.6rem, 3.2vw, 3.1rem); }
++  .lede { font-size: 1rem; }
++  .control { grid-template-columns: 5.5rem 1fr 2.8rem; }
++  .export-body { grid-template-columns: 1fr 7.5rem; }
++}
++
++/* Mobile recipe: copy on top, field below, compact ruler. Same acts, same palette. */
++@media (max-width: 767px) {
++  .pin { justify-content: flex-start; padding-top: 5rem; }
++  .act-ship .pin { justify-content: flex-start; }
++  .copy { max-width: 100%; }
++  .copy > * + * { margin-top: 0.8rem; }
++  .display { font-size: clamp(2.1rem, 10vw, 3rem); }
++  .headline { font-size: clamp(1.6rem, 7.5vw, 2.2rem); }
++  .lede { font-size: 1rem; }
++  .copy-hero .lede { margin-top: 1rem; }
++  .hint { font-size: 0.875rem; }
++  .top { padding: 0.9rem var(--gutter); }
++  .top-nav { gap: 0.9rem; }
++  .top-link { display: none; }
++  .motion-legend { font-size: 0.8rem; }
++  .controls { margin-top: 0.9rem; gap: 0.4rem; }
++  .control { grid-template-columns: 5.5rem 1fr 2.6rem; gap: 0.5rem; }
++  .control-note { font-size: 0.82rem; }
++  .lane-label { font-size: 0.72rem; top: 0.15rem; }
++  .lane-range { display: none; }
++  .copy-ship .lede { display: none; }
++  .film-labels { font-size: 0.55rem; }
++  .export {
++    left: var(--gutter); right: var(--gutter); top: calc(var(--film-y) + var(--film-h) + 1.6rem);
++    bottom: calc(var(--ruler-h) + 0.75rem);
++  }
++  .export-body { grid-template-columns: 1fr; }
++  .preview { display: none; }
++  .export pre { font-size: 0.68rem; }
++  .ghost { padding: 0.25rem 0.5rem; font-size: 0.78rem; }
++  .tc { font-size: 0.8rem; padding-right: 0.6rem; }
++  .transport { padding: 0 0.6rem; }
++  .transport-label { display: none; }
++  .region { padding-left: 0.5rem; }
++  .region-name { font-size: 0.78rem; }
++  .region:not(.is-current) .region-name { display: none; }
++  .foot { grid-template-columns: 1fr; padding-top: 3rem; }
++}
+diff --git a/app/layout.jsx b/app/layout.jsx
+index 35fc217..24a5ebd 100644
+--- a/app/layout.jsx
++++ b/app/layout.jsx
+@@ -2,7 +2,20 @@ import "./globals.css";
+ 
+ export const metadata = {
+   title: "Meridian",
+-  description: "Meridian is a timeline-based motion editor for the web. Design animation visually, ship production code.",
++  description:
++    "Meridian is a timeline-based motion editor for the web. Design animation visually, ship production code.",
++  openGraph: {
++    title: "Meridian",
++    description: "Design animation visually. Ship production code.",
++    type: "website",
++  },
++};
++
++export const viewport = {
++  themeColor: "#0b1020",
++  colorScheme: "dark",
++  width: "device-width",
++  initialScale: 1,
+ };
+ 
+ export default function RootLayout({ children }) {
+diff --git a/app/page.jsx b/app/page.jsx
+index 6f15aef..eebc415 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -1,31 +1,5 @@
+-export default function Home() {
+-  return (
+-    <main className="mx-auto max-w-3xl space-y-16 px-6 py-24">
+-      <section className="space-y-4">
+-        <h1 className="text-4xl font-semibold">Meridian</h1>
+-        <p className="text-lg text-[var(--muted)]">
+-          A timeline-based motion editor for the web. Design animation visually, ship production code.
+-        </p>
+-        <a
+-          className="inline-block rounded-md bg-[var(--foreground)] px-4 py-2 text-[var(--background)]"
+-          href="#get-access"
+-        >
+-          Get early access
+-        </a>
+-      </section>
+-
+-      <section className="space-y-6">
+-        <h2 className="text-2xl font-semibold">What it does</h2>
+-        <ul className="space-y-4 text-[var(--muted)]">
+-          <li>Visual timeline editing for springs, keyframes, and gesture-driven motion.</li>
+-          <li>One-click export to production JavaScript and CSS with no runtime lock-in.</li>
+-          <li>Live preview across breakpoints, with reduced-motion variants built in.</li>
+-        </ul>
+-      </section>
++import Stage from "@/components/Stage";
+ 
+-      <footer className="border-t border-[var(--line)] pt-8 text-sm text-[var(--muted)]" id="get-access">
+-        <p>Meridian is in private beta. hello@meridian.tools</p>
+-      </footer>
+-    </main>
+-  );
++export default function Home() {
++  return <Stage />;
+ }
+diff --git a/components/MotionToggle.jsx b/components/MotionToggle.jsx
+new file mode 100644
+index 0000000..ac24ed4
+--- /dev/null
++++ b/components/MotionToggle.jsx
+@@ -0,0 +1,33 @@
++"use client";
++
++// Meridian ships reduced-motion variants of every animation, so the page offers its own.
++export default function MotionToggle({ pref, reduced, onChange, system }) {
++  const value = pref === "auto" ? (system ? "reduced" : "full") : pref;
++  return (
++    <fieldset className="motion" aria-describedby="motion-help">
++      <legend className="motion-legend">Motion</legend>
++      <div className="motion-options">
++        {[
++          ["full", "Full"],
++          ["reduced", "Reduced"],
++        ].map(([v, label]) => (
++          <label key={v} className={"motion-option" + (value === v ? " is-on" : "")}>
++            <input
++              type="radio"
++              name="motion"
++              value={v}
++              checked={value === v}
++              onChange={() => onChange(v)}
++            />
++            <span>{label}</span>
++          </label>
++        ))}
++      </div>
++      <span id="motion-help" className="sr-only">
++        {reduced
++          ? "Reduced motion: the field still follows your scroll, without ambient or pointer motion."
++          : "Full motion: ambient rotation, pointer physics and spring transitions."}
++      </span>
++    </fieldset>
++  );
++}
+diff --git a/components/Ruler.jsx b/components/Ruler.jsx
+new file mode 100644
+index 0000000..b53c07b
+--- /dev/null
++++ b/components/Ruler.jsx
+@@ -0,0 +1,77 @@
++"use client";
++import { ACTS, BOUNDS } from "@/lib/acts";
++
++// The timeline chrome: timecode, transport, clip regions, chapter markers, playhead.
++// The scrubber is a real range input; the loop writes its value and valuetext directly.
++export default function Ruler({
++  index,
++  playing,
++  reduced,
++  onTogglePlay,
++  onScrub,
++  onJump,
++  timecodeRef,
++  playheadRef,
++  inputRef,
++}) {
++  const onKeyDown = (e) => {
++    if (e.key === "PageDown" || e.key === "PageUp") {
++      e.preventDefault();
++      onJump(e.key === "PageDown" ? 1 : -1);
++    }
++  };
++  return (
++    <div className="ruler" role="region" aria-label="Timeline">
++      <output className="tc" ref={timecodeRef} aria-live="off" aria-label="Timecode">
++        00:00:00:00
++      </output>
++      <button
++        type="button"
++        className="transport"
++        onClick={onTogglePlay}
++        aria-pressed={playing}
++        aria-label={reduced ? "Next act" : playing ? "Pause" : "Play"}
++        title={reduced ? "Next act" : playing ? "Pause (Space)" : "Play (Space)"}
++      >
++        <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" focusable="false">
++          {reduced ? (
++            <path d="M2 1.5v9l5-4.5zM8.5 1.5h1.5v9H8.5z" fill="currentColor" />
++          ) : playing ? (
++            <path d="M2 1.5h3v9H2zM7 1.5h3v9H7z" fill="currentColor" />
++          ) : (
++            <path d="M2.5 1.2v9.6l8-4.8z" fill="currentColor" />
++          )}
++        </svg>
++        <span className="transport-label">{reduced ? "Next" : playing ? "Pause" : "Play"}</span>
++      </button>
++      <div className="track">
++        <div className="regions" aria-hidden="true">
++          {ACTS.map((a, i) => (
++            <div
++              key={a.id}
++              className={"region" + (i === index ? " is-current" : "")}
++              style={{ left: `${BOUNDS[i].start * 100}%`, width: `${(BOUNDS[i].end - BOUNDS[i].start) * 100}%` }}
++            >
++              <i className="marker" />
++              <span className="region-name">{a.name}</span>
++            </div>
++          ))}
++        </div>
++        <div className="playhead" ref={playheadRef} aria-hidden="true" />
++        <input
++          ref={inputRef}
++          className="scrub"
++          type="range"
++          min="0"
++          max="1"
++          step="0.0005"
++          defaultValue="0"
++          aria-label="Timeline position"
++          aria-valuetext="00:00:00:00, Meridian"
++          onInput={(e) => onScrub(parseFloat(e.currentTarget.value))}
++          onKeyDown={onKeyDown}
++        />
++      </div>
++    </div>
++  );
++}
+diff --git a/components/Stage.jsx b/components/Stage.jsx
+new file mode 100644
+index 0000000..9c75c98
+--- /dev/null
++++ b/components/Stage.jsx
+@@ -0,0 +1,634 @@
++"use client";
++import { useCallback, useEffect, useRef, useState } from "react";
++import { createStore } from "@/lib/store";
++import { DEFAULT_DOC, TRACKS, norm, timecode, DOC_SECONDS, clamp01 } from "@/lib/document";
++import {
++  ACTS,
++  BOUNDS,
++  SCROLL_VH,
++  GEOMETRY,
++  resolve,
++  laneForAct,
++  rectToStage,
++  geoFor,
++  geometryCSS,
++} from "@/lib/acts";
++import { springParams, SpringValue } from "@/lib/spring";
++import { useMotionPreference } from "@/lib/motion";
++import { Field, probeWebGL, pickTier } from "@/components/field/Field";
++import Ruler from "@/components/Ruler";
++import MotionToggle from "@/components/MotionToggle";
++import StaticFallback from "@/components/StaticFallback";
++import Hero from "@/components/acts/Hero";
++import TimelineAct from "@/components/acts/TimelineAct";
++import SpringsAct from "@/components/acts/SpringsAct";
++import ShipAct from "@/components/acts/ShipAct";
++import AccessAct from "@/components/acts/AccessAct";
++
++const PALETTE = { bg: "#0b1020", ivory: "#f1ece1", brass: "#e6b455" };
++const GEO_CSS = geometryCSS();
++const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
++
++function makeRuntime() {
++  return {
++    field: null,
++    running: false,
++    rafId: 0,
++    visible: true,
++    intersecting: true,
++    lost: false,
++    reduced: false,
++    wrapTop: 0,
++    wrapH: 1,
++    viewW: 1,
++    viewH: 1,
++    aspect: 1,
++    scrollRange: 1,
++    vhFrac: 0.11,
++    geo: GEOMETRY.desktop,
++    scrollT: 0,
++    t: 0,
++    playhead: new SpringValue(0, { stiffness: 140, damping: 24 }),
++    lastTs: 0,
++    time: 0,
++    intro: 0,
++    frameNo: 0,
++    pointer: { x: 9, y: 9, vx: 0, vy: 0, lastMove: -1e9, lastTime: 0, px: 0, py: 0 },
++    pointerOn: new SpringValue(0, { stiffness: 60, damping: 15 }),
++    impulse: 0,
++    keySprings: Array.from({ length: 16 }, () => new SpringValue(0, { stiffness: 260, damping: 26 })),
++    lastDoc: null,
++    playing: false,
++    scrubbing: false,
++    ema: 16,
++    slow: 0,
++    lastInput: 0,
++    lastTc: "",
++    currentIndex: 0,
++    res: null,
++    ring: [new SpringValue(0), new SpringValue(0)],
++  };
++}
++
++export default function Stage() {
++  const storeRef = useRef(null);
++  if (!storeRef.current) storeRef.current = createStore(DEFAULT_DOC);
++  const store = storeRef.current;
++
++  const motion = useMotionPreference();
++  const reduced = motion.reduced;
++
++  const [webgl, setWebgl] = useState(null);
++  const [index, setIndex] = useState(0);
++  const [playing, setPlaying] = useState(false);
++  const [coarse, setCoarse] = useState(false);
++  const [info, setInfo] = useState(null);
++  const [frames, setFrames] = useState(GEOMETRY.desktop.frames);
++
++  const wrapRef = useRef(null);
++  const viewRef = useRef(null);
++  const canvasRef = useRef(null);
++  const timecodeRef = useRef(null);
++  const playheadRef = useRef(null);
++  const inputRef = useRef(null);
++  const ringRef = useRef(null);
++  const rtRef = useRef(null);
++  if (!rtRef.current) rtRef.current = makeRuntime();
++
++  useEffect(() => {
++    const rt = rtRef.current;
++    const was = rt.reduced;
++    rt.reduced = reduced;
++    if (reduced) {
++      rt.playhead.snap(rt.scrollT);
++      rt.intro = 1;
++      if (rt.playing) setPlayingState(false);
++    } else if (was && !reduced) {
++      rt.playhead.snap(rt.scrollT);
++    }
++    // eslint-disable-next-line react-hooks/exhaustive-deps
++  }, [reduced]);
++
++  const readScroll = useCallback(() => {
++    const rt = rtRef.current;
++    rt.scrollT = clamp01((window.scrollY - rt.wrapTop) / rt.scrollRange);
++  }, []);
++
++  const scrollToT = useCallback((t01, smooth) => {
++    const rt = rtRef.current;
++    window.scrollTo({ top: rt.wrapTop + clamp01(t01) * rt.scrollRange, behavior: smooth ? "smooth" : "auto" });
++  }, []);
++
++  const setPlayingState = useCallback(
++    (v) => {
++      const rt = rtRef.current;
++      rt.playing = v;
++      setPlaying(v);
++      if (v && rt.scrollT >= 0.999) scrollToT(0, false);
++    },
++    [scrollToT]
++  );
++
++  const jump = useCallback(
++    (dir) => {
++      const rt = rtRef.current;
++      const next = clamp(rt.currentIndex + dir, 0, ACTS.length - 1);
++      scrollToT(BOUNDS[next].start + 0.0015, !rt.reduced);
++    },
++    [scrollToT]
++  );
++
++  const togglePlay = useCallback(() => {
++    const rt = rtRef.current;
++    rt.lastInput = performance.now();
++    if (rt.reduced) jump(1);
++    else setPlayingState(!rt.playing);
++  }, [jump, setPlayingState]);
++
++  const onScrub = useCallback(
++    (v) => {
++      const rt = rtRef.current;
++      rt.lastInput = performance.now();
++      if (rt.playing) setPlayingState(false);
++      scrollToT(v, false);
++    },
++    [scrollToT, setPlayingState]
++  );
++
++  // Mount the field once the motion preference is known, so a reduced-motion visitor never
++  // sees the opening sequence.
++  useEffect(() => {
++    if (!motion.ready) return;
++    const rt = rtRef.current;
++    const view = viewRef.current;
++    const canvas = canvasRef.current;
++    if (!view || !canvas) return;
++
++    const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
++    setCoarse(coarsePointer);
++
++    if (!probeWebGL()) {
++      setWebgl(false);
++      return;
++    }
++    let field;
++    try {
++      const tier = pickTier({
++        width: window.innerWidth,
++        coarse: coarsePointer,
++        memory: navigator.deviceMemory,
++        cores: navigator.hardwareConcurrency,
++        reduced: rt.reduced,
++      });
++      field = new Field(canvas, { tier, maxDpr: Math.min(window.devicePixelRatio || 1, 2), palette: PALETTE });
++    } catch (err) {
++      console.warn("Meridian: WebGL field unavailable, using the static variant.", err);
++      setWebgl(false);
++      return;
++    }
++    rt.field = field;
++    rt.intro = rt.reduced ? 1 : 0;
++    setWebgl(true);
++    setInfo(field.info);
++
++    const measure = () => {
++      const wrap = wrapRef.current;
++      if (!wrap) return;
++      const r = wrap.getBoundingClientRect();
++      rt.wrapTop = r.top + window.scrollY;
++      rt.wrapH = wrap.offsetHeight;
++      rt.viewW = Math.max(1, view.clientWidth);
++      rt.viewH = Math.max(1, view.clientHeight);
++      rt.aspect = rt.viewW / rt.viewH;
++      rt.scrollRange = Math.max(1, rt.wrapH - rt.viewH);
++      rt.vhFrac = rt.viewH / rt.scrollRange;
++      rt.geo = geoFor(window.innerWidth);
++      setFrames(rt.geo.frames);
++      field.setSize(rt.viewW, rt.viewH);
++      const U = field.uniforms;
++      U.uGlobe.value[0] = (rt.geo.globe.cx * 2 - 1) * rt.aspect;
++      U.uGlobe.value[1] = -(rt.geo.globe.cy * 2 - 1);
++      U.uGlobe.value[2] = rt.geo.globe.r * 2;
++      U.uLineX.value = (rt.geo.lineX * 2 - 1) * rt.aspect;
++      U.uFrames.value = rt.geo.frames;
++      U.uPointSize.value = 1.5 * Math.pow(65536 / field.count, 0.25);
++      readScroll();
++    };
++    measure();
++    const ro = new ResizeObserver(measure);
++    ro.observe(view);
++    window.addEventListener("resize", measure);
++
++    const updateRunning = () => {
++      const should = rt.visible && rt.intersecting && !rt.lost;
++      if (should && !rt.running) {
++        rt.running = true;
++        rt.lastTs = 0;
++        rt.rafId = requestAnimationFrame(tick);
++      } else if (!should && rt.running) {
++        rt.running = false;
++        cancelAnimationFrame(rt.rafId);
++      }
++    };
++
++    field.onContextLost = () => {
++      rt.lost = true;
++      updateRunning();
++    };
++    field.onContextRestored = () => {
++      rt.lost = false;
++      measure();
++      updateRunning();
++    };
++
++    const onVisibility = () => {
++      rt.visible = document.visibilityState === "visible";
++      updateRunning();
++    };
++    document.addEventListener("visibilitychange", onVisibility);
++    // At the end of the page the sticky view sits exactly one viewport above the fold, and an
++    // edge-adjacent, zero-area intersection still counts as intersecting. Inset the root by a
++    // pixel so "fully scrolled away" is unambiguous.
++    const io = new IntersectionObserver(
++      (entries) => {
++        rt.intersecting = entries[0].isIntersecting;
++        updateRunning();
++      },
++      { threshold: 0, rootMargin: "-1px 0px -1px 0px" }
++    );
++    io.observe(canvas);
++
++    const onScroll = () => {
++      readScroll();
++      rt.lastInput = performance.now();
++    };
++    window.addEventListener("scroll", onScroll, { passive: true });
++
++    const stopOnUserInput = () => {
++      if (rt.playing) setPlayingState(false);
++    };
++    window.addEventListener("wheel", stopOnUserInput, { passive: true });
++    window.addEventListener("touchstart", stopOnUserInput, { passive: true });
++
++    const toStage = (cx, cy) => [((cx / rt.viewW) * 2 - 1) * rt.aspect, -((cy / rt.viewH) * 2 - 1)];
++    const onPointerMove = (e) => {
++      const p = rt.pointer;
++      const now = performance.now();
++      const [x, y] = toStage(e.clientX, e.clientY);
++      if (p.lastTime) {
++        const dt = Math.max(1e-3, (now - p.lastTime) / 1000);
++        const vx = (x - p.x) / dt;
++        const vy = (y - p.y) / dt;
++        p.vx = p.vx * 0.5 + vx * 0.5;
++        p.vy = p.vy * 0.5 + vy * 0.5;
++        const speed = Math.hypot(vx, vy);
++        rt.impulse = Math.min(1, rt.impulse + Math.max(0, speed - 2.5) * Math.min(dt, 0.05) * 0.25);
++      }
++      p.x = x;
++      p.y = y;
++      p.px = e.clientX;
++      p.py = e.clientY;
++      p.lastTime = now;
++      p.lastMove = now;
++      rt.lastInput = now;
++    };
++    const onPointerDown = (e) => {
++      const p = rt.pointer;
++      const [x, y] = toStage(e.clientX, e.clientY);
++      p.x = x;
++      p.y = y;
++      p.px = e.clientX;
++      p.py = e.clientY;
++      p.lastMove = performance.now();
++      rt.lastInput = p.lastMove;
++      if (e.pointerType === "touch") rt.impulse = Math.min(1, rt.impulse + 0.55);
++    };
++    const onPointerGone = () => {
++      rt.pointer.lastMove = -1e9;
++      rt.pointer.lastTime = 0;
++    };
++    window.addEventListener("pointermove", onPointerMove, { passive: true });
++    window.addEventListener("pointerdown", onPointerDown, { passive: true });
++    document.documentElement.addEventListener("pointerleave", onPointerGone);
++    window.addEventListener("blur", onPointerGone);
++
++    const onKey = (e) => {
++      rt.lastInput = performance.now();
++      const el = e.target;
++      const onBody = el === document.body || el === document.documentElement || el === document.getElementById("main");
++      const isSpace = e.code === "Space" || e.key === " " || e.key === "Spacebar";
++      if (isSpace && onBody && !e.metaKey && !e.ctrlKey && !e.altKey) {
++        e.preventDefault();
++        togglePlay();
++        return;
++      }
++      if (rt.playing && (e.key.startsWith("Arrow") || e.key.startsWith("Page") || e.key === "Home" || e.key === "End")) {
++        setPlayingState(false);
++      }
++    };
++    window.addEventListener("keydown", onKey);
++
++    const input = inputRef.current;
++    const scrubOn = () => (rt.scrubbing = true);
++    const scrubOff = () => (rt.scrubbing = false);
++    let scrubTimer = 0;
++    const scrubKey = () => {
++      rt.scrubbing = true;
++      clearTimeout(scrubTimer);
++      scrubTimer = setTimeout(scrubOff, 500);
++    };
++    input?.addEventListener("pointerdown", scrubOn);
++    input?.addEventListener("pointerup", scrubOff);
++    input?.addEventListener("pointercancel", scrubOff);
++    input?.addEventListener("keydown", scrubKey);
++
++    // Keyframe uniforms follow the document through small springs, so a drag settles the
++    // field instead of teleporting it. Reduced motion snaps.
++    const retarget = (doc, snap) => {
++      TRACKS.forEach((track, k) => {
++        const [k0, k1] = doc.keys[track.id];
++        const vals = [k0.t, k1.t, norm(track, k0.v), norm(track, k1.v)];
++        vals.forEach((v, j) => {
++          const s = rt.keySprings[k * 4 + j];
++          s.target = v;
++          if (snap) s.snap(v);
++        });
++      });
++    };
++    retarget(store.get(), true);
++    rt.lastDoc = store.get();
++
++    const laneA = new Float32Array(4);
++    const laneB = new Float32Array(4);
++
++    const tick = (ts) => {
++      if (!rt.running) return;
++      rt.rafId = requestAnimationFrame(tick);
++      const dt = rt.lastTs ? Math.min(0.05, (ts - rt.lastTs) / 1000) : 1 / 60;
++      rt.lastTs = ts;
++      rt.time += dt;
++      const isReduced = rt.reduced;
++
++      if (rt.playing) {
++        window.scrollBy(0, (rt.scrollRange / DOC_SECONDS) * dt);
++        readScroll();
++        if (rt.scrollT >= 0.9995) setPlayingState(false);
++      }
++
++      rt.playhead.target = rt.scrollT;
++      let t;
++      if (isReduced) {
++        rt.playhead.snap(rt.scrollT);
++        t = rt.scrollT;
++      } else {
++        t = clamp01(rt.playhead.step(dt));
++        if (Math.abs(t - rt.scrollT) < 2e-5) rt.playhead.snap(rt.scrollT), (t = rt.scrollT);
++      }
++      rt.t = t;
++      const res = resolve(t, rt.vhFrac);
++      rt.res = res;
++
++      rt.intro = isReduced ? 1 : Math.min(1, rt.intro + dt / 1.7);
++
++      const p = rt.pointer;
++      rt.pointerOn.target = ts - p.lastMove < 1600 ? 1 : 0;
++      rt.pointerOn.step(dt);
++      const decay = Math.exp(-dt * 7);
++      p.vx *= decay;
++      p.vy *= decay;
++      rt.impulse *= Math.exp(-dt / 0.75);
++
++      const doc = store.get();
++      if (doc !== rt.lastDoc) {
++        retarget(doc, isReduced);
++        rt.lastDoc = doc;
++      }
++      for (const s of rt.keySprings) {
++        if (isReduced) s.snap(s.target);
++        else s.step(dt);
++      }
++      const { zeta, omega } = springParams(doc.spring);
++
++      const U = field.uniforms;
++      U.uTime.value = rt.time;
++      U.uReduced.value = isReduced ? 1 : 0;
++      U.uIntro.value = rt.intro;
++      U.uFrom.value = res.from;
++      U.uTo.value = res.to;
++      U.uMorph.value = res.morph;
++      U.uLocalA.value = res.localFrom;
++      U.uLocalB.value = res.localTo;
++      const la = rectToStage(laneForAct(rt.geo, res.from), rt.aspect);
++      const lb = rectToStage(laneForAct(rt.geo, res.to), rt.aspect);
++      laneA.set(la);
++      laneB.set(lb);
++      U.uLaneA.value = laneA;
++      U.uLaneB.value = laneB;
++      U.uPointer.value[0] = p.x;
++      U.uPointer.value[1] = p.y;
++      U.uPointerVel.value[0] = clamp(p.vx * 0.02, -0.3, 0.3);
++      U.uPointerVel.value[1] = clamp(p.vy * 0.02, -0.3, 0.3);
++      U.uPointerOn.value = clamp01(rt.pointerOn.x);
++      for (let k = 0; k < 4; k++) {
++        U.uKeyT0.value[k] = rt.keySprings[k * 4].x;
++        U.uKeyT1.value[k] = rt.keySprings[k * 4 + 1].x;
++        U.uKeyV0.value[k] = rt.keySprings[k * 4 + 2].x;
++        U.uKeyV1.value[k] = rt.keySprings[k * 4 + 3].x;
++      }
++      U.uSpring.value[0] = zeta;
++      U.uSpring.value[1] = omega;
++      U.uDuration.value = doc.duration;
++      U.uImpulse.value = rt.impulse;
++
++      // Idle: nothing moving but ambient drift, so draw every other frame.
++      const idle =
++        ts - rt.lastInput > 3000 && !rt.playing && rt.pointerOn.x < 0.01 && Math.abs(rt.t - rt.scrollT) < 1e-4 && rt.intro >= 1;
++      rt.frameNo++;
++      if (!idle || rt.frameNo % 2 === 0) field.render();
++
++      if (!idle) {
++        rt.ema = rt.ema * 0.9 + dt * 1000 * 0.1;
++        if (rt.ema > 24) {
++          if (++rt.slow > 90) {
++            if (field.degrade()) {
++              U.uPointSize.value = 1.5 * Math.pow(65536 / field.count, 0.25);
++              setInfo(field.info);
++            }
++            rt.slow = 0;
++            rt.ema = 16;
++          }
++        } else if (rt.slow > 0) rt.slow--;
++      }
++
++      const tc = timecode(t);
++      if (tc !== rt.lastTc) {
++        rt.lastTc = tc;
++        if (timecodeRef.current) timecodeRef.current.textContent = tc;
++        inputRef.current?.setAttribute("aria-valuetext", `${tc}, ${ACTS[res.current].name}`);
++      }
++      if (!rt.scrubbing && inputRef.current) inputRef.current.value = String(t);
++      if (playheadRef.current) playheadRef.current.style.left = `${t * 100}%`;
++      if (res.current !== rt.currentIndex) {
++        rt.currentIndex = res.current;
++        setIndex(res.current);
++      }
++
++      const ring = ringRef.current;
++      if (ring) {
++        const inSprings = res.from === 2 || res.to === 2;
++        const show = inSprings && !isReduced && rt.pointerOn.x > 0.02 && !coarsePointer;
++        if (show) {
++          rt.ring[0].set(doc.spring);
++          rt.ring[1].set(doc.spring);
++          rt.ring[0].target = p.px;
++          rt.ring[1].target = p.py;
++          const rx = rt.ring[0].step(dt);
++          const ry = rt.ring[1].step(dt);
++          ring.style.opacity = String(clamp01(rt.pointerOn.x));
++          ring.style.transform = `translate(${rx.toFixed(1)}px, ${ry.toFixed(1)}px)`;
++        } else if (ring.style.opacity !== "0") {
++          ring.style.opacity = "0";
++          rt.ring[0].snap(p.px);
++          rt.ring[1].snap(p.py);
++        }
++      }
++    };
++
++    rt.visible = document.visibilityState === "visible";
++    updateRunning();
++
++    window.__meridianStats = {
++      get frames() {
++        return field.frames;
++      },
++      get running() {
++        return rt.running;
++      },
++      get info() {
++        return field.info;
++      },
++      get t() {
++        return rt.t;
++      },
++      get ema() {
++        return rt.ema;
++      },
++    };
++
++    return () => {
++      rt.running = false;
++      cancelAnimationFrame(rt.rafId);
++      ro.disconnect();
++      io.disconnect();
++      window.removeEventListener("resize", measure);
++      document.removeEventListener("visibilitychange", onVisibility);
++      window.removeEventListener("scroll", onScroll);
++      window.removeEventListener("wheel", stopOnUserInput);
++      window.removeEventListener("touchstart", stopOnUserInput);
++      window.removeEventListener("pointermove", onPointerMove);
++      window.removeEventListener("pointerdown", onPointerDown);
++      document.documentElement.removeEventListener("pointerleave", onPointerGone);
++      window.removeEventListener("blur", onPointerGone);
++      window.removeEventListener("keydown", onKey);
++      input?.removeEventListener("pointerdown", scrubOn);
++      input?.removeEventListener("pointerup", scrubOff);
++      input?.removeEventListener("pointercancel", scrubOff);
++      input?.removeEventListener("keydown", scrubKey);
++      field.dispose();
++      rt.field = null;
++      delete window.__meridianStats;
++    };
++    // eslint-disable-next-line react-hooks/exhaustive-deps
++  }, [motion.ready]);
++
++  const content = (i) => {
++    switch (i) {
++      case 0:
++        return <Hero coarse={coarse} />;
++      case 1:
++        return <TimelineAct store={store} reduced={reduced} />;
++      case 2:
++        return <SpringsAct store={store} ringRef={ringRef} coarse={coarse} />;
++      case 3:
++        return <ShipAct store={store} frames={frames} />;
++      default:
++        return <AccessAct />;
++    }
++  };
++
++  return (
++    <>
++      <style dangerouslySetInnerHTML={{ __html: GEO_CSS }} />
++      <a className="skip" href="#main">
++        Skip to content
++      </a>
++      <header className="top">
++        <a className="brand" href="#meridian">
++          <i aria-hidden="true" />
++          Meridian
++        </a>
++        <nav className="top-nav" aria-label="Page">
++          <MotionToggle pref={motion.pref} reduced={reduced} system={motion.system} onChange={motion.set} />
++          <a className="top-link" href="#access">
++            Request access
++          </a>
++        </nav>
++      </header>
++
++      <div className="stage" ref={wrapRef}>
++        <div className={"view" + (webgl === null ? " is-hidden" : "")} ref={viewRef} aria-hidden="true">
++          {webgl !== false ? <canvas ref={canvasRef} /> : <StaticFallback />}
++        </div>
++        <main id="main" className="acts">
++          {ACTS.map((a, i) => (
++            <section
++              key={a.id}
++              id={a.id}
++              className={`act act-${a.id}`}
++              style={{
++                height:
++                  i === ACTS.length - 1
++                    ? `calc(${(a.span * SCROLL_VH).toFixed(2)}vh + var(--vh))`
++                    : `${(a.span * SCROLL_VH).toFixed(2)}vh`,
++              }}
++            >
++              <div className="pin">{content(i)}</div>
++            </section>
++          ))}
++        </main>
++      </div>
++
++      <footer className="foot">
++        <div>
++          <p>
++            <a href="mailto:hello@meridian.tools">hello@meridian.tools</a>
++          </p>
++          <p>
++            Meridian is made by a small team of motion designers and engineers. The editor is in
++            private beta. The code it exports is already yours.
++          </p>
++        </div>
++        <div>
++          <p className="stat">
++            {info
++              ? `This visit drew ${info.count.toLocaleString()} points at ${info.dpr}x device pixels (${info.label} tier). The field stops drawing when it is offscreen or the tab is hidden.`
++              : "The field is drawn with WebGL when it is available, and stands still as a drawing when it is not."}
++          </p>
++          <p className="stat">Document length: 24 seconds at 24 frames per second, five acts.</p>
++        </div>
++      </footer>
++
++      <Ruler
++        index={index}
++        playing={playing}
++        reduced={reduced}
++        onTogglePlay={togglePlay}
++        onScrub={onScrub}
++        onJump={jump}
++        timecodeRef={timecodeRef}
++        playheadRef={playheadRef}
++        inputRef={inputRef}
++      />
++    </>
++  );
++}
+diff --git a/components/StaticFallback.jsx b/components/StaticFallback.jsx
+new file mode 100644
+index 0000000..9cdceb8
+--- /dev/null
++++ b/components/StaticFallback.jsx
+@@ -0,0 +1,18 @@
++// Shown only when WebGL is unavailable: the globe of meridians as an SVG, so the page keeps its
++// identity and every act's content still reads.
++export default function StaticFallback() {
++  const rings = Array.from({ length: 12 }, (_, i) => i);
++  return (
++    <div className="fallback" aria-hidden="true">
++      <svg viewBox="-110 -110 220 220" className="fallback-globe">
++        <g fill="none" stroke="currentColor" strokeWidth="0.6">
++          {rings.map((i) => {
++            const rx = Math.abs(Math.cos((i / 12) * Math.PI)) * 100;
++            return <ellipse key={i} cx="0" cy="0" rx={Math.max(rx, 0.5)} ry="100" opacity={0.25 + 0.5 * (rx / 100)} />;
++          })}
++          <line x1="0" y1="-108" x2="0" y2="108" stroke="var(--brass)" strokeWidth="1.2" />
++        </g>
++      </svg>
++    </div>
++  );
++}
+diff --git a/components/acts/AccessAct.jsx b/components/acts/AccessAct.jsx
+new file mode 100644
+index 0000000..c9eb68a
+--- /dev/null
++++ b/components/acts/AccessAct.jsx
+@@ -0,0 +1,19 @@
++export default function AccessAct() {
++  return (
++    <div className="copy copy-access">
++      <h2 className="headline">Meridian is in private beta.</h2>
++      <p className="lede">
++        We are onboarding a few teams at a time and shipping weekly. Tell us what you animate
++        today and we will send an invitation when your seat is ready.
++      </p>
++      <p className="cta-row">
++        <a className="cta" href="mailto:hello@meridian.tools?subject=Early%20access%20to%20Meridian">
++          Request early access
++        </a>
++        <a className="quiet-link" href="#meridian">
++          Back to the start
++        </a>
++      </p>
++    </div>
++  );
++}
+diff --git a/components/acts/Hero.jsx b/components/acts/Hero.jsx
+new file mode 100644
+index 0000000..4fea96f
+--- /dev/null
++++ b/components/acts/Hero.jsx
+@@ -0,0 +1,18 @@
++export default function Hero({ coarse }) {
++  return (
++    <div className="copy copy-hero">
++      <h1 className="display">
++        Design animation visually.
++        <br />
++        Ship production code.
++      </h1>
++      <p className="lede">
++        Meridian is a timeline editor for interface motion. This page is one of its documents:
++        twenty-four seconds, five acts, one field of light. The scroll bar is the playhead.
++      </p>
++      <p className="hint" aria-hidden="true">
++        {coarse ? "Scroll to scrub the timeline." : "Scroll to scrub the timeline, or press Space to play."}
++      </p>
++    </div>
++  );
++}
+diff --git a/components/acts/ShipAct.jsx b/components/acts/ShipAct.jsx
+new file mode 100644
+index 0000000..1847561
+--- /dev/null
++++ b/components/acts/ShipAct.jsx
+@@ -0,0 +1,108 @@
++"use client";
++import { useEffect, useMemo, useRef, useState } from "react";
++import { useStore } from "@/lib/store";
++import { toCSS, toJS } from "@/lib/document";
++
++export default function ShipAct({ store, frames }) {
++  const doc = useStore(store);
++  const [tab, setTab] = useState("css");
++  const [copied, setCopied] = useState("");
++  const [runs, setRuns] = useState(0);
++  const timer = useRef(null);
++  const css = useMemo(() => toCSS(doc), [doc]);
++  const js = useMemo(() => toJS(doc), [doc]);
++  const code = tab === "css" ? css : js;
++
++  useEffect(() => () => clearTimeout(timer.current), []);
++
++  const copy = async () => {
++    try {
++      await navigator.clipboard.writeText(code);
++      setCopied("Copied");
++    } catch {
++      setCopied("Select the code and copy it");
++    }
++    clearTimeout(timer.current);
++    timer.current = setTimeout(() => setCopied(""), 2200);
++  };
++
++  return (
++    <>
++      <div className="copy copy-ship">
++        <h2 className="headline">Export what you made.</h2>
++        <p className="lede">
++          The strip above is your document, frame by frame. The code beside it is generated from
++          the same keyframes and the same spring: plain CSS or plain JavaScript, nothing to
++          install, nothing to depend on.
++        </p>
++      </div>
++      <div className="film-labels" aria-hidden="true" style={{ "--n": frames }}>
++        {Array.from({ length: frames }, (_, i) => (
++          <span key={i}>{String(i + 1).padStart(2, "0")}</span>
++        ))}
++      </div>
++      <section className="export" aria-label="Exported code">
++        <div className="export-bar">
++          <div role="tablist" aria-label="Export format" className="tabs">
++            {[
++              ["css", "CSS"],
++              ["js", "JavaScript"],
++            ].map(([id, label]) => (
++              <button
++                key={id}
++                type="button"
++                role="tab"
++                id={`tab-${id}`}
++                aria-selected={tab === id}
++                aria-controls="export-code"
++                tabIndex={tab === id ? 0 : -1}
++                className={"tab" + (tab === id ? " is-on" : "")}
++                onClick={() => setTab(id)}
++                onKeyDown={(e) => {
++                  if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
++                    e.preventDefault();
++                    setTab(tab === "css" ? "js" : "css");
++                    requestAnimationFrame(() => document.getElementById(`tab-${tab === "css" ? "js" : "css"}`)?.focus());
++                  }
++                }}
++              >
++                {label}
++              </button>
++            ))}
++          </div>
++          <div className="export-actions">
++            <button type="button" className="ghost" onClick={() => setRuns((r) => r + 1)}>
++              Play preview
++            </button>
++            <button type="button" className="ghost" onClick={copy}>
++              Copy code
++            </button>
++            <span className="sr-only" role="status">
++              {copied}
++            </span>
++            {copied && (
++              <span className="copied" aria-hidden="true">
++                {copied}
++              </span>
++            )}
++          </div>
++        </div>
++        <div className="export-body">
++          <pre id="export-code" role="tabpanel" aria-labelledby={`tab-${tab}`} tabIndex={0}>
++            <code>{code}</code>
++          </pre>
++          <div className="preview" aria-hidden="true">
++            <style>{css}</style>
++            {runs > 0 && (
++              <div key={runs} className={`preview-card ${doc.name}`}>
++                <span />
++                <span />
++              </div>
++            )}
++            {runs === 0 && <div className="preview-card is-idle" />}
++          </div>
++        </div>
++      </section>
++    </>
++  );
++}
+diff --git a/components/acts/SpringsAct.jsx b/components/acts/SpringsAct.jsx
+new file mode 100644
+index 0000000..b65b4fd
+--- /dev/null
++++ b/components/acts/SpringsAct.jsx
+@@ -0,0 +1,55 @@
++"use client";
++import { useStore } from "@/lib/store";
++import { springParams, describeDamping, settleTime } from "@/lib/spring";
++
++export default function SpringsAct({ store, ringRef, coarse }) {
++  const doc = useStore(store);
++  const { zeta, omega } = springParams(doc.spring);
++  const setSpring = (patch) => store.set((d) => ({ ...d, spring: { ...d.spring, ...patch } }));
++  return (
++    <>
++      <div className="copy">
++        <h2 className="headline">Springs you can feel.</h2>
++        <p className="lede">
++          Meridian animates with physics, not bezier guesses. Two numbers describe the whole
++          motion, and the same two numbers drive every curve in this document, including the
++          keyframes you just moved.
++        </p>
++        <div className="controls">
++          <label className="control">
++            <span className="control-name">Stiffness</span>
++            <input
++              type="range"
++              min="30"
++              max="400"
++              step="1"
++              value={doc.spring.stiffness}
++              onChange={(e) => setSpring({ stiffness: Number(e.target.value) })}
++            />
++            <output className="control-value">{doc.spring.stiffness}</output>
++          </label>
++          <label className="control">
++            <span className="control-name">Damping</span>
++            <input
++              type="range"
++              min="2"
++              max="44"
++              step="0.5"
++              value={doc.spring.damping}
++              onChange={(e) => setSpring({ damping: Number(e.target.value) })}
++            />
++            <output className="control-value">{doc.spring.damping}</output>
++          </label>
++          <p className="control-note" role="status">
++            Damping ratio {zeta.toFixed(2)}, {describeDamping(zeta)}. Settles in about{" "}
++            {settleTime(zeta, omega).toFixed(2)} s.
++          </p>
++        </div>
++        <p className="hint" aria-hidden="true">
++          {coarse ? "Tap the field to launch it." : "Flick the pointer across the field to add velocity."}
++        </p>
++      </div>
++      <div className="ring" ref={ringRef} aria-hidden="true" />
++    </>
++  );
++}
+diff --git a/components/acts/TimelineAct.jsx b/components/acts/TimelineAct.jsx
+new file mode 100644
+index 0000000..9eca438
+--- /dev/null
++++ b/components/acts/TimelineAct.jsx
+@@ -0,0 +1,144 @@
++"use client";
++import { useCallback, useRef, useState } from "react";
++import { TRACKS, norm, denorm, clamp01, formatValue } from "@/lib/document";
++import { useStore } from "@/lib/store";
++
++const PAD = 0.18; // matches the shader's lane padding
++
++function KeyHandle({ track, which, doc, setDoc, laneRef, rowIndex, reduced }) {
++  const key = doc.keys[track.id][which];
++  const other = doc.keys[track.id][1 - which];
++  const n = clamp01(norm(track, key.v));
++  const [active, setActive] = useState(false);
++  const drag = useRef(null);
++
++  const commit = useCallback(
++    (t, v) => {
++      setDoc((d) => {
++        const keys = { ...d.keys };
++        const pair = keys[track.id].map((k) => ({ ...k }));
++        pair[which] = { t, v };
++        keys[track.id] = pair;
++        return { ...d, keys };
++      });
++    },
++    [setDoc, track.id, which]
++  );
++
++  const clampT = (t) => (which === 0 ? Math.min(t, other.t - 0.06) : Math.max(t, other.t + 0.06));
++
++  const onPointerDown = (e) => {
++    e.preventDefault();
++    e.currentTarget.setPointerCapture(e.pointerId);
++    drag.current = { id: e.pointerId };
++    setActive(true);
++  };
++  const onPointerMove = (e) => {
++    if (!drag.current || !laneRef.current) return;
++    const lane = laneRef.current.getBoundingClientRect();
++    const rowH = lane.height / TRACKS.length;
++    const rowTop = lane.top + rowH * rowIndex;
++    const t = clamp01((e.clientX - lane.left) / lane.width);
++    const yFrac = (e.clientY - rowTop) / rowH;
++    const nv = clamp01(1 - (yFrac - PAD) / (1 - 2 * PAD));
++    commit(clamp01(clampT(t)), denorm(track, nv));
++  };
++  const onPointerUp = (e) => {
++    if (!drag.current) return;
++    try {
++      e.currentTarget.releasePointerCapture(e.pointerId);
++    } catch {}
++    drag.current = null;
++    setActive(false);
++  };
++  const onKeyDown = (e) => {
++    const big = e.shiftKey ? 5 : 1;
++    let t = key.t;
++    let nv = n;
++    if (e.key === "ArrowLeft") t -= 0.02 * big;
++    else if (e.key === "ArrowRight") t += 0.02 * big;
++    else if (e.key === "ArrowUp") nv += 0.05 * big;
++    else if (e.key === "ArrowDown") nv -= 0.05 * big;
++    else if (e.key === "Home") t = which === 0 ? 0 : other.t + 0.06;
++    else if (e.key === "End") t = which === 0 ? other.t - 0.06 : 1;
++    else return;
++    e.preventDefault();
++    commit(clamp01(clampT(t)), denorm(track, clamp01(nv)));
++  };
++
++  const seconds = (key.t * doc.duration).toFixed(2);
++  const label = `${track.name} ${which === 0 ? "start" : "end"} keyframe`;
++  return (
++    <button
++      type="button"
++      className={"key" + (active ? " is-active" : "")}
++      style={{ left: `${key.t * 100}%`, top: `${(PAD + (1 - n) * (1 - 2 * PAD)) * 100}%` }}
++      role="slider"
++      aria-label={label}
++      aria-valuemin={0}
++      aria-valuemax={100}
++      aria-valuenow={Math.round(key.t * 100)}
++      aria-valuetext={`at ${seconds} seconds, ${formatValue(track, key.v)}. Left and right move time, up and down change the value.`}
++      aria-orientation="horizontal"
++      onPointerDown={onPointerDown}
++      onPointerMove={onPointerMove}
++      onPointerUp={onPointerUp}
++      onPointerCancel={onPointerUp}
++      onKeyDown={onKeyDown}
++      data-reduced={reduced ? "" : undefined}
++    >
++      <span className="key-readout" aria-hidden="true">
++        <b>{seconds} s</b>
++        <span>{formatValue(track, key.v)}</span>
++      </span>
++    </button>
++  );
++}
++
++export default function TimelineAct({ store, reduced }) {
++  const doc = useStore(store);
++  const laneRef = useRef(null);
++  const setDoc = store.set;
++  return (
++    <>
++      <div className="copy">
++        <h2 className="headline">Every property is a track.</h2>
++        <p className="lede">
++          Position, opacity, scale, rotation: each one springs from a start keyframe to an end
++          keyframe. Drag a diamond. The field is not a picture of the timeline, it is the
++          timeline, rendered live.
++        </p>
++        <p className="hint">Drag a keyframe, or focus one and use the arrow keys.</p>
++      </div>
++      <div
++        className="lane lane-tracks"
++        ref={laneRef}
++        role="group"
++        aria-label="Keyframe editor: four tracks with a start and an end keyframe each"
++      >
++        {TRACKS.map((track, i) => (
++          <div className="lane-row" key={track.id} style={{ top: `${i * 25}%` }}>
++            <span className="lane-label">{track.name}</span>
++            <span className="lane-range" aria-hidden="true">
++              {formatValue(track, track.max)}
++              <br />
++              {formatValue(track, track.min)}
++            </span>
++            {[0, 1].map((which) => (
++              <KeyHandle
++                key={which}
++                track={track}
++                which={which}
++                doc={doc}
++                setDoc={setDoc}
++                laneRef={laneRef}
++                rowIndex={i}
++                reduced={reduced}
++              />
++            ))}
++          </div>
++        ))}
++      </div>
++    </>
++  );
++}
+diff --git a/components/field/Field.js b/components/field/Field.js
+new file mode 100644
+index 0000000..94e2a4d
+--- /dev/null
++++ b/components/field/Field.js
+@@ -0,0 +1,216 @@
++// The field: one WebGL point cloud driven entirely by uniforms. OGL is used as a thin
++// substrate (context, program, VAO, uniform upload); every visual decision is in shaders.js.
++import { Renderer } from "ogl/src/core/Renderer.js";
++import { Program } from "ogl/src/core/Program.js";
++import { Geometry } from "ogl/src/core/Geometry.js";
++import { Mesh } from "ogl/src/core/Mesh.js";
++import { VERT, FRAG } from "./shaders";
++
++// Quality tiers, from a fast laptop down to an old phone. Only ever stepped down at runtime.
++export const TIERS = [
++  { dpr: 2, count: 65536, label: "full" },
++  { dpr: 1.5, count: 65536, label: "high" },
++  { dpr: 1.5, count: 40960, label: "medium" },
++  { dpr: 1.5, count: 24576, label: "mobile" },
++  { dpr: 1, count: 16384, label: "light" },
++];
++
++export function probeWebGL() {
++  try {
++    const c = document.createElement("canvas");
++    const gl = c.getContext("webgl2") || c.getContext("webgl");
++    if (!gl) return false;
++    const lose = gl.getExtension("WEBGL_lose_context");
++    if (lose) lose.loseContext();
++    return true;
++  } catch {
++    return false;
++  }
++}
++
++export function pickTier({ width, coarse, memory, cores, reduced }) {
++  if (width <= 767 || coarse) return 3;
++  if ((memory && memory <= 4) || (cores && cores <= 4)) return 1;
++  return reduced ? 1 : 0;
++}
++
++function mulberry32(seed) {
++  let a = seed >>> 0;
++  return () => {
++    a = (a + 0x6d2b79f5) >>> 0;
++    let t = a;
++    t = Math.imul(t ^ (t >>> 15), t | 1);
++    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
++    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
++  };
++}
++
++const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16) / 255);
++
++export class Field {
++  constructor(canvas, { tier = 0, maxDpr = 2, palette }) {
++    this.canvas = canvas;
++    this.tier = tier;
++    this.maxDpr = maxDpr;
++    this.palette = palette;
++    this.frames = 0;
++    this.w = 1;
++    this.h = 1;
++    this.lost = false;
++    this.onContextLost = null;
++
++    this.renderer = new Renderer({
++      canvas,
++      dpr: Math.min(TIERS[tier].dpr, maxDpr),
++      alpha: false,
++      depth: false,
++      stencil: false,
++      antialias: false,
++      premultipliedAlpha: false,
++      powerPreference: "high-performance",
++      autoClear: true,
++      webgl: 2,
++    });
++    const gl = (this.gl = this.renderer.gl);
++    const bg = hex(palette.bg);
++    gl.clearColor(bg[0], bg[1], bg[2], 1);
++
++    const f4 = () => new Float32Array(4);
++    this.uniforms = {
++      uCount: { value: 1 },
++      uAspect: { value: 1 },
++      uDpr: { value: this.renderer.dpr },
++      uTime: { value: 0 },
++      uReduced: { value: 0 },
++      uIntro: { value: 0 },
++      uFrom: { value: 0 },
++      uTo: { value: 0 },
++      uMorph: { value: 0 },
++      uLocalA: { value: 0 },
++      uLocalB: { value: 0 },
++      uLaneA: { value: f4() },
++      uLaneB: { value: f4() },
++      uGlobe: { value: new Float32Array([0, 0, 0.7]) },
++      uLineX: { value: 0 },
++      uPointer: { value: new Float32Array([9, 9]) },
++      uPointerVel: { value: new Float32Array(2) },
++      uPointerOn: { value: 0 },
++      uKeyT0: { value: f4() },
++      uKeyT1: { value: f4() },
++      uKeyV0: { value: f4() },
++      uKeyV1: { value: f4() },
++      uSpring: { value: new Float32Array([0.6, 13]) },
++      uDuration: { value: 1.2 },
++      uImpulse: { value: 0 },
++      uFrames: { value: 24 },
++      uPointSize: { value: 1.5 },
++      uIvory: { value: new Float32Array(hex(palette.ivory)) },
++      uBrass: { value: new Float32Array(hex(palette.brass)) },
++      uAlpha: { value: 0.34 },
++    };
++
++    this.buildProgram();
++    this.setCount(TIERS[tier].count);
++
++    this._onLost = (e) => {
++      e.preventDefault();
++      this.lost = true;
++      this.onContextLost?.();
++    };
++    this._onRestored = () => {
++      this.lost = false;
++      this.renderer.state.uniformLocations = new Map();
++      this.renderer.state.currentProgram = null;
++      this.renderer.currentGeometry = null;
++      this.buildProgram();
++      this.setCount(TIERS[this.tier].count);
++      const bg2 = hex(this.palette.bg);
++      this.gl.clearColor(bg2[0], bg2[1], bg2[2], 1);
++      this.onContextRestored?.();
++    };
++    canvas.addEventListener("webglcontextlost", this._onLost);
++    canvas.addEventListener("webglcontextrestored", this._onRestored);
++  }
++
++  buildProgram() {
++    const gl = this.gl;
++    this.program = new Program(gl, {
++      vertex: VERT,
++      fragment: FRAG,
++      uniforms: this.uniforms,
++      transparent: true,
++      depthTest: false,
++      depthWrite: false,
++      cullFace: false,
++    });
++    this.program.setBlendFunc(gl.ONE, gl.ONE);
++  }
++
++  setCount(n) {
++    const gl = this.gl;
++    if (this.geometry) this.geometry.remove?.();
++    const rand = mulberry32(1903);
++    const ids = new Float32Array(n);
++    const rnd = new Float32Array(n * 3);
++    for (let i = 0; i < n; i++) {
++      ids[i] = i;
++      rnd[i * 3] = rand();
++      rnd[i * 3 + 1] = rand();
++      rnd[i * 3 + 2] = rand();
++    }
++    this.geometry = new Geometry(gl, {
++      aId: { size: 1, data: ids },
++      aRand: { size: 3, data: rnd },
++    });
++    this.mesh = new Mesh(gl, { geometry: this.geometry, program: this.program, mode: gl.POINTS, frustumCulled: false });
++    this.count = n;
++    this.uniforms.uCount.value = n;
++    this.uniforms.uAlpha.value = Math.min(0.8, Math.max(0.3, 0.34 * Math.sqrt(65536 / n)));
++  }
++
++  setSize(w, h) {
++    this.w = Math.max(1, Math.round(w));
++    this.h = Math.max(1, Math.round(h));
++    this.renderer.setSize(this.w, this.h);
++    this.uniforms.uAspect.value = this.w / this.h;
++  }
++
++  applyTier(tier) {
++    this.tier = Math.min(TIERS.length - 1, Math.max(0, tier));
++    const t = TIERS[this.tier];
++    const dpr = Math.min(t.dpr, this.maxDpr);
++    if (dpr !== this.renderer.dpr) {
++      this.renderer.dpr = dpr;
++      this.uniforms.uDpr.value = dpr;
++      this.renderer.setSize(this.w, this.h);
++    }
++    if (t.count !== this.count) this.setCount(t.count);
++  }
++
++  degrade() {
++    if (this.tier >= TIERS.length - 1) return false;
++    this.applyTier(this.tier + 1);
++    return true;
++  }
++
++  get info() {
++    return { tier: this.tier, label: TIERS[this.tier].label, count: this.count, dpr: this.renderer.dpr };
++  }
++
++  render() {
++    if (this.lost) return;
++    this.renderer.render({ scene: this.mesh, sort: false, frustumCull: false });
++    this.frames++;
++  }
++
++  dispose() {
++    this.canvas.removeEventListener("webglcontextlost", this._onLost);
++    this.canvas.removeEventListener("webglcontextrestored", this._onRestored);
++    try {
++      this.geometry?.remove?.();
++      this.program?.remove?.();
++      const ext = this.gl.getExtension("WEBGL_lose_context");
++      ext?.loseContext();
++    } catch {}
++  }
++}
+diff --git a/components/field/shaders.js b/components/field/shaders.js
+new file mode 100644
+index 0000000..0993534
+--- /dev/null
++++ b/components/field/shaders.js
+@@ -0,0 +1,279 @@
++import { GLSL_SPRING } from "@/lib/spring";
++
++// One point cloud, five layouts. Every vertex evaluates the layout it is leaving and the one
++// it is entering and springs between them with its own delay. Nothing here is a texture or a
++// baked animation: keyframes, spring constants, pointer and playhead are uniforms, so a drag
++// in the DOM is a new shape on the next frame.
++export const VERT = /* glsl */ `
++precision highp float;
++
++attribute float aId;
++attribute vec3 aRand;
++
++uniform float uCount;
++uniform float uAspect;
++uniform float uDpr;
++uniform float uTime;
++uniform float uReduced;
++uniform float uIntro;
++uniform int   uFrom;
++uniform int   uTo;
++uniform float uMorph;
++uniform float uLocalA;
++uniform float uLocalB;
++uniform vec4  uLaneA;
++uniform vec4  uLaneB;
++uniform vec3  uGlobe;
++uniform float uLineX;
++uniform vec2  uPointer;
++uniform vec2  uPointerVel;
++uniform float uPointerOn;
++uniform vec4  uKeyT0;
++uniform vec4  uKeyT1;
++uniform vec4  uKeyV0;
++uniform vec4  uKeyV1;
++uniform vec2  uSpring;
++uniform float uDuration;
++uniform float uImpulse;
++uniform float uFrames;
++uniform float uPointSize;
++
++varying float vAlpha;
++varying float vBrass;
++
++const float PI = 3.141592653589793;
++const float TAU = 6.283185307179586;
++
++${GLSL_SPRING}
++
++float gBrass = 0.0;
++
++float pick(vec4 v, int i) {
++  return i == 0 ? v.x : (i == 1 ? v.y : (i == 2 ? v.z : v.w));
++}
++
++// Track k of the document at normalized time x, as a normalized value 0..1.
++float trackValue(int k, float x) {
++  float t0 = pick(uKeyT0, k);
++  float t1 = pick(uKeyT1, k);
++  float v0 = pick(uKeyV0, k);
++  float v1 = pick(uKeyV1, k);
++  if (x <= t0) return v0;
++  float seg = max(t1 - t0, 0.02);
++  float tau = (x - t0) / seg * uDuration;
++  return v1 + (v0 - v1) * springResponse(tau, uSpring.x, uSpring.y, 1.0, 0.0);
++}
++
++vec2 rot2(vec2 p, float a) {
++  float c = cos(a), s = sin(a);
++  return vec2(c * p.x - s * p.y, s * p.x + c * p.y);
++}
++
++// Act I: a globe drawn only with meridians. Scroll turns it; the pointer tilts it.
++vec4 layoutGlobe(float u, vec3 r, float local) {
++  const float M = 72.0;
++  float m = floor(u * M);
++  float s = fract(u * M);
++  float lon = (m / M) * PI;
++  float lat = s * TAU + r.x * (TAU * M / uCount);
++  float live = 1.0 - uReduced;
++  float yaw = live * uTime * 0.06 + local * 2.4 + uPointer.x * 0.12 * uPointerOn * live;
++  float pitch = 0.42 - uPointer.y * 0.08 * uPointerOn * live;
++  vec3 p = vec3(cos(lat) * cos(lon), sin(lat), cos(lat) * sin(lon));
++  p = vec3(cos(yaw) * p.x + sin(yaw) * p.z, p.y, -sin(yaw) * p.x + cos(yaw) * p.z);
++  p = vec3(p.x, cos(pitch) * p.y - sin(pitch) * p.z, sin(pitch) * p.y + cos(pitch) * p.z);
++  float camZ = 3.2;
++  float persp = camZ / (camZ - p.z);
++  vec2 xy = uGlobe.xy + p.xy * uGlobe.z * persp;
++  float depth = (p.z + 1.0) * 0.5;
++  float w = mix(0.14, 1.0, depth * depth);
++  // Every meridian meets at the poles; thin them there so the caps do not burn out.
++  w *= 1.0 - 0.8 * smoothstep(0.72, 1.0, abs(sin(lat)));
++  // The meridian facing the viewer is the prime one: brass.
++  float facing = smoothstep(0.985, 1.0, p.z);
++  gBrass = facing;
++  return vec4(xy, mix(0.7, 1.3, depth), w);
++}
++
++// Act II: four property tracks, each a spring between two keyframes the visitor can drag.
++vec4 layoutTracks(float u, vec3 r, float local, vec4 lane) {
++  const float T = 4.0;
++  float k = floor(u * T);
++  float x = fract(u * T);
++  x = clamp(x + (r.x - 0.5) * (T / uCount) * 2.0, 0.0, 1.0);
++  int ki = int(k + 0.5);
++  float v = trackValue(ki, x);
++  float dv = trackValue(ki, min(x + 0.006, 1.0)) - v;
++  float laneH = (lane.w - lane.y) / T;
++  float yTop = lane.w - laneH * k;
++  float pad = laneH * 0.18;
++  float y = (yTop - laneH) + pad + v * (laneH - 2.0 * pad);
++  float spread = 0.0035 + abs(dv) * 0.9;
++  y += (r.y + r.z - 1.0) * spread;
++  float X = mix(lane.x, lane.z, x);
++  float head = local * 1.12;
++  float reveal = 1.0 - smoothstep(head - 0.05, head + 0.01, x);
++  float w = mix(0.22, 1.0, reveal);
++  float t0 = pick(uKeyT0, ki), t1 = pick(uKeyT1, ki);
++  gBrass = max(smoothstep(0.006, 0.0, abs(x - t0)), smoothstep(0.006, 0.0, abs(x - t1)));
++  gBrass = max(gBrass, smoothstep(0.03, 0.0, abs(x - head)) * step(head, 1.0));
++  return vec4(X, y, 1.0, w);
++}
++
++// Act III: a bundle of spring responses with different launch velocities. Sliders change the
++// spring; a flick of the pointer adds velocity and fans the bundle open.
++vec4 layoutSprings(float u, vec3 r, float local, vec4 lane) {
++  const float C = 96.0;
++  float c = floor(u * C);
++  float s = fract(u * C);
++  s = clamp(s + (r.x - 0.5) * (C / uCount) * 2.0, 0.0, 1.0);
++  float f = (c / (C - 1.0)) * 2.0 - 1.0;
++  f = sign(f) * pow(abs(f), 1.6);
++  float v0 = f * (1.1 + 2.6 * uImpulse) * uSpring.y;
++  float tau = s * uDuration * 1.5;
++  float y = springResponse(tau, uSpring.x, uSpring.y, 1.0, v0);
++  float Y = mix(lane.y, lane.w, 0.5 + y * 0.3);
++  float X = mix(lane.x, lane.z, s);
++  float head = local * 1.1;
++  float reveal = 1.0 - smoothstep(head - 0.06, head + 0.01, s);
++  float w = mix(0.18, 1.0, reveal) * (0.4 + 0.6 * (1.0 - abs(f)));
++  gBrass = smoothstep(0.08, 0.0, abs(f)) * 0.9;
++  return vec4(X, Y, 1.0, w);
++}
++
++// Act IV: the same document as a filmstrip. Each frame draws the element at that instant.
++vec4 layoutFilm(float u, vec3 r, float local, vec4 lane) {
++  float F = uFrames;
++  float fi = floor(u * F);
++  float p = fract(u * F);
++  float tau = fi / max(F - 1.0, 1.0);
++  float cellW = (lane.z - lane.x) / F;
++  float cellH = (lane.w - lane.y);
++  float cx = lane.x + cellW * (fi + 0.5);
++  float cy = (lane.y + lane.w) * 0.5;
++  float sz = min(cellW, cellH) * 0.5;
++  float shown = smoothstep(fi / F - 0.04, fi / F + 0.01, local * 1.15);
++  if (r.z > 0.84) {
++    // The cell itself: a thin rectangle, like a frame on a strip.
++    float per = fract(p * 7.0 + r.y);
++    vec2 hs = vec2(cellW * 0.47, cellH * 0.47);
++    float L = 2.0 * (hs.x + hs.y);
++    float d = per * L;
++    vec2 q;
++    if (d < hs.x * 2.0) q = vec2(-hs.x + d, hs.y);
++    else if (d < hs.x * 2.0 + hs.y * 2.0) q = vec2(hs.x, hs.y - (d - hs.x * 2.0));
++    else if (d < hs.x * 4.0 + hs.y * 2.0) q = vec2(hs.x - (d - hs.x * 2.0 - hs.y * 2.0), -hs.y);
++    else q = vec2(-hs.x, -hs.y + (d - hs.x * 4.0 - hs.y * 2.0));
++    gBrass = 0.0;
++    return vec4(cx + q.x, cy + q.y, 0.8, mix(0.08, 0.2, shown));
++  }
++  float a = p * TAU;
++  vec2 sq = vec2(sign(cos(a)) * pow(abs(cos(a)), 0.4), sign(sin(a)) * pow(abs(sin(a)), 0.4));
++  float interior = step(r.y, 0.3);
++  float fill = mix(1.0, sqrt(r.x), interior);
++  vec2 q = sq * vec2(0.62, 0.42) * fill;
++  float ty = (trackValue(0, tau) - 0.5) * 2.0;
++  float op = trackValue(1, tau);
++  float sc = mix(0.8, 1.1, trackValue(2, tau));
++  float rot = (trackValue(3, tau) - 0.5) * 2.0 * 0.14;
++  q = rot2(q * sc, rot);
++  q.y -= ty * 0.3;
++  vec2 xy = vec2(cx, cy) + q * sz;
++  float w = mix(0.2, 1.0, shown) * mix(0.12, 1.0, clamp(op, 0.0, 1.0)) * mix(1.0, 0.4, interior);
++  gBrass = smoothstep(0.03, 0.0, abs(tau - clamp(local * 1.15, 0.0, 1.0))) * 0.9;
++  return vec4(xy, 1.0, w);
++}
++
++// Act V and the opening: everything is one line again, the meridian, the playhead.
++vec4 layoutLine(float u, vec3 r, float local) {
++  float y = mix(-1.05, 1.05, u);
++  float g = (r.y + r.z - 1.0);
++  float spread = mix(0.06, 0.006, smoothstep(0.0, 0.6, local));
++  float breathe = 1.0 + 0.5 * (1.0 - uReduced) * sin(uTime * 0.7 + y * 3.0 + r.x);
++  float x = uLineX + g * spread * breathe;
++  // Thousands of points share one column: keep the sum brass, not white.
++  float w = (0.3 + 0.7 * (1.0 - abs(g))) * 0.07;
++  gBrass = 1.0;
++  return vec4(x, y, 1.0, w);
++}
++
++vec4 layoutFor(int act, float u, vec3 r, float local, vec4 lane) {
++  if (act == 0) return layoutGlobe(u, r, local);
++  if (act == 1) return layoutTracks(u, r, local, lane);
++  if (act == 2) return layoutSprings(u, r, local, lane);
++  if (act == 3) return layoutFilm(u, r, local, lane);
++  return layoutLine(u, r, local);
++}
++
++void main() {
++  float u = (aId + 0.5) / uCount;
++  vec3 r = aRand;
++
++  vec4 A = layoutFor(uFrom, u, r, uLocalA, uLaneA);
++  float bA = gBrass;
++  vec4 B = A;
++  float bB = bA;
++  float e = 0.0;
++  if (uTo != uFrom) {
++    B = layoutFor(uTo, u, r, uLocalB, uLaneB);
++    bB = gBrass;
++    float stag = r.z * 0.4;
++    e = clamp((uMorph - stag) / 0.6, 0.0, 1.0);
++    e = uReduced > 0.5
++      ? smoothstep(0.0, 1.0, e)
++      : 1.0 - springResponse(e * 1.15, 0.62, 12.0, 1.0, 0.0) * (1.0 - e * e * e);
++  }
++  vec4 P = mix(A, B, e);
++  float brass = mix(bA, bB, e);
++
++  // Points take an arc between layouts instead of a straight line.
++  vec2 dir = B.xy - A.xy;
++  P.xy += vec2(-dir.y, dir.x) * (r.x - 0.5) * 0.35 * sin(PI * e) * (1.0 - uReduced);
++
++  // Opening: the field springs out of the meridian line.
++  if (uIntro < 1.0) {
++    vec4 L = layoutLine(u, r, 1.0);
++    float ie = clamp(uIntro * 1.4 - r.y * 0.4, 0.0, 1.0);
++    ie = 1.0 - springResponse(ie * 1.2, 0.55, 11.0, 1.0, 0.0) * (1.0 - ie * ie * ie);
++    P.xy = mix(L.xy, P.xy, ie);
++    P.w = mix(L.w, P.w, ie);
++    brass = mix(1.0, brass, ie);
++  }
++
++  // The pointer is a lens: points nearby get pushed, and dragged by its velocity.
++  vec2 d = P.xy - uPointer;
++  float dist = length(d);
++  float infl = uPointerOn * (1.0 - uReduced) * smoothstep(0.42, 0.0, dist);
++  P.xy += (d / max(dist, 1e-3)) * infl * 0.1;
++  P.xy += uPointerVel * infl * 0.35;
++  brass = max(brass, infl * 0.85);
++
++  float tw = 1.0 - 0.25 * (1.0 - uReduced) * (0.5 + 0.5 * sin(uTime * (1.5 + r.x * 2.0) + r.y * TAU));
++  vAlpha = P.w * tw * (1.0 - 0.35 * sin(PI * e) * (1.0 - uReduced));
++  vBrass = brass;
++
++  gl_Position = vec4(P.x / uAspect, P.y, 0.0, 1.0);
++  float size = uPointSize * uDpr * (0.75 + 0.5 * r.x) * P.z;
++  gl_PointSize = clamp(size, 1.0, 7.0 * uDpr);
++}
++`;
++
++export const FRAG = /* glsl */ `
++precision mediump float;
++
++uniform vec3 uIvory;
++uniform vec3 uBrass;
++uniform float uAlpha;
++
++varying float vAlpha;
++varying float vBrass;
++
++void main() {
++  vec2 c = gl_PointCoord - 0.5;
++  float d = dot(c, c) * 4.0;
++  float a = 1.0 - smoothstep(0.1, 1.0, d);
++  a *= vAlpha * uAlpha;
++  vec3 col = mix(uIvory, uBrass, vBrass);
++  gl_FragColor = vec4(col * a, a);
++}
++`;
+diff --git a/lib/acts.js b/lib/acts.js
+new file mode 100644
+index 0000000..a94942e
+--- /dev/null
++++ b/lib/acts.js
+@@ -0,0 +1,107 @@
++// Five acts on one timeline. Scroll position is the playhead.
++import { clamp01 } from "./document";
++
++export const ACTS = [
++  { id: "meridian", name: "Meridian", span: 0.2 },
++  { id: "timeline", name: "Timeline", span: 0.22 },
++  { id: "springs", name: "Springs", span: 0.22 },
++  { id: "ship", name: "Ship", span: 0.2 },
++  { id: "access", name: "Access", span: 0.16 },
++];
++
++// Scroll distance of the whole document, in viewport heights.
++export const SCROLL_VH = 900;
++
++export const BOUNDS = (() => {
++  let acc = 0;
++  const total = ACTS.reduce((s, a) => s + a.span, 0);
++  return ACTS.map((a) => {
++    const start = acc / total;
++    acc += a.span;
++    return { start, end: acc / total };
++  });
++})();
++
++// Where are we? Which layout are we leaving, which are we entering, how far along.
++// vhFrac is one viewport of scroll expressed in playhead units: the page turn between two
++// acts happens while one copy block slides out and the next slides in, so the field morphs
++// over that same window.
++export function resolve(t, vhFrac) {
++  let index = BOUNDS.findIndex((b) => t < b.end);
++  if (index < 0) index = ACTS.length - 1;
++  const b = BOUNDS[index];
++  const localFrom = clamp01((t - b.start) / (b.end - b.start));
++  let to = index;
++  let morph = 0;
++  if (index < ACTS.length - 1) {
++    const win = Math.min(vhFrac, (b.end - b.start) * 0.7);
++    const startMorph = b.end - win;
++    if (t > startMorph) {
++      to = index + 1;
++      morph = clamp01((t - startMorph) / win);
++    }
++  }
++  return { index, from: index, to, morph, localFrom, localTo: 0, current: morph > 0.5 ? to : index };
++}
++
++// Where the field lives on screen, as fractions of the viewport (y down). The DOM overlays
++// (keyframe handles, pointer ring, frame numbers) are positioned with the same numbers, so
++// what you drag is exactly where the points are.
++export const GEOMETRY = {
++  desktop: {
++    globe: { cx: 0.66, cy: 0.5, r: 0.32 },
++    tracks: { x0: 0.42, y0: 0.14, x1: 0.94, y1: 0.8 },
++    springs: { x0: 0.42, y0: 0.12, x1: 0.94, y1: 0.82 },
++    film: { x0: 0.05, y0: 0.1, x1: 0.95, y1: 0.36 },
++    lineX: 0.66,
++    frames: 24,
++  },
++  tablet: {
++    globe: { cx: 0.74, cy: 0.5, r: 0.24 },
++    tracks: { x0: 0.5, y0: 0.14, x1: 0.95, y1: 0.8 },
++    springs: { x0: 0.5, y0: 0.12, x1: 0.95, y1: 0.82 },
++    film: { x0: 0.04, y0: 0.1, x1: 0.96, y1: 0.34 },
++    lineX: 0.74,
++    frames: 24,
++  },
++  mobile: {
++    globe: { cx: 0.5, cy: 0.66, r: 0.24 },
++    tracks: { x0: 0.06, y0: 0.54, x1: 0.94, y1: 0.87 },
++    springs: { x0: 0.06, y0: 0.54, x1: 0.94, y1: 0.87 },
++    film: { x0: 0.03, y0: 0.44, x1: 0.97, y1: 0.56 },
++    lineX: 0.5,
++    frames: 12,
++  },
++};
++
++export const MOBILE_MAX = 767;
++export const TABLET_MAX = 1199;
++export const isMobileWidth = (w) => w <= MOBILE_MAX;
++export const geoFor = (w) => (w <= MOBILE_MAX ? GEOMETRY.mobile : w <= TABLET_MAX ? GEOMETRY.tablet : GEOMETRY.desktop);
++
++export function laneForAct(geo, act) {
++  if (act === 2) return geo.springs;
++  if (act === 3) return geo.film;
++  return geo.tracks;
++}
++
++// Viewport fractions -> stage space (x in [-aspect, aspect], y up in [-1, 1]).
++export function rectToStage(rect, aspect) {
++  return [(rect.x0 * 2 - 1) * aspect, -(rect.y1 * 2 - 1), (rect.x1 * 2 - 1) * aspect, -(rect.y0 * 2 - 1)];
++}
++
++// CSS custom properties generated from GEOMETRY so the DOM lanes share one source of truth.
++export function geometryCSS() {
++  const vars = (g) =>
++    [
++      ["tracks", g.tracks],
++      ["springs", g.springs],
++      ["film", g.film],
++    ]
++      .map(
++        ([n, r]) =>
++          `--${n}-x:${(r.x0 * 100).toFixed(2)}%;--${n}-y:${(r.y0 * 100).toFixed(2)}%;--${n}-w:${((r.x1 - r.x0) * 100).toFixed(2)}%;--${n}-h:${((r.y1 - r.y0) * 100).toFixed(2)}%;`
++      )
++      .join("") + `--globe-cx:${(g.globe.cx * 100).toFixed(2)}%;--globe-cy:${(g.globe.cy * 100).toFixed(2)}%;--globe-r:${(g.globe.r * 100).toFixed(2)}vh;--frames:${g.frames};`;
++  return `:root{${vars(GEOMETRY.desktop)}}@media (max-width:${TABLET_MAX}px){:root{${vars(GEOMETRY.tablet)}}}@media (max-width:${MOBILE_MAX}px){:root{${vars(GEOMETRY.mobile)}}}`;
++}
+diff --git a/lib/document.js b/lib/document.js
+new file mode 100644
+index 0000000..f70c48d
+--- /dev/null
++++ b/lib/document.js
+@@ -0,0 +1,139 @@
++// The Meridian document this page is: four tracks, two keyframes each, one spring.
++// The visitor edits it in acts II and III; act IV prints it.
++import { springParams, springResponse } from "./spring";
++
++export const TRACKS = [
++  { id: "y", name: "Position", unit: "px", min: -40, max: 40, digits: 0 },
++  { id: "opacity", name: "Opacity", unit: "", min: 0, max: 1, digits: 2 },
++  { id: "scale", name: "Scale", unit: "", min: 0.8, max: 1.1, digits: 2 },
++  { id: "rotate", name: "Rotation", unit: "deg", min: -8, max: 8, digits: 1 },
++];
++
++export const DEFAULT_DOC = {
++  name: "reveal",
++  duration: 1.2,
++  spring: { stiffness: 170, damping: 16, mass: 1 },
++  keys: {
++    y: [
++      { t: 0.0, v: 40 },
++      { t: 0.62, v: 0 },
++    ],
++    opacity: [
++      { t: 0.04, v: 0 },
++      { t: 0.55, v: 1 },
++    ],
++    scale: [
++      { t: 0.0, v: 0.92 },
++      { t: 0.7, v: 1 },
++    ],
++    rotate: [
++      { t: 0.08, v: -6 },
++      { t: 0.66, v: 0 },
++    ],
++  },
++};
++
++export const clamp01 = (x) => Math.min(1, Math.max(0, x));
++export const norm = (track, v) => (v - track.min) / (track.max - track.min);
++export const denorm = (track, n) => track.min + n * (track.max - track.min);
++
++export function evalTrack(doc, id, x) {
++  const [k0, k1] = doc.keys[id];
++  if (x <= k0.t) return k0.v;
++  const seg = Math.max(k1.t - k0.t, 0.02);
++  const tau = ((x - k0.t) / seg) * doc.duration;
++  const { zeta, omega } = springParams(doc.spring);
++  return k1.v + (k0.v - k1.v) * springResponse(tau, zeta, omega, 1, 0);
++}
++
++export function sampleDoc(doc, n = 21) {
++  const out = [];
++  for (let i = 0; i < n; i++) {
++    const t = i / (n - 1);
++    out.push({
++      t,
++      y: evalTrack(doc, "y", t),
++      opacity: clamp01(evalTrack(doc, "opacity", t)),
++      scale: evalTrack(doc, "scale", t),
++      rotate: evalTrack(doc, "rotate", t),
++    });
++  }
++  return out;
++}
++
++const fmt = (v, d) => {
++  const s = Number(v).toFixed(d);
++  return /^-0(\.0+)?$/.test(s) ? s.slice(1) : s;
++};
++const pct = (t) => fmt(t * 100, 1).replace(/\.0$/, "");
++
++export function formatValue(track, v) {
++  return `${fmt(v, track.digits)}${track.unit ? " " + track.unit : ""}`;
++}
++
++export function toCSS(doc) {
++  const rows = sampleDoc(doc, 21).map(
++    (s) =>
++      `  ${pct(s.t)}% { transform: translateY(${fmt(s.y, 1)}px) scale(${fmt(s.scale, 3)}) rotate(${fmt(s.rotate, 2)}deg); opacity: ${fmt(s.opacity, 3)}; }`
++  );
++  return [
++    `/* ${doc.name}: ${doc.duration}s, spring ${doc.spring.stiffness}/${doc.spring.damping}, sampled every 5% */`,
++    `@keyframes ${doc.name} {`,
++    ...rows,
++    `}`,
++    ``,
++    `.${doc.name} {`,
++    `  animation: ${doc.name} ${doc.duration}s linear both;`,
++    `}`,
++    ``,
++    `@media (prefers-reduced-motion: reduce) {`,
++    `  .${doc.name} { animation: ${doc.name}-quiet 0.4s ease-out both; }`,
++    `}`,
++    `@keyframes ${doc.name}-quiet {`,
++    `  from { opacity: 0; }`,
++    `  to { opacity: 1; }`,
++    `}`,
++  ].join("\n");
++}
++
++export function toJS(doc) {
++  const k = doc.keys;
++  const key = (id) => `[[${fmt(k[id][0].t, 2)}, ${k[id][0].v}], [${fmt(k[id][1].t, 2)}, ${k[id][1].v}]]`;
++  return [
++    `// ${doc.name}: plain JavaScript, no dependencies, no runtime.`,
++    `const spring = (k, c, m = 1) => {`,
++    `  const w = Math.sqrt(k / m), z = c / (2 * Math.sqrt(k * m));`,
++    `  const wd = w * Math.sqrt(Math.max(1 - z * z, 1e-6));`,
++    `  return (t) => Math.exp(-z * w * t) * (Math.cos(wd * t) + (z * w / wd) * Math.sin(wd * t));`,
++    `};`,
++    ``,
++    `const ease = spring(${doc.spring.stiffness}, ${doc.spring.damping}, ${doc.spring.mass});`,
++    `const duration = ${doc.duration};`,
++    `const tracks = {`,
++    `  y: ${key("y")},`,
++    `  opacity: ${key("opacity")},`,
++    `  scale: ${key("scale")},`,
++    `  rotate: ${key("rotate")},`,
++    `};`,
++    ``,
++    `const at = ([a, b], t) =>`,
++    `  t <= a[0] ? a[1] : b[1] + (a[1] - b[1]) * ease(((t - a[0]) / Math.max(b[0] - a[0], 0.02)) * duration);`,
++    ``,
++    `// Call with progress 0..1, from your own loop, scroll position, or gesture.`,
++    `export function ${doc.name}(el, t) {`,
++    `  el.style.transform = \`translateY(\${at(tracks.y, t)}px) scale(\${at(tracks.scale, t)}) rotate(\${at(tracks.rotate, t)}deg)\`;`,
++    `  el.style.opacity = Math.min(1, Math.max(0, at(tracks.opacity, t)));`,
++    `}`,
++  ].join("\n");
++}
++
++// The page is a 24-second document at 24 fps.
++export const DOC_SECONDS = 24;
++export const FPS = 24;
++const pad = (n) => String(n).padStart(2, "0");
++export function timecode(t) {
++  const total = Math.round(clamp01(t) * DOC_SECONDS * FPS);
++  const f = total % FPS;
++  const s = Math.floor(total / FPS);
++  return `00:00:${pad(s)}:${pad(f)}`;
++}
+diff --git a/lib/motion.js b/lib/motion.js
+new file mode 100644
+index 0000000..1d0bd4d
+--- /dev/null
++++ b/lib/motion.js
+@@ -0,0 +1,43 @@
++"use client";
++import { useCallback, useEffect, useState } from "react";
++
++const KEY = "meridian.motion";
++const QUERY = "(prefers-reduced-motion: reduce)";
++
++// The visitor's motion preference: the OS setting by default, overridable on the page.
++// The page's own reduced variant is designed, not stripped, so the override is safe both ways.
++export function useMotionPreference() {
++  const [pref, setPref] = useState("auto");
++  const [system, setSystem] = useState(false);
++  const [ready, setReady] = useState(false);
++
++  useEffect(() => {
++    const mq = window.matchMedia(QUERY);
++    setSystem(mq.matches);
++    try {
++      const saved = window.localStorage.getItem(KEY);
++      if (saved === "full" || saved === "reduced") setPref(saved);
++    } catch {}
++    const onChange = (e) => setSystem(e.matches);
++    mq.addEventListener("change", onChange);
++    setReady(true);
++    return () => mq.removeEventListener("change", onChange);
++  }, []);
++
++  const reduced = pref === "reduced" || (pref === "auto" && system);
++
++  useEffect(() => {
++    if (!ready) return;
++    document.documentElement.dataset.motion = reduced ? "reduced" : "full";
++  }, [reduced, ready]);
++
++  const set = useCallback((next) => {
++    setPref(next);
++    try {
++      if (next === "auto") window.localStorage.removeItem(KEY);
++      else window.localStorage.setItem(KEY, next);
++    } catch {}
++  }, []);
++
++  return { pref, reduced, set, ready, system };
++}
+diff --git a/lib/spring.js b/lib/spring.js
+new file mode 100644
+index 0000000..332eed1
+--- /dev/null
++++ b/lib/spring.js
+@@ -0,0 +1,95 @@
++// One damped-spring solution is shared by everything on the page: the vertex shader that
++// draws the field, the CPU springs (pointer ring, playhead smoothing, keyframe settling),
++// and the code the visitor exports. Same math, three hosts.
++
++export function springParams({ stiffness, damping, mass = 1 }) {
++  const omega = Math.sqrt(stiffness / mass);
++  const zeta = damping / (2 * Math.sqrt(stiffness * mass));
++  return { omega, zeta };
++}
++
++// Free response of a damped harmonic oscillator toward 0, starting at displacement x0
++// with velocity v0. Handles under-, critically and over-damped cases.
++export function springResponse(tau, zeta, omega, x0 = 1, v0 = 0) {
++  if (tau <= 0) return x0;
++  if (zeta < 0.999) {
++    const wd = omega * Math.sqrt(1 - zeta * zeta);
++    return (
++      Math.exp(-zeta * omega * tau) *
++      (x0 * Math.cos(wd * tau) + ((v0 + zeta * omega * x0) / wd) * Math.sin(wd * tau))
++    );
++  }
++  if (zeta < 1.001) {
++    return Math.exp(-omega * tau) * (x0 + (v0 + omega * x0) * tau);
++  }
++  const s = omega * Math.sqrt(zeta * zeta - 1);
++  const r1 = -zeta * omega + s;
++  const r2 = -zeta * omega - s;
++  const B = (v0 - r1 * x0) / (r2 - r1);
++  const A = x0 - B;
++  return A * Math.exp(r1 * tau) + B * Math.exp(r2 * tau);
++}
++
++export function describeDamping(zeta) {
++  if (zeta < 0.35) return "bouncy";
++  if (zeta < 0.8) return "underdamped";
++  if (zeta < 1.05) return "critically damped";
++  return "overdamped";
++}
++
++// Time (s) for the envelope to fall under 1% (underdamped approximation).
++export function settleTime(zeta, omega) {
++  return 4.6 / Math.max(zeta * omega, 1e-3);
++}
++
++// A stateful spring for values animated on the CPU.
++export class SpringValue {
++  constructor(value = 0, params = { stiffness: 170, damping: 22, mass: 1 }) {
++    this.x = value;
++    this.v = 0;
++    this.target = value;
++    this.set(params);
++  }
++  set({ stiffness, damping, mass = 1 }) {
++    this.k = stiffness;
++    this.c = damping;
++    this.m = mass;
++  }
++  step(dt) {
++    const n = Math.min(8, Math.max(1, Math.ceil(dt / (1 / 120))));
++    const h = dt / n;
++    for (let i = 0; i < n; i++) {
++      const a = (-this.k * (this.x - this.target) - this.c * this.v) / this.m;
++      this.v += a * h;
++      this.x += this.v * h;
++    }
++    return this.x;
++  }
++  snap(value) {
++    this.x = value;
++    this.target = value;
++    this.v = 0;
++  }
++  get settled() {
++    return Math.abs(this.x - this.target) < 1e-4 && Math.abs(this.v) < 1e-3;
++  }
++}
++
++export const GLSL_SPRING = /* glsl */ `
++float springResponse(float tau, float zeta, float omega, float x0, float v0) {
++  if (tau <= 0.0) return x0;
++  if (zeta < 0.999) {
++    float wd = omega * sqrt(1.0 - zeta * zeta);
++    return exp(-zeta * omega * tau) * (x0 * cos(wd * tau) + ((v0 + zeta * omega * x0) / wd) * sin(wd * tau));
++  }
++  if (zeta < 1.001) {
++    return exp(-omega * tau) * (x0 + (v0 + omega * x0) * tau);
++  }
++  float s = omega * sqrt(zeta * zeta - 1.0);
++  float r1 = -zeta * omega + s;
++  float r2 = -zeta * omega - s;
++  float B = (v0 - r1 * x0) / (r2 - r1);
++  float A = x0 - B;
++  return A * exp(r1 * tau) + B * exp(r2 * tau);
++}
++`;
+diff --git a/lib/store.js b/lib/store.js
+new file mode 100644
+index 0000000..6a62baa
+--- /dev/null
++++ b/lib/store.js
+@@ -0,0 +1,27 @@
++import { useSyncExternalStore } from "react";
++
++export function createStore(initial) {
++  let state = initial;
++  const subs = new Set();
++  return {
++    get: () => state,
++    set: (updater) => {
++      const next = typeof updater === "function" ? updater(state) : { ...state, ...updater };
++      if (next === state) return;
++      state = next;
++      subs.forEach((fn) => fn(state));
++    },
++    subscribe: (fn) => {
++      subs.add(fn);
++      return () => subs.delete(fn);
++    },
++  };
++}
++
++export function useStore(store, selector = (s) => s) {
++  return useSyncExternalStore(
++    store.subscribe,
++    () => selector(store.get()),
++    () => selector(store.get())
++  );
++}
+diff --git a/package.json b/package.json
+index 22c9199..7fe5d80 100644
+--- a/package.json
++++ b/package.json
+@@ -9,11 +9,12 @@
+   },
+   "dependencies": {
+     "next": "16.2.12",
++    "ogl": "^1.0.11",
+     "react": "19.2.8",
+     "react-dom": "19.2.8"
+   },
+   "devDependencies": {
+-    "tailwindcss": "4.3.3",
+-    "@tailwindcss/postcss": "4.3.3"
++    "@tailwindcss/postcss": "4.3.3",
++    "tailwindcss": "4.3.3"
+   }
+ }

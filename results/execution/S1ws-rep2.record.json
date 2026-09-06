@@ -1,0 +1,42 @@
+{
+ "run": "S1ws-rep2",
+ "date": "2026-09-02",
+ "condition": "with_skill_v1",
+ "model": "Fable",
+ "fixture": "launch-page-base@3543ef943fcc5434ff7653a1147d944bf8f40223",
+ "delivery": "evals/withskill_protocol.md wrapper, identical to rep1. Serialized implementation arm.",
+ "interruptions": "none; 62 min, 383,573 tokens, 101 tool calls",
+ "implementation": {
+  "concept": "'The playhead is the sun.' Meridian = the line the sun crosses at noon, so the page is ONE DAY on a 50-second master timeline that scroll scrubs. Thousands of animation cels stand on a ground plane and cast real shadows that lengthen at dawn, vanish at noon and swing west by dusk; sky, paper tone, panels, timeline bar and the headline's own text-shadow all derive from one sun function in lib/timeline.js. Five acts: Dawn (field + playhead, pointer as time lens) -> Morning (spacing chart + keyboard bezier editor) -> Noon (spring response, stiffness/damping/mass) -> Dusk (frames fly to glyph targets rasterized from the LIVE code block; exported CSS carries the visitor's own cubic-bezier from Act 2 and a linear() easing plus settle-time duration from Act 3) -> Night (luminous horizon, typing ripples).",
+  "art_direction_note": "Explicitly rejected the templated spectacle look: 'the default spectacle look (dark page, neon particles, glass cards) was rejected as templated.' Chose a light-table world of paper and ink instead - paper #f1eee7, ink #141a2e, ultramarine #2c3ee6 as the single interactive accent. This is the first S1 run in either arm to go light rather than dark.",
+  "renderer": "RAW WebGL2, ZERO new dependencies. Stateless instanced field: every frame's position is a pure function of (instance id, master time, idle clock, parameters), blended across acts in the vertex shader - 'mirrors the product's promise (a deterministic, scrubbable timeline) and needs no GPGPU state'. Max 6 draw calls: sky/ground/ruler, ground-shadow (same program, geometry projected along the sun vector), frame pass, quarter-res bloom at night.",
+  "dependencies_added": [],
+  "fit_gate": "React Bits, Fancy Components, SmoothUI, Paper Shaders, npm bezier editors checked - 'nothing that casts shadows, accepts a sun vector or models a sky'. Verdicts: custom for the shader system and timeline bar; ADAPT the glyph-sampling idea (offscreen canvas -> getImageData -> strided targets) from React Bits' ParticleText; reference-only for SmoothUI's scrubber a11y pattern, implemented on native input[type=range] rather than adding motion.",
+  "concept_family": "Scroll-as-playhead again (5 of 5 across the S1 cell), but the visual world diverges sharply from the four dark-editor predecessors."
+ },
+ "measurements": {
+  "m1_gpu_system_chrome": "PASS both profiles - desktop p50 16.7ms p95 16.8ms hitch 0.0% (60.0 rAF/s, 480 samples); mobile p50 16.7ms p95 16.8ms hitch 0.21% (58.8 rAF/s, 470 samples)",
+  "m2_offscreen": "NOT_MEASURABLE_BY_GEOMETRY - 5th consecutive viewport-fixed canvas in the S1 cell; M2b is the operative pause measure",
+  "m2b_hidden_pause": "PASS both profiles",
+  "m3_reduced_motion": "PASS both profiles - reducedMotionRafPerSec 0.00, ratio 0.00 (requirement <=0.20), motionStops true; content parity true, 5 headings both states, zero missing, textLengthRatio 0.977, controlDelta 0, 27 accessible names. Render-on-demand under reduced motion: the run measured '0 frames over 1.5s idle, exactly 1 frame per scroll'.",
+  "m4_teardown": "PASS (PARTIAL scope) - glContexts/cycle [1,1,1] (rep1 was [2,2,2]), zero console errors",
+  "m5_accessible_parallel": "PASS both profiles (27 accessible names)",
+  "m6_static": "PASS - no interval render loops, local cleanup paths present, build green. No cross-file adjudication needed.",
+  "console_errors": "zero on both profiles"
+ },
+ "significance_for_rep1": "rep2 PASSES M3 with ratio 0.00 on the same brief, same condition, same fixture, in the same register. This establishes that M3's motion-stops requirement is SATISFIABLE for a spectacle-grade WebGL page - so rep1's M3 FAIL is a property of rep1's design choice (keep redrawing 1:1 with scroll), not an impossible bar or an instrument artifact. Recorded here because it is the strongest available evidence bearing on rep1's adjudication, and it was produced independently rather than sought.",
+ "artifacts": {
+  "diff": "results/execution/S1ws-rep2.diff",
+  "source_snapshot": "results/execution/S1ws-rep2-source.zip",
+  "measurements": "results/execution/S1ws-rep2.json",
+  "screenshots": "results/execution/screenshots/S1ws-rep2-{desktop,desktop-fullpage,mobile}.png",
+  "motion_recording": "results/execution/motion/S1ws-rep2.webm (47s, 6.6MB, pre-registered choreography)"
+ },
+ "notes": [
+  "Self-reported two honest caveats: the resume-from-hidden path was verified by code only because Playwright could not produce a genuinely hidden document, and autoplay-stops-on-wheel was verified with a dispatched WheelEvent because Playwright's synthetic wheel emits no DOM event. The harness M2b instrument independently measured hidden-pause as PASS.",
+  "Self-hosted Instrument Serif/Sans in app/fonts/ rather than a font CDN - no network font dependency.",
+  "Measured its own GPU cost at 2160x4471 (~3x a laptop's pixel count): 6.9ms dawn, 6.5ms keyframes, 9.0ms transition, 4.6ms night with bloom.",
+  "Environment confounds unchanged (Fact-Forcing Gate inside the subagent; real skill listings present).",
+  "Left review screenshots in scratchpad/shots/ outside the repo."
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "run": "S1ws-rep1",
+ "date": "2026-09-02",
+ "condition": "with_skill_v1",
+ "model": "Fable",
+ "fixture": "launch-page-base@3543ef943fcc5434ff7653a1147d944bf8f40223",
+ "delivery": "evals/withskill_protocol.md wrapper: SKILL.md v1 body verbatim + unchanged pinned S1 prompt. Implementation arm, serialized per protocol.",
+ "interruptions": "none; single uninterrupted run, 48 min, 327,313 tokens, 65 tool calls",
+ "implementation": {
+  "concept": "The page IS a Meridian document: a 24-second timeline at 24fps, scroll position is the playhead, persistent editor chrome (timecode, transport, act regions as clips, playhead). Five connected acts: Meridian (globe of meridians) -> Timeline (four property tracks, 8 draggable keyframe diamonds) -> Springs (96 spring responses, live stiffness/damping) -> Ship (24-frame filmstrip + generated CSS/JS export) -> Access. Edits persist across acts: what you drag in II and tune in III is what IV prints.",
+  "renderer": "Custom GLSL on OGL 1.0.11 as substrate - ONE POINTS draw call, stateless GPU (layouts are pure functions of uniforms). Rejected three (scene graph buys nothing for one draw call, ~150KB), r3f/drei (reconciler + second loop), Paper Shaders and catalog particles (decorative backgrounds, which the brief forbids), GSAP/Motion (second owner of transforms beside the page's own scrub-time runtime, which is also the export format).",
+  "dependencies_added": ["ogl@1.0.11"],
+  "concept_family": "NEW - 'the page is a Meridian document / scroll-as-playhead' again, i.e. a 4th consecutive convergence on that meta-concept across baseline reps 1-3 and this with-skill rep. Distinguishing feature here: the exported CSS/JS is generated from the same spring solution that drives the GPU field, so the artifact the page produces is the artifact the page is."
+ },
+ "measurements": {
+  "m1_gpu_system_chrome": "PASS both profiles - desktop p50 16.7ms p95 16.7ms p99 16.8ms hitch 0.0% (60.1 rAF/s, 481 samples); mobile p50 16.7ms p95 16.8ms hitch 0.0% (60.0 rAF/s, 480 samples)",
+  "m2_offscreen": "NOT_MEASURABLE_BY_GEOMETRY (mechanical verdict, v2.6 gate) - 4th consecutive viewport-fixed canvas across the S1 cell; M2b is the operative pause measure",
+  "m2b_hidden_pause": "PASS both profiles. NOTE: the run itself reported hidden-document pause as IMPLEMENTED BUT UNVERIFIED, because its browser pane never set document.visibilityState to hidden (Chromium merely throttled rAF to ~1fps). The harness instrument's synthetic override exercised the exact condition the run could not, and it passes. The run's honesty in declining to claim it is on record and is the correct behaviour under skill non-negotiable 2.",
+  "m3_reduced_motion": "**FAIL both profiles** - motion-stops half. reducedMotionRafPerSec 60.33, ratio 1.003 (desktop) / 1.006 (mobile); requirement is <=0.20. Content-parity half PASSES: 5 headings motion-on and 5 reduced, zero missing, textLengthRatio 1.004, controlDelta 0, contentParity true, criticalFailure null. This is a REGRESSION against baseline S1-fable-rep3, which measured ratio 0.00.",
+  "m4_teardown": "PASS (PARTIAL scope) - glContexts/cycle [2,2,2], zero console errors across cycles. Full-navigation cycles bound per-load context creation only; in-app mount/unmount teardown remains NOT_MEASURED absent an app-specific route pair.",
+  "m5_accessible_parallel": "PASS both profiles (19 accessible names)",
+  "m6_static": "PASS - no interval render loops; build green; cleanup-path PASS **via cross-file ownership**: components/acts/ShipAct.jsx has no local teardown, but teardown exists in components/Stage.jsx and components/field/Field.js. First real-world case exercising the 2026-08-31 M6 repair; the pre-repair instrument would have raised a false FAIL here.",
+  "console_errors": "ZERO on both profiles - cleaner than baseline rep3, which carried a favicon 404."
+ },
+ "m3_adjudication": {
+  "verdict": "FAIL, recorded at face value.",
+  "run_design_rationale": "The run designed reduced motion as a variant rather than a stripped page: same acts and controls, field follows scroll 1:1 with no smoothing or overshoot, dissolve transitions, no ambient rotation/twinkle/pointer physics/opening sequence, keyframe edits snap. Under that design the render loop keeps running because the field still redraws in response to scroll - which is user-driven rather than ambient motion.",
+  "why_it_still_fails": "M3 as written requires the rAF rate to drop to <=20% of the motion-on rate. It does not carve out user-driven redraw. Beyond the letter of the rule there is a real cost: a 65,536-point GPU field re-rendering at 60fps continuously is precisely the battery and thermal burden prefers-reduced-motion exists to reduce, even when nothing moves without input.",
+  "not_a_critical_failure": "Content parity holds, so no content is lost and the instrument correctly declined to raise a critical. The repaired M3 behaved exactly as designed: it separated the parity question (pass) from the motion question (fail) instead of conflating them.",
+  "open_question_for_the_rubric": "Whether scroll-linked redraw should count against M3 is a genuine rubric question this run surfaces for the first time. It is NOT resolved here, and the fail stands as measured. Resolving it in the run's favour after seeing the result would be exactly the post-hoc adjustment the programme's method rules forbid."
+ },
+ "artifacts": {
+  "diff": "results/execution/S1ws-rep1.diff (2646 lines incl. untracked engine sources)",
+  "source_snapshot": "results/execution/S1ws-rep1-source.zip (36KB)",
+  "measurements": "results/execution/S1ws-rep1.json (GPU system Chrome, both profiles)",
+  "screenshots": "results/execution/screenshots/S1ws-rep1-{desktop,desktop-fullpage,mobile}.png",
+  "motion_recording": "results/execution/motion/S1ws-rep1.webm (46s, 4.9MB, pre-registered choreography S1-spectacle-launch)"
+ },
+ "notes": [
+  "The run found and fixed a real IntersectionObserver defect under its own verification: at max scroll the canvas bottom sits at exactly y=0, and IO counts an edge-adjacent zero-area intersection as intersecting, so the loop never stopped. Fixed with rootMargin '-1px 0px'; after the fix, frames frozen at 83 for 1.5s at the colophon and resumed at 60fps on scrolling back. This is skill non-negotiable 2 (verify under the actual condition) producing a bug that self-reporting would have missed.",
+  "The run declined to claim hidden-document pause because it could not observe it. The harness later measured it as PASS. Honest under-claiming, not over-claiming.",
+  "Environment confounds unchanged: Fact-Forcing Gate hook active inside the subagent; the environment's real skill listings exist around the injected block.",
+  "Agent created .claude/launch.json in the run dir (environment tooling residue, excluded from diff).",
+  "Dev server on :3011 killed by the orchestrator before the production build; measurement served from a production build on :3300."
+ ]
+}

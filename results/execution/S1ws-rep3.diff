@@ -1,0 +1,4611 @@
+diff --git a/app/globals.css b/app/globals.css
+index 6529d42..31fdc46 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -1,26 +1,622 @@
+ @import "tailwindcss";
+ 
++@theme {
++  --color-ground: #0a0d16;
++  --color-panel: #111624;
++  --color-bone: #efeadf;
++  --color-slate: #8b93a7;
++  --color-ice: #9fd8ff;
++  --color-amber: #ffb35c;
++  --color-rule: #232c3f;
++  --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
++  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
++}
++
+ :root {
+-  color-scheme: light dark;
+-  --background: #f5f5f3;
+-  --foreground: #161616;
+-  --muted: #6b6b66;
+-  --surface: #ffffff;
+-  --line: #deded8;
+-}
+-
+-@media (prefers-color-scheme: dark) {
+-  :root {
+-    --background: #111110;
+-    --foreground: #f5f5f2;
+-    --muted: #a0a099;
+-    --surface: #181817;
+-    --line: #31312f;
+-  }
++  color-scheme: dark;
++  --hud-h: 64px;
++  --gutter: clamp(1.25rem, 5vw, 5rem);
++  --measure: 30rem;
++  --arrive: 1;
+ }
+ 
+ * { box-sizing: border-box; }
+-html { background: var(--background); color: var(--foreground); }
+-body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
++
++html {
++  background: var(--color-ground);
++  color: var(--color-bone);
++}
++
++body {
++  margin: 0;
++  font-family: var(--font-sans);
++  font-size: 1.0625rem;
++  line-height: 1.55;
++  -webkit-font-smoothing: antialiased;
++  text-rendering: optimizeLegibility;
++  overflow-x: hidden;
++}
++
+ a { color: inherit; }
+-button, input { font: inherit; }
++button, input, output { font: inherit; color: inherit; }
++::selection { background: color-mix(in srgb, var(--color-amber) 45%, transparent); }
++
++:focus-visible {
++  outline: 2px solid var(--color-amber);
++  outline-offset: 3px;
++  border-radius: 2px;
++}
++
++.skip-link {
++  position: absolute;
++  left: var(--gutter);
++  top: -3rem;
++  z-index: 40;
++  padding: 0.5rem 0.9rem;
++  background: var(--color-amber);
++  color: var(--color-ground);
++  border-radius: 4px;
++  text-decoration: none;
++}
++.skip-link:focus { top: 0.75rem; }
++
++/* ---------- type ---------- */
++
++.display {
++  font-weight: 500;
++  font-size: clamp(2.25rem, 4.6vw, 4rem);
++  line-height: 1.02;
++  letter-spacing: -0.024em;
++  font-variation-settings: "opsz" 96, "wdth" 100;
++  text-wrap: balance;
++  margin: 0 0 1.25rem;
++}
++.display--xl {
++  font-size: clamp(2.75rem, 6.4vw, 5.9rem);
++  line-height: 0.98;
++  letter-spacing: -0.03em;
++}
++
++.lede {
++  font-size: 1.25rem;
++  line-height: 1.45;
++  max-width: 34rem;
++  margin: 0 0 1rem;
++}
++
++p { margin: 0 0 1rem; }
++.muted { color: var(--color-slate); }
++.hint {
++  color: var(--color-slate);
++  font-size: 0.9375rem;
++}
++@media (pointer: coarse) { .hint { display: none; } }
++[data-motion="reduced"] .hint, [data-renderer="none"] .hint { display: none; }
++
++.readout {
++  font-family: var(--font-mono);
++  font-size: 0.9375rem;
++  color: var(--color-ice);
++  margin-top: 1.25rem;
++}
++.readout code { font: inherit; }
++
++/* ---------- chrome ---------- */
++
++.site-header {
++  position: fixed;
++  inset: 0 0 auto 0;
++  z-index: 30;
++  height: 64px;
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  padding: 0 var(--gutter);
++  pointer-events: none;
++  background: linear-gradient(to bottom, var(--color-ground) 0%, color-mix(in srgb, var(--color-ground) 80%, transparent) 55%, transparent 100%);
++}
++.site-header > * { pointer-events: auto; }
++
++.wordmark {
++  display: inline-flex;
++  align-items: center;
++  gap: 0.6rem;
++  font-weight: 500;
++  font-size: 1.125rem;
++  letter-spacing: -0.01em;
++  text-decoration: none;
++  margin: 0;
++}
++.wordmark::before {
++  content: "";
++  width: 2px;
++  height: 1.05em;
++  background: var(--color-amber);
++  border-radius: 1px;
++}
++.wordmark--large { font-size: 2rem; }
++
++.header-cta {
++  font-size: 0.9375rem;
++  text-decoration: none;
++  padding: 0.5rem 0.95rem;
++  border: 1px solid var(--color-rule);
++  border-radius: 999px;
++  background: color-mix(in srgb, var(--color-ground) 75%, transparent);
++}
++.header-cta:hover { border-color: var(--color-slate); }
++
++/* ---------- stage + acts ---------- */
++
++.composition { position: relative; }
++
++.stage {
++  position: sticky;
++  top: 0;
++  height: 100vh;
++  height: 100dvh;
++  z-index: 0;
++  overflow: hidden;
++}
++.stage__canvas {
++  position: absolute;
++  inset: 0;
++  width: 100%;
++  height: 100%;
++  display: block;
++  opacity: 0;
++  transition: opacity 1.4s ease;
++}
++.stage__canvas[data-ready] { opacity: 1; }
++
++.acts {
++  position: relative;
++  z-index: 1;
++  margin-top: -100vh;
++  margin-top: -100dvh;
++}
++
++.act {
++  position: relative;
++  min-height: 100vh;
++  min-height: 100dvh;
++  display: grid;
++  grid-template-columns: minmax(0, var(--measure)) minmax(0, 1fr);
++  column-gap: clamp(2rem, 6vw, 6rem);
++  row-gap: 2.5rem;
++  align-items: center;
++  padding: 7rem var(--gutter) calc(var(--hud-h) + 4rem);
++}
++.act--hold { min-height: 130vh; min-height: 130dvh; }
++.act--export { min-height: 125vh; min-height: 125dvh; }
++.act--release { min-height: 110vh; min-height: 110dvh; }
++
++.act--overture {
++  grid-template-columns: minmax(0, 1fr);
++  align-content: center;
++  row-gap: 3.5rem;
++}
++
++.act__text { max-width: var(--measure); }
++.act__text--wide { max-width: 46rem; }
++
++.act__marker {
++  display: flex;
++  gap: 0.9rem;
++  align-items: baseline;
++  margin: 0 0 1.5rem;
++  font-size: 0.9375rem;
++  color: var(--color-slate);
++}
++.act__marker[aria-current] .act__numeral { color: var(--color-amber); }
++.act__numeral { font-weight: 500; }
++.act__time { font-family: var(--font-mono); font-size: 0.875rem; }
++
++/* Instruments: the DOM elements the field forms on. */
++.instrument {
++  position: relative;
++  width: min(100%, 34rem);
++  justify-self: center;
++}
++.instrument--ruler {
++  grid-column: 1 / -1;
++  width: 100%;
++  height: 180px;
++  justify-self: stretch;
++}
++.instrument--lattice {
++  aspect-ratio: 5 / 4;
++  touch-action: pan-y;
++  cursor: grab;
++}
++.instrument--lattice:active { cursor: grabbing; }
++.instrument--code { width: min(100%, 36rem); min-width: 0; }
++.instrument--globe {
++  aspect-ratio: 1;
++  cursor: grab;
++  touch-action: pan-y;
++}
++.instrument--globe:active { cursor: grabbing; }
++
++/* Vector fallbacks, only when WebGL2 is unavailable. */
++.fallback { display: none; width: 100%; height: 100%; }
++[data-renderer="none"] .fallback { display: block; }
++.fallback line, .fallback circle, .fallback ellipse {
++  stroke: var(--color-ice);
++  stroke-width: 1;
++  fill: none;
++  vector-effect: non-scaling-stroke;
++  opacity: 0.7;
++}
++.fallback .fallback__head, .fallback .fallback__prime { stroke: var(--color-amber); stroke-width: 2; opacity: 1; }
++
++/* ---------- easing editor ---------- */
++
++.editor {
++  width: min(100%, 24rem);
++  justify-self: center;
++  padding: 32% 0;
++}
++.editor__plot { position: relative; aspect-ratio: 1; }
++.editor__svg {
++  position: absolute;
++  inset: 0;
++  width: 100%;
++  height: 100%;
++  overflow: visible;
++}
++.editor__svg line, .editor__svg path, .editor__svg rect {
++  vector-effect: non-scaling-stroke;
++  fill: none;
++}
++.editor__grid line { stroke: var(--color-rule); stroke-width: 1; }
++.editor__frame { stroke: var(--color-slate); stroke-width: 1; opacity: 0.6; }
++.editor__linear { stroke: var(--color-slate); stroke-width: 1; stroke-dasharray: 3 4; opacity: 0.6; }
++.editor__arm { stroke: var(--color-amber); stroke-width: 1; opacity: 0.7; }
++.editor__curve { stroke: var(--color-ice); stroke-width: 1.5; opacity: 0.95; }
++.editor__handle {
++  position: absolute;
++  width: 22px;
++  height: 22px;
++  margin: 0;
++  padding: 0;
++  border-radius: 50%;
++  border: 2px solid var(--color-ground);
++  background: var(--color-amber);
++  transform: translate(-50%, -50%);
++  cursor: grab;
++  touch-action: none;
++}
++.editor__handle:active { cursor: grabbing; }
++
++/* ---------- controls ---------- */
++
++.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.5rem 0 0; }
++.chip {
++  padding: 0.45rem 0.9rem;
++  border-radius: 999px;
++  border: 1px solid var(--color-rule);
++  background: transparent;
++  cursor: pointer;
++  font-size: 0.9375rem;
++  line-height: 1.2;
++  transition: border-color 160ms ease, color 160ms ease;
++}
++.chip:hover { border-color: var(--color-slate); }
++.chip[aria-pressed="true"] { border-color: var(--color-amber); color: var(--color-amber); }
++.chip--action { border-color: var(--color-ice); color: var(--color-ice); }
++.chip--small { padding: 0.3rem 0.7rem; font-size: 0.8125rem; }
++
++.controls { display: grid; gap: 0.9rem; margin: 0.75rem 0 0; }
++.slider {
++  display: grid;
++  grid-template-columns: 6rem 1fr 3rem;
++  align-items: center;
++  gap: 0.9rem;
++}
++.slider__name { font-size: 0.9375rem; }
++.slider__value { font-family: var(--font-mono); font-size: 0.875rem; text-align: right; color: var(--color-ice); }
++
++input[type="range"] {
++  -webkit-appearance: none;
++  appearance: none;
++  width: 100%;
++  height: 24px;
++  margin: 0;
++  background: transparent;
++  cursor: pointer;
++}
++input[type="range"]::-webkit-slider-runnable-track { height: 2px; background: var(--color-rule); }
++input[type="range"]::-moz-range-track { height: 2px; background: var(--color-rule); }
++input[type="range"]::-webkit-slider-thumb {
++  -webkit-appearance: none;
++  appearance: none;
++  width: 16px;
++  height: 16px;
++  margin-top: -7px;
++  border-radius: 50%;
++  background: var(--color-amber);
++  border: 2px solid var(--color-ground);
++}
++input[type="range"]::-moz-range-thumb {
++  width: 12px;
++  height: 12px;
++  border-radius: 50%;
++  background: var(--color-amber);
++  border: 2px solid var(--color-ground);
++}
++
++.spring-plot { margin: 1.25rem 0 0; width: 100%; max-width: 26rem; }
++.spring-plot svg { display: block; width: 100%; height: 5rem; overflow: visible; }
++.spring-plot__axis { stroke: var(--color-rule); stroke-width: 1; vector-effect: non-scaling-stroke; }
++.spring-plot__line { stroke: var(--color-ice); stroke-width: 1.5; fill: none; vector-effect: non-scaling-stroke; }
++.spring-plot figcaption {
++  display: flex;
++  justify-content: space-between;
++  font-family: var(--font-mono);
++  font-size: 0.75rem;
++  color: var(--color-slate);
++  margin-top: 0.35rem;
++}
++
++/* ---------- code ---------- */
++
++.code {
++  min-width: 0;
++  border: 1px solid var(--color-rule);
++  border-radius: 6px;
++  background: color-mix(in srgb, var(--color-panel) 55%, transparent);
++  font-family: var(--font-mono);
++  font-size: 0.875rem;
++  line-height: 1.65;
++  overflow: hidden;
++}
++.code__bar {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  padding: 0.5rem 1rem;
++  border-top: 1px solid var(--color-rule);
++  border-bottom: 1px solid var(--color-rule);
++  color: var(--color-slate);
++  font-size: 0.8125rem;
++}
++.code__bar:first-child { border-top: 0; }
++.code__pre {
++  margin: 0;
++  padding: 1rem 1.1rem 1.2rem;
++  overflow-x: auto;
++  opacity: var(--arrive, 1);
++  color: var(--color-bone);
++}
++.tok-sel { color: var(--color-bone); }
++.tok-prop { color: var(--color-slate); }
++.tok-val { color: var(--color-bone); }
++.tok-at { color: var(--color-slate); }
++.tok-fn { color: var(--color-ice); }
++.tok-str { color: var(--color-ice); }
++.tok-live { color: var(--color-amber); }
++.tok-cm { color: var(--color-slate); font-style: italic; }
++
++/* ---------- release ---------- */
++
++.cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.25rem; margin-top: 1.5rem; }
++.cta {
++  display: inline-block;
++  padding: 0.8rem 1.4rem;
++  border-radius: 999px;
++  background: var(--color-bone);
++  color: var(--color-ground);
++  text-decoration: none;
++  font-weight: 500;
++}
++.cta:hover { background: #ffffff; }
++
++/* ---------- end slate ---------- */
++
++.end-slate {
++  position: relative;
++  z-index: 1;
++  min-height: 100vh;
++  min-height: 100dvh;
++  display: grid;
++  align-content: center;
++  padding: 6rem var(--gutter) calc(var(--hud-h) + 4rem);
++  background: var(--color-ground);
++  border-top: 1px solid var(--color-rule);
++}
++.end-slate__inner { max-width: 44rem; }
++.facts {
++  display: grid;
++  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
++  gap: 1.5rem 2rem;
++  margin: 2.5rem 0;
++}
++.facts dt { color: var(--color-slate); font-size: 0.875rem; margin-bottom: 0.25rem; }
++.facts dd { margin: 0; font-family: var(--font-mono); font-size: 0.9375rem; }
++
++/* ---------- HUD timeline ---------- */
++
++.hud {
++  position: fixed;
++  inset: auto 0 0 0;
++  z-index: 30;
++  height: var(--hud-h);
++  display: grid;
++  grid-template-columns: 13rem minmax(0, 1fr) auto;
++  align-items: center;
++  gap: 1.5rem;
++  padding: 0 var(--gutter);
++  background: color-mix(in srgb, var(--color-panel) 92%, transparent);
++  border-top: 1px solid var(--color-rule);
++  backdrop-filter: blur(6px);
++}
++.hud__time { display: flex; flex-direction: column; line-height: 1.2; }
++.hud__tc { font-family: var(--font-mono); font-size: 0.9375rem; color: var(--color-amber); }
++.hud__act { font-size: 0.8125rem; color: var(--color-slate); }
++
++.hud__ruler {
++  position: relative;
++  height: 40px;
++  align-self: center;
++}
++.hud__range {
++  position: absolute;
++  inset: 0;
++  height: 100%;
++  z-index: 2;
++}
++.hud__range::-webkit-slider-runnable-track {
++  height: 14px;
++  background:
++    repeating-linear-gradient(90deg, var(--color-rule) 0 1px, transparent 1px 2.0833333%) 0 100% / 100% 6px no-repeat,
++    linear-gradient(var(--color-rule), var(--color-rule)) 0 100% / 100% 1px no-repeat;
++}
++.hud__range::-moz-range-track {
++  height: 14px;
++  background:
++    repeating-linear-gradient(90deg, var(--color-rule) 0 1px, transparent 1px 2.0833333%) 0 100% / 100% 6px no-repeat,
++    linear-gradient(var(--color-rule), var(--color-rule)) 0 100% / 100% 1px no-repeat;
++}
++.hud__range::-webkit-slider-thumb {
++  width: 24px;
++  height: 40px;
++  margin-top: -13px;
++  border-radius: 0;
++  background: transparent;
++  border: 0;
++}
++.hud__range::-moz-range-thumb {
++  width: 24px;
++  height: 40px;
++  border-radius: 0;
++  background: transparent;
++  border: 0;
++}
++.hud__head {
++  position: absolute;
++  top: 2px;
++  bottom: 6px;
++  left: 0;
++  width: 2px;
++  margin-left: -1px;
++  background: var(--color-amber);
++  pointer-events: none;
++  z-index: 3;
++}
++.hud__head::before {
++  content: "";
++  position: absolute;
++  top: -2px;
++  left: -5px;
++  border: 6px solid transparent;
++  border-top: 7px solid var(--color-amber);
++  border-bottom: 0;
++}
++.hud__markers {
++  list-style: none;
++  margin: 0;
++  padding: 0;
++  position: absolute;
++  inset: 0;
++  pointer-events: none;
++}
++.hud__marker {
++  position: absolute;
++  bottom: 2px;
++  transform: translateX(-50%);
++  pointer-events: auto;
++  z-index: 4;
++}
++.hud__marker-button {
++  position: relative;
++  width: 14px;
++  height: 14px;
++  padding: 0;
++  border: 0;
++  background: transparent;
++  cursor: pointer;
++}
++.hud__marker-button::before {
++  content: "";
++  position: absolute;
++  left: 3px;
++  top: 3px;
++  width: 8px;
++  height: 8px;
++  background: var(--color-slate);
++  transform: rotate(45deg);
++  transition: background-color 160ms ease;
++}
++.hud__marker[data-current] .hud__marker-button::before { background: var(--color-amber); }
++.hud__marker-name {
++  position: absolute;
++  bottom: 18px;
++  left: 50%;
++  transform: translateX(-50%);
++  white-space: nowrap;
++  font-size: 0.75rem;
++  color: var(--color-slate);
++  opacity: 0;
++  transition: opacity 160ms ease;
++}
++.hud__marker-button:hover .hud__marker-name,
++.hud__marker-button:focus-visible .hud__marker-name,
++.hud__marker[data-current] .hud__marker-name { opacity: 1; }
++.hud__marker[data-current] .hud__marker-name { color: var(--color-bone); }
++
++.hud__motion {
++  padding: 0.4rem 0.8rem;
++  border-radius: 999px;
++  border: 1px solid var(--color-rule);
++  background: transparent;
++  font-size: 0.8125rem;
++  color: var(--color-slate);
++  cursor: pointer;
++  white-space: nowrap;
++}
++.hud__motion:hover { border-color: var(--color-slate); color: var(--color-bone); }
++
++/* ---------- reduced motion ---------- */
++
++@media (prefers-reduced-motion: reduce) {
++  .stage__canvas { transition: none; }
++  .chip, .hud__marker-button::before, .hud__marker-name { transition: none; }
++}
++[data-motion="reduced"] .stage__canvas { transition: none; }
++[data-motion="reduced"] .chip,
++[data-motion="reduced"] .hud__marker-button::before,
++[data-motion="reduced"] .hud__marker-name { transition: none; }
++[data-motion="reduced"] .code__pre { opacity: 1; }
++[data-motion="reduced"] .instrument--lattice,
++[data-motion="reduced"] .instrument--globe { cursor: default; }
++
++/* ---------- mobile recipe ---------- */
++
++@media (max-width: 899px) {
++  :root { --hud-h: 60px; }
++  .act {
++    grid-template-columns: minmax(0, 1fr);
++    row-gap: 2rem;
++    padding-top: 6rem;
++    align-content: center;
++  }
++  .act--hold, .act--export, .act--release { min-height: 100vh; min-height: 100dvh; }
++  .instrument { justify-self: start; }
++  .instrument--ruler { height: 140px; }
++  .editor { width: min(100%, 20rem); justify-self: start; padding: 32% 0; }
++  .lede { font-size: 1.125rem; }
++  .hud {
++    grid-template-columns: auto minmax(0, 1fr) auto;
++    gap: 0.9rem;
++  }
++  .hud__act-name { display: none; }
++  .hud__marker-name { display: none; }
++  .header-cta { display: none; }
++  .slider { grid-template-columns: 5rem 1fr 2.5rem; }
++}
++@media (max-width: 480px) {
++  .code__pre { white-space: pre-wrap; overflow-wrap: anywhere; }
++  .hud__motion { padding: 0.35rem 0.6rem; font-size: 0.75rem; }
++  .hud__time { min-width: 5.5rem; }
++}
+diff --git a/app/icon.svg b/app/icon.svg
+new file mode 100644
+index 0000000..8c93a1d
+--- /dev/null
++++ b/app/icon.svg
+@@ -0,0 +1,7 @@
++<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
++  <rect width="32" height="32" rx="7" fill="#0a0d16"/>
++  <path d="M6 21h20" stroke="#9fd8ff" stroke-width="1.5" stroke-linecap="round"/>
++  <path d="M10 21v-3M22 21v-3M16 21v-5" stroke="#9fd8ff" stroke-width="1.5" stroke-linecap="round" opacity=".7"/>
++  <rect x="12" y="7" width="2.5" height="19" rx="1.25" fill="#ffb35c"/>
++  <path d="M9.5 7h7.5l-3.75 4z" fill="#ffb35c"/>
++</svg>
+diff --git a/app/layout.jsx b/app/layout.jsx
+index 35fc217..506fafb 100644
+--- a/app/layout.jsx
++++ b/app/layout.jsx
+@@ -1,14 +1,37 @@
++import { Bricolage_Grotesque, Geist_Mono } from "next/font/google";
+ import "./globals.css";
+ 
++const sans = Bricolage_Grotesque({
++  subsets: ["latin"],
++  axes: ["opsz", "wdth"],
++  variable: "--font-bricolage",
++  display: "swap",
++});
++
++const mono = Geist_Mono({
++  subsets: ["latin"],
++  variable: "--font-geist-mono",
++  display: "swap",
++});
++
+ export const metadata = {
+-  title: "Meridian",
+-  description: "Meridian is a timeline-based motion editor for the web. Design animation visually, ship production code.",
++  title: "Meridian, a timeline editor for web motion",
++  description:
++    "Meridian is a timeline-based motion editor for the web. Design animation visually, ship production code.",
++};
++
++export const viewport = {
++  themeColor: "#0a0d16",
++  colorScheme: "dark",
+ };
+ 
+ export default function RootLayout({ children }) {
+   return (
+-    <html lang="en">
+-      <body>{children}</body>
++    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
++      <body>
++        <a className="skip-link" href="#main">Skip to content</a>
++        {children}
++      </body>
+     </html>
+   );
+ }
+diff --git a/app/page.jsx b/app/page.jsx
+index 6f15aef..16d5a53 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -1,31 +1,5 @@
+-export default function Home() {
+-  return (
+-    <main className="mx-auto max-w-3xl space-y-16 px-6 py-24">
+-      <section className="space-y-4">
+-        <h1 className="text-4xl font-semibold">Meridian</h1>
+-        <p className="text-lg text-[var(--muted)]">
+-          A timeline-based motion editor for the web. Design animation visually, ship production code.
+-        </p>
+-        <a
+-          className="inline-block rounded-md bg-[var(--foreground)] px-4 py-2 text-[var(--background)]"
+-          href="#get-access"
+-        >
+-          Get early access
+-        </a>
+-      </section>
+-
+-      <section className="space-y-6">
+-        <h2 className="text-2xl font-semibold">What it does</h2>
+-        <ul className="space-y-4 text-[var(--muted)]">
+-          <li>Visual timeline editing for springs, keyframes, and gesture-driven motion.</li>
+-          <li>One-click export to production JavaScript and CSS with no runtime lock-in.</li>
+-          <li>Live preview across breakpoints, with reduced-motion variants built in.</li>
+-        </ul>
+-      </section>
++import Composition from "@/components/composition/Composition";
+ 
+-      <footer className="border-t border-[var(--line)] pt-8 text-sm text-[var(--muted)]" id="get-access">
+-        <p>Meridian is in private beta. hello@meridian.tools</p>
+-      </footer>
+-    </main>
+-  );
++export default function Home() {
++  return <Composition />;
+ }
+diff --git a/components/composition/ActMarker.jsx b/components/composition/ActMarker.jsx
+new file mode 100644
+index 0000000..e2c7edf
+--- /dev/null
++++ b/components/composition/ActMarker.jsx
+@@ -0,0 +1,23 @@
++"use client";
++
++import { useEffect, useRef } from "react";
++import { ACTS, useStore } from "./store";
++import { hud } from "./runtime";
++
++// "Act II 00:00:10:12" — the act's position on the composition's timeline.
++// The timecode is filled by the render loop once the layout is measured.
++export default function ActMarker({ index }) {
++  const act = useStore((s) => s.act);
++  const timeRef = useRef(null);
++  useEffect(() => {
++    hud.actTimes[index] = timeRef.current;
++    return () => { hud.actTimes[index] = null; };
++  }, [index]);
++  const a = ACTS[index];
++  return (
++    <p className="act__marker" aria-current={act === index ? "step" : undefined}>
++      <span className="act__numeral">Act {a.numeral}</span>
++      <span className="act__time" ref={timeRef}>{index === 0 ? "00:00:00:00" : ""}</span>
++    </p>
++  );
++}
+diff --git a/components/composition/Composition.jsx b/components/composition/Composition.jsx
+new file mode 100644
+index 0000000..c375c56
+--- /dev/null
++++ b/components/composition/Composition.jsx
+@@ -0,0 +1,35 @@
++"use client";
++
++import Stage from "./Stage";
++import Hud from "./Hud";
++import SiteHeader from "./SiteHeader";
++import EndSlate from "./EndSlate";
++import Overture from "./acts/Overture";
++import Keyframes from "./acts/Keyframes";
++import Springs from "./acts/Springs";
++import Export from "./acts/Export";
++import Release from "./acts/Release";
++
++// The stage is sticky for the length of the five acts, then scrolls away with
++// them so the end slate can take the screen (and the render loop can pause).
++export default function Composition() {
++  return (
++    <>
++      <SiteHeader />
++      <div className="composition">
++        <div className="stage">
++          <Stage />
++        </div>
++        <main id="main" className="acts">
++          <Overture />
++          <Keyframes />
++          <Springs />
++          <Export />
++          <Release />
++        </main>
++      </div>
++      <EndSlate />
++      <Hud />
++    </>
++  );
++}
+diff --git a/components/composition/EasingEditor.jsx b/components/composition/EasingEditor.jsx
+new file mode 100644
+index 0000000..779348b
+--- /dev/null
++++ b/components/composition/EasingEditor.jsx
+@@ -0,0 +1,101 @@
++"use client";
++
++import { useRef } from "react";
++import { useStore, setState, getState } from "./store";
++import { clamp } from "./lib/easing";
++
++const Y_MIN = -0.3;
++const Y_MAX = 1.3;
++
++export default function EasingEditor() {
++  const easing = useStore((s) => s.easing);
++  const plotRef = useRef(null);
++  const [x1, y1, x2, y2] = easing;
++  const hx1 = x1 * 100;
++  const hy1 = (1 - y1) * 100;
++  const hx2 = x2 * 100;
++  const hy2 = (1 - y2) * 100;
++  const path = `M 0 100 C ${hx1} ${hy1}, ${hx2} ${hy2}, 100 0`;
++
++  const startDrag = (i) => (e) => {
++    const plot = plotRef.current;
++    if (!plot || e.button !== 0) return;
++    e.preventDefault();
++    const target = e.currentTarget;
++    target.setPointerCapture(e.pointerId);
++    const move = (ev) => {
++      const r = plot.getBoundingClientRect();
++      const x = clamp((ev.clientX - r.left) / r.width, 0, 1);
++      const y = clamp(1 - (ev.clientY - r.top) / r.height, Y_MIN, Y_MAX);
++      const cur = getState().easing.slice();
++      cur[i * 2] = x;
++      cur[i * 2 + 1] = y;
++      setState({ easing: cur });
++    };
++    const end = () => {
++      target.removeEventListener("pointermove", move);
++      target.removeEventListener("pointerup", end);
++      target.removeEventListener("pointercancel", end);
++    };
++    target.addEventListener("pointermove", move);
++    target.addEventListener("pointerup", end);
++    target.addEventListener("pointercancel", end);
++  };
++
++  const onKey = (i) => (e) => {
++    const step = e.shiftKey ? 0.1 : 0.02;
++    let dx = 0;
++    let dy = 0;
++    if (e.key === "ArrowLeft") dx = -step;
++    else if (e.key === "ArrowRight") dx = step;
++    else if (e.key === "ArrowUp") dy = step;
++    else if (e.key === "ArrowDown") dy = -step;
++    else return;
++    e.preventDefault();
++    const cur = getState().easing.slice();
++    cur[i * 2] = clamp(cur[i * 2] + dx, 0, 1);
++    cur[i * 2 + 1] = clamp(cur[i * 2 + 1] + dy, Y_MIN, Y_MAX);
++    setState({ easing: cur });
++  };
++
++  const label = (n, x, y) =>
++    `Control point ${n}: x ${x.toFixed(2)}, y ${y.toFixed(2)}. Arrow keys move it, hold Shift for larger steps.`;
++
++  return (
++    <div className="editor">
++      <div className="editor__plot" data-anchor="2" ref={plotRef}>
++        <svg className="editor__svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
++          <g className="editor__grid">
++            {[25, 50, 75].map((v) => (
++              <line key={`v${v}`} x1={v} y1={0} x2={v} y2={100} />
++            ))}
++            {[25, 50, 75].map((v) => (
++              <line key={`h${v}`} x1={0} y1={v} x2={100} y2={v} />
++            ))}
++          </g>
++          <rect className="editor__frame" x={0} y={0} width={100} height={100} />
++          <line className="editor__linear" x1={0} y1={100} x2={100} y2={0} />
++          <line className="editor__arm" x1={0} y1={100} x2={hx1} y2={hy1} />
++          <line className="editor__arm" x1={100} y1={0} x2={hx2} y2={hy2} />
++          <path className="editor__curve" d={path} />
++        </svg>
++        <button
++          type="button"
++          className="editor__handle"
++          style={{ left: `${hx1}%`, top: `${hy1}%` }}
++          onPointerDown={startDrag(0)}
++          onKeyDown={onKey(0)}
++          aria-label={label(1, x1, y1)}
++        />
++        <button
++          type="button"
++          className="editor__handle"
++          style={{ left: `${hx2}%`, top: `${hy2}%` }}
++          onPointerDown={startDrag(1)}
++          onKeyDown={onKey(1)}
++          aria-label={label(2, x2, y2)}
++        />
++      </div>
++    </div>
++  );
++}
+diff --git a/components/composition/EndSlate.jsx b/components/composition/EndSlate.jsx
+new file mode 100644
+index 0000000..01901fb
+--- /dev/null
++++ b/components/composition/EndSlate.jsx
+@@ -0,0 +1,44 @@
++"use client";
++
++import { useStore } from "./store";
++import { formatBezier } from "./lib/easing";
++
++export default function EndSlate() {
++  const easing = useStore((s) => s.easing);
++  const spring = useStore((s) => s.spring);
++  const count = useStore((s) => s.particleCount);
++  const renderer = useStore((s) => s.renderer);
++  return (
++    <footer className="end-slate">
++      <div className="end-slate__inner">
++        <p className="wordmark wordmark--large">Meridian</p>
++        <dl className="facts">
++          <div>
++            <dt>Runtime</dt>
++            <dd>00:00:48:00</dd>
++          </div>
++          <div>
++            <dt>Acts</dt>
++            <dd>5</dd>
++          </div>
++          <div>
++            <dt>Points in the field</dt>
++            <dd>{renderer === "none" ? "vector fallback" : count ? count.toLocaleString("en-US") : "measuring"}</dd>
++          </div>
++          <div>
++            <dt>Your curve</dt>
++            <dd>{formatBezier(easing)}</dd>
++          </div>
++          <div>
++            <dt>Your spring</dt>
++            <dd>stiffness {spring.stiffness}, damping {spring.damping}</dd>
++          </div>
++        </dl>
++        <p className="muted">Rendered live in your browser. Nothing on this page was pre-recorded.</p>
++        <p>
++          <a href="mailto:hello@meridian.tools">hello@meridian.tools</a>
++        </p>
++      </div>
++    </footer>
++  );
++}
+diff --git a/components/composition/Hud.jsx b/components/composition/Hud.jsx
+new file mode 100644
+index 0000000..671de91
+--- /dev/null
++++ b/components/composition/Hud.jsx
+@@ -0,0 +1,92 @@
++"use client";
++
++import { useEffect, useRef } from "react";
++import { useStore, ACTS, frame, getState, setMotion } from "./store";
++import { registerHud, hud } from "./runtime";
++import { RUNTIME_SECONDS } from "./lib/easing";
++
++function scrollToProgress(p, smooth) {
++  const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
++  window.scrollTo({ top: p * max, behavior: smooth && getState().motion === "full" ? "smooth" : "auto" });
++}
++
++export default function Hud() {
++  const act = useStore((s) => s.act);
++  const motion = useStore((s) => s.motion);
++  const tcRef = useRef(null);
++  const rangeRef = useRef(null);
++  const headRef = useRef(null);
++  const markerRefs = useRef([]);
++
++  useEffect(() => {
++    registerHud({ tc: tcRef.current, range: rangeRef.current, head: headRef.current, markers: markerRefs.current });
++    return () => registerHud({ tc: null, range: null, head: null, markers: [] });
++  }, []);
++
++  const current = ACTS[act];
++
++  return (
++    <nav className="hud" aria-label="Composition timeline">
++      <div className="hud__time">
++        <span className="hud__tc" ref={tcRef}>00:00:00:00</span>
++        <span className="hud__act">
++          Act {current.numeral}
++          <span className="hud__act-name"> {current.name}</span>
++        </span>
++      </div>
++
++      <div className="hud__ruler">
++        <input
++          ref={rangeRef}
++          className="hud__range"
++          type="range"
++          min={0}
++          max={RUNTIME_SECONDS}
++          step={0.5}
++          defaultValue={0}
++          aria-label="Playhead"
++          aria-valuetext="00:00:00:00, Act I: Overture"
++          onInput={(e) => scrollToProgress(Number(e.currentTarget.value) / RUNTIME_SECONDS, false)}
++          onPointerDown={() => { hud.scrubbing = true; }}
++          onPointerUp={() => { hud.scrubbing = false; }}
++          onPointerCancel={() => { hud.scrubbing = false; }}
++          onBlur={() => { hud.scrubbing = false; }}
++        />
++        <span className="hud__head" ref={headRef} aria-hidden="true" />
++        <ol className="hud__markers" aria-label="Keyframes">
++          {ACTS.map((a, i) => (
++            <li
++              key={a.id}
++              ref={(el) => { markerRefs.current[i] = el; }}
++              className="hud__marker"
++              style={{ left: `${(i / 4) * 100}%` }}
++              data-current={i === act ? "true" : undefined}
++            >
++              <button
++                type="button"
++                className="hud__marker-button"
++                aria-label={`Jump to Act ${a.numeral}: ${a.name}`}
++                aria-current={i === act ? "true" : undefined}
++                onClick={() => scrollToProgress(frame.markers[i], true)}
++              >
++                <span className="hud__marker-name">{a.name}</span>
++              </button>
++            </li>
++          ))}
++        </ol>
++      </div>
++
++      <button
++        type="button"
++        className="hud__motion"
++        aria-describedby="motion-hint"
++        onClick={() => setMotion(motion === "full" ? "reduced" : "full")}
++      >
++        Motion: {motion === "full" ? "full" : "reduced"}
++      </button>
++      <span id="motion-hint" className="sr-only">
++        Switches between the full-motion and reduced-motion versions of this page. Both contain the same content.
++      </span>
++    </nav>
++  );
++}
+diff --git a/components/composition/SiteHeader.jsx b/components/composition/SiteHeader.jsx
+new file mode 100644
+index 0000000..8689c0f
+--- /dev/null
++++ b/components/composition/SiteHeader.jsx
+@@ -0,0 +1,8 @@
++export default function SiteHeader() {
++  return (
++    <header className="site-header">
++      <a className="wordmark" href="#act-1">Meridian</a>
++      <a className="header-cta" href="#access">Get early access</a>
++    </header>
++  );
++}
+diff --git a/components/composition/SpringPlot.jsx b/components/composition/SpringPlot.jsx
+new file mode 100644
+index 0000000..6686667
+--- /dev/null
++++ b/components/composition/SpringPlot.jsx
+@@ -0,0 +1,38 @@
++"use client";
++
++import { springResponse } from "./lib/easing";
++
++// The curve view of the spring: how the visitor's spring settles over time.
++// In reduced-motion mode this is the primary way the spring is shown.
++export default function SpringPlot({ params }) {
++  const T = Math.max(0.6, Math.min(params.settle * 1.05, 4));
++  const N = 160;
++  const points = [];
++  for (let i = 0; i <= N; i++) {
++    const t = (i / N) * T;
++    const x = springResponse(t, params);
++    points.push(`${((i / N) * 100).toFixed(2)},${(52 - x * 38).toFixed(2)}`);
++  }
++  const description =
++    params.overshoot > 0.005
++      ? `settles in ${params.settle.toFixed(2)} seconds and overshoots by ${Math.round(params.overshoot * 100)} percent`
++      : `settles in ${params.settle.toFixed(2)} seconds without overshooting`;
++  return (
++    <figure className="spring-plot">
++      <svg
++        viewBox="0 0 100 100"
++        preserveAspectRatio="none"
++        role="img"
++        aria-label={`Spring response over ${T.toFixed(1)} seconds: ${description}.`}
++      >
++        <line className="spring-plot__axis" x1="0" y1="52" x2="100" y2="52" />
++        <line className="spring-plot__axis" x1="0" y1="14" x2="100" y2="14" strokeDasharray="1 2" />
++        <polyline className="spring-plot__line" points={points.join(" ")} />
++      </svg>
++      <figcaption>
++        <span>0 s</span>
++        <span>{T.toFixed(1)} s</span>
++      </figcaption>
++    </figure>
++  );
++}
+diff --git a/components/composition/Stage.jsx b/components/composition/Stage.jsx
+new file mode 100644
+index 0000000..98e080f
+--- /dev/null
++++ b/components/composition/Stage.jsx
+@@ -0,0 +1,435 @@
++"use client";
++
++import { useEffect, useRef } from "react";
++import { Field } from "./engine/field";
++import { frame, getState, setState, subscribeStore, initMotion, ACTS } from "./store";
++import { hud } from "./runtime";
++import { springParams, timecode, clamp, RUNTIME_SECONDS } from "./lib/easing";
++
++// Capability recipes. "low" keeps the identity (same formations, same palette)
++// with a quarter of the particles, DPR 1 and no ambient jitter.
++const RECIPES = {
++  high: { count: 56000, dprCap: 1.5, pointScale: 2.0, ambient: 1 },
++  low: { count: 16000, dprCap: 1, pointScale: 2.3, ambient: 0 },
++};
++
++const INTRO_SECONDS = 2.6;
++const ARRIVE_FROM = 1.15; // next instrument's centre, in viewport heights, where the morph starts
++const ARRIVE_TO = 0.55; // ... and where it has fully arrived
++
++function detectTier() {
++  const coarse = window.matchMedia("(pointer: coarse)").matches;
++  const narrow = window.innerWidth < 900;
++  const cores = navigator.hardwareConcurrency || 4;
++  const mem = navigator.deviceMemory || 8;
++  return coarse || narrow || cores <= 4 || mem <= 4 ? "low" : "high";
++}
++
++// Small deterministic sequence for the auto-pluck positions.
++let pseudoSeed = 12345;
++const pseudo = () => {
++  pseudoSeed = (pseudoSeed * 1664525 + 1013904223) >>> 0;
++  return pseudoSeed / 4294967296;
++};
++
++const smoothstep = (a, b, x) => {
++  const t = clamp((x - a) / (b - a), 0, 1);
++  return t * t * (3 - 2 * t);
++};
++
++export default function Stage() {
++  const canvasRef = useRef(null);
++
++  useEffect(() => {
++    const canvas = canvasRef.current;
++    const root = document.documentElement;
++    initMotion();
++
++    // Without WebGL2 the vector fallbacks carry the identity; the timeline HUD still follows scroll.
++    let field = null;
++    try {
++      field = new Field(canvas);
++    } catch {
++      field = null;
++    }
++
++    let tier = detectTier();
++    let recipe = RECIPES[tier];
++    if (field) {
++      field.setCount(recipe.count);
++      setState({ renderer: "webgl2", tier, particleCount: recipe.count });
++      root.dataset.renderer = "webgl2";
++      root.dataset.tier = tier;
++    } else {
++      setState({ renderer: "none", tier });
++      root.dataset.renderer = "none";
++    }
++    root.dataset.motion = getState().motion;
++
++    const anchorEls = [];
++    document.querySelectorAll("[data-anchor]").forEach((el) => {
++      anchorEls[Number(el.dataset.anchor)] = el;
++    });
++    const sectionEls = ACTS.map((a) => document.getElementById(a.id));
++    const arriveCache = new Array(6).fill(-1);
++    const markerCache = new Array(5).fill(-1);
++    let lastTimecode = "";
++    let lastValueText = "";
++
++    const rects = new Float32Array(24);
++    const centres = new Float32Array(6);
++    let viewport = { W: 1, H: 1, aspect: 1, left: 0, top: 0 };
++
++    const stats = { frames: 0, ema: 16, governed: false, lastResize: 0 };
++    let running = false;
++    let rafId = 0;
++    let last = 0;
++    let visible = document.visibilityState === "visible";
++    let intersecting = true;
++    let pendingStatic = 0;
++
++    function resize() {
++      const cr = canvas.getBoundingClientRect();
++      const dpr = Math.min(window.devicePixelRatio || 1, recipe.dprCap);
++      if (field) field.resize(cr.width || 1, cr.height || 1, dpr);
++    }
++
++    function measure() {
++      const cr = canvas.getBoundingClientRect();
++      const W = cr.width || 1;
++      const H = cr.height || 1;
++      const aspect = W / H;
++      viewport = { W, H, aspect, left: cr.left, top: cr.top };
++      rects[0] = 0;
++      rects[1] = 0;
++      rects[2] = aspect;
++      rects[3] = 1;
++      const vh = window.innerHeight || H;
++      const scrollY = window.scrollY;
++      const maxScroll = Math.max(1, root.scrollHeight - vh);
++      for (let k = 1; k <= 5; k++) {
++        const el = anchorEls[k];
++        if (!el) continue;
++        const r = el.getBoundingClientRect();
++        const cx = ((r.left + r.width / 2 - cr.left) / W) * 2 - 1;
++        const cy = 1 - ((r.top + r.height / 2 - cr.top) / H) * 2;
++        rects[k * 4] = cx * aspect;
++        rects[k * 4 + 1] = cy;
++        rects[k * 4 + 2] = (r.width / W) * aspect;
++        rects[k * 4 + 3] = r.height / H;
++        centres[k] = (r.top + r.height / 2) / vh;
++        // Scroll position at which this act becomes current (its instrument centre at 80% of the viewport).
++        frame.markers[k - 1] = k === 1 ? 0 : clamp((r.top + r.height / 2 + scrollY - 0.8 * vh) / maxScroll, 0, 1);
++        if (k === 1) {
++          const p = frame.pointer;
++          if (p.cx > -1e3) frame.heroTarget = clamp((p.cx - r.left) / Math.max(1, r.width), 0.02, 0.98);
++        }
++      }
++      // Continuous formation time: the field flows to whichever instrument is arriving.
++      let t = 1;
++      for (let k = 2; k <= 5; k++) {
++        const arr = clamp((ARRIVE_FROM - centres[k]) / (ARRIVE_FROM - ARRIVE_TO), 0, 1);
++        if (arr <= 0) break;
++        t = k - 1 + arr;
++      }
++      frame.t = t;
++      frame.progress = clamp(scrollY / maxScroll, 0, 1);
++    }
++
++    function writeHud() {
++      const seconds = frame.progress * RUNTIME_SECONDS;
++      const tc = timecode(seconds);
++      if (hud.tc && tc !== lastTimecode) {
++        hud.tc.textContent = tc;
++        lastTimecode = tc;
++      }
++      if (hud.range && !hud.scrubbing) {
++        hud.range.value = String(seconds);
++        const act = ACTS[getState().act];
++        const vt = `${tc}, Act ${act.numeral}: ${act.name}`;
++        if (vt !== lastValueText) {
++          hud.range.setAttribute("aria-valuetext", vt);
++          lastValueText = vt;
++        }
++      }
++      if (hud.head) hud.head.style.left = `${frame.progress * 100}%`;
++      for (let k = 0; k < 5; k++) {
++        const m = frame.markers[k];
++        if (Math.abs(m - markerCache[k]) > 0.0005) {
++          markerCache[k] = m;
++          if (hud.markers[k]) hud.markers[k].style.left = `${m * 100}%`;
++          if (hud.actTimes[k]) hud.actTimes[k].textContent = timecode(m * RUNTIME_SECONDS);
++        }
++      }
++    }
++
++    function writeArrival(a, b, mix, reduced) {
++      for (let k = 1; k <= 5; k++) {
++        let v;
++        if (reduced) v = 1;
++        else if (k === b) v = smoothstep(0.55, 1, mix);
++        else if (k === a) v = 1 - smoothstep(0, 0.45, mix);
++        else v = 0;
++        if (b === a && k === a) v = 1;
++        if (Math.abs(v - arriveCache[k]) > 0.005) {
++          arriveCache[k] = v;
++          const el = sectionEls[k - 1];
++          if (el) el.style.setProperty("--arrive", v.toFixed(3));
++        }
++      }
++    }
++
++    function updateAct(t) {
++      const act = clamp(Math.round(t) - 1, 0, 4);
++      if (act !== getState().act) setState({ act });
++    }
++
++    function draw(mode) {
++      if (!field) return;
++      const S = getState();
++      const reduced = mode === "reduced";
++      const tt = reduced ? Math.round(frame.t) : frame.smoothT;
++      const a = clamp(Math.floor(tt), 1, 5);
++      const b = Math.min(5, a + 1);
++      const mix = clamp(tt - a, 0, 1);
++      const sp = springParams(S.spring);
++      const p = frame.pointer;
++      const pk = frame.pluck;
++      const g = frame.globe;
++      const wx = ((p.cx - viewport.left) / viewport.W) * 2 - 1;
++      const wy = 1 - ((p.cy - viewport.top) / viewport.H) * 2;
++      field.render({
++        time: frame.time,
++        a,
++        b,
++        mix,
++        intro: reduced ? 1 : frame.intro,
++        rects,
++        ease: S.easing,
++        spring: [sp.omega0, sp.zeta, pk.release, reduced ? 0 : pk.strength],
++        pluck: [pk.x, pk.y, pk.vx, pk.vy],
++        hold: reduced || !pk.hold ? 0 : Math.min(1, (frame.time - (pk.holdStart ?? frame.time)) / 0.35),
++        pointer: [wx * viewport.aspect, wy, reduced ? 0 : p.strength, p.radius],
++        globe: reduced ? [0.5, 0.32] : [g.rotY, g.rotX],
++        heroPlayhead: reduced ? 0.36 : frame.heroPlayhead,
++        ambient: reduced ? 0 : recipe.ambient,
++        pointScale: recipe.pointScale,
++      });
++      writeArrival(a, b, mix, reduced);
++    }
++
++    function step(dt) {
++      measure();
++      frame.smoothT += (frame.t - frame.smoothT) * (1 - Math.exp(-dt * 10));
++      if (frame.intro < 1) frame.intro = Math.min(1, frame.intro + dt / INTRO_SECONDS);
++      const p = frame.pointer;
++      p.strength += (p.target - p.strength) * (1 - Math.exp(-dt * 12));
++      p.target *= Math.exp(-dt * 2.5);
++      frame.heroPlayhead += (frame.heroTarget - frame.heroPlayhead) * (1 - Math.exp(-dt * 8));
++      const g = frame.globe;
++      if (!g.dragging) {
++        g.rotY += (0.12 + g.vel) * dt;
++        g.vel *= Math.exp(-dt * 1.8);
++      }
++      const pk = frame.pluck;
++      // Springs act: while the visitor is here and not pulling the field themselves, pluck it
++      // on arrival and about every 3.5 s, so the current stiffness and damping stay visible.
++      if (getState().act === 2) {
++        if (!pk.hold && frame.time > pk.nextAuto) {
++          pk.nextAuto = frame.time + 3.0;
++          const r1 = pseudo(), r2 = pseudo(), r3 = pseudo();
++          Object.assign(pk, {
++            x: (r1 - 0.5) * 1.2, y: (r2 - 0.5) * 1.0,
++            vx: 0.4 + 0.3 * r3, vy: (r2 - 0.5) * 0.5,
++            hold: 1, holdStart: frame.time, holdUntil: frame.time + 0.4, strength: 1,
++          });
++        }
++      } else {
++        pk.nextAuto = 0;
++      }
++      if (pk.hold && pk.holdUntil !== undefined && frame.time > pk.holdUntil) {
++        pk.hold = 0;
++        pk.holdUntil = undefined;
++        pk.release = frame.time;
++        pk.strength = 1;
++      }
++      updateAct(frame.smoothT);
++    }
++
++    function govern(dtMs) {
++      stats.ema = stats.ema * 0.9 + dtMs * 0.1;
++      if (field && !stats.governed && stats.frames > 150 && stats.ema > 24 && field.count > 20000) {
++        stats.governed = true;
++        tier = "low";
++        recipe = { ...RECIPES.low, count: Math.floor(field.count / 2) };
++        field.setCount(recipe.count);
++        resize();
++        setState({ tier, particleCount: recipe.count });
++        root.dataset.tier = "low";
++        root.dataset.governed = "true";
++      }
++    }
++
++    function tick(now) {
++      if (!running) return;
++      rafId = requestAnimationFrame(tick);
++      const dtMs = last ? Math.min(50, now - last) : 16;
++      last = now;
++      const dt = dtMs / 1000;
++      frame.time += dt;
++      step(dt);
++      draw("full");
++      writeHud();
++      stats.frames++;
++      if (frame.intro >= 1) govern(dtMs);
++    }
++
++    // No loop running (reduced mode, no renderer, or the stage scrolled offscreen): one
++    // measurement per discrete change keeps the HUD honest, and reduced mode re-plates the field.
++    function renderStatic() {
++      if (pendingStatic) return;
++      pendingStatic = requestAnimationFrame(() => {
++        pendingStatic = 0;
++        measure();
++        const reduced = getState().motion === "reduced";
++        frame.smoothT = reduced ? Math.round(frame.t) : frame.t;
++        updateAct(frame.t);
++        if (field && reduced) {
++          draw("reduced");
++          stats.frames++;
++        }
++        writeHud();
++      });
++    }
++
++    function updateRunning() {
++      const S = getState();
++      const should = visible && intersecting && S.motion === "full" && !!field && !field.lost;
++      if (should && !running) {
++        running = true;
++        last = 0;
++        rafId = requestAnimationFrame(tick);
++        canvas.dataset.render = "running";
++      } else if (!should && running) {
++        running = false;
++        cancelAnimationFrame(rafId);
++        canvas.dataset.render = S.motion === "reduced" ? "static" : "paused";
++      } else if (!should) {
++        canvas.dataset.render = S.motion === "reduced" ? "static" : "paused";
++      }
++      if (!field) canvas.dataset.render = "none";
++      if ((S.motion === "reduced" || !field) && visible) renderStatic();
++    }
++
++    // Offscreen means no visible pixels: an edge-adjacent box (the sticky stage parked exactly
++    // above the viewport once the end slate takes over) must count as offscreen, so both the
++    // observer and the scroll handler test the canvas rect for a non-empty intersection.
++    const canvasOnScreen = () => {
++      const r = canvas.getBoundingClientRect();
++      // A sub-pixel sliver left over from fractional layout does not count as on screen.
++      return r.bottom > 1 && r.top < window.innerHeight - 1 && r.right > 1 && r.left < window.innerWidth - 1;
++    };
++    const io = new IntersectionObserver(
++      () => {
++        intersecting = canvasOnScreen();
++        updateRunning();
++      },
++      { threshold: 0, rootMargin: "-1px" },
++    );
++    io.observe(canvas);
++
++    const onVisibility = () => {
++      visible = document.visibilityState === "visible";
++      updateRunning();
++    };
++    document.addEventListener("visibilitychange", onVisibility);
++
++    const onPointerMove = (e) => {
++      const p = frame.pointer;
++      const now = performance.now();
++      if (p.lastT) {
++        const dtp = Math.max(1, now - p.lastT);
++        const speed = Math.hypot(e.clientX - p.lastX, e.clientY - p.lastY) / dtp; // px per ms
++        p.target = Math.max(p.target, Math.min(1, speed * 1.1));
++      }
++      p.lastX = e.clientX;
++      p.lastY = e.clientY;
++      p.lastT = now;
++      p.cx = e.clientX;
++      p.cy = e.clientY;
++    };
++    const onPointerLeave = () => {
++      frame.pointer.target = 0;
++      frame.pointer.cx = -1e4;
++      frame.pointer.cy = -1e4;
++    };
++    window.addEventListener("pointermove", onPointerMove, { passive: true });
++    document.addEventListener("pointerleave", onPointerLeave);
++
++    const onScroll = () => {
++      const on = canvasOnScreen();
++      if (on !== intersecting) {
++        intersecting = on;
++        updateRunning();
++      }
++      if (!running) renderStatic();
++    };
++    window.addEventListener("scroll", onScroll, { passive: true });
++
++    const ro = new ResizeObserver(() => {
++      resize();
++      if (!running) renderStatic();
++    });
++    ro.observe(canvas);
++    resize();
++
++    let prevMotion = getState().motion;
++    const unsubscribe = subscribeStore(() => {
++      const S = getState();
++      if (S.motion !== prevMotion) {
++        prevMotion = S.motion;
++        root.dataset.motion = S.motion;
++        if (S.motion === "full" && S.act > 0) frame.intro = 1;
++        updateRunning();
++      } else if (S.motion === "reduced") {
++        renderStatic(); // an edit to the curve or the spring re-plates the field
++      }
++    });
++
++    updateRunning();
++    canvas.dataset.ready = "true";
++
++    window.__meridian = {
++      get frames() { return stats.frames; },
++      get running() { return running; },
++      get frameMs() { return stats.ema; },
++      get count() { return field ? field.count : 0; },
++      get dpr() { return field ? field.dpr : 0; },
++      get time() { return frame.time; },
++      get pluck() { return { ...frame.pluck }; },
++      get tier() { return tier; },
++      get motion() { return getState().motion; },
++      get t() { return frame.smoothT; },
++      get intersecting() { return intersecting; },
++      get visible() { return visible; },
++      get governed() { return stats.governed; },
++    };
++
++    return () => {
++      running = false;
++      cancelAnimationFrame(rafId);
++      cancelAnimationFrame(pendingStatic);
++      io.disconnect();
++      ro.disconnect();
++      unsubscribe();
++      document.removeEventListener("visibilitychange", onVisibility);
++      window.removeEventListener("pointermove", onPointerMove);
++      document.removeEventListener("pointerleave", onPointerLeave);
++      window.removeEventListener("scroll", onScroll);
++      if (field) field.dispose();
++      delete window.__meridian;
++    };
++  }, []);
++
++  return <canvas ref={canvasRef} className="stage__canvas" aria-hidden="true" />;
++}
+diff --git a/components/composition/acts/Export.jsx b/components/composition/acts/Export.jsx
+new file mode 100644
+index 0000000..7e1dabc
+--- /dev/null
++++ b/components/composition/acts/Export.jsx
+@@ -0,0 +1,95 @@
++"use client";
++
++import { useState } from "react";
++import ActMarker from "../ActMarker";
++import { useStore } from "../store";
++import { formatBezier, springParams } from "../lib/easing";
++
++export default function Export() {
++  const easing = useStore((s) => s.easing);
++  const spring = useStore((s) => s.spring);
++  const [copied, setCopied] = useState(false);
++  const params = springParams(spring);
++  const bezier = formatBezier(easing);
++  const settle = params.settle.toFixed(2);
++
++  const plain = [
++    ".card {",
++    `  transition: transform 720ms ${bezier};`,
++    "}",
++    "",
++    "@media (prefers-reduced-motion: reduce) {",
++    "  .card { transition-duration: 0ms; }",
++    "}",
++    "",
++    'import { spring } from "@meridian/motion";',
++    "",
++    "export const settle = spring({",
++    `  stiffness: ${spring.stiffness},`,
++    `  damping: ${spring.damping},`,
++    "  mass: 1,",
++    `}); // settles in ${settle}s`,
++  ].join("\n");
++
++  const copy = async () => {
++    try {
++      await navigator.clipboard.writeText(plain);
++      setCopied(true);
++      window.setTimeout(() => setCopied(false), 1800);
++    } catch {
++      setCopied(false);
++    }
++  };
++
++  return (
++    <section id="act-4" className="act act--export" aria-labelledby="h-act-4">
++      <div className="act__text">
++        <ActMarker index={3} />
++        <h2 id="h-act-4" className="display">Ship it as code, not a video.</h2>
++        <p>
++          What you designed above, exported the way it ships: plain CSS and JavaScript with your
++          curve and your spring, and no runtime to install. The reduced-motion variant is written
++          for you.
++        </p>
++        <p className="muted">Every highlighted value updates as you edit Acts II and III.</p>
++      </div>
++      <div className="instrument instrument--code" data-anchor="4">
++        <div className="code">
++          <div className="code__bar">
++            <span className="code__file">motion.css</span>
++            <button type="button" className="chip chip--small" onClick={copy}>
++              {copied ? "Copied" : "Copy code"}
++            </button>
++          </div>
++          <pre className="code__pre" tabIndex={0}>
++            <code>
++              <span className="tok-sel">.card</span> {"{"}{"\n"}
++              {"  "}<span className="tok-prop">transition</span>: <span className="tok-val">transform 720ms</span>{" "}
++              <span className="tok-live">{bezier}</span>;{"\n"}
++              {"}"}{"\n\n"}
++              <span className="tok-at">@media</span> <span className="tok-val">(prefers-reduced-motion: reduce)</span> {"{"}{"\n"}
++              {"  "}<span className="tok-sel">.card</span> {"{"} <span className="tok-prop">transition-duration</span>:{" "}
++              <span className="tok-val">0ms</span>; {"}"}{"\n"}
++              {"}"}
++            </code>
++          </pre>
++          <div className="code__bar">
++            <span className="code__file">motion.js</span>
++          </div>
++          <pre className="code__pre" tabIndex={0}>
++            <code>
++              <span className="tok-at">import</span> {"{ "}<span className="tok-val">spring</span>{" }"}{" "}
++              <span className="tok-at">from</span> <span className="tok-str">"@meridian/motion"</span>;{"\n\n"}
++              <span className="tok-at">export const</span> <span className="tok-val">settle</span> = <span className="tok-fn">spring</span>({"{"}{"\n"}
++              {"  "}<span className="tok-prop">stiffness</span>: <span className="tok-live">{spring.stiffness}</span>,{"\n"}
++              {"  "}<span className="tok-prop">damping</span>: <span className="tok-live">{spring.damping}</span>,{"\n"}
++              {"  "}<span className="tok-prop">mass</span>: <span className="tok-val">1</span>,{"\n"}
++              {"}"}); <span className="tok-cm">{`// settles in ${settle}s`}</span>
++            </code>
++          </pre>
++        </div>
++        <span className="sr-only" aria-live="polite">{copied ? "Code copied to clipboard." : ""}</span>
++      </div>
++    </section>
++  );
++}
+diff --git a/components/composition/acts/Keyframes.jsx b/components/composition/acts/Keyframes.jsx
+new file mode 100644
+index 0000000..d991dd0
+--- /dev/null
++++ b/components/composition/acts/Keyframes.jsx
+@@ -0,0 +1,41 @@
++"use client";
++
++import ActMarker from "../ActMarker";
++import EasingEditor from "../EasingEditor";
++import { useStore, setState } from "../store";
++import { EASING_PRESETS, formatBezier } from "../lib/easing";
++
++const same = (a, b) => a.every((v, i) => Math.abs(v - b[i]) < 1e-6);
++
++export default function Keyframes() {
++  const easing = useStore((s) => s.easing);
++  return (
++    <section id="act-2" className="act act--hold" aria-labelledby="h-act-2">
++      <div className="act__text">
++        <ActMarker index={1} />
++        <h2 id="h-act-2" className="display">Keyframes you can feel.</h2>
++        <p>
++          Drag the handles. Every particle on this page re-times itself to your curve, and so does
++          the code you export in Act IV.
++        </p>
++        <div className="chips" role="group" aria-label="Easing presets">
++          {EASING_PRESETS.map((p) => (
++            <button
++              key={p.name}
++              type="button"
++              className="chip"
++              aria-pressed={same(p.value, easing)}
++              onClick={() => setState({ easing: p.value })}
++            >
++              {p.name}
++            </button>
++          ))}
++        </div>
++        <p className="readout">
++          <code>{formatBezier(easing)}</code>
++        </p>
++      </div>
++      <EasingEditor />
++    </section>
++  );
++}
+diff --git a/components/composition/acts/Overture.jsx b/components/composition/acts/Overture.jsx
+new file mode 100644
+index 0000000..71a3f77
+--- /dev/null
++++ b/components/composition/acts/Overture.jsx
+@@ -0,0 +1,37 @@
++"use client";
++
++import ActMarker from "../ActMarker";
++
++export default function Overture() {
++  return (
++    <section id="act-1" className="act act--overture" aria-labelledby="h-act-1">
++      <div className="act__text act__text--wide">
++        <ActMarker index={0} />
++        <h1 id="h-act-1" className="display display--xl">
++          Design animation visually. Ship production code.
++        </h1>
++        <p className="lede">
++          Meridian is a timeline editor for motion on the web. This page is a Meridian composition:
++          scroll to move the playhead, or drag it in the timeline below.
++        </p>
++        <p className="hint">Move your cursor along the ruler.</p>
++      </div>
++      <div className="instrument instrument--ruler" data-anchor="1" aria-hidden="true">
++        <svg className="fallback fallback--ruler" viewBox="0 0 1000 100" preserveAspectRatio="none" focusable="false">
++          <defs>
++            <pattern id="ticks" width="20" height="100" patternUnits="userSpaceOnUse">
++              <line x1="0" y1="50" x2="0" y2="62" />
++            </pattern>
++            <pattern id="ticks-major" width="120" height="100" patternUnits="userSpaceOnUse">
++              <line x1="0" y1="50" x2="0" y2="78" />
++            </pattern>
++          </defs>
++          <line x1="0" y1="50" x2="1000" y2="50" />
++          <rect width="1000" height="100" fill="url(#ticks)" />
++          <rect width="1000" height="100" fill="url(#ticks-major)" />
++          <line className="fallback__head" x1="360" y1="20" x2="360" y2="90" />
++        </svg>
++      </div>
++    </section>
++  );
++}
+diff --git a/components/composition/acts/Release.jsx b/components/composition/acts/Release.jsx
+new file mode 100644
+index 0000000..9fb83a9
+--- /dev/null
++++ b/components/composition/acts/Release.jsx
+@@ -0,0 +1,74 @@
++"use client";
++
++import { useRef } from "react";
++import ActMarker from "../ActMarker";
++import { frame, getState } from "../store";
++
++export default function Release() {
++  const panelRef = useRef(null);
++
++  // Turn the mark under the pointer; it keeps spinning with inertia after release.
++  const onPointerDown = (e) => {
++    if (getState().motion !== "full" || e.button !== 0 || e.pointerType === "touch") return;
++    const panel = panelRef.current;
++    e.preventDefault();
++    panel.setPointerCapture(e.pointerId);
++    const g = frame.globe;
++    g.dragging = true;
++    let lastX = e.clientX;
++    let lastT = performance.now();
++    const move = (ev) => {
++      const now = performance.now();
++      const dx = ev.clientX - lastX;
++      const dt = Math.max(1, now - lastT);
++      g.rotY += dx * 0.008;
++      g.vel = (dx / dt) * 6;
++      lastX = ev.clientX;
++      lastT = now;
++    };
++    const end = () => {
++      g.dragging = false;
++      panel.removeEventListener("pointermove", move);
++      panel.removeEventListener("pointerup", end);
++      panel.removeEventListener("pointercancel", end);
++    };
++    panel.addEventListener("pointermove", move);
++    panel.addEventListener("pointerup", end);
++    panel.addEventListener("pointercancel", end);
++  };
++
++  return (
++    <section id="act-5" className="act act--release" aria-labelledby="h-act-5">
++      <div className="act__text">
++        <ActMarker index={4} />
++        <h2 id="h-act-5" className="display">Meridian is in private beta.</h2>
++        <p>
++          We're onboarding small teams who ship motion in production. Tell us what you're animating
++          and which framework you ship with.
++        </p>
++        <p className="cta-row">
++          <a id="access" className="cta" href="mailto:hello@meridian.tools?subject=Early%20access%20to%20Meridian">
++            Request early access
++          </a>
++          <span className="muted">hello@meridian.tools</span>
++        </p>
++      </div>
++      <div
++        className="instrument instrument--globe"
++        data-anchor="5"
++        ref={panelRef}
++        onPointerDown={onPointerDown}
++        aria-hidden="true"
++      >
++        <svg className="fallback fallback--globe" viewBox="0 0 100 100" focusable="false">
++          <circle cx="50" cy="50" r="42" />
++          <ellipse cx="50" cy="50" rx="14" ry="42" />
++          <ellipse cx="50" cy="50" rx="30" ry="42" />
++          <ellipse cx="50" cy="50" rx="42" ry="14" />
++          <ellipse cx="50" cy="50" rx="42" ry="30" />
++          <ellipse className="fallback__prime" cx="50" cy="50" rx="4" ry="42" />
++        </svg>
++      </div>
++    </section>
++  );
++}
+diff --git a/components/composition/acts/Springs.jsx b/components/composition/acts/Springs.jsx
+new file mode 100644
+index 0000000..0a9ea81
+--- /dev/null
++++ b/components/composition/acts/Springs.jsx
+@@ -0,0 +1,122 @@
++"use client";
++
++import { useRef } from "react";
++import ActMarker from "../ActMarker";
++import SpringPlot from "../SpringPlot";
++import { useStore, setState, getState, frame } from "../store";
++import { springParams, SPRING_LIMITS } from "../lib/easing";
++
++export default function Springs() {
++  const spring = useStore((s) => s.spring);
++  const motion = useStore((s) => s.motion);
++  const renderer = useStore((s) => s.renderer);
++  const params = springParams(spring);
++  const panelRef = useRef(null);
++  const canPluck = motion === "full" && renderer === "webgl2";
++
++  const update = (key) => (e) => setState({ spring: { ...getState().spring, [key]: Number(e.target.value) } });
++
++  const pluckAt = (x, y, vx, vy) => {
++    Object.assign(frame.pluck, { x, y, vx, vy, hold: 0, holdUntil: undefined, release: frame.time, strength: 1, nextAuto: frame.time + 4 });
++  };
++
++  // Pull the lattice with the pointer, let go, and the spring carries it back.
++  const onPointerDown = (e) => {
++    if (getState().motion !== "full" || e.button !== 0) return;
++    const panel = panelRef.current;
++    const r = panel.getBoundingClientRect();
++    e.preventDefault();
++    panel.setPointerCapture(e.pointerId);
++    const lx = ((e.clientX - r.left) / r.width) * 2 - 1;
++    const ly = 1 - ((e.clientY - r.top) / r.height) * 2;
++    Object.assign(frame.pluck, { x: lx, y: ly, vx: 0, vy: 0, hold: 1, holdStart: frame.time, holdUntil: undefined, strength: 1, nextAuto: frame.time + 8 });
++    const startX = e.clientX;
++    const startY = e.clientY;
++    const move = (ev) => {
++      let dx = ((ev.clientX - startX) / r.width) * 2;
++      let dy = -((ev.clientY - startY) / r.height) * 2;
++      const len = Math.hypot(dx, dy);
++      if (len > 0.6) { dx *= 0.6 / len; dy *= 0.6 / len; }
++      frame.pluck.vx = dx;
++      frame.pluck.vy = dy;
++    };
++    const cleanup = () => {
++      panel.removeEventListener("pointermove", move);
++      panel.removeEventListener("pointerup", up);
++      panel.removeEventListener("pointercancel", cancel);
++    };
++    const up = () => {
++      const pk = frame.pluck;
++      if (Math.hypot(pk.vx, pk.vy) < 0.04) { pk.vx = 0.5; pk.vy = 0.15; } // a tap plucks too
++      pk.hold = 0;
++      pk.release = frame.time;
++      pk.strength = 1;
++      pk.nextAuto = frame.time + 4;
++      cleanup();
++    };
++    const cancel = () => {
++      frame.pluck.hold = 0;
++      frame.pluck.strength = 0;
++      cleanup();
++    };
++    panel.addEventListener("pointermove", move);
++    panel.addEventListener("pointerup", up);
++    panel.addEventListener("pointercancel", cancel);
++  };
++
++  return (
++    <section id="act-3" className="act act--hold" aria-labelledby="h-act-3">
++      <div className="act__text">
++        <ActMarker index={2} />
++        <h2 id="h-act-3" className="display">Springs, not stopwatches.</h2>
++        <p>
++          Motion that ends on a clock feels dead. Set stiffness and damping, then pull the field and
++          let it go.
++        </p>
++        <div className="controls">
++          <label className="slider">
++            <span className="slider__name">Stiffness</span>
++            <input
++              type="range"
++              min={SPRING_LIMITS.stiffness.min}
++              max={SPRING_LIMITS.stiffness.max}
++              step={SPRING_LIMITS.stiffness.step}
++              value={spring.stiffness}
++              onChange={update("stiffness")}
++            />
++            <output className="slider__value">{spring.stiffness}</output>
++          </label>
++          <label className="slider">
++            <span className="slider__name">Damping</span>
++            <input
++              type="range"
++              min={SPRING_LIMITS.damping.min}
++              max={SPRING_LIMITS.damping.max}
++              step={SPRING_LIMITS.damping.step}
++              value={spring.damping}
++              onChange={update("damping")}
++            />
++            <output className="slider__value">{spring.damping}</output>
++          </label>
++          {canPluck && (
++            <button type="button" className="chip chip--action" onClick={() => pluckAt(0, 0, 0.55, 0.16)}>
++              Pluck the field
++            </button>
++          )}
++        </div>
++        <p className="readout">
++          Settles in {params.settle.toFixed(2)} s
++          {params.overshoot > 0.005 ? `, overshoots by ${Math.round(params.overshoot * 100)}%` : ", no overshoot"}
++        </p>
++        <SpringPlot params={params} />
++      </div>
++      <div
++        className="instrument instrument--lattice"
++        data-anchor="3"
++        ref={panelRef}
++        onPointerDown={onPointerDown}
++        aria-hidden="true"
++      />
++    </section>
++  );
++}
+diff --git a/components/composition/engine/field.js b/components/composition/engine/field.js
+new file mode 100644
+index 0000000..5f161e7
+--- /dev/null
++++ b/components/composition/engine/field.js
+@@ -0,0 +1,149 @@
++import { createProgram, uniformLocations, perspective, translation, multiply } from "./gl";
++import { VERT, FRAG } from "./shaders";
++
++const FOV = (50 * Math.PI) / 180;
++// Camera distance such that the z=0 plane spans y in [-1, 1].
++export const CAM_DIST = 1 / Math.tan(FOV / 2);
++
++const UNIFORMS = [
++  "uVP", "uTime", "uDpr", "uPointScale", "uAlpha", "uCamDist", "uA", "uB", "uMix", "uIntro",
++  "uRect[0]", "uEase", "uSpring", "uPluck", "uHold", "uPointer", "uGlobe", "uHeroPlayhead",
++  "uGrid", "uAmbient", "uIce", "uAmber",
++];
++
++export const ICE = [0.62, 0.85, 1.0];
++export const AMBER = [1.0, 0.7, 0.36];
++
++// Deterministic seeds so every visitor sees the same field.
++function mulberry32(seed) {
++  let s = seed >>> 0;
++  return () => {
++    s = (s + 0x6d2b79f5) >>> 0;
++    let t = s;
++    t = Math.imul(t ^ (t >>> 15), t | 1);
++    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
++    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
++  };
++}
++
++export class Field {
++  constructor(canvas) {
++    this.canvas = canvas;
++    const gl = canvas.getContext("webgl2", {
++      alpha: true,
++      antialias: false,
++      depth: false,
++      stencil: false,
++      premultipliedAlpha: true,
++      preserveDrawingBuffer: false,
++      powerPreference: "high-performance",
++    });
++    if (!gl) throw new Error("WebGL2 unavailable");
++    this.gl = gl;
++    this.program = createProgram(gl, VERT, FRAG);
++    this.u = uniformLocations(gl, this.program, UNIFORMS);
++    this.vao = gl.createVertexArray();
++    this.buffer = gl.createBuffer();
++    this.count = 0;
++    this.grid = [8, 8];
++    this.alpha = 0.3;
++    this.width = 1;
++    this.height = 1;
++    this.dpr = 1;
++    this.aspect = 1;
++    this.vp = new Float32Array(16);
++    this.lost = false;
++    this.onLost = (e) => {
++      e.preventDefault();
++      this.lost = true;
++    };
++    canvas.addEventListener("webglcontextlost", this.onLost);
++    gl.disable(gl.DEPTH_TEST);
++    gl.enable(gl.BLEND);
++    gl.blendFunc(gl.ONE, gl.ONE);
++    gl.clearColor(0, 0, 0, 0);
++    gl.useProgram(this.program);
++    gl.uniform3fv(this.u.uIce, ICE);
++    gl.uniform3fv(this.u.uAmber, AMBER);
++    gl.uniform1f(this.u.uCamDist, CAM_DIST);
++  }
++
++  setCount(n) {
++    const gl = this.gl;
++    const seeds = new Float32Array(n * 4);
++    const rnd = mulberry32(0x9e3779b9);
++    for (let i = 0; i < seeds.length; i++) seeds[i] = rnd();
++    gl.bindVertexArray(this.vao);
++    gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
++    gl.bufferData(gl.ARRAY_BUFFER, seeds, gl.STATIC_DRAW);
++    const loc = gl.getAttribLocation(this.program, "aSeed");
++    gl.enableVertexAttribArray(loc);
++    gl.vertexAttribPointer(loc, 4, gl.FLOAT, false, 0, 0);
++    gl.bindVertexArray(null);
++    this.count = n;
++    // Lattice: about twenty particles per node so nodes read as glowing points; node grid ~5:4.
++    const nodes = Math.max(64, Math.floor(n / 20));
++    const cols = Math.max(2, Math.round(Math.sqrt(nodes * 1.25)));
++    const rows = Math.max(2, Math.round(nodes / cols));
++    this.grid = [cols, rows];
++    // Per-particle alpha falls with density so brightness stays constant across tiers.
++    this.alpha = Math.min(0.9, 0.36 * Math.sqrt(24000 / n));
++  }
++
++  resize(width, height, dpr) {
++    const w = Math.max(1, Math.round(width * dpr));
++    const h = Math.max(1, Math.round(height * dpr));
++    if (this.canvas.width !== w || this.canvas.height !== h) {
++      this.canvas.width = w;
++      this.canvas.height = h;
++    }
++    this.width = width;
++    this.height = height;
++    this.dpr = dpr;
++    this.aspect = width / height;
++    this.gl.viewport(0, 0, w, h);
++    const P = perspective(FOV, this.aspect, 0.1, 20);
++    const V = translation(0, 0, -CAM_DIST);
++    this.vp.set(multiply(P, V));
++  }
++
++  render(f) {
++    if (this.lost) return;
++    const gl = this.gl;
++    const u = this.u;
++    gl.useProgram(this.program);
++    gl.uniformMatrix4fv(u.uVP, false, this.vp);
++    gl.uniform1f(u.uTime, f.time);
++    gl.uniform1f(u.uDpr, this.dpr);
++    gl.uniform1f(u.uPointScale, f.pointScale);
++    gl.uniform1f(u.uAlpha, this.alpha);
++    gl.uniform1i(u.uA, f.a);
++    gl.uniform1i(u.uB, f.b);
++    gl.uniform1f(u.uMix, f.mix);
++    gl.uniform1f(u.uIntro, f.intro);
++    gl.uniform4fv(u["uRect[0]"], f.rects);
++    gl.uniform4fv(u.uEase, f.ease);
++    gl.uniform4fv(u.uSpring, f.spring);
++    gl.uniform4fv(u.uPluck, f.pluck);
++    gl.uniform1f(u.uHold, f.hold);
++    gl.uniform4fv(u.uPointer, f.pointer);
++    gl.uniform2fv(u.uGlobe, f.globe);
++    gl.uniform1f(u.uHeroPlayhead, f.heroPlayhead);
++    gl.uniform2fv(u.uGrid, this.grid);
++    gl.uniform1f(u.uAmbient, f.ambient);
++    gl.clear(gl.COLOR_BUFFER_BIT);
++    gl.bindVertexArray(this.vao);
++    gl.drawArrays(gl.POINTS, 0, this.count);
++    gl.bindVertexArray(null);
++  }
++
++  dispose() {
++    const gl = this.gl;
++    this.canvas.removeEventListener("webglcontextlost", this.onLost);
++    gl.deleteBuffer(this.buffer);
++    gl.deleteVertexArray(this.vao);
++    gl.deleteProgram(this.program);
++    const ext = gl.getExtension("WEBGL_lose_context");
++    if (ext) ext.loseContext();
++  }
++}
+diff --git a/components/composition/engine/gl.js b/components/composition/engine/gl.js
+new file mode 100644
+index 0000000..63478c1
+--- /dev/null
++++ b/components/composition/engine/gl.js
+@@ -0,0 +1,61 @@
++export function createProgram(gl, vsSrc, fsSrc) {
++  const vs = compile(gl, gl.VERTEX_SHADER, vsSrc);
++  const fs = compile(gl, gl.FRAGMENT_SHADER, fsSrc);
++  const program = gl.createProgram();
++  gl.attachShader(program, vs);
++  gl.attachShader(program, fs);
++  gl.linkProgram(program);
++  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
++    const info = gl.getProgramInfoLog(program);
++    gl.deleteProgram(program);
++    throw new Error(`Program link failed: ${info}`);
++  }
++  gl.deleteShader(vs);
++  gl.deleteShader(fs);
++  return program;
++}
++
++function compile(gl, type, src) {
++  const shader = gl.createShader(type);
++  gl.shaderSource(shader, src);
++  gl.compileShader(shader);
++  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
++    const info = gl.getShaderInfoLog(shader);
++    gl.deleteShader(shader);
++    throw new Error(`Shader compile failed: ${info}`);
++  }
++  return shader;
++}
++
++export function uniformLocations(gl, program, names) {
++  const out = {};
++  for (const n of names) out[n] = gl.getUniformLocation(program, n);
++  return out;
++}
++
++// Column-major 4x4 helpers (only what the field needs).
++export function perspective(fovy, aspect, near, far) {
++  const f = 1 / Math.tan(fovy / 2);
++  const nf = 1 / (near - far);
++  return new Float32Array([
++    f / aspect, 0, 0, 0,
++    0, f, 0, 0,
++    0, 0, (far + near) * nf, -1,
++    0, 0, 2 * far * near * nf, 0,
++  ]);
++}
++
++export function translation(x, y, z) {
++  return new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1]);
++}
++
++export function multiply(a, b) {
++  const out = new Float32Array(16);
++  for (let c = 0; c < 4; c++) {
++    for (let r = 0; r < 4; r++) {
++      out[c * 4 + r] =
++        a[r] * b[c * 4] + a[4 + r] * b[c * 4 + 1] + a[8 + r] * b[c * 4 + 2] + a[12 + r] * b[c * 4 + 3];
++    }
++  }
++  return out;
++}
+diff --git a/components/composition/engine/shaders.js b/components/composition/engine/shaders.js
+new file mode 100644
+index 0000000..8e80ffd
+--- /dev/null
++++ b/components/composition/engine/shaders.js
+@@ -0,0 +1,306 @@
++// One vertex shader computes every formation procedurally from a 4-float seed
++// (plus gl_VertexID for the lattice), then blends between the two formations
++// that scroll is currently between. Formation k is expressed in a local
++// [-1, 1] square and mapped into the world rect of the DOM element it belongs
++// to, so the field literally forms *on* the instrument in the document.
++
++export const VERT = /* glsl */ `#version 300 es
++precision highp float;
++precision highp int;
++
++in vec4 aSeed;
++
++uniform mat4 uVP;
++uniform float uTime;
++uniform float uDpr;
++uniform float uPointScale;
++uniform float uAlpha;
++uniform float uCamDist;
++uniform int uA;
++uniform int uB;
++uniform float uMix;
++uniform float uIntro;
++uniform vec4 uRect[6];      // cx, cy, halfW, halfH in world units
++uniform vec4 uEase;         // cubic-bezier x1 y1 x2 y2
++uniform vec4 uSpring;       // omega0, zeta, releaseTime, strength
++uniform vec4 uPluck;        // px, py (local), vx, vy (local displacement)
++uniform float uHold;
++uniform vec4 uPointer;      // wx, wy, strength, radius
++uniform vec2 uGlobe;        // rotY, rotX
++uniform float uHeroPlayhead;
++uniform vec2 uGrid;         // lattice cols, rows
++uniform float uAmbient;
++uniform vec3 uIce;
++uniform vec3 uAmber;
++
++out vec3 vColor;
++out float vAlpha;
++
++const float PI = 3.14159265;
++const float TAU = 6.2831853;
++
++float hash1(float n) { return fract(sin(n * 127.1 + 0.37) * 43758.5453); }
++
++vec2 bez(vec2 p0, vec2 p1, vec2 p2, vec2 p3, float t) {
++  float u = 1.0 - t;
++  return u * u * u * p0 + 3.0 * u * u * t * p1 + 3.0 * u * t * t * p2 + t * t * t * p3;
++}
++vec2 bezD(vec2 p0, vec2 p1, vec2 p2, vec2 p3, float t) {
++  float u = 1.0 - t;
++  return 3.0 * u * u * (p1 - p0) + 6.0 * u * t * (p2 - p1) + 3.0 * t * t * (p3 - p2);
++}
++
++// CSS cubic-bezier(x1,y1,x2,y2) evaluated as y(x). Same solve as lib/easing.js.
++float easeBez(float x, vec4 e) {
++  x = clamp(x, 0.0, 1.0);
++  float cx = 3.0 * e.x, bx = 3.0 * (e.z - e.x) - cx, ax = 1.0 - cx - bx;
++  float cy = 3.0 * e.y, by = 3.0 * (e.w - e.y) - cy, ay = 1.0 - cy - by;
++  float t = x;
++  for (int i = 0; i < 6; i++) {
++    float xt = ((ax * t + bx) * t + cx) * t - x;
++    float dx = (3.0 * ax * t + 2.0 * bx) * t + cx;
++    if (abs(dx) < 1e-4) break;
++    t = clamp(t - xt / dx, 0.0, 1.0);
++  }
++  return ((ay * t + by) * t + cy) * t;
++}
++
++vec3 toWorld(vec3 l, vec4 r) {
++  return vec3(r.xy + l.xy * r.zw, l.z * min(r.z, r.w));
++}
++
++// 0 — unauthored motion: a drifting cloud filling the viewport.
++vec3 fChaos(vec4 s, float t) {
++  vec3 p = s.xyz * 2.0 - 1.0;
++  p.x += 0.12 * sin(t * 0.23 + s.w * TAU);
++  p.y += 0.12 * cos(t * 0.19 + s.z * TAU);
++  p.z *= 0.9;
++  return p;
++}
++
++// 1 — the timeline ruler: baseline, ticks, a playhead that follows the pointer, a haze above.
++vec3 fRuler(vec4 s, float t, float ph, out float size, out float a, out float heat) {
++  float role = s.y;
++  vec3 p = vec3(s.x * 2.0 - 1.0, 0.0, 0.0);
++  size = 1.0; a = 1.0; heat = 0.0;
++  if (role < 0.48) {
++    p.y = (s.z - 0.5) * 0.05;
++  } else if (role < 0.80) {
++    float n = 72.0;
++    float i = floor(s.x * n);
++    p.x = (i + 0.5) / n * 2.0 - 1.0 + (s.w - 0.5) * 0.004;
++    float major = 1.0 - step(0.5, mod(i, 6.0));
++    p.y = s.z * mix(0.28, 0.72, major);
++    size = mix(0.9, 1.15, major);
++  } else if (role < 0.86) {
++    p.x = ph * 2.0 - 1.0 + (s.z - 0.5) * 0.012;
++    p.y = mix(-0.45, 1.25, s.x);
++    heat = 1.0; size = 1.35;
++  } else {
++    p.y = 0.55 + s.z * 1.1 + 0.06 * sin(t * 0.7 + s.w * TAU);
++    p.x += 0.04 * sin(t * 0.4 + s.z * TAU);
++    p.z = (s.w - 0.5) * 0.5;
++    size = 1.8; a = 0.4;
++  }
++  return p;
++}
++
++// 2 — the visitor's easing curve, its grid, its handles, and a soft trace around it.
++vec3 fCurve(vec4 s, vec4 e, out float size, out float a, out float heat) {
++  float role = s.y;
++  size = 1.0; a = 1.0; heat = 0.0;
++  vec2 p0 = vec2(-1.0), p3 = vec2(1.0);
++  vec2 p1 = -1.0 + 2.0 * e.xy;
++  vec2 p2 = -1.0 + 2.0 * e.zw;
++  if (role < 0.62 || role >= 0.80) {
++    bool trace = role >= 0.80;
++    float tt = s.x;
++    vec2 b = bez(p0, p1, p2, p3, tt);
++    vec2 d = normalize(bezD(p0, p1, p2, p3, tt) + vec2(1e-4, 0.0));
++    vec2 nrm = vec2(-d.y, d.x);
++    float w = (s.z - 0.5) * (trace ? 0.5 : 0.09) * (0.4 + s.w * s.w);
++    heat = trace ? 0.0 : 0.35 * s.w;
++    a = trace ? 0.16 : 1.0;
++    size = trace ? 1.5 : 1.0;
++    return vec3(b + nrm * w, (s.w - 0.5) * (trace ? 0.3 : 0.06));
++  } else if (role < 0.74) {
++    float gx = (floor(s.x * 12.0) + 0.5) / 12.0 * 2.0 - 1.0;
++    float gy = (floor(s.z * 12.0) + 0.5) / 12.0 * 2.0 - 1.0;
++    a = 0.35; size = 0.8;
++    return vec3(gx + (s.w - 0.5) * 0.012, gy + (hash1(s.w * 91.0) - 0.5) * 0.012, 0.0);
++  } else {
++    vec2 h = role < 0.77 ? p1 : p2;
++    float ang = s.x * TAU;
++    float r = 0.06 * sqrt(s.z);
++    heat = 0.85; size = 1.2;
++    return vec3(h + r * vec2(cos(ang), sin(ang)), 0.0);
++  }
++}
++
++// Spring released from unit displacement at rest; overdamped branch included.
++float springX(float tt, float w0, float z) {
++  if (tt <= 0.0) return 1.0;
++  if (z < 0.999) {
++    float wd = w0 * sqrt(1.0 - z * z);
++    return exp(-z * w0 * tt) * (cos(wd * tt) + (z * w0 / wd) * sin(wd * tt));
++  }
++  if (z < 1.001) return exp(-w0 * tt) * (1.0 + w0 * tt);
++  float root = sqrt(z * z - 1.0);
++  float s1 = -w0 * (z - root), s2 = -w0 * (z + root);
++  float A = -s2 / (s1 - s2), B = s1 / (s1 - s2);
++  return A * exp(s1 * tt) + B * exp(s2 * tt);
++}
++
++// 3 — a lattice of spring nodes that carries the visitor's pluck outward as a wave.
++vec3 fLattice(int id, vec4 s, float t, out float size, out float a, out float heat) {
++  float cols = uGrid.x, rows = uGrid.y;
++  float total = cols * rows;
++  float k = mod(float(id), total);
++  float col = mod(k, cols), row = floor(k / cols);
++  vec2 p = vec2(col / max(cols - 1.0, 1.0), row / max(rows - 1.0, 1.0)) * 2.0 - 1.0;
++  p += (s.zw - 0.5) * 0.02;
++  vec2 d = p - uPluck.xy;
++  float dist = length(d);
++  float fall = exp(-dist * dist * 1.3);
++  float disp;
++  if (uHold > 0.0) {
++    disp = fall * uHold;
++  } else {
++    float tt = t - uSpring.z - dist * 0.10;
++    disp = tt > 0.0 ? springX(tt, uSpring.x, uSpring.y) * fall : 0.0;
++  }
++  vec2 off = uPluck.zw * disp * uSpring.w;
++  heat = clamp(abs(disp) * uSpring.w * 2.2, 0.0, 1.0);
++  size = 1.0; a = 0.45;
++  return vec3(p + off, disp * 0.6 * uSpring.w);
++}
++
++// 4 — lines of code, typed in top to bottom (stagger follows the reading order).
++vec3 fCode(vec4 s, out float size, out float a, out float heat, out float order) {
++  float rows = 20.0;
++  float r = floor(s.y * rows);
++  float hr = hash1(r + 3.7);
++  float blockPos = mod(r, 5.0);
++  float lvl = blockPos < 0.5 ? 0.0 : (blockPos > 3.5 ? 0.0 : 1.0 + step(0.55, hash1(r * 2.1)));
++  float indent = lvl * 0.11;
++  float len = blockPos < 0.5 || blockPos > 3.5 ? 0.42 + 0.2 * hr : 0.45 + 0.5 * fract(hr * 7.31);
++  float u = s.x;
++  float span = (2.0 - indent) * len;
++  float x = -1.0 + indent + u * span + (s.w - 0.5) * 0.006;
++  float y = 1.0 - (r + 0.5) / rows * 2.0 + (s.z - 0.5) * 0.035;
++  float tok = u * 7.0 + hr * 3.0;
++  float seg = floor(tok);
++  float gap = step(0.84, fract(tok));
++  float cls = mod(seg + floor(hr * 5.0), 3.0);
++  heat = cls < 0.5 ? 0.9 : (cls < 1.5 ? 0.0 : 0.4);
++  a = 0.5 * (1.0 - gap);
++  size = 1.0;
++  order = (r + u * 0.8) / rows;
++  return vec3(x, y, 0.0);
++}
++
++// 5 — the Meridian mark: a globe of meridians, the prime one warm.
++vec3 fGlobe(vec4 s, vec2 rot, out float size, out float a, out float heat) {
++  float role = s.y;
++  float lon, lat;
++  size = 1.0; a = 0.9; heat = 0.0;
++  if (role < 0.55) {
++    float m = floor(s.x * 16.0);
++    lon = (m + 0.5) / 16.0 * TAU;
++    lat = (s.z - 0.5) * PI;
++    heat = m < 0.5 ? 1.0 : 0.0;
++  } else if (role < 0.78) {
++    float m = floor(s.z * 7.0);
++    lat = (m + 0.5) / 7.0 * PI - PI * 0.5;
++    lon = s.x * TAU;
++    a = 0.55;
++  } else {
++    lon = s.x * TAU;
++    lat = asin(clamp(s.z * 2.0 - 1.0, -1.0, 1.0));
++    a = 0.28; size = 1.3;
++  }
++  vec3 p = vec3(cos(lat) * sin(lon), sin(lat), cos(lat) * cos(lon)) * 0.85;
++  float cy = cos(rot.x), sy = sin(rot.x);
++  p = vec3(p.x * cy + p.z * sy, p.y, -p.x * sy + p.z * cy);
++  float cx = cos(rot.y), sx = sin(rot.y);
++  p = vec3(p.x, p.y * cx - p.z * sx, p.y * sx + p.z * cx);
++  a *= mix(0.22, 1.0, smoothstep(-0.9, 0.6, p.z));
++  return p;
++}
++
++vec3 formation(int k, vec4 s, float t, out float size, out float a, out float heat, out float order) {
++  size = 1.0; a = 1.0; heat = 0.0; order = s.w;
++  if (k == 0) return fChaos(s, t);
++  if (k == 1) return fRuler(s, t, uHeroPlayhead, size, a, heat);
++  if (k == 2) return fCurve(s, uEase, size, a, heat);
++  if (k == 3) return fLattice(gl_VertexID, s, t, size, a, heat);
++  if (k == 4) return fCode(s, size, a, heat, order);
++  return fGlobe(s, uGlobe, size, a, heat);
++}
++
++void main() {
++  vec4 s = aSeed;
++  float t = uTime;
++  float sa, aa, ha, oa, sb, ab, hb, ob;
++  vec3 la = formation(uA, s, t, sa, aa, ha, oa);
++  vec3 lb = formation(uB, s, t, sb, ab, hb, ob);
++  vec3 wa = toWorld(la, uRect[uA]);
++  vec3 wb = toWorld(lb, uRect[uB]);
++
++  // Staggered keyframes: every particle runs the visitor's easing, offset by its seed.
++  float st = (uB == 4) ? ob : s.w;
++  float span = 0.5;
++  float m = clamp((uMix - st * span) / (1.0 - span), 0.0, 1.0);
++  float me = easeBez(m, uEase);
++  vec3 p = mix(wa, wb, me);
++  float flight = 4.0 * me * (1.0 - me);
++  p.z += 0.35 * flight * (s.z - 0.35);
++  float size = mix(sa, sb, me);
++  float alpha = mix(aa, ab, me);
++  float heat = mix(ha, hb, me) + flight * 0.9;
++
++  // Opening title: chaos resolving into the ruler.
++  vec3 c0 = toWorld(fChaos(s, t), uRect[0]);
++  float mi = clamp((uIntro - s.w * 0.55) / 0.45, 0.0, 1.0);
++  mi = easeBez(mi, uEase);
++  p = mix(c0, p, mi);
++  heat += 4.0 * mi * (1.0 - mi) * 0.7;
++  alpha = mix(0.35, alpha, mi);
++  size = mix(1.6, size, mi);
++
++  p.xy += uAmbient * 0.003 * vec2(sin(t * 1.3 + s.x * TAU), cos(t * 1.1 + s.y * TAU));
++
++  // Pointer lens: repulsion plus a little swirl, warming what it touches.
++  vec2 d = p.xy - uPointer.xy;
++  float r2 = dot(d, d);
++  float lens = uPointer.z * exp(-r2 / (uPointer.w * uPointer.w));
++  vec2 dir = d * inversesqrt(r2 + 1e-5);
++  p.xy += (dir * 0.7 + vec2(-dir.y, dir.x) * 0.5) * lens * uPointer.w * 0.9;
++  heat += lens * 1.3;
++
++  vec4 clip = uVP * vec4(p, 1.0);
++  gl_Position = clip;
++  float depthScale = clamp(uCamDist / max(clip.w, 0.2), 0.3, 3.0);
++  gl_PointSize = uPointScale * uDpr * size * depthScale;
++
++  heat = clamp(heat, 0.0, 1.0);
++  vec3 col = mix(uIce, uAmber, heat);
++  col = mix(col, vec3(1.0), smoothstep(0.72, 1.0, heat) * 0.55);
++  vColor = col;
++  vAlpha = alpha * uAlpha;
++}
++`;
++
++export const FRAG = /* glsl */ `#version 300 es
++precision mediump float;
++in vec3 vColor;
++in float vAlpha;
++out vec4 outColor;
++void main() {
++  vec2 c = gl_PointCoord - 0.5;
++  float d = length(c) * 2.0;
++  float a = smoothstep(1.0, 0.15, d);
++  a *= a * vAlpha;
++  outColor = vec4(vColor * a, a);
++}
++`;
+diff --git a/components/composition/lib/easing.js b/components/composition/lib/easing.js
+new file mode 100644
+index 0000000..7c6b410
+--- /dev/null
++++ b/components/composition/lib/easing.js
+@@ -0,0 +1,95 @@
++// Motion math shared by the UI, the exported-code block and the GPU field.
++// The shader re-implements the same cubic-bezier solve and spring response so
++// what the visitor sees on screen is exactly what the code block describes.
++
++export function cubicBezier(x1, y1, x2, y2) {
++  const cx = 3 * x1;
++  const bx = 3 * (x2 - x1) - cx;
++  const ax = 1 - cx - bx;
++  const cy = 3 * y1;
++  const by = 3 * (y2 - y1) - cy;
++  const ay = 1 - cy - by;
++  const sampleX = (t) => ((ax * t + bx) * t + cx) * t;
++  const sampleY = (t) => ((ay * t + by) * t + cy) * t;
++  const sampleDX = (t) => (3 * ax * t + 2 * bx) * t + cx;
++
++  function solveT(x) {
++    let t = x;
++    for (let i = 0; i < 8; i++) {
++      const dx = sampleDX(t);
++      if (Math.abs(dx) < 1e-6) break;
++      const err = sampleX(t) - x;
++      if (Math.abs(err) < 1e-6) return t;
++      t = Math.min(1, Math.max(0, t - err / dx));
++    }
++    let lo = 0;
++    let hi = 1;
++    for (let i = 0; i < 24; i++) {
++      t = (lo + hi) / 2;
++      if (sampleX(t) < x) lo = t;
++      else hi = t;
++    }
++    return t;
++  }
++
++  return (x) => (x <= 0 ? 0 : x >= 1 ? 1 : sampleY(solveT(x)));
++}
++
++export function formatBezier([x1, y1, x2, y2]) {
++  const f = (v) => (Math.abs(v) < 0.005 ? "0.00" : v.toFixed(2));
++  return `cubic-bezier(${f(x1)}, ${f(y1)}, ${f(x2)}, ${f(y2)})`;
++}
++
++export const EASING_PRESETS = [
++  { name: "Ease out", value: [0.32, 0, 0.18, 1] },
++  { name: "Ease in-out", value: [0.65, 0, 0.35, 1] },
++  { name: "Anticipate", value: [0.36, -0.3, 0.26, 1] },
++  { name: "Overshoot", value: [0.34, 1.3, 0.64, 1] },
++  { name: "Linear", value: [0, 0, 1, 1] },
++];
++
++export const SPRING_LIMITS = {
++  stiffness: { min: 40, max: 400, step: 5 },
++  damping: { min: 2, max: 40, step: 1 },
++};
++
++// Damped harmonic oscillator released from unit displacement at rest.
++export function springParams({ stiffness, damping, mass = 1 }) {
++  const omega0 = Math.sqrt(stiffness / mass);
++  const zeta = damping / (2 * Math.sqrt(stiffness * mass));
++  let settle;
++  if (zeta < 1) settle = 4.6 / (zeta * omega0);
++  else settle = 4.6 / (omega0 * (zeta - Math.sqrt(Math.max(zeta * zeta - 1, 0)) || 1e-6));
++  const overshoot = zeta < 1 ? Math.exp((-zeta * Math.PI) / Math.sqrt(1 - zeta * zeta)) : 0;
++  return { omega0, zeta, settle, overshoot };
++}
++
++export function springResponse(t, { omega0, zeta }) {
++  if (t <= 0) return 1;
++  if (zeta < 1) {
++    const wd = omega0 * Math.sqrt(1 - zeta * zeta);
++    return Math.exp(-zeta * omega0 * t) * (Math.cos(wd * t) + ((zeta * omega0) / wd) * Math.sin(wd * t));
++  }
++  if (Math.abs(zeta - 1) < 1e-6) return Math.exp(-omega0 * t) * (1 + omega0 * t);
++  const root = Math.sqrt(zeta * zeta - 1);
++  const s1 = -omega0 * (zeta - root);
++  const s2 = -omega0 * (zeta + root);
++  const A = -s2 / (s1 - s2);
++  const B = s1 / (s1 - s2);
++  return A * Math.exp(s1 * t) + B * Math.exp(s2 * t);
++}
++
++export const RUNTIME_SECONDS = 48;
++export const FPS = 24;
++
++export function timecode(seconds, fps = FPS) {
++  const total = Math.max(0, Math.round(seconds * fps));
++  const f = total % fps;
++  const s = Math.floor(total / fps) % 60;
++  const m = Math.floor(total / fps / 60) % 60;
++  const h = Math.floor(total / fps / 3600);
++  const p = (n) => String(n).padStart(2, "0");
++  return `${p(h)}:${p(m)}:${p(s)}:${p(f)}`;
++}
++
++export const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
+diff --git a/components/composition/runtime.js b/components/composition/runtime.js
+new file mode 100644
+index 0000000..83ac4bc
+--- /dev/null
++++ b/components/composition/runtime.js
+@@ -0,0 +1,14 @@
++// DOM handles the render loop writes to directly (timecode, playhead, markers),
++// so the HUD never re-renders at frame rate.
++export const hud = {
++  tc: null,
++  range: null,
++  head: null,
++  markers: [],
++  actTimes: [],
++  scrubbing: false,
++};
++
++export function registerHud(refs) {
++  Object.assign(hud, refs);
++}
+diff --git a/components/composition/store.js b/components/composition/store.js
+new file mode 100644
+index 0000000..4ce50c5
+--- /dev/null
++++ b/components/composition/store.js
+@@ -0,0 +1,97 @@
++import { useSyncExternalStore } from "react";
++
++// Discrete state (re-renders React when it changes).
++let state = {
++  easing: [0.32, 0, 0.18, 1],
++  spring: { stiffness: 120, damping: 9 },
++  motion: "full", // 'full' | 'reduced'
++  motionSource: "system", // 'system' | 'user'
++  tier: "high", // 'high' | 'low'
++  renderer: "pending", // 'pending' | 'webgl2' | 'none'
++  particleCount: 0,
++  act: 0,
++};
++
++const listeners = new Set();
++
++export function getState() {
++  return state;
++}
++
++export function setState(partial) {
++  state = { ...state, ...partial };
++  listeners.forEach((l) => l());
++}
++
++export function subscribeStore(listener) {
++  listeners.add(listener);
++  return () => listeners.delete(listener);
++}
++
++export function useStore(selector) {
++  return useSyncExternalStore(
++    subscribeStore,
++    () => selector(state),
++    () => selector(state),
++  );
++}
++
++// Per-frame mutable state. Written by input handlers and the render loop,
++// read by the loop. Never observed by React, so the loop never re-renders.
++export const frame = {
++  time: 0,
++  progress: 0,
++  t: 1, // continuous formation time, 1..5
++  smoothT: 1,
++  intro: 0,
++  pointer: { cx: -1e4, cy: -1e4, wx: 0, wy: 0, strength: 0, target: 0, radius: 0.24, lastX: 0, lastY: 0, lastT: 0 },
++  heroPlayhead: 0.36,
++  heroTarget: 0.36,
++  pluck: { x: 0, y: 0, vx: 0.42, vy: 0.14, release: -1e9, strength: 0, hold: 0, holdStart: 0, nextAuto: 0 },
++  globe: { rotY: 0.5, rotX: 0.32, vel: 0, dragging: false },
++  markers: [0, 0, 0, 0, 0],
++};
++
++export const ACTS = [
++  { id: "act-1", numeral: "I", name: "Overture" },
++  { id: "act-2", numeral: "II", name: "Keyframes" },
++  { id: "act-3", numeral: "III", name: "Springs" },
++  { id: "act-4", numeral: "IV", name: "Export" },
++  { id: "act-5", numeral: "V", name: "Release" },
++];
++
++const MOTION_KEY = "meridian:motion";
++let motionInitialised = false;
++
++// Resolve the motion mode once on the client: a stored visitor choice wins,
++// otherwise follow prefers-reduced-motion (and keep following it if it changes).
++export function initMotion() {
++  if (motionInitialised || typeof window === "undefined") return;
++  motionInitialised = true;
++  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
++  let stored = null;
++  try {
++    stored = window.localStorage.getItem(MOTION_KEY);
++  } catch {
++    stored = null;
++  }
++  if (stored === "full" || stored === "reduced") {
++    setState({ motion: stored, motionSource: "user" });
++  } else {
++    setState({ motion: mq.matches ? "reduced" : "full", motionSource: "system" });
++  }
++  mq.addEventListener("change", () => {
++    if (getState().motionSource === "system") {
++      setState({ motion: mq.matches ? "reduced" : "full" });
++    }
++  });
++}
++
++export function setMotion(mode) {
++  setState({ motion: mode, motionSource: "user" });
++  try {
++    window.localStorage.setItem(MOTION_KEY, mode);
++  } catch {
++    // Storage may be unavailable; the choice still applies for this visit.
++  }
++}
+=== NEW FILE: components/composition/SpringPlot.jsx ===
+"use client";
+
+import { springResponse } from "./lib/easing";
+
+// The curve view of the spring: how the visitor's spring settles over time.
+// In reduced-motion mode this is the primary way the spring is shown.
+export default function SpringPlot({ params }) {
+  const T = Math.max(0.6, Math.min(params.settle * 1.05, 4));
+  const N = 160;
+  const points = [];
+  for (let i = 0; i <= N; i++) {
+    const t = (i / N) * T;
+    const x = springResponse(t, params);
+    points.push(`${((i / N) * 100).toFixed(2)},${(52 - x * 38).toFixed(2)}`);
+  }
+  const description =
+    params.overshoot > 0.005
+      ? `settles in ${params.settle.toFixed(2)} seconds and overshoots by ${Math.round(params.overshoot * 100)} percent`
+      : `settles in ${params.settle.toFixed(2)} seconds without overshooting`;
+  return (
+    <figure className="spring-plot">
+      <svg
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        role="img"
+        aria-label={`Spring response over ${T.toFixed(1)} seconds: ${description}.`}
+      >
+        <line className="spring-plot__axis" x1="0" y1="52" x2="100" y2="52" />
+        <line className="spring-plot__axis" x1="0" y1="14" x2="100" y2="14" strokeDasharray="1 2" />
+        <polyline className="spring-plot__line" points={points.join(" ")} />
+      </svg>
+      <figcaption>
+        <span>0 s</span>
+        <span>{T.toFixed(1)} s</span>
+      </figcaption>
+    </figure>
+  );
+}
+=== NEW FILE: components/composition/EasingEditor.jsx ===
+"use client";
+
+import { useRef } from "react";
+import { useStore, setState, getState } from "./store";
+import { clamp } from "./lib/easing";
+
+const Y_MIN = -0.3;
+const Y_MAX = 1.3;
+
+export default function EasingEditor() {
+  const easing = useStore((s) => s.easing);
+  const plotRef = useRef(null);
+  const [x1, y1, x2, y2] = easing;
+  const hx1 = x1 * 100;
+  const hy1 = (1 - y1) * 100;
+  const hx2 = x2 * 100;
+  const hy2 = (1 - y2) * 100;
+  const path = `M 0 100 C ${hx1} ${hy1}, ${hx2} ${hy2}, 100 0`;
+
+  const startDrag = (i) => (e) => {
+    const plot = plotRef.current;
+    if (!plot || e.button !== 0) return;
+    e.preventDefault();
+    const target = e.currentTarget;
+    target.setPointerCapture(e.pointerId);
+    const move = (ev) => {
+      const r = plot.getBoundingClientRect();
+      const x = clamp((ev.clientX - r.left) / r.width, 0, 1);
+      const y = clamp(1 - (ev.clientY - r.top) / r.height, Y_MIN, Y_MAX);
+      const cur = getState().easing.slice();
+      cur[i * 2] = x;
+      cur[i * 2 + 1] = y;
+      setState({ easing: cur });
+    };
+    const end = () => {
+      target.removeEventListener("pointermove", move);
+      target.removeEventListener("pointerup", end);
+      target.removeEventListener("pointercancel", end);
+    };
+    target.addEventListener("pointermove", move);
+    target.addEventListener("pointerup", end);
+    target.addEventListener("pointercancel", end);
+  };
+
+  const onKey = (i) => (e) => {
+    const step = e.shiftKey ? 0.1 : 0.02;
+    let dx = 0;
+    let dy = 0;
+    if (e.key === "ArrowLeft") dx = -step;
+    else if (e.key === "ArrowRight") dx = step;
+    else if (e.key === "ArrowUp") dy = step;
+    else if (e.key === "ArrowDown") dy = -step;
+    else return;
+    e.preventDefault();
+    const cur = getState().easing.slice();
+    cur[i * 2] = clamp(cur[i * 2] + dx, 0, 1);
+    cur[i * 2 + 1] = clamp(cur[i * 2 + 1] + dy, Y_MIN, Y_MAX);
+    setState({ easing: cur });
+  };
+
+  const label = (n, x, y) =>
+    `Control point ${n}: x ${x.toFixed(2)}, y ${y.toFixed(2)}. Arrow keys move it, hold Shift for larger steps.`;
+
+  return (
+    <div className="editor">
+      <div className="editor__plot" data-anchor="2" ref={plotRef}>
+        <svg className="editor__svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          <g className="editor__grid">
+            {[25, 50, 75].map((v) => (
+              <line key={`v${v}`} x1={v} y1={0} x2={v} y2={100} />
+            ))}
+            {[25, 50, 75].map((v) => (
+              <line key={`h${v}`} x1={0} y1={v} x2={100} y2={v} />
+            ))}
+          </g>
+          <rect className="editor__frame" x={0} y={0} width={100} height={100} />
+          <line className="editor__linear" x1={0} y1={100} x2={100} y2={0} />
+          <line className="editor__arm" x1={0} y1={100} x2={hx1} y2={hy1} />
+          <line className="editor__arm" x1={100} y1={0} x2={hx2} y2={hy2} />
+          <path className="editor__curve" d={path} />
+        </svg>
+        <button
+          type="button"
+          className="editor__handle"
+          style={{ left: `${hx1}%`, top: `${hy1}%` }}
+          onPointerDown={startDrag(0)}
+          onKeyDown={onKey(0)}
+          aria-label={label(1, x1, y1)}
+        />
+        <button
+          type="button"
+          className="editor__handle"
+          style={{ left: `${hx2}%`, top: `${hy2}%` }}
+          onPointerDown={startDrag(1)}
+          onKeyDown={onKey(1)}
+          aria-label={label(2, x2, y2)}
+        />
+      </div>
+    </div>
+  );
+}
+=== NEW FILE: components/composition/runtime.js ===
+// DOM handles the render loop writes to directly (timecode, playhead, markers),
+// so the HUD never re-renders at frame rate.
+export const hud = {
+  tc: null,
+  range: null,
+  head: null,
+  markers: [],
+  actTimes: [],
+  scrubbing: false,
+};
+
+export function registerHud(refs) {
+  Object.assign(hud, refs);
+}
+=== NEW FILE: components/composition/Composition.jsx ===
+"use client";
+
+import Stage from "./Stage";
+import Hud from "./Hud";
+import SiteHeader from "./SiteHeader";
+import EndSlate from "./EndSlate";
+import Overture from "./acts/Overture";
+import Keyframes from "./acts/Keyframes";
+import Springs from "./acts/Springs";
+import Export from "./acts/Export";
+import Release from "./acts/Release";
+
+// The stage is sticky for the length of the five acts, then scrolls away with
+// them so the end slate can take the screen (and the render loop can pause).
+export default function Composition() {
+  return (
+    <>
+      <SiteHeader />
+      <div className="composition">
+        <div className="stage">
+          <Stage />
+        </div>
+        <main id="main" className="acts">
+          <Overture />
+          <Keyframes />
+          <Springs />
+          <Export />
+          <Release />
+        </main>
+      </div>
+      <EndSlate />
+      <Hud />
+    </>
+  );
+}
+=== NEW FILE: components/composition/Stage.jsx ===
+"use client";
+
+import { useEffect, useRef } from "react";
+import { Field } from "./engine/field";
+import { frame, getState, setState, subscribeStore, initMotion, ACTS } from "./store";
+import { hud } from "./runtime";
+import { springParams, timecode, clamp, RUNTIME_SECONDS } from "./lib/easing";
+
+// Capability recipes. "low" keeps the identity (same formations, same palette)
+// with a quarter of the particles, DPR 1 and no ambient jitter.
+const RECIPES = {
+  high: { count: 56000, dprCap: 1.5, pointScale: 2.0, ambient: 1 },
+  low: { count: 16000, dprCap: 1, pointScale: 2.3, ambient: 0 },
+};
+
+const INTRO_SECONDS = 2.6;
+const ARRIVE_FROM = 1.15; // next instrument's centre, in viewport heights, where the morph starts
+const ARRIVE_TO = 0.55; // ... and where it has fully arrived
+
+function detectTier() {
+  const coarse = window.matchMedia("(pointer: coarse)").matches;
+  const narrow = window.innerWidth < 900;
+  const cores = navigator.hardwareConcurrency || 4;
+  const mem = navigator.deviceMemory || 8;
+  return coarse || narrow || cores <= 4 || mem <= 4 ? "low" : "high";
+}
+
+// Small deterministic sequence for the auto-pluck positions.
+let pseudoSeed = 12345;
+const pseudo = () => {
+  pseudoSeed = (pseudoSeed * 1664525 + 1013904223) >>> 0;
+  return pseudoSeed / 4294967296;
+};
+
+const smoothstep = (a, b, x) => {
+  const t = clamp((x - a) / (b - a), 0, 1);
+  return t * t * (3 - 2 * t);
+};
+
+export default function Stage() {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const root = document.documentElement;
+    initMotion();
+
+    // Without WebGL2 the vector fallbacks carry the identity; the timeline HUD still follows scroll.
+    let field = null;
+    try {
+      field = new Field(canvas);
+    } catch {
+      field = null;
+    }
+
+    let tier = detectTier();
+    let recipe = RECIPES[tier];
+    if (field) {
+      field.setCount(recipe.count);
+      setState({ renderer: "webgl2", tier, particleCount: recipe.count });
+      root.dataset.renderer = "webgl2";
+      root.dataset.tier = tier;
+    } else {
+      setState({ renderer: "none", tier });
+      root.dataset.renderer = "none";
+    }
+    root.dataset.motion = getState().motion;
+
+    const anchorEls = [];
+    document.querySelectorAll("[data-anchor]").forEach((el) => {
+      anchorEls[Number(el.dataset.anchor)] = el;
+    });
+    const sectionEls = ACTS.map((a) => document.getElementById(a.id));
+    const arriveCache = new Array(6).fill(-1);
+    const markerCache = new Array(5).fill(-1);
+    let lastTimecode = "";
+    let lastValueText = "";
+
+    const rects = new Float32Array(24);
+    const centres = new Float32Array(6);
+    let viewport = { W: 1, H: 1, aspect: 1, left: 0, top: 0 };
+
+    const stats = { frames: 0, ema: 16, governed: false, lastResize: 0 };
+    let running = false;
+    let rafId = 0;
+    let last = 0;
+    let visible = document.visibilityState === "visible";
+    let intersecting = true;
+    let pendingStatic = 0;
+
+    function resize() {
+      const cr = canvas.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, recipe.dprCap);
+      if (field) field.resize(cr.width || 1, cr.height || 1, dpr);
+    }
+
+    function measure() {
+      const cr = canvas.getBoundingClientRect();
+      const W = cr.width || 1;
+      const H = cr.height || 1;
+      const aspect = W / H;
+      viewport = { W, H, aspect, left: cr.left, top: cr.top };
+      rects[0] = 0;
+      rects[1] = 0;
+      rects[2] = aspect;
+      rects[3] = 1;
+      const vh = window.innerHeight || H;
+      const scrollY = window.scrollY;
+      const maxScroll = Math.max(1, root.scrollHeight - vh);
+      for (let k = 1; k <= 5; k++) {
+        const el = anchorEls[k];
+        if (!el) continue;
+        const r = el.getBoundingClientRect();
+        const cx = ((r.left + r.width / 2 - cr.left) / W) * 2 - 1;
+        const cy = 1 - ((r.top + r.height / 2 - cr.top) / H) * 2;
+        rects[k * 4] = cx * aspect;
+        rects[k * 4 + 1] = cy;
+        rects[k * 4 + 2] = (r.width / W) * aspect;
+        rects[k * 4 + 3] = r.height / H;
+        centres[k] = (r.top + r.height / 2) / vh;
+        // Scroll position at which this act becomes current (its instrument centre at 80% of the viewport).
+        frame.markers[k - 1] = k === 1 ? 0 : clamp((r.top + r.height / 2 + scrollY - 0.8 * vh) / maxScroll, 0, 1);
+        if (k === 1) {
+          const p = frame.pointer;
+          if (p.cx > -1e3) frame.heroTarget = clamp((p.cx - r.left) / Math.max(1, r.width), 0.02, 0.98);
+        }
+      }
+      // Continuous formation time: the field flows to whichever instrument is arriving.
+      let t = 1;
+      for (let k = 2; k <= 5; k++) {
+        const arr = clamp((ARRIVE_FROM - centres[k]) / (ARRIVE_FROM - ARRIVE_TO), 0, 1);
+        if (arr <= 0) break;
+        t = k - 1 + arr;
+      }
+      frame.t = t;
+      frame.progress = clamp(scrollY / maxScroll, 0, 1);
+    }
+
+    function writeHud() {
+      const seconds = frame.progress * RUNTIME_SECONDS;
+      const tc = timecode(seconds);
+      if (hud.tc && tc !== lastTimecode) {
+        hud.tc.textContent = tc;
+        lastTimecode = tc;
+      }
+      if (hud.range && !hud.scrubbing) {
+        hud.range.value = String(seconds);
+        const act = ACTS[getState().act];
+        const vt = `${tc}, Act ${act.numeral}: ${act.name}`;
+        if (vt !== lastValueText) {
+          hud.range.setAttribute("aria-valuetext", vt);
+          lastValueText = vt;
+        }
+      }
+      if (hud.head) hud.head.style.left = `${frame.progress * 100}%`;
+      for (let k = 0; k < 5; k++) {
+        const m = frame.markers[k];
+        if (Math.abs(m - markerCache[k]) > 0.0005) {
+          markerCache[k] = m;
+          if (hud.markers[k]) hud.markers[k].style.left = `${m * 100}%`;
+          if (hud.actTimes[k]) hud.actTimes[k].textContent = timecode(m * RUNTIME_SECONDS);
+        }
+      }
+    }
+
+    function writeArrival(a, b, mix, reduced) {
+      for (let k = 1; k <= 5; k++) {
+        let v;
+        if (reduced) v = 1;
+        else if (k === b) v = smoothstep(0.55, 1, mix);
+        else if (k === a) v = 1 - smoothstep(0, 0.45, mix);
+        else v = 0;
+        if (b === a && k === a) v = 1;
+        if (Math.abs(v - arriveCache[k]) > 0.005) {
+          arriveCache[k] = v;
+          const el = sectionEls[k - 1];
+          if (el) el.style.setProperty("--arrive", v.toFixed(3));
+        }
+      }
+    }
+
+    function updateAct(t) {
+      const act = clamp(Math.round(t) - 1, 0, 4);
+      if (act !== getState().act) setState({ act });
+    }
+
+    function draw(mode) {
+      if (!field) return;
+      const S = getState();
+      const reduced = mode === "reduced";
+      const tt = reduced ? Math.round(frame.t) : frame.smoothT;
+      const a = clamp(Math.floor(tt), 1, 5);
+      const b = Math.min(5, a + 1);
+      const mix = clamp(tt - a, 0, 1);
+      const sp = springParams(S.spring);
+      const p = frame.pointer;
+      const pk = frame.pluck;
+      const g = frame.globe;
+      const wx = ((p.cx - viewport.left) / viewport.W) * 2 - 1;
+      const wy = 1 - ((p.cy - viewport.top) / viewport.H) * 2;
+      field.render({
+        time: frame.time,
+        a,
+        b,
+        mix,
+        intro: reduced ? 1 : frame.intro,
+        rects,
+        ease: S.easing,
+        spring: [sp.omega0, sp.zeta, pk.release, reduced ? 0 : pk.strength],
+        pluck: [pk.x, pk.y, pk.vx, pk.vy],
+        hold: reduced || !pk.hold ? 0 : Math.min(1, (frame.time - (pk.holdStart ?? frame.time)) / 0.35),
+        pointer: [wx * viewport.aspect, wy, reduced ? 0 : p.strength, p.radius],
+        globe: reduced ? [0.5, 0.32] : [g.rotY, g.rotX],
+        heroPlayhead: reduced ? 0.36 : frame.heroPlayhead,
+        ambient: reduced ? 0 : recipe.ambient,
+        pointScale: recipe.pointScale,
+      });
+      writeArrival(a, b, mix, reduced);
+    }
+
+    function step(dt) {
+      measure();
+      frame.smoothT += (frame.t - frame.smoothT) * (1 - Math.exp(-dt * 10));
+      if (frame.intro < 1) frame.intro = Math.min(1, frame.intro + dt / INTRO_SECONDS);
+      const p = frame.pointer;
+      p.strength += (p.target - p.strength) * (1 - Math.exp(-dt * 12));
+      p.target *= Math.exp(-dt * 2.5);
+      frame.heroPlayhead += (frame.heroTarget - frame.heroPlayhead) * (1 - Math.exp(-dt * 8));
+      const g = frame.globe;
+      if (!g.dragging) {
+        g.rotY += (0.12 + g.vel) * dt;
+        g.vel *= Math.exp(-dt * 1.8);
+      }
+      const pk = frame.pluck;
+      // Springs act: while the visitor is here and not pulling the field themselves, pluck it
+      // on arrival and about every 3.5 s, so the current stiffness and damping stay visible.
+      if (getState().act === 2) {
+        if (!pk.hold && frame.time > pk.nextAuto) {
+          pk.nextAuto = frame.time + 3.0;
+          const r1 = pseudo(), r2 = pseudo(), r3 = pseudo();
+          Object.assign(pk, {
+            x: (r1 - 0.5) * 1.2, y: (r2 - 0.5) * 1.0,
+            vx: 0.4 + 0.3 * r3, vy: (r2 - 0.5) * 0.5,
+            hold: 1, holdStart: frame.time, holdUntil: frame.time + 0.4, strength: 1,
+          });
+        }
+      } else {
+        pk.nextAuto = 0;
+      }
+      if (pk.hold && pk.holdUntil !== undefined && frame.time > pk.holdUntil) {
+        pk.hold = 0;
+        pk.holdUntil = undefined;
+        pk.release = frame.time;
+        pk.strength = 1;
+      }
+      updateAct(frame.smoothT);
+    }
+
+    function govern(dtMs) {
+      stats.ema = stats.ema * 0.9 + dtMs * 0.1;
+      if (field && !stats.governed && stats.frames > 150 && stats.ema > 24 && field.count > 20000) {
+        stats.governed = true;
+        tier = "low";
+        recipe = { ...RECIPES.low, count: Math.floor(field.count / 2) };
+        field.setCount(recipe.count);
+        resize();
+        setState({ tier, particleCount: recipe.count });
+        root.dataset.tier = "low";
+        root.dataset.governed = "true";
+      }
+    }
+
+    function tick(now) {
+      if (!running) return;
+      rafId = requestAnimationFrame(tick);
+      const dtMs = last ? Math.min(50, now - last) : 16;
+      last = now;
+      const dt = dtMs / 1000;
+      frame.time += dt;
+      step(dt);
+      draw("full");
+      writeHud();
+      stats.frames++;
+      if (frame.intro >= 1) govern(dtMs);
+    }
+
+    // No loop running (reduced mode, no renderer, or the stage scrolled offscreen): one
+    // measurement per discrete change keeps the HUD honest, and reduced mode re-plates the field.
+    function renderStatic() {
+      if (pendingStatic) return;
+      pendingStatic = requestAnimationFrame(() => {
+        pendingStatic = 0;
+        measure();
+        const reduced = getState().motion === "reduced";
+        frame.smoothT = reduced ? Math.round(frame.t) : frame.t;
+        updateAct(frame.t);
+        if (field && reduced) {
+          draw("reduced");
+          stats.frames++;
+        }
+        writeHud();
+      });
+    }
+
+    function updateRunning() {
+      const S = getState();
+      const should = visible && intersecting && S.motion === "full" && !!field && !field.lost;
+      if (should && !running) {
+        running = true;
+        last = 0;
+        rafId = requestAnimationFrame(tick);
+        canvas.dataset.render = "running";
+      } else if (!should && running) {
+        running = false;
+        cancelAnimationFrame(rafId);
+        canvas.dataset.render = S.motion === "reduced" ? "static" : "paused";
+      } else if (!should) {
+        canvas.dataset.render = S.motion === "reduced" ? "static" : "paused";
+      }
+      if (!field) canvas.dataset.render = "none";
+      if ((S.motion === "reduced" || !field) && visible) renderStatic();
+    }
+
+    // Offscreen means no visible pixels: an edge-adjacent box (the sticky stage parked exactly
+    // above the viewport once the end slate takes over) must count as offscreen, so both the
+    // observer and the scroll handler test the canvas rect for a non-empty intersection.
+    const canvasOnScreen = () => {
+      const r = canvas.getBoundingClientRect();
+      // A sub-pixel sliver left over from fractional layout does not count as on screen.
+      return r.bottom > 1 && r.top < window.innerHeight - 1 && r.right > 1 && r.left < window.innerWidth - 1;
+    };
+    const io = new IntersectionObserver(
+      () => {
+        intersecting = canvasOnScreen();
+        updateRunning();
+      },
+      { threshold: 0, rootMargin: "-1px" },
+    );
+    io.observe(canvas);
+
+    const onVisibility = () => {
+      visible = document.visibilityState === "visible";
+      updateRunning();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    const onPointerMove = (e) => {
+      const p = frame.pointer;
+      const now = performance.now();
+      if (p.lastT) {
+        const dtp = Math.max(1, now - p.lastT);
+        const speed = Math.hypot(e.clientX - p.lastX, e.clientY - p.lastY) / dtp; // px per ms
+        p.target = Math.max(p.target, Math.min(1, speed * 1.1));
+      }
+      p.lastX = e.clientX;
+      p.lastY = e.clientY;
+      p.lastT = now;
+      p.cx = e.clientX;
+      p.cy = e.clientY;
+    };
+    const onPointerLeave = () => {
+      frame.pointer.target = 0;
+      frame.pointer.cx = -1e4;
+      frame.pointer.cy = -1e4;
+    };
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    document.addEventListener("pointerleave", onPointerLeave);
+
+    const onScroll = () => {
+      const on = canvasOnScreen();
+      if (on !== intersecting) {
+        intersecting = on;
+        updateRunning();
+      }
+      if (!running) renderStatic();
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    const ro = new ResizeObserver(() => {
+      resize();
+      if (!running) renderStatic();
+    });
+    ro.observe(canvas);
+    resize();
+
+    let prevMotion = getState().motion;
+    const unsubscribe = subscribeStore(() => {
+      const S = getState();
+      if (S.motion !== prevMotion) {
+        prevMotion = S.motion;
+        root.dataset.motion = S.motion;
+        if (S.motion === "full" && S.act > 0) frame.intro = 1;
+        updateRunning();
+      } else if (S.motion === "reduced") {
+        renderStatic(); // an edit to the curve or the spring re-plates the field
+      }
+    });
+
+    updateRunning();
+    canvas.dataset.ready = "true";
+
+    window.__meridian = {
+      get frames() { return stats.frames; },
+      get running() { return running; },
+      get frameMs() { return stats.ema; },
+      get count() { return field ? field.count : 0; },
+      get dpr() { return field ? field.dpr : 0; },
+      get time() { return frame.time; },
+      get pluck() { return { ...frame.pluck }; },
+      get tier() { return tier; },
+      get motion() { return getState().motion; },
+      get t() { return frame.smoothT; },
+      get intersecting() { return intersecting; },
+      get visible() { return visible; },
+      get governed() { return stats.governed; },
+    };
+
+    return () => {
+      running = false;
+      cancelAnimationFrame(rafId);
+      cancelAnimationFrame(pendingStatic);
+      io.disconnect();
+      ro.disconnect();
+      unsubscribe();
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("pointermove", onPointerMove);
+      document.removeEventListener("pointerleave", onPointerLeave);
+      window.removeEventListener("scroll", onScroll);
+      if (field) field.dispose();
+      delete window.__meridian;
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="stage__canvas" aria-hidden="true" />;
+}
+=== NEW FILE: components/composition/store.js ===
+import { useSyncExternalStore } from "react";
+
+// Discrete state (re-renders React when it changes).
+let state = {
+  easing: [0.32, 0, 0.18, 1],
+  spring: { stiffness: 120, damping: 9 },
+  motion: "full", // 'full' | 'reduced'
+  motionSource: "system", // 'system' | 'user'
+  tier: "high", // 'high' | 'low'
+  renderer: "pending", // 'pending' | 'webgl2' | 'none'
+  particleCount: 0,
+  act: 0,
+};
+
+const listeners = new Set();
+
+export function getState() {
+  return state;
+}
+
+export function setState(partial) {
+  state = { ...state, ...partial };
+  listeners.forEach((l) => l());
+}
+
+export function subscribeStore(listener) {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+}
+
+export function useStore(selector) {
+  return useSyncExternalStore(
+    subscribeStore,
+    () => selector(state),
+    () => selector(state),
+  );
+}
+
+// Per-frame mutable state. Written by input handlers and the render loop,
+// read by the loop. Never observed by React, so the loop never re-renders.
+export const frame = {
+  time: 0,
+  progress: 0,
+  t: 1, // continuous formation time, 1..5
+  smoothT: 1,
+  intro: 0,
+  pointer: { cx: -1e4, cy: -1e4, wx: 0, wy: 0, strength: 0, target: 0, radius: 0.24, lastX: 0, lastY: 0, lastT: 0 },
+  heroPlayhead: 0.36,
+  heroTarget: 0.36,
+  pluck: { x: 0, y: 0, vx: 0.42, vy: 0.14, release: -1e9, strength: 0, hold: 0, holdStart: 0, nextAuto: 0 },
+  globe: { rotY: 0.5, rotX: 0.32, vel: 0, dragging: false },
+  markers: [0, 0, 0, 0, 0],
+};
+
+export const ACTS = [
+  { id: "act-1", numeral: "I", name: "Overture" },
+  { id: "act-2", numeral: "II", name: "Keyframes" },
+  { id: "act-3", numeral: "III", name: "Springs" },
+  { id: "act-4", numeral: "IV", name: "Export" },
+  { id: "act-5", numeral: "V", name: "Release" },
+];
+
+const MOTION_KEY = "meridian:motion";
+let motionInitialised = false;
+
+// Resolve the motion mode once on the client: a stored visitor choice wins,
+// otherwise follow prefers-reduced-motion (and keep following it if it changes).
+export function initMotion() {
+  if (motionInitialised || typeof window === "undefined") return;
+  motionInitialised = true;
+  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let stored = null;
+  try {
+    stored = window.localStorage.getItem(MOTION_KEY);
+  } catch {
+    stored = null;
+  }
+  if (stored === "full" || stored === "reduced") {
+    setState({ motion: stored, motionSource: "user" });
+  } else {
+    setState({ motion: mq.matches ? "reduced" : "full", motionSource: "system" });
+  }
+  mq.addEventListener("change", () => {
+    if (getState().motionSource === "system") {
+      setState({ motion: mq.matches ? "reduced" : "full" });
+    }
+  });
+}
+
+export function setMotion(mode) {
+  setState({ motion: mode, motionSource: "user" });
+  try {
+    window.localStorage.setItem(MOTION_KEY, mode);
+  } catch {
+    // Storage may be unavailable; the choice still applies for this visit.
+  }
+}
+=== NEW FILE: components/composition/SiteHeader.jsx ===
+export default function SiteHeader() {
+  return (
+    <header className="site-header">
+      <a className="wordmark" href="#act-1">Meridian</a>
+      <a className="header-cta" href="#access">Get early access</a>
+    </header>
+  );
+}
+=== NEW FILE: components/composition/Hud.jsx ===
+"use client";
+
+import { useEffect, useRef } from "react";
+import { useStore, ACTS, frame, getState, setMotion } from "./store";
+import { registerHud, hud } from "./runtime";
+import { RUNTIME_SECONDS } from "./lib/easing";
+
+function scrollToProgress(p, smooth) {
+  const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+  window.scrollTo({ top: p * max, behavior: smooth && getState().motion === "full" ? "smooth" : "auto" });
+}
+
+export default function Hud() {
+  const act = useStore((s) => s.act);
+  const motion = useStore((s) => s.motion);
+  const tcRef = useRef(null);
+  const rangeRef = useRef(null);
+  const headRef = useRef(null);
+  const markerRefs = useRef([]);
+
+  useEffect(() => {
+    registerHud({ tc: tcRef.current, range: rangeRef.current, head: headRef.current, markers: markerRefs.current });
+    return () => registerHud({ tc: null, range: null, head: null, markers: [] });
+  }, []);
+
+  const current = ACTS[act];
+
+  return (
+    <nav className="hud" aria-label="Composition timeline">
+      <div className="hud__time">
+        <span className="hud__tc" ref={tcRef}>00:00:00:00</span>
+        <span className="hud__act">
+          Act {current.numeral}
+          <span className="hud__act-name"> {current.name}</span>
+        </span>
+      </div>
+
+      <div className="hud__ruler">
+        <input
+          ref={rangeRef}
+          className="hud__range"
+          type="range"
+          min={0}
+          max={RUNTIME_SECONDS}
+          step={0.5}
+          defaultValue={0}
+          aria-label="Playhead"
+          aria-valuetext="00:00:00:00, Act I: Overture"
+          onInput={(e) => scrollToProgress(Number(e.currentTarget.value) / RUNTIME_SECONDS, false)}
+          onPointerDown={() => { hud.scrubbing = true; }}
+          onPointerUp={() => { hud.scrubbing = false; }}
+          onPointerCancel={() => { hud.scrubbing = false; }}
+          onBlur={() => { hud.scrubbing = false; }}
+        />
+        <span className="hud__head" ref={headRef} aria-hidden="true" />
+        <ol className="hud__markers" aria-label="Keyframes">
+          {ACTS.map((a, i) => (
+            <li
+              key={a.id}
+              ref={(el) => { markerRefs.current[i] = el; }}
+              className="hud__marker"
+              style={{ left: `${(i / 4) * 100}%` }}
+              data-current={i === act ? "true" : undefined}
+            >
+              <button
+                type="button"
+                className="hud__marker-button"
+                aria-label={`Jump to Act ${a.numeral}: ${a.name}`}
+                aria-current={i === act ? "true" : undefined}
+                onClick={() => scrollToProgress(frame.markers[i], true)}
+              >
+                <span className="hud__marker-name">{a.name}</span>
+              </button>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <button
+        type="button"
+        className="hud__motion"
+        aria-describedby="motion-hint"
+        onClick={() => setMotion(motion === "full" ? "reduced" : "full")}
+      >
+        Motion: {motion === "full" ? "full" : "reduced"}
+      </button>
+      <span id="motion-hint" className="sr-only">
+        Switches between the full-motion and reduced-motion versions of this page. Both contain the same content.
+      </span>
+    </nav>
+  );
+}
+=== NEW FILE: components/composition/EndSlate.jsx ===
+"use client";
+
+import { useStore } from "./store";
+import { formatBezier } from "./lib/easing";
+
+export default function EndSlate() {
+  const easing = useStore((s) => s.easing);
+  const spring = useStore((s) => s.spring);
+  const count = useStore((s) => s.particleCount);
+  const renderer = useStore((s) => s.renderer);
+  return (
+    <footer className="end-slate">
+      <div className="end-slate__inner">
+        <p className="wordmark wordmark--large">Meridian</p>
+        <dl className="facts">
+          <div>
+            <dt>Runtime</dt>
+            <dd>00:00:48:00</dd>
+          </div>
+          <div>
+            <dt>Acts</dt>
+            <dd>5</dd>
+          </div>
+          <div>
+            <dt>Points in the field</dt>
+            <dd>{renderer === "none" ? "vector fallback" : count ? count.toLocaleString("en-US") : "measuring"}</dd>
+          </div>
+          <div>
+            <dt>Your curve</dt>
+            <dd>{formatBezier(easing)}</dd>
+          </div>
+          <div>
+            <dt>Your spring</dt>
+            <dd>stiffness {spring.stiffness}, damping {spring.damping}</dd>
+          </div>
+        </dl>
+        <p className="muted">Rendered live in your browser. Nothing on this page was pre-recorded.</p>
+        <p>
+          <a href="mailto:hello@meridian.tools">hello@meridian.tools</a>
+        </p>
+      </div>
+    </footer>
+  );
+}
+=== NEW FILE: components/composition/ActMarker.jsx ===
+"use client";
+
+import { useEffect, useRef } from "react";
+import { ACTS, useStore } from "./store";
+import { hud } from "./runtime";
+
+// "Act II 00:00:10:12" — the act's position on the composition's timeline.
+// The timecode is filled by the render loop once the layout is measured.
+export default function ActMarker({ index }) {
+  const act = useStore((s) => s.act);
+  const timeRef = useRef(null);
+  useEffect(() => {
+    hud.actTimes[index] = timeRef.current;
+    return () => { hud.actTimes[index] = null; };
+  }, [index]);
+  const a = ACTS[index];
+  return (
+    <p className="act__marker" aria-current={act === index ? "step" : undefined}>
+      <span className="act__numeral">Act {a.numeral}</span>
+      <span className="act__time" ref={timeRef}>{index === 0 ? "00:00:00:00" : ""}</span>
+    </p>
+  );
+}
+=== NEW FILE: components/composition/acts/Keyframes.jsx ===
+"use client";
+
+import ActMarker from "../ActMarker";
+import EasingEditor from "../EasingEditor";
+import { useStore, setState } from "../store";
+import { EASING_PRESETS, formatBezier } from "../lib/easing";
+
+const same = (a, b) => a.every((v, i) => Math.abs(v - b[i]) < 1e-6);
+
+export default function Keyframes() {
+  const easing = useStore((s) => s.easing);
+  return (
+    <section id="act-2" className="act act--hold" aria-labelledby="h-act-2">
+      <div className="act__text">
+        <ActMarker index={1} />
+        <h2 id="h-act-2" className="display">Keyframes you can feel.</h2>
+        <p>
+          Drag the handles. Every particle on this page re-times itself to your curve, and so does
+          the code you export in Act IV.
+        </p>
+        <div className="chips" role="group" aria-label="Easing presets">
+          {EASING_PRESETS.map((p) => (
+            <button
+              key={p.name}
+              type="button"
+              className="chip"
+              aria-pressed={same(p.value, easing)}
+              onClick={() => setState({ easing: p.value })}
+            >
+              {p.name}
+            </button>
+          ))}
+        </div>
+        <p className="readout">
+          <code>{formatBezier(easing)}</code>
+        </p>
+      </div>
+      <EasingEditor />
+    </section>
+  );
+}
+=== NEW FILE: components/composition/acts/Release.jsx ===
+"use client";
+
+import { useRef } from "react";
+import ActMarker from "../ActMarker";
+import { frame, getState } from "../store";
+
+export default function Release() {
+  const panelRef = useRef(null);
+
+  // Turn the mark under the pointer; it keeps spinning with inertia after release.
+  const onPointerDown = (e) => {
+    if (getState().motion !== "full" || e.button !== 0 || e.pointerType === "touch") return;
+    const panel = panelRef.current;
+    e.preventDefault();
+    panel.setPointerCapture(e.pointerId);
+    const g = frame.globe;
+    g.dragging = true;
+    let lastX = e.clientX;
+    let lastT = performance.now();
+    const move = (ev) => {
+      const now = performance.now();
+      const dx = ev.clientX - lastX;
+      const dt = Math.max(1, now - lastT);
+      g.rotY += dx * 0.008;
+      g.vel = (dx / dt) * 6;
+      lastX = ev.clientX;
+      lastT = now;
+    };
+    const end = () => {
+      g.dragging = false;
+      panel.removeEventListener("pointermove", move);
+      panel.removeEventListener("pointerup", end);
+      panel.removeEventListener("pointercancel", end);
+    };
+    panel.addEventListener("pointermove", move);
+    panel.addEventListener("pointerup", end);
+    panel.addEventListener("pointercancel", end);
+  };
+
+  return (
+    <section id="act-5" className="act act--release" aria-labelledby="h-act-5">
+      <div className="act__text">
+        <ActMarker index={4} />
+        <h2 id="h-act-5" className="display">Meridian is in private beta.</h2>
+        <p>
+          We're onboarding small teams who ship motion in production. Tell us what you're animating
+          and which framework you ship with.
+        </p>
+        <p className="cta-row">
+          <a id="access" className="cta" href="mailto:hello@meridian.tools?subject=Early%20access%20to%20Meridian">
+            Request early access
+          </a>
+          <span className="muted">hello@meridian.tools</span>
+        </p>
+      </div>
+      <div
+        className="instrument instrument--globe"
+        data-anchor="5"
+        ref={panelRef}
+        onPointerDown={onPointerDown}
+        aria-hidden="true"
+      >
+        <svg className="fallback fallback--globe" viewBox="0 0 100 100" focusable="false">
+          <circle cx="50" cy="50" r="42" />
+          <ellipse cx="50" cy="50" rx="14" ry="42" />
+          <ellipse cx="50" cy="50" rx="30" ry="42" />
+          <ellipse cx="50" cy="50" rx="42" ry="14" />
+          <ellipse cx="50" cy="50" rx="42" ry="30" />
+          <ellipse className="fallback__prime" cx="50" cy="50" rx="4" ry="42" />
+        </svg>
+      </div>
+    </section>
+  );
+}
+=== NEW FILE: components/composition/acts/Overture.jsx ===
+"use client";
+
+import ActMarker from "../ActMarker";
+
+export default function Overture() {
+  return (
+    <section id="act-1" className="act act--overture" aria-labelledby="h-act-1">
+      <div className="act__text act__text--wide">
+        <ActMarker index={0} />
+        <h1 id="h-act-1" className="display display--xl">
+          Design animation visually. Ship production code.
+        </h1>
+        <p className="lede">
+          Meridian is a timeline editor for motion on the web. This page is a Meridian composition:
+          scroll to move the playhead, or drag it in the timeline below.
+        </p>
+        <p className="hint">Move your cursor along the ruler.</p>
+      </div>
+      <div className="instrument instrument--ruler" data-anchor="1" aria-hidden="true">
+        <svg className="fallback fallback--ruler" viewBox="0 0 1000 100" preserveAspectRatio="none" focusable="false">
+          <defs>
+            <pattern id="ticks" width="20" height="100" patternUnits="userSpaceOnUse">
+              <line x1="0" y1="50" x2="0" y2="62" />
+            </pattern>
+            <pattern id="ticks-major" width="120" height="100" patternUnits="userSpaceOnUse">
+              <line x1="0" y1="50" x2="0" y2="78" />
+            </pattern>
+          </defs>
+          <line x1="0" y1="50" x2="1000" y2="50" />
+          <rect width="1000" height="100" fill="url(#ticks)" />
+          <rect width="1000" height="100" fill="url(#ticks-major)" />
+          <line className="fallback__head" x1="360" y1="20" x2="360" y2="90" />
+        </svg>
+      </div>
+    </section>
+  );
+}
+=== NEW FILE: components/composition/acts/Export.jsx ===
+"use client";
+
+import { useState } from "react";
+import ActMarker from "../ActMarker";
+import { useStore } from "../store";
+import { formatBezier, springParams } from "../lib/easing";
+
+export default function Export() {
+  const easing = useStore((s) => s.easing);
+  const spring = useStore((s) => s.spring);
+  const [copied, setCopied] = useState(false);
+  const params = springParams(spring);
+  const bezier = formatBezier(easing);
+  const settle = params.settle.toFixed(2);
+
+  const plain = [
+    ".card {",
+    `  transition: transform 720ms ${bezier};`,
+    "}",
+    "",
+    "@media (prefers-reduced-motion: reduce) {",
+    "  .card { transition-duration: 0ms; }",
+    "}",
+    "",
+    'import { spring } from "@meridian/motion";',
+    "",
+    "export const settle = spring({",
+    `  stiffness: ${spring.stiffness},`,
+    `  damping: ${spring.damping},`,
+    "  mass: 1,",
+    `}); // settles in ${settle}s`,
+  ].join("\n");
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(plain);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      setCopied(false);
+    }
+  };
+
+  return (
+    <section id="act-4" className="act act--export" aria-labelledby="h-act-4">
+      <div className="act__text">
+        <ActMarker index={3} />
+        <h2 id="h-act-4" className="display">Ship it as code, not a video.</h2>
+        <p>
+          What you designed above, exported the way it ships: plain CSS and JavaScript with your
+          curve and your spring, and no runtime to install. The reduced-motion variant is written
+          for you.
+        </p>
+        <p className="muted">Every highlighted value updates as you edit Acts II and III.</p>
+      </div>
+      <div className="instrument instrument--code" data-anchor="4">
+        <div className="code">
+          <div className="code__bar">
+            <span className="code__file">motion.css</span>
+            <button type="button" className="chip chip--small" onClick={copy}>
+              {copied ? "Copied" : "Copy code"}
+            </button>
+          </div>
+          <pre className="code__pre" tabIndex={0}>
+            <code>
+              <span className="tok-sel">.card</span> {"{"}{"\n"}
+              {"  "}<span className="tok-prop">transition</span>: <span className="tok-val">transform 720ms</span>{" "}
+              <span className="tok-live">{bezier}</span>;{"\n"}
+              {"}"}{"\n\n"}
+              <span className="tok-at">@media</span> <span className="tok-val">(prefers-reduced-motion: reduce)</span> {"{"}{"\n"}
+              {"  "}<span className="tok-sel">.card</span> {"{"} <span className="tok-prop">transition-duration</span>:{" "}
+              <span className="tok-val">0ms</span>; {"}"}{"\n"}
+              {"}"}
+            </code>
+          </pre>
+          <div className="code__bar">
+            <span className="code__file">motion.js</span>
+          </div>
+          <pre className="code__pre" tabIndex={0}>
+            <code>
+              <span className="tok-at">import</span> {"{ "}<span className="tok-val">spring</span>{" }"}{" "}
+              <span className="tok-at">from</span> <span className="tok-str">"@meridian/motion"</span>;{"\n\n"}
+              <span className="tok-at">export const</span> <span className="tok-val">settle</span> = <span className="tok-fn">spring</span>({"{"}{"\n"}
+              {"  "}<span className="tok-prop">stiffness</span>: <span className="tok-live">{spring.stiffness}</span>,{"\n"}
+              {"  "}<span className="tok-prop">damping</span>: <span className="tok-live">{spring.damping}</span>,{"\n"}
+              {"  "}<span className="tok-prop">mass</span>: <span className="tok-val">1</span>,{"\n"}
+              {"}"}); <span className="tok-cm">{`// settles in ${settle}s`}</span>
+            </code>
+          </pre>
+        </div>
+        <span className="sr-only" aria-live="polite">{copied ? "Code copied to clipboard." : ""}</span>
+      </div>
+    </section>
+  );
+}
+=== NEW FILE: components/composition/acts/Springs.jsx ===
+"use client";
+
+import { useRef } from "react";
+import ActMarker from "../ActMarker";
+import SpringPlot from "../SpringPlot";
+import { useStore, setState, getState, frame } from "../store";
+import { springParams, SPRING_LIMITS } from "../lib/easing";
+
+export default function Springs() {
+  const spring = useStore((s) => s.spring);
+  const motion = useStore((s) => s.motion);
+  const renderer = useStore((s) => s.renderer);
+  const params = springParams(spring);
+  const panelRef = useRef(null);
+  const canPluck = motion === "full" && renderer === "webgl2";
+
+  const update = (key) => (e) => setState({ spring: { ...getState().spring, [key]: Number(e.target.value) } });
+
+  const pluckAt = (x, y, vx, vy) => {
+    Object.assign(frame.pluck, { x, y, vx, vy, hold: 0, holdUntil: undefined, release: frame.time, strength: 1, nextAuto: frame.time + 4 });
+  };
+
+  // Pull the lattice with the pointer, let go, and the spring carries it back.
+  const onPointerDown = (e) => {
+    if (getState().motion !== "full" || e.button !== 0) return;
+    const panel = panelRef.current;
+    const r = panel.getBoundingClientRect();
+    e.preventDefault();
+    panel.setPointerCapture(e.pointerId);
+    const lx = ((e.clientX - r.left) / r.width) * 2 - 1;
+    const ly = 1 - ((e.clientY - r.top) / r.height) * 2;
+    Object.assign(frame.pluck, { x: lx, y: ly, vx: 0, vy: 0, hold: 1, holdStart: frame.time, holdUntil: undefined, strength: 1, nextAuto: frame.time + 8 });
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const move = (ev) => {
+      let dx = ((ev.clientX - startX) / r.width) * 2;
+      let dy = -((ev.clientY - startY) / r.height) * 2;
+      const len = Math.hypot(dx, dy);
+      if (len > 0.6) { dx *= 0.6 / len; dy *= 0.6 / len; }
+      frame.pluck.vx = dx;
+      frame.pluck.vy = dy;
+    };
+    const cleanup = () => {
+      panel.removeEventListener("pointermove", move);
+      panel.removeEventListener("pointerup", up);
+      panel.removeEventListener("pointercancel", cancel);
+    };
+    const up = () => {
+      const pk = frame.pluck;
+      if (Math.hypot(pk.vx, pk.vy) < 0.04) { pk.vx = 0.5; pk.vy = 0.15; } // a tap plucks too
+      pk.hold = 0;
+      pk.release = frame.time;
+      pk.strength = 1;
+      pk.nextAuto = frame.time + 4;
+      cleanup();
+    };
+    const cancel = () => {
+      frame.pluck.hold = 0;
+      frame.pluck.strength = 0;
+      cleanup();
+    };
+    panel.addEventListener("pointermove", move);
+    panel.addEventListener("pointerup", up);
+    panel.addEventListener("pointercancel", cancel);
+  };
+
+  return (
+    <section id="act-3" className="act act--hold" aria-labelledby="h-act-3">
+      <div className="act__text">
+        <ActMarker index={2} />
+        <h2 id="h-act-3" className="display">Springs, not stopwatches.</h2>
+        <p>
+          Motion that ends on a clock feels dead. Set stiffness and damping, then pull the field and
+          let it go.
+        </p>
+        <div className="controls">
+          <label className="slider">
+            <span className="slider__name">Stiffness</span>
+            <input
+              type="range"
+              min={SPRING_LIMITS.stiffness.min}
+              max={SPRING_LIMITS.stiffness.max}
+              step={SPRING_LIMITS.stiffness.step}
+              value={spring.stiffness}
+              onChange={update("stiffness")}
+            />
+            <output className="slider__value">{spring.stiffness}</output>
+          </label>
+          <label className="slider">
+            <span className="slider__name">Damping</span>
+            <input
+              type="range"
+              min={SPRING_LIMITS.damping.min}
+              max={SPRING_LIMITS.damping.max}
+              step={SPRING_LIMITS.damping.step}
+              value={spring.damping}
+              onChange={update("damping")}
+            />
+            <output className="slider__value">{spring.damping}</output>
+          </label>
+          {canPluck && (
+            <button type="button" className="chip chip--action" onClick={() => pluckAt(0, 0, 0.55, 0.16)}>
+              Pluck the field
+            </button>
+          )}
+        </div>
+        <p className="readout">
+          Settles in {params.settle.toFixed(2)} s
+          {params.overshoot > 0.005 ? `, overshoots by ${Math.round(params.overshoot * 100)}%` : ", no overshoot"}
+        </p>
+        <SpringPlot params={params} />
+      </div>
+      <div
+        className="instrument instrument--lattice"
+        data-anchor="3"
+        ref={panelRef}
+        onPointerDown={onPointerDown}
+        aria-hidden="true"
+      />
+    </section>
+  );
+}
+=== NEW FILE: components/composition/lib/easing.js ===
+// Motion math shared by the UI, the exported-code block and the GPU field.
+// The shader re-implements the same cubic-bezier solve and spring response so
+// what the visitor sees on screen is exactly what the code block describes.
+
+export function cubicBezier(x1, y1, x2, y2) {
+  const cx = 3 * x1;
+  const bx = 3 * (x2 - x1) - cx;
+  const ax = 1 - cx - bx;
+  const cy = 3 * y1;
+  const by = 3 * (y2 - y1) - cy;
+  const ay = 1 - cy - by;
+  const sampleX = (t) => ((ax * t + bx) * t + cx) * t;
+  const sampleY = (t) => ((ay * t + by) * t + cy) * t;
+  const sampleDX = (t) => (3 * ax * t + 2 * bx) * t + cx;
+
+  function solveT(x) {
+    let t = x;
+    for (let i = 0; i < 8; i++) {
+      const dx = sampleDX(t);
+      if (Math.abs(dx) < 1e-6) break;
+      const err = sampleX(t) - x;
+      if (Math.abs(err) < 1e-6) return t;
+      t = Math.min(1, Math.max(0, t - err / dx));
+    }
+    let lo = 0;
+    let hi = 1;
+    for (let i = 0; i < 24; i++) {
+      t = (lo + hi) / 2;
+      if (sampleX(t) < x) lo = t;
+      else hi = t;
+    }
+    return t;
+  }
+
+  return (x) => (x <= 0 ? 0 : x >= 1 ? 1 : sampleY(solveT(x)));
+}
+
+export function formatBezier([x1, y1, x2, y2]) {
+  const f = (v) => (Math.abs(v) < 0.005 ? "0.00" : v.toFixed(2));
+  return `cubic-bezier(${f(x1)}, ${f(y1)}, ${f(x2)}, ${f(y2)})`;
+}
+
+export const EASING_PRESETS = [
+  { name: "Ease out", value: [0.32, 0, 0.18, 1] },
+  { name: "Ease in-out", value: [0.65, 0, 0.35, 1] },
+  { name: "Anticipate", value: [0.36, -0.3, 0.26, 1] },
+  { name: "Overshoot", value: [0.34, 1.3, 0.64, 1] },
+  { name: "Linear", value: [0, 0, 1, 1] },
+];
+
+export const SPRING_LIMITS = {
+  stiffness: { min: 40, max: 400, step: 5 },
+  damping: { min: 2, max: 40, step: 1 },
+};
+
+// Damped harmonic oscillator released from unit displacement at rest.
+export function springParams({ stiffness, damping, mass = 1 }) {
+  const omega0 = Math.sqrt(stiffness / mass);
+  const zeta = damping / (2 * Math.sqrt(stiffness * mass));
+  let settle;
+  if (zeta < 1) settle = 4.6 / (zeta * omega0);
+  else settle = 4.6 / (omega0 * (zeta - Math.sqrt(Math.max(zeta * zeta - 1, 0)) || 1e-6));
+  const overshoot = zeta < 1 ? Math.exp((-zeta * Math.PI) / Math.sqrt(1 - zeta * zeta)) : 0;
+  return { omega0, zeta, settle, overshoot };
+}
+
+export function springResponse(t, { omega0, zeta }) {
+  if (t <= 0) return 1;
+  if (zeta < 1) {
+    const wd = omega0 * Math.sqrt(1 - zeta * zeta);
+    return Math.exp(-zeta * omega0 * t) * (Math.cos(wd * t) + ((zeta * omega0) / wd) * Math.sin(wd * t));
+  }
+  if (Math.abs(zeta - 1) < 1e-6) return Math.exp(-omega0 * t) * (1 + omega0 * t);
+  const root = Math.sqrt(zeta * zeta - 1);
+  const s1 = -omega0 * (zeta - root);
+  const s2 = -omega0 * (zeta + root);
+  const A = -s2 / (s1 - s2);
+  const B = s1 / (s1 - s2);
+  return A * Math.exp(s1 * t) + B * Math.exp(s2 * t);
+}
+
+export const RUNTIME_SECONDS = 48;
+export const FPS = 24;
+
+export function timecode(seconds, fps = FPS) {
+  const total = Math.max(0, Math.round(seconds * fps));
+  const f = total % fps;
+  const s = Math.floor(total / fps) % 60;
+  const m = Math.floor(total / fps / 60) % 60;
+  const h = Math.floor(total / fps / 3600);
+  const p = (n) => String(n).padStart(2, "0");
+  return `${p(h)}:${p(m)}:${p(s)}:${p(f)}`;
+}
+
+export const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
+=== NEW FILE: components/composition/engine/gl.js ===
+export function createProgram(gl, vsSrc, fsSrc) {
+  const vs = compile(gl, gl.VERTEX_SHADER, vsSrc);
+  const fs = compile(gl, gl.FRAGMENT_SHADER, fsSrc);
+  const program = gl.createProgram();
+  gl.attachShader(program, vs);
+  gl.attachShader(program, fs);
+  gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    const info = gl.getProgramInfoLog(program);
+    gl.deleteProgram(program);
+    throw new Error(`Program link failed: ${info}`);
+  }
+  gl.deleteShader(vs);
+  gl.deleteShader(fs);
+  return program;
+}
+
+function compile(gl, type, src) {
+  const shader = gl.createShader(type);
+  gl.shaderSource(shader, src);
+  gl.compileShader(shader);
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    const info = gl.getShaderInfoLog(shader);
+    gl.deleteShader(shader);
+    throw new Error(`Shader compile failed: ${info}`);
+  }
+  return shader;
+}
+
+export function uniformLocations(gl, program, names) {
+  const out = {};
+  for (const n of names) out[n] = gl.getUniformLocation(program, n);
+  return out;
+}
+
+// Column-major 4x4 helpers (only what the field needs).
+export function perspective(fovy, aspect, near, far) {
+  const f = 1 / Math.tan(fovy / 2);
+  const nf = 1 / (near - far);
+  return new Float32Array([
+    f / aspect, 0, 0, 0,
+    0, f, 0, 0,
+    0, 0, (far + near) * nf, -1,
+    0, 0, 2 * far * near * nf, 0,
+  ]);
+}
+
+export function translation(x, y, z) {
+  return new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1]);
+}
+
+export function multiply(a, b) {
+  const out = new Float32Array(16);
+  for (let c = 0; c < 4; c++) {
+    for (let r = 0; r < 4; r++) {
+      out[c * 4 + r] =
+        a[r] * b[c * 4] + a[4 + r] * b[c * 4 + 1] + a[8 + r] * b[c * 4 + 2] + a[12 + r] * b[c * 4 + 3];
+    }
+  }
+  return out;
+}
+=== NEW FILE: components/composition/engine/field.js ===
+import { createProgram, uniformLocations, perspective, translation, multiply } from "./gl";
+import { VERT, FRAG } from "./shaders";
+
+const FOV = (50 * Math.PI) / 180;
+// Camera distance such that the z=0 plane spans y in [-1, 1].
+export const CAM_DIST = 1 / Math.tan(FOV / 2);
+
+const UNIFORMS = [
+  "uVP", "uTime", "uDpr", "uPointScale", "uAlpha", "uCamDist", "uA", "uB", "uMix", "uIntro",
+  "uRect[0]", "uEase", "uSpring", "uPluck", "uHold", "uPointer", "uGlobe", "uHeroPlayhead",
+  "uGrid", "uAmbient", "uIce", "uAmber",
+];
+
+export const ICE = [0.62, 0.85, 1.0];
+export const AMBER = [1.0, 0.7, 0.36];
+
+// Deterministic seeds so every visitor sees the same field.
+function mulberry32(seed) {
+  let s = seed >>> 0;
+  return () => {
+    s = (s + 0x6d2b79f5) >>> 0;
+    let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+export class Field {
+  constructor(canvas) {
+    this.canvas = canvas;
+    const gl = canvas.getContext("webgl2", {
+      alpha: true,
+      antialias: false,
+      depth: false,
+      stencil: false,
+      premultipliedAlpha: true,
+      preserveDrawingBuffer: false,
+      powerPreference: "high-performance",
+    });
+    if (!gl) throw new Error("WebGL2 unavailable");
+    this.gl = gl;
+    this.program = createProgram(gl, VERT, FRAG);
+    this.u = uniformLocations(gl, this.program, UNIFORMS);
+    this.vao = gl.createVertexArray();
+    this.buffer = gl.createBuffer();
+    this.count = 0;
+    this.grid = [8, 8];
+    this.alpha = 0.3;
+    this.width = 1;
+    this.height = 1;
+    this.dpr = 1;
+    this.aspect = 1;
+    this.vp = new Float32Array(16);
+    this.lost = false;
+    this.onLost = (e) => {
+      e.preventDefault();
+      this.lost = true;
+    };
+    canvas.addEventListener("webglcontextlost", this.onLost);
+    gl.disable(gl.DEPTH_TEST);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.ONE, gl.ONE);
+    gl.clearColor(0, 0, 0, 0);
+    gl.useProgram(this.program);
+    gl.uniform3fv(this.u.uIce, ICE);
+    gl.uniform3fv(this.u.uAmber, AMBER);
+    gl.uniform1f(this.u.uCamDist, CAM_DIST);
+  }
+
+  setCount(n) {
+    const gl = this.gl;
+    const seeds = new Float32Array(n * 4);
+    const rnd = mulberry32(0x9e3779b9);
+    for (let i = 0; i < seeds.length; i++) seeds[i] = rnd();
+    gl.bindVertexArray(this.vao);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, seeds, gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(this.program, "aSeed");
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 4, gl.FLOAT, false, 0, 0);
+    gl.bindVertexArray(null);
+    this.count = n;
+    // Lattice: about twenty particles per node so nodes read as glowing points; node grid ~5:4.
+    const nodes = Math.max(64, Math.floor(n / 20));
+    const cols = Math.max(2, Math.round(Math.sqrt(nodes * 1.25)));
+    const rows = Math.max(2, Math.round(nodes / cols));
+    this.grid = [cols, rows];
+    // Per-particle alpha falls with density so brightness stays constant across tiers.
+    this.alpha = Math.min(0.9, 0.36 * Math.sqrt(24000 / n));
+  }
+
+  resize(width, height, dpr) {
+    const w = Math.max(1, Math.round(width * dpr));
+    const h = Math.max(1, Math.round(height * dpr));
+    if (this.canvas.width !== w || this.canvas.height !== h) {
+      this.canvas.width = w;
+      this.canvas.height = h;
+    }
+    this.width = width;
+    this.height = height;
+    this.dpr = dpr;
+    this.aspect = width / height;
+    this.gl.viewport(0, 0, w, h);
+    const P = perspective(FOV, this.aspect, 0.1, 20);
+    const V = translation(0, 0, -CAM_DIST);
+    this.vp.set(multiply(P, V));
+  }
+
+  render(f) {
+    if (this.lost) return;
+    const gl = this.gl;
+    const u = this.u;
+    gl.useProgram(this.program);
+    gl.uniformMatrix4fv(u.uVP, false, this.vp);
+    gl.uniform1f(u.uTime, f.time);
+    gl.uniform1f(u.uDpr, this.dpr);
+    gl.uniform1f(u.uPointScale, f.pointScale);
+    gl.uniform1f(u.uAlpha, this.alpha);
+    gl.uniform1i(u.uA, f.a);
+    gl.uniform1i(u.uB, f.b);
+    gl.uniform1f(u.uMix, f.mix);
+    gl.uniform1f(u.uIntro, f.intro);
+    gl.uniform4fv(u["uRect[0]"], f.rects);
+    gl.uniform4fv(u.uEase, f.ease);
+    gl.uniform4fv(u.uSpring, f.spring);
+    gl.uniform4fv(u.uPluck, f.pluck);
+    gl.uniform1f(u.uHold, f.hold);
+    gl.uniform4fv(u.uPointer, f.pointer);
+    gl.uniform2fv(u.uGlobe, f.globe);
+    gl.uniform1f(u.uHeroPlayhead, f.heroPlayhead);
+    gl.uniform2fv(u.uGrid, this.grid);
+    gl.uniform1f(u.uAmbient, f.ambient);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.bindVertexArray(this.vao);
+    gl.drawArrays(gl.POINTS, 0, this.count);
+    gl.bindVertexArray(null);
+  }
+
+  dispose() {
+    const gl = this.gl;
+    this.canvas.removeEventListener("webglcontextlost", this.onLost);
+    gl.deleteBuffer(this.buffer);
+    gl.deleteVertexArray(this.vao);
+    gl.deleteProgram(this.program);
+    const ext = gl.getExtension("WEBGL_lose_context");
+    if (ext) ext.loseContext();
+  }
+}
+=== NEW FILE: components/composition/engine/shaders.js ===
+// One vertex shader computes every formation procedurally from a 4-float seed
+// (plus gl_VertexID for the lattice), then blends between the two formations
+// that scroll is currently between. Formation k is expressed in a local
+// [-1, 1] square and mapped into the world rect of the DOM element it belongs
+// to, so the field literally forms *on* the instrument in the document.
+
+export const VERT = /* glsl */ `#version 300 es
+precision highp float;
+precision highp int;
+
+in vec4 aSeed;
+
+uniform mat4 uVP;
+uniform float uTime;
+uniform float uDpr;
+uniform float uPointScale;
+uniform float uAlpha;
+uniform float uCamDist;
+uniform int uA;
+uniform int uB;
+uniform float uMix;
+uniform float uIntro;
+uniform vec4 uRect[6];      // cx, cy, halfW, halfH in world units
+uniform vec4 uEase;         // cubic-bezier x1 y1 x2 y2
+uniform vec4 uSpring;       // omega0, zeta, releaseTime, strength
+uniform vec4 uPluck;        // px, py (local), vx, vy (local displacement)
+uniform float uHold;
+uniform vec4 uPointer;      // wx, wy, strength, radius
+uniform vec2 uGlobe;        // rotY, rotX
+uniform float uHeroPlayhead;
+uniform vec2 uGrid;         // lattice cols, rows
+uniform float uAmbient;
+uniform vec3 uIce;
+uniform vec3 uAmber;
+
+out vec3 vColor;
+out float vAlpha;
+
+const float PI = 3.14159265;
+const float TAU = 6.2831853;
+
+float hash1(float n) { return fract(sin(n * 127.1 + 0.37) * 43758.5453); }
+
+vec2 bez(vec2 p0, vec2 p1, vec2 p2, vec2 p3, float t) {
+  float u = 1.0 - t;
+  return u * u * u * p0 + 3.0 * u * u * t * p1 + 3.0 * u * t * t * p2 + t * t * t * p3;
+}
+vec2 bezD(vec2 p0, vec2 p1, vec2 p2, vec2 p3, float t) {
+  float u = 1.0 - t;
+  return 3.0 * u * u * (p1 - p0) + 6.0 * u * t * (p2 - p1) + 3.0 * t * t * (p3 - p2);
+}
+
+// CSS cubic-bezier(x1,y1,x2,y2) evaluated as y(x). Same solve as lib/easing.js.
+float easeBez(float x, vec4 e) {
+  x = clamp(x, 0.0, 1.0);
+  float cx = 3.0 * e.x, bx = 3.0 * (e.z - e.x) - cx, ax = 1.0 - cx - bx;
+  float cy = 3.0 * e.y, by = 3.0 * (e.w - e.y) - cy, ay = 1.0 - cy - by;
+  float t = x;
+  for (int i = 0; i < 6; i++) {
+    float xt = ((ax * t + bx) * t + cx) * t - x;
+    float dx = (3.0 * ax * t + 2.0 * bx) * t + cx;
+    if (abs(dx) < 1e-4) break;
+    t = clamp(t - xt / dx, 0.0, 1.0);
+  }
+  return ((ay * t + by) * t + cy) * t;
+}
+
+vec3 toWorld(vec3 l, vec4 r) {
+  return vec3(r.xy + l.xy * r.zw, l.z * min(r.z, r.w));
+}
+
+// 0 — unauthored motion: a drifting cloud filling the viewport.
+vec3 fChaos(vec4 s, float t) {
+  vec3 p = s.xyz * 2.0 - 1.0;
+  p.x += 0.12 * sin(t * 0.23 + s.w * TAU);
+  p.y += 0.12 * cos(t * 0.19 + s.z * TAU);
+  p.z *= 0.9;
+  return p;
+}
+
+// 1 — the timeline ruler: baseline, ticks, a playhead that follows the pointer, a haze above.
+vec3 fRuler(vec4 s, float t, float ph, out float size, out float a, out float heat) {
+  float role = s.y;
+  vec3 p = vec3(s.x * 2.0 - 1.0, 0.0, 0.0);
+  size = 1.0; a = 1.0; heat = 0.0;
+  if (role < 0.48) {
+    p.y = (s.z - 0.5) * 0.05;
+  } else if (role < 0.80) {
+    float n = 72.0;
+    float i = floor(s.x * n);
+    p.x = (i + 0.5) / n * 2.0 - 1.0 + (s.w - 0.5) * 0.004;
+    float major = 1.0 - step(0.5, mod(i, 6.0));
+    p.y = s.z * mix(0.28, 0.72, major);
+    size = mix(0.9, 1.15, major);
+  } else if (role < 0.86) {
+    p.x = ph * 2.0 - 1.0 + (s.z - 0.5) * 0.012;
+    p.y = mix(-0.45, 1.25, s.x);
+    heat = 1.0; size = 1.35;
+  } else {
+    p.y = 0.55 + s.z * 1.1 + 0.06 * sin(t * 0.7 + s.w * TAU);
+    p.x += 0.04 * sin(t * 0.4 + s.z * TAU);
+    p.z = (s.w - 0.5) * 0.5;
+    size = 1.8; a = 0.4;
+  }
+  return p;
+}
+
+// 2 — the visitor's easing curve, its grid, its handles, and a soft trace around it.
+vec3 fCurve(vec4 s, vec4 e, out float size, out float a, out float heat) {
+  float role = s.y;
+  size = 1.0; a = 1.0; heat = 0.0;
+  vec2 p0 = vec2(-1.0), p3 = vec2(1.0);
+  vec2 p1 = -1.0 + 2.0 * e.xy;
+  vec2 p2 = -1.0 + 2.0 * e.zw;
+  if (role < 0.62 || role >= 0.80) {
+    bool trace = role >= 0.80;
+    float tt = s.x;
+    vec2 b = bez(p0, p1, p2, p3, tt);
+    vec2 d = normalize(bezD(p0, p1, p2, p3, tt) + vec2(1e-4, 0.0));
+    vec2 nrm = vec2(-d.y, d.x);
+    float w = (s.z - 0.5) * (trace ? 0.5 : 0.09) * (0.4 + s.w * s.w);
+    heat = trace ? 0.0 : 0.35 * s.w;
+    a = trace ? 0.16 : 1.0;
+    size = trace ? 1.5 : 1.0;
+    return vec3(b + nrm * w, (s.w - 0.5) * (trace ? 0.3 : 0.06));
+  } else if (role < 0.74) {
+    float gx = (floor(s.x * 12.0) + 0.5) / 12.0 * 2.0 - 1.0;
+    float gy = (floor(s.z * 12.0) + 0.5) / 12.0 * 2.0 - 1.0;
+    a = 0.35; size = 0.8;
+    return vec3(gx + (s.w - 0.5) * 0.012, gy + (hash1(s.w * 91.0) - 0.5) * 0.012, 0.0);
+  } else {
+    vec2 h = role < 0.77 ? p1 : p2;
+    float ang = s.x * TAU;
+    float r = 0.06 * sqrt(s.z);
+    heat = 0.85; size = 1.2;
+    return vec3(h + r * vec2(cos(ang), sin(ang)), 0.0);
+  }
+}
+
+// Spring released from unit displacement at rest; overdamped branch included.
+float springX(float tt, float w0, float z) {
+  if (tt <= 0.0) return 1.0;
+  if (z < 0.999) {
+    float wd = w0 * sqrt(1.0 - z * z);
+    return exp(-z * w0 * tt) * (cos(wd * tt) + (z * w0 / wd) * sin(wd * tt));
+  }
+  if (z < 1.001) return exp(-w0 * tt) * (1.0 + w0 * tt);
+  float root = sqrt(z * z - 1.0);
+  float s1 = -w0 * (z - root), s2 = -w0 * (z + root);
+  float A = -s2 / (s1 - s2), B = s1 / (s1 - s2);
+  return A * exp(s1 * tt) + B * exp(s2 * tt);
+}
+
+// 3 — a lattice of spring nodes that carries the visitor's pluck outward as a wave.
+vec3 fLattice(int id, vec4 s, float t, out float size, out float a, out float heat) {
+  float cols = uGrid.x, rows = uGrid.y;
+  float total = cols * rows;
+  float k = mod(float(id), total);
+  float col = mod(k, cols), row = floor(k / cols);
+  vec2 p = vec2(col / max(cols - 1.0, 1.0), row / max(rows - 1.0, 1.0)) * 2.0 - 1.0;
+  p += (s.zw - 0.5) * 0.02;
+  vec2 d = p - uPluck.xy;
+  float dist = length(d);
+  float fall = exp(-dist * dist * 1.3);
+  float disp;
+  if (uHold > 0.0) {
+    disp = fall * uHold;
+  } else {
+    float tt = t - uSpring.z - dist * 0.10;
+    disp = tt > 0.0 ? springX(tt, uSpring.x, uSpring.y) * fall : 0.0;
+  }
+  vec2 off = uPluck.zw * disp * uSpring.w;
+  heat = clamp(abs(disp) * uSpring.w * 2.2, 0.0, 1.0);
+  size = 1.0; a = 0.45;
+  return vec3(p + off, disp * 0.6 * uSpring.w);
+}
+
+// 4 — lines of code, typed in top to bottom (stagger follows the reading order).
+vec3 fCode(vec4 s, out float size, out float a, out float heat, out float order) {
+  float rows = 20.0;
+  float r = floor(s.y * rows);
+  float hr = hash1(r + 3.7);
+  float blockPos = mod(r, 5.0);
+  float lvl = blockPos < 0.5 ? 0.0 : (blockPos > 3.5 ? 0.0 : 1.0 + step(0.55, hash1(r * 2.1)));
+  float indent = lvl * 0.11;
+  float len = blockPos < 0.5 || blockPos > 3.5 ? 0.42 + 0.2 * hr : 0.45 + 0.5 * fract(hr * 7.31);
+  float u = s.x;
+  float span = (2.0 - indent) * len;
+  float x = -1.0 + indent + u * span + (s.w - 0.5) * 0.006;
+  float y = 1.0 - (r + 0.5) / rows * 2.0 + (s.z - 0.5) * 0.035;
+  float tok = u * 7.0 + hr * 3.0;
+  float seg = floor(tok);
+  float gap = step(0.84, fract(tok));
+  float cls = mod(seg + floor(hr * 5.0), 3.0);
+  heat = cls < 0.5 ? 0.9 : (cls < 1.5 ? 0.0 : 0.4);
+  a = 0.5 * (1.0 - gap);
+  size = 1.0;
+  order = (r + u * 0.8) / rows;
+  return vec3(x, y, 0.0);
+}
+
+// 5 — the Meridian mark: a globe of meridians, the prime one warm.
+vec3 fGlobe(vec4 s, vec2 rot, out float size, out float a, out float heat) {
+  float role = s.y;
+  float lon, lat;
+  size = 1.0; a = 0.9; heat = 0.0;
+  if (role < 0.55) {
+    float m = floor(s.x * 16.0);
+    lon = (m + 0.5) / 16.0 * TAU;
+    lat = (s.z - 0.5) * PI;
+    heat = m < 0.5 ? 1.0 : 0.0;
+  } else if (role < 0.78) {
+    float m = floor(s.z * 7.0);
+    lat = (m + 0.5) / 7.0 * PI - PI * 0.5;
+    lon = s.x * TAU;
+    a = 0.55;
+  } else {
+    lon = s.x * TAU;
+    lat = asin(clamp(s.z * 2.0 - 1.0, -1.0, 1.0));
+    a = 0.28; size = 1.3;
+  }
+  vec3 p = vec3(cos(lat) * sin(lon), sin(lat), cos(lat) * cos(lon)) * 0.85;
+  float cy = cos(rot.x), sy = sin(rot.x);
+  p = vec3(p.x * cy + p.z * sy, p.y, -p.x * sy + p.z * cy);
+  float cx = cos(rot.y), sx = sin(rot.y);
+  p = vec3(p.x, p.y * cx - p.z * sx, p.y * sx + p.z * cx);
+  a *= mix(0.22, 1.0, smoothstep(-0.9, 0.6, p.z));
+  return p;
+}
+
+vec3 formation(int k, vec4 s, float t, out float size, out float a, out float heat, out float order) {
+  size = 1.0; a = 1.0; heat = 0.0; order = s.w;
+  if (k == 0) return fChaos(s, t);
+  if (k == 1) return fRuler(s, t, uHeroPlayhead, size, a, heat);
+  if (k == 2) return fCurve(s, uEase, size, a, heat);
+  if (k == 3) return fLattice(gl_VertexID, s, t, size, a, heat);
+  if (k == 4) return fCode(s, size, a, heat, order);
+  return fGlobe(s, uGlobe, size, a, heat);
+}
+
+void main() {
+  vec4 s = aSeed;
+  float t = uTime;
+  float sa, aa, ha, oa, sb, ab, hb, ob;
+  vec3 la = formation(uA, s, t, sa, aa, ha, oa);
+  vec3 lb = formation(uB, s, t, sb, ab, hb, ob);
+  vec3 wa = toWorld(la, uRect[uA]);
+  vec3 wb = toWorld(lb, uRect[uB]);
+
+  // Staggered keyframes: every particle runs the visitor's easing, offset by its seed.
+  float st = (uB == 4) ? ob : s.w;
+  float span = 0.5;
+  float m = clamp((uMix - st * span) / (1.0 - span), 0.0, 1.0);
+  float me = easeBez(m, uEase);
+  vec3 p = mix(wa, wb, me);
+  float flight = 4.0 * me * (1.0 - me);
+  p.z += 0.35 * flight * (s.z - 0.35);
+  float size = mix(sa, sb, me);
+  float alpha = mix(aa, ab, me);
+  float heat = mix(ha, hb, me) + flight * 0.9;
+
+  // Opening title: chaos resolving into the ruler.
+  vec3 c0 = toWorld(fChaos(s, t), uRect[0]);
+  float mi = clamp((uIntro - s.w * 0.55) / 0.45, 0.0, 1.0);
+  mi = easeBez(mi, uEase);
+  p = mix(c0, p, mi);
+  heat += 4.0 * mi * (1.0 - mi) * 0.7;
+  alpha = mix(0.35, alpha, mi);
+  size = mix(1.6, size, mi);
+
+  p.xy += uAmbient * 0.003 * vec2(sin(t * 1.3 + s.x * TAU), cos(t * 1.1 + s.y * TAU));
+
+  // Pointer lens: repulsion plus a little swirl, warming what it touches.
+  vec2 d = p.xy - uPointer.xy;
+  float r2 = dot(d, d);
+  float lens = uPointer.z * exp(-r2 / (uPointer.w * uPointer.w));
+  vec2 dir = d * inversesqrt(r2 + 1e-5);
+  p.xy += (dir * 0.7 + vec2(-dir.y, dir.x) * 0.5) * lens * uPointer.w * 0.9;
+  heat += lens * 1.3;
+
+  vec4 clip = uVP * vec4(p, 1.0);
+  gl_Position = clip;
+  float depthScale = clamp(uCamDist / max(clip.w, 0.2), 0.3, 3.0);
+  gl_PointSize = uPointScale * uDpr * size * depthScale;
+
+  heat = clamp(heat, 0.0, 1.0);
+  vec3 col = mix(uIce, uAmber, heat);
+  col = mix(col, vec3(1.0), smoothstep(0.72, 1.0, heat) * 0.55);
+  vColor = col;
+  vAlpha = alpha * uAlpha;
+}
+`;
+
+export const FRAG = /* glsl */ `#version 300 es
+precision mediump float;
+in vec3 vColor;
+in float vAlpha;
+out vec4 outColor;
+void main() {
+  vec2 c = gl_PointCoord - 0.5;
+  float d = length(c) * 2.0;
+  float a = smoothstep(1.0, 0.15, d);
+  a *= a * vAlpha;
+  outColor = vec4(vColor * a, a);
+}
+`;
