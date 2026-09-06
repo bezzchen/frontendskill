@@ -1,113 +1,128 @@
 {
-  "suite_name": "creative-frontend-architect-v1.6-routing-baseline",
-  "repetitions_per_condition": 3,
-  "conditions": [
-    "baseline_no_skill",
-    "with_skill"
-  ],
-  "run_policy": {
-    "fresh_context_each_run": true,
-    "reset_fixture_before_each_run": true,
-    "pin_model_agent_and_settings": true,
-    "do_not_reveal_expected_behavior_to_agent": true,
-    "routing_phase_instruction": "Inspect the repository and propose the architecture. Do not implement yet unless the prompt explicitly requests otherwise."
+ "suite_name": "creative-frontend-architect-v1.6-routing-baseline",
+ "repetitions_per_condition": 3,
+ "conditions": [
+  "baseline_no_skill",
+  "with_skill"
+ ],
+ "run_policy": {
+  "fresh_context_each_run": true,
+  "reset_fixture_before_each_run": true,
+  "pin_model_agent_and_settings": true,
+  "do_not_reveal_expected_behavior_to_agent": true,
+  "routing_phase_instruction": "Inspect the repository and propose the architecture. Do not implement yet unless the prompt explicitly requests otherwise."
+ },
+ "evals": [
+  {
+   "id": "E1-ordinary-settings-restraint",
+   "fixture": "next-tailwind-base",
+   "adversarial_cue": "The dependency sentence intentionally gives permission to over-engineer; restraint is being tested.",
+   "prompt": "You are working in this existing Next.js + React + Tailwind application. The account settings page already works but feels plain. Improve the visual polish and interaction quality of the page: profile form, notification toggles, password section, save state, validation, and mobile behavior. There is currently no animation library installed. You may add dependencies if you think they are justified. Keep the page accessible and production-ready.\n\nFirst inspect the repository and propose the architecture and interaction approach. Do not implement yet.",
+   "expected_behavior": [
+    "Treat this primarily as product UI, not a showcase-animation problem.",
+    "Prefer native CSS/browser behavior for ordinary transitions unless a dependency has a concrete task-specific advantage.",
+    "Prioritize hierarchy, typography, spacing, states, focus, validation, responsive behavior, and reduced motion."
+   ],
+   "critical_failure_signals": [
+    "Proposes Three.js/R3F, PixiJS, shaders, particles, or cinematic scroll without a task-specific need.",
+    "Adds a heavy motion engine mainly to compensate for weak product hierarchy."
+   ]
   },
-  "evals": [
-    {
-      "id": "E1-ordinary-settings-restraint",
-      "fixture": "next-tailwind-base",
-      "adversarial_cue": "The dependency sentence intentionally gives permission to over-engineer; restraint is being tested.",
-      "prompt": "You are working in this existing Next.js + React + Tailwind application. The account settings page already works but feels plain. Improve the visual polish and interaction quality of the page: profile form, notification toggles, password section, save state, validation, and mobile behavior. There is currently no animation library installed. You may add dependencies if you think they are justified. Keep the page accessible and production-ready.\n\nFirst inspect the repository and propose the architecture and interaction approach. Do not implement yet.",
-      "expected_behavior": [
-        "Treat this primarily as product UI, not a showcase-animation problem.",
-        "Prefer native CSS/browser behavior for ordinary transitions unless a dependency has a concrete task-specific advantage.",
-        "Prioritize hierarchy, typography, spacing, states, focus, validation, responsive behavior, and reduced motion."
-      ],
-      "critical_failure_signals": [
-        "Proposes Three.js/R3F, PixiJS, shaders, particles, or cinematic scroll without a task-specific need.",
-        "Adds a heavy motion engine mainly to compensate for weak product hierarchy."
-      ]
-    },
-    {
-      "id": "E2-preserve-anime-v4",
-      "fixture": "anime-v4-portfolio",
-      "prompt": "This portfolio already has an animation setup. I want the experience/company logos in one section to feel like a living system: on larger screens they can loosely orbit around a central project object, users should be able to drag them, and switching between 'Experience' and 'Projects' should reorganize the same elements into a clean structured state. It also needs to work well on touch devices and small screens.\n\nInspect the repository, including installed package versions. Propose the architecture and interaction model first. Do not implement yet.",
-      "expected_behavior": [
-        "Inspect and respect the installed Anime.js v4 stack, which the project already uses for its intro reveal.",
-        "Recognize Anime.js v4 as a strong fit for drag/layout/staggered DOM/SVG interaction before adding another overlapping engine.",
-        "Design an appropriate mobile/touch recipe independently rather than merely shrinking the desktop behavior.",
-        "Plan reduced-motion and cleanup/lifecycle handling."
-      ],
-      "critical_failure_signals": [
-        "Proposes GSAP/Motion for the same concern without identifying a concrete capability gap.",
-        "Escalates to R3F solely to create orbiting elements.",
-        "Uses or plans Anime.js v3 API patterns despite the fixture pinning v4."
-      ]
-    },
-    {
-      "id": "E3-cinematic-scroll",
-      "fixture": "next-tailwind-base",
-      "prompt": "Add a portfolio case-study section with a three-act scroll narrative. The section should hold while the user progresses through it; typography, diagrams, and project media should enter in coordinated stages; the sequence should track scroll progress; one SVG path should draw as the story advances; then the page should release naturally into the next normal document section. The rest of the site should remain ordinary semantic React/Next.js UI. Reduced-motion users must get the same content without scroll choreography.\n\nInspect the repository and propose the architecture first. Do not implement yet.",
-      "expected_behavior": [
-        "Recognize the task as coordinated scroll choreography rather than ordinary component state.",
-        "Choose an architecture that cleanly supports holding/pinning, scrubbed progress, staged coordination, SVG drawing, lifecycle cleanup, and reduced-motion output.",
-        "GSAP/ScrollTrigger is a strong candidate, but an excellent current native approach may pass if it satisfies the same requirements with lower complexity.",
-        "Keep the rest of the site normal semantic DOM."
-      ],
-      "critical_failure_signals": [
-        "Uses unrelated WebGL/3D for the whole site.",
-        "Proposes multiple overlapping motion engines for the same sequence.",
-        "Reduced-motion approach loses content or narrative order."
-      ],
-      "scoring_note": "Score capability fit and reasoning, not whether a specific brand/library name appears."
-    },
-    {
-      "id": "E4-dom-plus-gpu-media",
-      "fixture": "next-tailwind-base",
-      "prompt": "The existing responsive project grid is semantic HTML with normal links, headings, descriptions, and media. I want only the project images to gain a high-end liquid/refraction distortion on pointer movement and a more dramatic shader-like transition when a project is opened. Text, layout, accessibility, SEO, and responsive behavior should remain normal DOM.\n\nInspect the repository. Choose the architecture with the least unnecessary complexity and explain why it is preferable to the nearest alternatives. Do not implement yet.",
-      "expected_behavior": [
-        "Preserve semantic DOM and classify this as a bounded DOM+GPU media problem.",
-        "Consider a focused GPU/shader bridge such as Curtains.js, VFX-JS, or a small OGL/custom layer before full R3F.",
-        "Account for touch/mobile/reduced-motion fallback and GPU lifecycle."
-      ],
-      "critical_failure_signals": [
-        "Rebuilds the entire project grid in Three.js/R3F.",
-        "Moves text/semantics into canvas.",
-        "Chooses a large 3D architecture for bounded image effects without a clear reason."
-      ]
-    },
-    {
-      "id": "E5-dense-2d-renderer",
-      "fixture": "next-tailwind-base",
-      "prompt": "Create an interactive 'experience constellation' containing about 500 small logo/image nodes. Nodes should drift subtly, respond to pointer proximity, support selection/filtering, and smoothly regroup by category. The surrounding page is a React/Next.js site, but this visualization is one bounded section. It must remain smooth on a normal laptop and degrade sensibly on mobile.\n\nInspect the repository and decide the rendering architecture before implementation. Do not implement yet.",
-      "expected_behavior": [
-        "Recognize a renderer-density problem.",
-        "Strongly consider PixiJS or another suitable GPU-accelerated 2D/canvas model rather than 500 frequently animated DOM nodes.",
-        "Avoid true 3D unless depth/camera/3D geometry is conceptually required.",
-        "Plan batching, mobile simplification, offscreen pausing, and an accessible semantic representation."
-      ],
-      "critical_failure_signals": [
-        "Plans to animate roughly 500 React DOM elements every frame.",
-        "Selects R3F solely because GPU rendering is needed.",
-        "Ignores accessibility representation or offscreen render cost."
-      ]
-    },
-    {
-      "id": "E6-vague-dynamic-intent",
-      "fixture": "next-tailwind-base",
-      "prompt": "This portfolio works, but it feels a little static and not very memorable. Make it feel more dynamic and impressive.\n\nInspect the existing site first. Tell me what you would change and why before implementing anything.",
-      "expected_behavior": [
-        "Diagnose whether the real weakness is art direction, hierarchy, typography, composition, interaction, or motion before selecting technology.",
-        "Do not equate 'dynamic' with adding multiple effects or libraries.",
-        "Propose one or two high-leverage changes tied to the existing content and design, or explicitly conclude that motion is not the highest-priority fix.",
-        "Ask for or identify missing brand/audience/reference context when it materially affects the creative direction."
-      ],
-      "critical_failure_signals": [
-        "Immediately proposes a stack of GSAP/Three.js/particles/custom cursor/parallax without diagnosing the page.",
-        "Uses generic AI-design tropes as the primary answer.",
-        "Treats more animation as inherently better."
-      ]
-    }
-  ],
-  "evaluation_layer": "B-routing-judgment"
+  {
+   "id": "E2-preserve-anime-v4",
+   "fixture": "anime-v4-portfolio",
+   "prompt": "This portfolio already has an animation setup. I want the experience/company logos in one section to feel like a living system: on larger screens they can loosely orbit around a central project object, users should be able to drag them, and switching between 'Experience' and 'Projects' should reorganize the same elements into a clean structured state. It also needs to work well on touch devices and small screens.\n\nInspect the repository, including installed package versions. Propose the architecture and interaction model first. Do not implement yet.",
+   "expected_behavior": [
+    "Inspect and respect the installed Anime.js v4 stack, which the project already uses for its intro reveal.",
+    "Recognize Anime.js v4 as a strong fit for drag/layout/staggered DOM/SVG interaction before adding another overlapping engine.",
+    "Design an appropriate mobile/touch recipe independently rather than merely shrinking the desktop behavior.",
+    "Plan reduced-motion and cleanup/lifecycle handling."
+   ],
+   "critical_failure_signals": [
+    "Proposes GSAP/Motion for the same concern without identifying a concrete capability gap.",
+    "Escalates to R3F solely to create orbiting elements.",
+    "Uses or plans Anime.js v3 API patterns despite the fixture pinning v4."
+   ]
+  },
+  {
+   "id": "E3-cinematic-scroll",
+   "fixture": "next-tailwind-base",
+   "prompt": "Add a portfolio case-study section with a three-act scroll narrative. The section should hold while the user progresses through it; typography, diagrams, and project media should enter in coordinated stages; the sequence should track scroll progress; one SVG path should draw as the story advances; then the page should release naturally into the next normal document section. The rest of the site should remain ordinary semantic React/Next.js UI. Reduced-motion users must get the same content without scroll choreography.\n\nInspect the repository and propose the architecture first. Do not implement yet.",
+   "expected_behavior": [
+    "Recognize the task as coordinated scroll choreography rather than ordinary component state.",
+    "Choose an architecture that cleanly supports holding/pinning, scrubbed progress, staged coordination, SVG drawing, lifecycle cleanup, and reduced-motion output.",
+    "GSAP/ScrollTrigger is a strong candidate, but an excellent current native approach may pass if it satisfies the same requirements with lower complexity.",
+    "Keep the rest of the site normal semantic DOM."
+   ],
+   "critical_failure_signals": [
+    "Uses unrelated WebGL/3D for the whole site.",
+    "Proposes multiple overlapping motion engines for the same sequence.",
+    "Reduced-motion approach loses content or narrative order."
+   ],
+   "scoring_note": "Score capability fit and reasoning, not whether a specific brand/library name appears."
+  },
+  {
+   "id": "E4-dom-plus-gpu-media",
+   "fixture": "next-tailwind-base",
+   "prompt": "The existing responsive project grid is semantic HTML with normal links, headings, descriptions, and media. I want only the project images to gain a high-end liquid/refraction distortion on pointer movement and a more dramatic shader-like transition when a project is opened. Text, layout, accessibility, SEO, and responsive behavior should remain normal DOM.\n\nInspect the repository. Choose the architecture with the least unnecessary complexity and explain why it is preferable to the nearest alternatives. Do not implement yet.",
+   "expected_behavior": [
+    "Preserve semantic DOM and classify this as a bounded DOM+GPU media problem.",
+    "Consider a focused GPU/shader bridge such as Curtains.js, VFX-JS, or a small OGL/custom layer before full R3F.",
+    "Account for touch/mobile/reduced-motion fallback and GPU lifecycle."
+   ],
+   "critical_failure_signals": [
+    "Rebuilds the entire project grid in Three.js/R3F.",
+    "Moves text/semantics into canvas.",
+    "Chooses a large 3D architecture for bounded image effects without a clear reason."
+   ]
+  },
+  {
+   "id": "E5-dense-2d-renderer",
+   "fixture": "next-tailwind-base",
+   "prompt": "Create an interactive 'experience constellation' containing about 500 small logo/image nodes. Nodes should drift subtly, respond to pointer proximity, support selection/filtering, and smoothly regroup by category. The surrounding page is a React/Next.js site, but this visualization is one bounded section. It must remain smooth on a normal laptop and degrade sensibly on mobile.\n\nInspect the repository and decide the rendering architecture before implementation. Do not implement yet.",
+   "expected_behavior": [
+    "Recognize a renderer-density problem.",
+    "Strongly consider PixiJS or another suitable GPU-accelerated 2D/canvas model rather than 500 frequently animated DOM nodes.",
+    "Avoid true 3D unless depth/camera/3D geometry is conceptually required.",
+    "Plan batching, mobile simplification, offscreen pausing, and an accessible semantic representation."
+   ],
+   "critical_failure_signals": [
+    "Plans to animate roughly 500 React DOM elements every frame.",
+    "Selects R3F solely because GPU rendering is needed.",
+    "Ignores accessibility representation or offscreen render cost."
+   ]
+  },
+  {
+   "id": "E6-vague-dynamic-intent",
+   "fixture": "next-tailwind-base",
+   "prompt": "This portfolio works, but it feels a little static and not very memorable. Make it feel more dynamic and impressive.\n\nInspect the existing site first. Tell me what you would change and why. Do not implement yet.",
+   "expected_behavior": [
+    "Diagnose whether the real weakness is art direction, hierarchy, typography, composition, interaction, or motion before selecting technology.",
+    "Do not equate 'dynamic' with adding multiple effects or libraries.",
+    "Propose one or two high-leverage changes tied to the existing content and design, or explicitly conclude that motion is not the highest-priority fix.",
+    "Ask for or identify missing brand/audience/reference context when it materially affects the creative direction."
+   ],
+   "critical_failure_signals": [
+    "Immediately proposes a stack of GSAP/Three.js/particles/custom cursor/parallax without diagnosing the page.",
+    "Uses generic AI-design tropes as the primary answer.",
+    "Treats more animation as inherently better."
+   ],
+   "amendment_2026_09_02": "Terminal instruction replaced. The original ended 'Tell me what you would change and why BEFORE IMPLEMENTING ANYTHING' \u2014 an order of operations, not a stop \u2014 while E1-E5 all end 'Do not implement yet.' Under the original wording 3/3 baseline attempts implemented a full redesign instead of proposing, while E1-E5 complied 10/10 under identical delivery. This was an eval-design defect, not a model failure. INVALIDATES: E6 rep 1 (both model arms) and the Opus E6 baseline, which were run under the old wording and are not comparable to anything run under the new one. E6 restarts at n=0 on both arms. See results/deviations/E6_PROMPT_DEFECT.md.",
+   "prompt_before_amendment": "This portfolio works, but it feels a little static and not very memorable. Make it feel more dynamic and impressive.\n\nInspect the existing site first. Tell me what you would change and why before implementing anything."
+  }
+ ],
+ "evaluation_layer": "B-routing-judgment",
+ "amendments": [
+  {
+   "date": "2026-09-02",
+   "eval": "E6-vague-dynamic-intent",
+   "change": "terminal instruction aligned with E1-E5",
+   "reason": "original phrasing permitted implementation after explanation; 3/3 runs implemented",
+   "invalidates": [
+    "E6 rep1 Fable",
+    "E6 rep1 Opus"
+   ],
+   "authorised_by": "owner instruction 'lets get started on the open items' following a recommendation to fix the file and accept n=1 for this programme"
+  }
+ ]
 }

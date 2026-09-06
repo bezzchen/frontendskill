@@ -1,3 +1,14 @@
+> **SUPERSEDED 2026-09-02.** This dossier asked the owner to rescore E6 rep 1's Architectural
+> Restraint. That question is now moot: E6's pinned prompt was found defective (it permitted
+> implementation after explanation, and 3/3 later attempts implemented rather than proposed), and the
+> prompt was amended, which invalidates E6 rep 1 on both model arms. A rescore of an invalidated run
+> cannot revive criterion A's weak-case rule, which is now recorded NOT_MEASURED. The dossier is kept
+> for the record and because its argument about the Architectural Restraint anchors — that a run was
+> marked down for ambition under anchors written about dependency escalation — remains a live concern
+> for the rubric itself. See results/deviations/E6_PROMPT_DEFECT.md.
+
+---
+
 # E6 Architectural-Restraint rescore dossier (prepared 2026-08-25)
 
 The success bar names one blocking condition before its targeted weak-case rule can bind:

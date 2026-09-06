@@ -1,0 +1,52 @@
+{
+ "scores": [
+  {
+   "id": "P11",
+   "conceptual_fit": 3,
+   "architectural_restraint": 4,
+   "existing_stack_respect": 4,
+   "critical_failures": [],
+   "one_line_rationale": "Most minimal design in the pool - zero JS, zero deps, section stays a server component, choreography as one @supports+@media-gated CSS block - and the most technically precise mechanism knowledge (contain-range-to-pin mapping, animation shorthand resetting animation-timeline, avoiding timeline-scope); cost is that Firefox stable and Safari <26 get no choreography at all, an explicitly owner-gated assumption with a named switch trigger, but still a real fit compromise for a signature section."
+  },
+  {
+   "id": "P14",
+   "conceptual_fit": 3,
+   "architectural_restraint": 3,
+   "existing_stack_respect": 3,
+   "critical_failures": [],
+   "one_line_rationale": "Correct sticky-track/one-progress-source design with a genuinely testable pure timeline module and disciplined continuous-vs-discrete write channels, but wraps the entire case-study subtree in a 'use client' root against the repo's server-first convention, puts choreography CSS in globals.css on a mistaken Tailwind-v4 rationale (CSS Modules were available), and picks 100dvh for the sticky stage, which changes the scrub range mid-scroll and destabilises its own progress formula on mobile."
+  },
+  {
+   "id": "P18",
+   "conceptual_fit": 4,
+   "architectural_restraint": 4,
+   "existing_stack_respect": 4,
+   "critical_failures": [],
+   "one_line_rationale": "Crispest ownership in the pool - one layout primitive (sticky), one JS-owned scalar via setProperty, pure-CSS interpolation, server-rendered content passed as children into a ~60-line client shell - with correct alternative rejections (GSAP pin-spacer/fixed flip, Motion cost, SDA Firefox gap), the most precise resolution of the pathLength question (pathLength=1 with unitless dash values, citing the Safari page-zoom bug), installed-stack specifics (Turbopack/Lightning CSS module constraints, Next 16 browser floor), and honest naming of the hydration scrollHeight jump the whole design family shares."
+  },
+  {
+   "id": "P19",
+   "conceptual_fit": 4,
+   "architectural_restraint": 4,
+   "existing_stack_respect": 4,
+   "critical_failures": [],
+   "one_line_rationale": "Equally minimal zero-dependency sticky + single --p design with an explicit one-writer/one-reader ownership map and the deepest installed-version engagement (Next 16's removed automatic scroll-behavior, framework browser floor, svh-vs-dvh scrub stability, ConstellationData flagged as a 500-node perf trap); softest points are replacing pathLength with a getTotalLength() measurement on a largely historical compatibility concern, and a wrong CSS clamp() argument order in its interpolation sketch."
+  },
+  {
+   "id": "P20",
+   "conceptual_fit": 3,
+   "architectural_restraint": 3,
+   "existing_stack_respect": 3,
+   "critical_failures": [],
+   "one_line_rationale": "Compact, correct sticky-track architecture mapping every requirement to a mechanism, static-first with a data-enhanced gate, correct pathLength=1 draw and stable vh/svh units - but its rejection of CSS scroll-driven animations rests on a wrong capability claim ('we need JS anyway for act-threshold logic', which animation-range can express) and names Safari rather than Firefox as the support gap, it runs a continuous rAF while the track is near the viewport rather than coalescing scroll bursts, and it engages the installed versions less than the top three."
+  }
+ ],
+ "ranking_best_to_worst": [
+  "P18",
+  "P19",
+  "P11",
+  "P14",
+  "P20"
+ ],
+ "notes": "Homogeneous pool: four of five converge on the same architecture (tall sticky track, one normalized progress scalar to a CSS custom property, data-attribute staging, dashoffset draw, static-by-default reduced-motion parity). None proposed renderer escalation, scroll hijacking, or a novelty dependency, so no proposal fell below 3 on any dimension. CONTRADICTIONS: (1) CSS scroll-driven animations - P11, P18, P19 all report Firefox stable lacking it with Chrome 115+/Safari 26+; P14 vaguer; P20 is the OUTLIER, blaming Safari recency and never mentioning Firefox, WHICH INVERTS THE ACTUAL GAP. P11 alone builds on SDA and treats non-support as identical to the reduced-motion fallback - elegant, but the no-choreography cohort is larger than its framing implies. (2) pathLength - P11/P14/P18/P20 use pathLength=1; P19 rejects it citing no MDN BCD entry and historical WebKit/Blink bugs; P18 addresses the same underlying Safari page-zoom defect by KEEPING pathLength and writing unitless dash values, the more economical fix. Could not verify BCD coverage, so P19 scored as over-cautious rather than wrong. (3) vector-effect: non-scaling-stroke - P11 recommends it on the drawn path, P19 warns against combining with stroke-dash*; P19's caution better founded. (4) svh vs dvh - P14 picks 100dvh, P19 argues dvh changes the scrub span mid-scroll and jitters; P19 correct, a concrete mechanism defect in P14 though not page-breaking. All five repo surveys agree on the installed stack and corroborate each other - no factually wrong claim about the stack, no page-breaking recommendation, hence empty critical_failures throughout."
+}

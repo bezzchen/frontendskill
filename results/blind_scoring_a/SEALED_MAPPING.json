@@ -1,0 +1,31 @@
+{
+ "seed": 20260902,
+ "created": "2026-09-02",
+ "mapping": {
+  "P01": "E2-base-rep3",
+  "P02": "E2-ws-rep2",
+  "P03": "E4-ws-rep3",
+  "P04": "E2-base-rep2",
+  "P05": "E5-base-rep3",
+  "P06": "E1-base-rep3",
+  "P07": "E1-ws-rep2",
+  "P08": "E4-base-rep2",
+  "P09": "E5-ws-rep3",
+  "P10": "E5-base-rep2",
+  "P11": "E3-ws-rep1",
+  "P12": "E1-ws-rep3",
+  "P13": "E4-ws-rep1",
+  "P14": "E3-base-rep3",
+  "P15": "E1-ws-rep1",
+  "P16": "E5-ws-rep1",
+  "P17": "E2-ws-rep3",
+  "P18": "E3-ws-rep3",
+  "P19": "E3-ws-rep2",
+  "P20": "E3-base-rep2",
+  "P21": "E4-ws-rep2",
+  "P22": "E1-base-rep2",
+  "P23": "E2-ws-rep1",
+  "P24": "E5-ws-rep2",
+  "P25": "E4-base-rep3"
+ }
+}

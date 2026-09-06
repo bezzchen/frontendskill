@@ -1,0 +1,52 @@
+{
+ "scores": [
+  {
+   "id": "P05",
+   "conceptual_fit": 4,
+   "architectural_restraint": 4,
+   "existing_stack_respect": 4,
+   "critical_failures": [],
+   "one_line_rationale": "Canvas 2D + sprite atlas with a React-free typed-array core and DOM/Tailwind chrome; rejects DOM-per-node and WebGL with the correct scale argument (instancing buys nothing at n=500), zero new deps, crisp ownership seam - frame-cost figures are estimates rather than measurements, and a spatial hash at n=500 is mild excess, but the calls and reasons are right and economically stated."
+  },
+  {
+   "id": "P10",
+   "conceptual_fit": 4,
+   "architectural_restraint": 4,
+   "existing_stack_respect": 4,
+   "critical_failures": [],
+   "one_line_rationale": "Same Canvas 2D hot path / React-DOM cold path conclusion, argued more completely: prices raw WebGL and library WebGL separately, explicitly declines a spatial index as unneeded at 500, and catches the repo's CSS-token theming and hydration seams; only weakness is the unmeasured '150-200 animated DOM nodes' ceiling used to reject the DOM option."
+  },
+  {
+   "id": "P09",
+   "conceptual_fit": 2,
+   "architectural_restraint": 1,
+   "existing_stack_respect": 3,
+   "critical_failures": [],
+   "one_line_rationale": "Hand-rolled WebGL2 instanced renderer at 500 nodes PLUS a full Canvas2D fallback renderer - it builds both, while conceding the fallback is viable on laptops (the brief's stated target), so the escalation rests on an unmeasured 'marginal at DPR 3 on mid-range phones' hypothesis; dependency-free, version-aware and correct on Next 16 dynamic-import rules, which holds up stack respect, but the ~12 KB/700-900 line budget for two renderers plus chrome is not credible."
+  },
+  {
+   "id": "P16",
+   "conceptual_fit": 4,
+   "architectural_restraint": 4,
+   "existing_stack_respect": 4,
+   "critical_failures": [],
+   "one_line_rationale": "DOM nodes with compositor-driven CSS motion, backed by THE ONLY REAL MEASUREMENT IN THE POOL (500 nodes at 0.6 ms JS / 60 fps, holding under 4-6x CPU throttle), and the leanest architecture here - no renderer, no atlas, no per-frame loop for drift, positions as CSS custom properties so SSR and resize need no JS, with selection/filter/theming/hit-testing inherited from the installed React+CSS stack instead of rebuilt beside a canvas; benchmark is M4/headless so the mobile layer-memory risk is argued rather than measured, and it is tiered down honestly."
+  },
+  {
+   "id": "P24",
+   "conceptual_fit": 4,
+   "architectural_restraint": 3,
+   "existing_stack_respect": 4,
+   "critical_failures": [],
+   "one_line_rationale": "Canvas 2D, zero deps, with the sharpest alternatives table of the canvas group (raw WebGL2 correctly separated from Pixi/three, explicit escalation threshold) and the best stack detail - SSR-safe canvas needing no next/dynamic, CSS-variable palette, React 19.2 useEffectEvent - but reaches the same conclusion carrying more machinery than it needs: seven modules, a four-step quality ladder, optional neighbour links, and register framing."
+  }
+ ],
+ "ranking_best_to_worst": [
+  "P16",
+  "P10",
+  "P05",
+  "P24",
+  "P09"
+ ],
+ "notes": "Four of five converge on essentially the same shape (zero new dependencies, one bounded client section, imperative core with React owning only discrete state), so discrimination is fine-grained and P05/P10/P16 land genuinely tied at 12; broke that tie on evidence quality (P16 measured its central claim, the others estimated) and on how much is rebuilt beside the installed stack. DELIBERATELY DID NOT REWARD the two long catalog surveys (P09, P24) for breadth, per the length rule - they mostly support a 'build custom' conclusion the shorter proposals reach directly. P16 and P10 reach OPPOSITE verdicts on DOM at 500 nodes and P16 has the measurement, but did not penalise the Canvas 2D proposals for that: Canvas 2D at 500 sprites is defensible and P16's own bench shows the two matched at that scale. P09 was the only clear outlier - thorough and dependency-free, but building BOTH a WebGL2 renderer and a Canvas2D fallback for 500 sprites is renderer escalation by the anchor's own wording. No proposal made a false claim about the installed stack; none would break the existing page."
+}

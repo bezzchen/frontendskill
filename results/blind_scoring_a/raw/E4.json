@@ -1,0 +1,54 @@
+{
+ "scores": [
+  {
+   "id": "P03",
+   "conceptual_fit": 4,
+   "architectural_restraint": 4,
+   "existing_stack_respect": 4,
+   "critical_failures": [],
+   "one_line_rationale": "Shared viewport WebGL2 canvas skinning DOM img rects with the same machinery driving both hover and the open transition; single client module with delegated click interception keeps the grid fully server-rendered, and it uniquely rejects the page.jsx mount point and dual-ownership of the quad transform; ping-pong flowmap FBO in v1 is one notch above minimal but shared across quads and defensible."
+  },
+  {
+   "id": "P13",
+   "conceptual_fit": 3,
+   "architectural_restraint": 4,
+   "existing_stack_respect": 4,
+   "critical_failures": [],
+   "one_line_rationale": "Leanest rendering model (one program, one pass, no FBOs, age-based decay giving a deterministic stop condition) and the best-argued never-hide-the-img case, but the global rule is not reconciled with the open transition, where the quad flies off and expands while the original card image stays visible underneath - a duplicate-image artifact on the brief's second half that goes unaddressed."
+  },
+  {
+   "id": "P08",
+   "conceptual_fit": 3,
+   "architectural_restraint": 4,
+   "existing_stack_respect": 4,
+   "critical_failures": [],
+   "one_line_rationale": "Correct shared-overlay call with the sharpest framing of the brief's tension ('least unnecessary complexity is bounded below by the quality requirement') and a good rejection of whole-card rasterization, but mounts the layer as a sibling in page.jsx rather than the root layout, so the dramatic open transition is cut by client navigation once a real route exists - acknowledged with a migration note rather than designed for."
+  },
+  {
+   "id": "P21",
+   "conceptual_fit": 4,
+   "architectural_restraint": 4,
+   "existing_stack_respect": 4,
+   "critical_failures": [],
+   "one_line_rationale": "Route-persistent shared canvas with the crispest ownership table and an explicitly FBO-free analytic field argued as the reason the loop is stoppable; only proposal to derive architecture from repo-specific installed facts (opaque card backgrounds force canvas-above-content; no next.config means shaders stay JS template strings), and it reasons the hide-the-img judgement both ways including the alt-text carve-out."
+  },
+  {
+   "id": "P25",
+   "conceptual_fit": 3,
+   "architectural_restraint": 4,
+   "existing_stack_respect": 3,
+   "critical_failures": [
+    "Says the GL island is loaded via next/dynamic with ssr:false while also insisting no 'use client' spreads into existing components; in the App Router next/dynamic with ssr:false is not permitted from a Server Component, so as written this errors - narrowly repairable with a client wrapper, but a wrong claim about the installed framework."
+   ],
+   "one_line_rationale": "Right architecture with good instincts (binds to the existing data-project-media contract, names scroll 'swim' and colour-parity risks with mitigations, vanilla-first with explicit OGL/three tripwires), but gates the whole layer behind (hover:hover) and (pointer:fine), silently dropping the requested open transition on all touch devices, leaves the mount point unresolved, and gets the next/dynamic mechanic wrong."
+  }
+ ],
+ "ranking_best_to_worst": [
+  "P21",
+  "P03",
+  "P13",
+  "P08",
+  "P25"
+ ],
+ "notes": "All five converged on one shared full-viewport WebGL2 canvas, quads synced to DOM rects, raw GL, zero new dependencies - so Architectural restraint did not discriminate: every proposal genuinely earned a 4 and penalising one to spread the range would have been manufactured. Separation came from Conceptual fit (does the chosen mount point and hide/overlay rule actually deliver the dramatic open transition, on every input device) and from whether installed-stack facts CHANGED a decision rather than merely being recited. Hide-vs-visible split: P03 and P21 hide only after the first GL frame and both give a reason (P03 chooses opacity:0 over visibility:hidden to preserve the a11y node; P21 gates on data-gl and flags the same caveat); P13 and P25 overlay without hiding, well-argued for hover but P13 never resolves it for the transition and P25 mitigates only the colour-parity half. Could not independently verify repo claims, but all five agree on the stack and the three citing exact versions agree on 16.2.12/19.2.8/4.3.3 with no contradictions, so treated as mutually corroborated. P03, P13 and P21 are close enough at the top that the ordering between them is a judgement call, not a gap."
+}

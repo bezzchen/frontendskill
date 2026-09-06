@@ -1,0 +1,60 @@
+{
+ "scores": [
+  {
+   "id": "P01",
+   "conceptual_fit": 4,
+   "architectural_restraint": 4,
+   "existing_stack_respect": 3,
+   "critical_failures": [
+    "States createDraggable in installed 4.5.0 is 'pointer-events based'; three other proposals citing 4.5.0 source state it uses mouse+touch events, not Pointer Events.",
+    "Puts per-frame orbit transform on a parent wrapper of the draggable; P17 reports from source that Draggable caches ancestor inverse transforms once at construction, making grab bounds stale. Not acknowledged or spiked."
+   ],
+   "one_line_rationale": "'Transform-over-flow' is the most elegant answer to 'same elements reorganize', declining first-party createLayout for a stated two-writer reason rather than from ignorance - but one contested claim about installed Draggable and an unexamined ancestor-transform dependency hold back stack respect."
+  },
+  {
+   "id": "P04",
+   "conceptual_fit": 3,
+   "architectural_restraint": 4,
+   "existing_stack_respect": 3,
+   "critical_failures": [
+    "Same unacknowledged parent-wrapper-transform risk as P01/P02.",
+    "Never surfaces createLayout, a first-party module in installed 4.5.0 aimed squarely at the reorganize requirement; hand-rolls FLIP and hand-rolls capture-phase click suppression that three other proposals report Draggable already performs."
+   ],
+   "one_line_rationale": "Leanest architecture with a real unifying insight - orbit, structured slots, resize and post-drag rejoin converge through one anchor/animatable pipeline - but its desktop structured view leaves the unselected group still orbiting, and its engagement with the installed build is the shallowest of the five."
+  },
+  {
+   "id": "P02",
+   "conceptual_fit": 3,
+   "architectural_restraint": 3,
+   "existing_stack_respect": 4,
+   "critical_failures": [
+    "Unacknowledged parent-wrapper-transform risk: orbit loop writes outer .slot transform while createDraggable writes inner .tile transform, the nesting P17's source read argues against."
+   ],
+   "one_line_rationale": "Source-level verification of installed 4.5.0 is excellent and load-bearing (damping 20 vs docs' 10, transform-muted layout recording, subpath bundle cost, stay off the 5.0 beta), but the architecture is the most assembled - absolute-to-grid mode switch needing a synchronous 'bake' pass, pairwise repulsion solver, input queueing - where a peer avoids the whole class of problem structurally."
+  },
+  {
+   "id": "P17",
+   "conceptual_fit": 4,
+   "architectural_restraint": 3,
+   "existing_stack_respect": 4,
+   "critical_failures": [],
+   "one_line_rationale": "The only proposal whose property choice is DERIVED from a specific behavior of the installed build - orbit writes left/top precisely because Draggable caches ancestor transforms and Layout records/restores left/top natively - with the crispest one-writer-per-property matrix, the createLayout display:block-over-CSS-grid hazard nobody else caught, and a fallback for every uncertain claim; loses restraint for extras beyond minimal sufficiency."
+  },
+  {
+   "id": "P23",
+   "conceptual_fit": 4,
+   "architectural_restraint": 3,
+   "existing_stack_respect": 4,
+   "critical_failures": [],
+   "one_line_rationale": "Cleanest resolution of orbit-vs-drag composition - Draggable is sole transform owner, solver writes through muted setX/setY so internal coordinates never desync - with the most faithful reading of 'central project object' and every external option rejected by its declared runtime dependencies; slightly more surface and an unusual coupling, both honestly spiked with a Plan B."
+  }
+ ],
+ "ranking_best_to_worst": [
+  "P17",
+  "P23",
+  "P01",
+  "P04",
+  "P02"
+ ],
+ "notes": "All five converge on the same correct big calls (DOM over canvas at n=6-7, zero new deps, anime.js as single engine, structured grid as SSR/reduced-motion baseline), so discrimination came down to how each composes orbit+drag+reorganize and how well each claim about the installed library holds up. CONTRADICTIONS: (1) P01 says createDraggable is 'pointer-events based', P04 says 'pointer and touch natively', while P02/P17 state explicitly from 4.5.0 source it uses mouse+touch NOT Pointer Events (P23 agrees) - weighted the three corroborating source-reads over the two. (2) P02, P17, P23 independently report release spring defaults stiffness 80 / damping 20 while docs say 10; P01 and P04 silent. (3) P01 recommends against createLayout on draggable nodes; P02/P17/P23 adopt with spikes; P04 never mentions it exists. (4) SHARPEST: P01, P04, P02 all build the same nested two-layer scheme with the orbit transform on the draggable's PARENT, while P17 argues from source this is unsafe. If P17 is right, three proposals share a latent defect in their central mechanism and none acknowledges it; this drove much of the ordering. Deliberately ignored register/catalog-sweep framing except where a catalog verdict actually justified not adding a dependency, and did not reward longer verification/spike sections as such. P01 installed node_modules to introspect the real package while P02/P17/P23 kept the tree clean; orthogonal to the scored dimensions, did not move scores."
+}
