@@ -46,14 +46,24 @@ const THRESHOLDS = {
 
 /** Instrumentation installed before any page script runs. */
 const INIT = () => {
-  window.__probe = { frames: [], rafCalls: 0, glContexts: 0, errors: [] };
+  // M1 amendment 2026-09-07: cadence is measured per BROWSER FRAME, not per callback.
+  // Multiple callbacks in one frame share a timestamp; counting each as a sample injected
+  // zero-duration intervals that diluted hitchPct (reproduced: a 2% hitch page reported 0.95%).
+  // rafCalls is retained unchanged as the loop-activity diagnostic.
+  window.__probe = { frames: [], rafCalls: 0, glContexts: 0, errors: [], maxCallbacksPerFrame: 0 };
   const rAF = window.requestAnimationFrame.bind(window);
-  let last = 0;
+  let last = 0, lastT = null, cbThisFrame = 0;
+  window.__probe.resetCadence = () => { last = 0; lastT = null; cbThisFrame = 0; window.__probe.frames.length = 0; };
   window.requestAnimationFrame = (cb) =>
     rAF((t) => {
       window.__probe.rafCalls++;
-      if (last) window.__probe.frames.push(t - last);
-      last = t;
+      if (t !== lastT) {
+        if (cbThisFrame > window.__probe.maxCallbacksPerFrame) window.__probe.maxCallbacksPerFrame = cbThisFrame;
+        if (last) window.__probe.frames.push(t - last);
+        last = t; lastT = t; cbThisFrame = 1;
+      } else {
+        cbThisFrame++;
+      }
       return cb(t);
     });
   const getContext = HTMLCanvasElement.prototype.getContext;
@@ -247,19 +257,72 @@ async function profile(browser, profileName) {
     // Content excludes interactive controls: a control whose referent stops existing under
     // reduced motion is a legitimate change, so its label must not count as lost content
     // (rubric amendment 2026-08-30). Buttons are stripped; prose links stay, being content.
-    const clone = document.body.cloneNode(true);
-    clone.querySelectorAll('button, [role="button"], script, style').forEach((n) => n.remove());
+    // M3 amendment 2026-09-07: parity is measured on RENDERED text. textContent includes
+    // display:none subtrees, so a reduced-motion stylesheet hiding all of <main> previously
+    // reported full parity on a page that renders nothing (reproduced, smoke_controls/m3-display-none.html).
+    // NOTE: getComputedStyle on an element INSIDE a display:none subtree reports that element's
+    // own display (e.g. "block"), not "none" — so a per-element style check misses hidden
+    // descendants. getClientRects() is empty for anything not rendered, which is the reliable test.
+    const isRendered = (el) => {
+      if (typeof el.checkVisibility === "function") {
+        return el.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true });
+      }
+      if (el.getClientRects && el.getClientRects().length === 0) return false;
+      const st = getComputedStyle(el);
+      return st.display !== "none" && st.visibility !== "hidden" && st.opacity !== "0";
+    };
+    const isControl = (el) => el.matches('button, [role="button"], script, style');
+    const walk = (el) => {
+      if (el.nodeType === 1 && (!isRendered(el) || isControl(el))) return "";
+      let out = "";
+      for (const n of el.childNodes) {
+        if (n.nodeType === 3) out += n.textContent;
+        else if (n.nodeType === 1) out += walk(n);
+      }
+      return out;
+    };
     return {
       headings: [...document.querySelectorAll("h1,h2,h3,h4,h5,h6")]
+        .filter((h) => isRendered(h))
         .map((h) => (h.textContent || "").replace(/\s+/g, " ").trim()).filter(Boolean),
-      textLen: (clone.textContent || "").replace(/\s+/g, " ").trim().length,
+      textLen: walk(document.body).replace(/\s+/g, " ").trim().length,
     };
   };
   const axContent = await page.evaluate(CONTENT);
   const focusables = await page.evaluate(
     () => document.querySelectorAll('a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])').length
   );
-  result.m5 = { accessibleNameCount: axNames, focusableCount: focusables, pass: axNames > 0 && focusables > 0 };
+  // M5 amendment 2026-09-07: an inventory count is not an accessibility pass. Requires a
+  // rendered, keyboard-reachable control AND a text alternative for the graphical surface AND
+  // real (non-control) content. Old counts retained as diagnostics.
+  const m5real = await page.evaluate((sel) => {
+    const vis = (el) => { const s = getComputedStyle(el);
+      return s.display !== "none" && s.visibility !== "hidden" && s.opacity !== "0"; };
+    const reachable = [...document.querySelectorAll('a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])')]
+      .filter((el) => vis(el) && !el.disabled && !el.closest("[inert]") && el.getAttribute("tabindex") !== "-1");
+    // Scope to the MEASURED SECTION's surface, per the 2026-09-07 amendment. Checking every
+    // canvas/svg on the page would false-FAIL a page carrying a decorative inline icon.
+    const root = document.querySelector(sel) || document;
+    const scope = root.matches && root.matches("canvas, svg") ? [root]
+                : [...root.querySelectorAll("canvas, svg")];
+    const surfaces = scope.filter(vis);
+    // aria-hidden INHERITS to descendants, so an ancestor carrying it is the common and valid
+    // pattern (verified against a real build whose canvas is hidden via its wrapper, not itself).
+    // Checking only the element's own attribute produced a false FAIL.
+    const surfaceOk = surfaces.length === 0 || surfaces.every((s) =>
+      s.closest('[aria-hidden="true"]') !== null ||
+      (s.getAttribute("aria-label") || s.getAttribute("role") || s.querySelector("title,desc")));
+    const bodyClone = document.body.cloneNode(true);
+    bodyClone.querySelectorAll('button, [role="button"], script, style').forEach((n) => n.remove());
+    const proseLen = (bodyClone.textContent || "").replace(/\s+/g, " ").trim().length;
+    return { reachableControls: reachable.length, renderedSurfaces: surfaces.length,
+             surfaceHasTextAlternative: !!surfaceOk, proseLen };
+  }, SECTION);
+  result.m5 = {
+    ...m5real,
+    diagnostics: { accessibleNameCount: axNames, focusableCount: focusables },
+    pass: m5real.reachableControls > 0 && m5real.surfaceHasTextAlternative && m5real.proseLen > 0,
+  };
 
   await ctx.close();
 

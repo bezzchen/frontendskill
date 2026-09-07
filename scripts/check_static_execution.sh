@@ -56,16 +56,32 @@ fi
 
 # --- Dependency drift vs the pinned specialist ---
 case "$CASE" in
-  I2) pin="animejs"; want="4." ;;
-  I5) pin="pixi.js"; want="8." ;;
+  I2) pin="animejs"; want="4" ;;
+  I5) pin="pixi.js"; want="8" ;;
   *)  pin=""; want="" ;;
 esac
 if [ -n "$pin" ]; then
-  ver=$(node -e "try{const p=require('$DIR/package.json');console.log((p.dependencies||{})['$pin']||'MISSING')}catch(e){console.log('NO_PACKAGE_JSON')}")
-  case "$ver" in
-    *"$want"*) note "M6 pinned-$pin" "PASS ($ver)" ;;
-    *) note "M6 pinned-$pin" "FAIL ($ver)"; fail=1 ;;
-  esac
+  # M6 amendment 2026-09-07: parse the MAJOR version instead of substring-matching.
+  # The old test `case "$ver" in *"8."*)` passed a declared ^7.8.0 for a v8 gate (reproduced).
+  # Prefer the resolved installed version; fall back to the declared range with operators stripped.
+  read -r ver src major <<EOF
+$(node -e "
+const fs=require('fs');
+let ver='MISSING', src='declared';
+try{ ver=(require('$DIR/node_modules/$pin/package.json').version)||'MISSING'; src='installed'; }
+catch(e){
+  try{ const p=require('$DIR/package.json'); ver=((p.dependencies||{})['$pin'])||((p.devDependencies||{})['$pin'])||'MISSING'; }
+  catch(e2){ ver='NO_PACKAGE_JSON'; }
+}
+const m=String(ver).match(/(\d+)\s*\.\s*\d+/)||String(ver).match(/(\d+)/);
+console.log(ver, src, m?m[1]:'?');
+")
+EOF
+  if [ "$major" = "$want" ]; then
+    note "M6 pinned-$pin" "PASS ($ver, $src, major=$major)"
+  else
+    note "M6 pinned-$pin" "FAIL ($ver, $src, major=$major, want major=$want)"; fail=1
+  fi
 fi
 
 # --- Build ---

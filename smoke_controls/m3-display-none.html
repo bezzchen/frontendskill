@@ -1,0 +1,13 @@
+<!doctype html><title>M3 false-pass probe</title>
+<style>
+  canvas { display:block; width:400px; height:200px; background:#123; }
+  @media (prefers-reduced-motion: reduce) { main { display: none !important; } }
+</style>
+<body>
+<canvas id="c" width="400" height="200" aria-hidden="true"></canvas>
+<main>
+  <h1>Meridian</h1><h2>Act I</h2>
+  <p>This paragraph is substantial body content that a reduced-motion user must still be able to read.
+     Under reduced motion this entire main element is hidden with display:none, so nothing renders.</p>
+</main>
+<script>let n=0;(function f(){n++;requestAnimationFrame(f)})();</script>

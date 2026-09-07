@@ -1,0 +1,11 @@
+<!doctype html><title>M1 two-loop control</title>
+<body><h1>Two concurrent rAF loops, one deliberately hitching</h1>
+<canvas id="c" width="300" height="150"></canvas>
+<script>
+// Loop A: well behaved.
+(function a(){ requestAnimationFrame(a); })();
+// Loop B: same frame, blocks 50ms on 2% of frames -> ground truth ~2% hitch.
+let n=0;
+(function b(){ n++; if (n % 50 === 0){ const s=performance.now(); while(performance.now()-s < 50){} }
+  requestAnimationFrame(b); })();
+</script>

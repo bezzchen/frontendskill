@@ -189,3 +189,69 @@ Applies to: **Accessibility / Reduced Motion**.
 
 Design Coherence stays human-scored from screenshots at both viewports — deliberately not
 automated, per the harness's own rule against programmatically judging beauty.
+
+---
+
+## Amendments — four false-pass paths repaired (2026-09-07)
+
+**Pre-registered before any code change**, per the same discipline as the 2026-08-30 M3/M6
+amendments. Prompted by an external appraisal of commit 815aa7c; all four claims were independently
+reproduced in this harness before being accepted. Each repair requires a control that FAILS on the
+old instrument and PASSES on the new one, and a control that still fails after the fix.
+
+### M1 — cadence must be computed from distinct browser frames
+
+**Why.** The rAF wrapper kept a single `last` timestamp shared across every wrapped callback. When a
+page registers more than one callback per frame, each additional callback receives the *same*
+timestamp `t` and pushes an interval of `t - last = 0`. Those zero-duration samples inflate the
+sample count and dilute `hitchPct`, so a page with a genuinely bad frame cadence can report a passing
+one. Reproduced: 1,000 real intervals at a 2% hitch rate, fed through the extracted wrapper with two
+callbacks per frame, report a median interval of 0 ms and hitch ≈0.9995% — under the 1% desktop
+threshold.
+
+**Change.** Deduplicate by timestamp: record an interval only when `t` differs from the previous
+recorded frame time. Retain the raw callback count separately as `rafCalls` (loop-activity
+diagnostic, unchanged in meaning). Reset cadence state at the start of each sampling window.
+`callbacksPerFrame` is reported so multi-loop pages are visible rather than silently averaged.
+
+### M3 — content parity must use RENDERED text, not `textContent`
+
+**Why.** The 2026-08-30 amendment fixed a false *critical* (controls counted as content) and left a
+false *pass*: `textContent` includes text inside `display:none` subtrees. A reduced-motion stylesheet
+that hides all of `main` therefore reports identical text length and identical headings — full
+parity — on a page that renders nothing. Reproduced with `smoke_controls/m3-display-none.html`:
+`textContent` 206 both states, headings 2/2, parity TRUE, while computed-visibility-aware extraction
+returns 0 under reduced motion.
+
+**Change.** Walk the DOM and accumulate text only from elements whose computed style is not
+`display:none`, `visibility:hidden`, or `opacity:0`. Headings likewise counted only when rendered.
+The control-exclusion rule from 2026-08-30 is retained unchanged. **No threshold moves**; only the
+definition of "content present" is corrected.
+
+### M5 — an inventory count is not an accessibility pass
+
+**Why.** `pass: axNames > 0 && focusables > 0` accepts any named `ul li`, `button` or `a` anywhere in
+the document, plus any element matching a focusable selector. It does not establish that the
+graphical system has an accessible equivalent, that the counted element is rendered, or that it is
+keyboard reachable. A canvas page with one unrelated `aria-hidden`, disabled button satisfies it.
+
+**Change.** M5 now requires: (a) the measured section's graphical surface is either `aria-hidden`
+with a text alternative present, or exposes a non-empty accessible name; (b) at least one **rendered
+and keyboard-reachable** control exists (computed-visible, not `inert`, not `disabled`, not
+`tabindex="-1"`); (c) the accessible representation contains real content, not only control labels.
+Failing any of these is `FAIL`, not a low score. The old counts are retained as diagnostics under
+`m5.diagnostics` so historical records remain interpretable.
+
+### M6 — version pins must be parsed, not substring-matched
+
+**Why.** The pin check tested `case "$ver" in *"8."*)`, so a declared `^7.8.0` passes a Pixi-v8 gate
+because the string contains `8.`. Reproduced.
+
+**Change.** Parse the resolved major version (prefer the installed `node_modules/<pkg>/package.json`
+version; fall back to the declared range with the leading range operator stripped) and compare the
+major integer. Report the resolved version in the verdict line.
+
+### Restatement of the standing rule
+These repairs correct **definitions of failure**, never thresholds. Any measurement that cannot be
+taken remains `NOT_MEASURED`, which is never a pass. Historical records measured under the old
+instruments are labelled with the instrument version rather than silently re-interpreted.

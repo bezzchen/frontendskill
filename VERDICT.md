@@ -7,9 +7,9 @@ with an Opus routing baseline that was not extended
 
 ## The one-sentence answer
 
-**This skill is a process intervention. It reliably changes how the work is approached, it modestly
-improves architectural decisions, it does not improve what gets built, and it increases variance in
-both directions.**
+**This skill is a process intervention. It reliably changes how the work is approached and modestly
+improves architectural decisions. Improvement in what actually gets built was not demonstrated, and
+the with-skill outputs showed wider spread with a lower average.**
 
 That is a real and useful result. It is not the result the programme was hoping for.
 
@@ -63,13 +63,16 @@ rather than intuition.
 
 ## What it does not do
 
-**It does not improve what gets built.** Both implementation-facing criteria failed.
+**Improvement in what gets built was not demonstrated.** Both implementation-facing criteria failed.
+That is weaker than "it makes things worse", and the distinction is load-bearing at n=3.
 
 - **F** (register switching): the pooled W1 ranking put with-skill below baseline. Underpowered —
   p = 0.70, reviewer called all six equivalent — but recorded at face value on the owner's ruling.
 - **G1** (spectacle): four of five conjunctive clauses failed. With-skill median rank 4.67 vs 3.00.
 
-**It increases variance.** This is the most robust negative finding, seen twice independently:
+**With-skill outputs had wider spread and a lower average.** Observed twice independently. Note the
+limit: three outputs per condition cannot establish a bimodal population, and "the skill causes
+variance" is a mechanism this design does not test. What follows is the observation, not the cause:
 
 - **G1**: the with-skill arm produced the pool's **best** build (unanimous first, straight 4s from
   all three reviewers) *and* its **two worst** (unanimous last at 1.75). All three baselines cluster
@@ -77,9 +80,10 @@ rather than intuition.
 - **Criterion A's E5 cell**: with-skill produced both the highest-scoring proposal (4.000) and the
   lowest in the entire 25-proposal pool (2.000, penalised for renderer escalation).
 
-The pre-registered tests are medians. A median is the wrong summary of a bimodal arm, and it converts
-"one excellent result plus two poor ones" into a failure. **The freeze rule forbids loosening the
-criteria after the comparison, so the failures stand — but the mechanism is variance, not degradation.**
+The pre-registered tests are medians, and a median summarises a wide spread poorly. **The freeze rule
+forbids loosening criteria after the comparison, so the failures stand.** Whether the spread is
+caused by the skill, by the briefs, or by run-to-run noise is untested here — three runs per
+condition cannot separate those.
 
 **It does not converge architecture.** On identical briefs, reps disagree: E5 produced three
 different renderers across three reps; E3 split 4-1 on the engine; E2 produced three distinct
@@ -141,6 +145,26 @@ adoption versus 0/3 baseline, with no architect skill loaded. The skill decides 
 decisions, the pack is where the evidence points, and it has never had a controlled arm of its own.
 
 ---
+
+## External appraisal and instrument repairs (2026-09-07)
+
+An external review of commit `815aa7c` alleged four measurement defects. **All four were
+independently reproduced in this harness and repaired** — see
+`results/INSTRUMENT_REPAIRS_20260907.md`. In summary: M1 diluted `hitchPct` by counting multiple
+callbacks per frame as separate frames; M3 measured parity on `textContent`, which survives
+`display:none`; M5 accepted any named element anywhere as an accessibility pass; M6 substring-matched
+version pins, so `^7.8.0` satisfied a v8 gate.
+
+**No archived verdict changes.** M1 dilution requires ≥2 callbacks per frame; only the I5 cell
+qualifies, and its worst reported hitch is 0.106% against a 1% threshold. The full S1 arm was
+re-measured with the repaired instruments and all three verdicts hold — though the M5 passes now rest
+on real evidence (21/36/23 rendered keyboard-reachable controls) rather than a vacuous count.
+
+The review also identified over-generalisation in the v1.1 draft (blanket ticker-stopping can freeze
+a still-visible surface; global rAF counts are confounded by unrelated animation; the mandated search
+had no stopping condition). **The draft was revised to rev2** accordingly. Criteria A, C and D have
+been re-labelled *qualified*, *scope-limited* and *provisional* respectively, for reasons the review
+identified and this document had recorded only in its limitations.
 
 ## Honest limitations of this verdict
 
