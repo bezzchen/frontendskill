@@ -1,5 +1,12 @@
 # creative-frontend-architect — an evidence-first Agent Skill and the harness that judged it
 
+> ## → Read [`VERDICT.md`](VERDICT.md) first
+> The programme is complete. **Five criteria met, two failed, one not measured, four owner-open.**
+> Short version: the skill is a *process* intervention — it reliably changes how work is approached
+> and modestly improves architectural decisions, but it does not improve what gets built, and it
+> increases variance in both directions. Recommendation: ship v1.1, not v1, and position it as a
+> decision aid rather than a quality-of-output intervention.
+
 This repository contains a Claude/Agent **Skill** for creative frontend work (animation, WebGL,
 interactive pages) **and the evaluation harness that decided what belongs in it**.
 
