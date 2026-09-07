@@ -1,0 +1,12 @@
+{
+ "seed": 20260902,
+ "created": "2026-09-02",
+ "mapping": {
+  "B1": "S1-fable-rep2",
+  "B2": "S1ws-rep1",
+  "B3": "S1-fable-rep1",
+  "B4": "S1ws-rep3",
+  "B5": "S1ws-rep2",
+  "B6": "S1-fable-rep3"
+ }
+}

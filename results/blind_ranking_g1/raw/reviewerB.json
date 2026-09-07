@@ -1,0 +1,105 @@
+{
+ "reviewer": "B",
+ "scores": [
+  {
+   "id": "B1",
+   "realtime_centrality": 3,
+   "authored_continuity": 3,
+   "graphics_craft": 3,
+   "original_integration": 3,
+   "visual_defects": [
+    "Mobile: third act chip reads 'II', duplicating second, where 'III' expected - truncation in a too-narrow chip",
+    "Desktop+mobile: opaque white blob at mid-left over particle field, reads as stray/unresolved sprite; on mobile overlaps 'this page is a Meridian project'",
+    "Mobile: 'K1 / 00:00.0 / set' chip dark amber on near-black, close to illegible",
+    "Fullpage: multiple screen-heights of empty black between acts"
+   ],
+   "one_line_rationale": "A film-transport conceit (48s, 5 named acts, persistent playhead) genuinely organizes the page and the didone/mono pairing is art-directed, but the acts resolve into fairly conventional text-plus-panel blocks separated by large voids."
+  },
+  {
+   "id": "B2",
+   "realtime_centrality": 3,
+   "authored_continuity": 2,
+   "graphics_craft": 3,
+   "original_integration": 2,
+   "visual_defects": [
+    "Mobile SEVERE: sticky header overprints body copy - wordmark and Motion/Full/Reduced toggle render directly on top of 'motion, and the same two numbers drive every...', unreadable text-on-text",
+    "Mobile: first line of that paragraph cut off at top edge",
+    "Mobile: 'Export what you made.' heading overlapped and clipped by sticky bottom timeline bar",
+    "Desktop: lower ~45% of hero viewport entirely empty navy - large dead region",
+    "Fullpage: several screen-heights of empty navy between sections; reads sparse rather than composed"
+   ],
+   "one_line_rationale": "The spring-response particle trace is a genuinely bespoke, concept-bound graphic and the navy/cream/amber typography is controlled, but the hero's wireframe sphere is stock, the visual language jumps between sections, and the mobile header collision is the worst defect in the pool."
+  },
+  {
+   "id": "B3",
+   "realtime_centrality": 4,
+   "authored_continuity": 3,
+   "graphics_craft": 4,
+   "original_integration": 3,
+   "visual_defects": [
+    "Desktop: 'PRIVATE BETA / COMP 001' top-right sits over brightest amber streaks, near-illegible",
+    "Desktop: right-hand timecode on eyebrow rule also crosses the bright band, hard to read",
+    "Mobile: orange playhead overlaps '00' act chip, partially obscuring label",
+    "Fullpage: very long flat black region between hero and cream finale - consistent with pinned stage, not penalized"
+   ],
+   "one_line_rationale": "The full-bleed velocity-streak flow field is the page's ground rather than a backdrop, the edit-suite chrome is bespoke, and the dark-to-cream finale is a real material shift - the technique stays recognizable as a flow field, which caps integration."
+  },
+  {
+   "id": "B4",
+   "realtime_centrality": 2,
+   "authored_continuity": 2,
+   "graphics_craft": 2,
+   "original_integration": 2,
+   "visual_defects": [
+    "Desktop CONFIRMED BY PIXEL CROP: sticky 'Meridian' wordmark renders directly on top of the 'Damping' slider label - both strings degraded",
+    "Desktop: 'Stiffness' slider row above clipped by top edge, label and value cut in half",
+    "Desktop: lower ~60% of viewport entirely empty - very large dead region",
+    "Desktop+fullpage: particle dot field extremely low contrast, barely distinguishable from background",
+    "Fullpage: two code panels in Act IV ('meridian.css','meridian.js') appear essentially EMPTY - headers and 'Copy code' button with no visible code",
+    "Mobile: body copy clipped mid-sentence by sticky bottom bar",
+    "Mobile: STATE MISMATCH - heading reads 'Act IV 00:00:28:23' while bottom transport reads '00:00:24:00 / Act III'",
+    "Mobile: large empty dark region between dot field and 'Act IV' label"
+   ],
+   "one_line_rationale": "Five labelled acts and a persistent transport are present, but every act is the same left-aligned heading-paragraph-widget treatment, the dot field is so faint it functions as decoration behind ordinary sections, and the build carries the most confirmed defects."
+  },
+  {
+   "id": "B5",
+   "realtime_centrality": 4,
+   "authored_continuity": 4,
+   "graphics_craft": 4,
+   "original_integration": 4,
+   "visual_defects": [
+    "Mobile: five act labels in bottom transport (Dawn/Morning/Noon/Dusk/Night, all present on desktop) are MISSING - cells render as empty grey blocks",
+    "Mobile: 'Calm motion / off' wraps awkwardly into cramped bottom-right corner",
+    "Mobile: signature 3D field almost entirely occluded by opaque cream card - the page's defining visual barely visible at this width",
+    "Fullpage: large 'Meridian' display wordmark flush against or clipped by left viewport edge",
+    "Fullpage: very long flat cream region between hero and footer - consistent with pinned stage, not penalized"
+   ],
+   "one_line_rationale": "The only build with a WORLD MODEL: a receding 3D value-field under a real horizon with atmospheric perspective and cast shadows, whose five acts are bound to a Dawn-to-Night lighting cycle that doubles as the product narrative - two visibly different sky states confirm the transition carries lighting forward, and nothing reads as library provenance."
+  },
+  {
+   "id": "B6",
+   "realtime_centrality": 3,
+   "authored_continuity": 3,
+   "graphics_craft": 3,
+   "original_integration": 3,
+   "visual_defects": [
+    "Mobile: eyebrow breaks badly - wordmark and 'MOTION EDITOR FOR THE / WEB' on misaligned baselines, second string starting higher and to the right before wrapping",
+    "Mobile: golden arc passes directly behind body paragraph, dropping contrast on lines it crosses",
+    "Mobile: amber 'missing' and italic 'timeline.' set very tightly on headline's second line, visually crowding",
+    "Desktop: semi-transparent scrim behind hero text has a visible HARD RECTANGULAR SEAM against the starfield at its right boundary",
+    "Fullpage: nearly everything below hero is flat black with only a small footer - consistent with pinned stage, but no further composed acts visible"
+   ],
+   "one_line_rationale": "The sun-arc-as-timeline concept is a legitimately authored metaphor with elegant type, but glowing gold particles on a starfield is a familiar idiom, the text scrim shows a hard edge, and the mobile eyebrow is visibly broken."
+  }
+ ],
+ "ranking_best_to_worst": [
+  "B5",
+  "B3",
+  "B1",
+  "B6",
+  "B2",
+  "B4"
+ ],
+ "notes": "(1) Pinned-stage ambiguity: B3/B5/B6 fullpage captures are hero frame, then many screen-heights of perfectly flat colour, then footer. TESTED: those regions compress to ~4KB and render as uniform colour, containing no faint content - the signature of a sticky scroll-scrubbed stage where the fullpage capture renders the pinned frame once and leaves scroll-spacer blank. Treated as capture artifact, not penalized. But it means only ONE composed act state is visible for each, which SUPPRESSED continuity confidence - B6 especially. If any void is actually dead space in the live page, B3/B5/B6 would all drop sharply. (2) Conversely B1/B2/B4 render act content inline so more of their pages is verifiable, but their inter-act gaps are DEMONSTRABLY REAL empty regions - a genuine asymmetry in what the evidence supports for each group. (3) Dimension 1 is partly inferential from stills: judged centrality from whether the graphical system occupies the page's ground plane and whether act chrome is bound to it, since the system cannot be observed responding. B5's continuity 4 rests on act naming plus two visibly different sky states rather than on seeing transitions, and is the single score I would most want a live pass to confirm. No build unassessable; B6 came closest."
+}
