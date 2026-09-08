@@ -69,6 +69,15 @@ What *is* now established:
 - **The visual factorial's −0.653 is not explained away by the excluded dimension**, and is not
   confirmed as real either.
 
+## FOLLOW-UP: M8 ran the fix, and the deficit survived (2026-09-08)
+
+`results/M8_CONTROL_ALL_RESULT.md`. The `control-all` probe confirmed this pass's diagnosis — M7's
+first-control sampling missed most of every build's instrument response, by up to two orders of
+magnitude — **but correcting it moved the skill main effect only from −0.0893 to −0.0778.** The
+sampling explanation is dead. What M8 also showed is that the effect is not reliably estimated at
+this n: the `neither` cell falls to n=1, the exclusion is biased against non-skill builds, and the
+top skill value is at metric saturation, giving a range of −0.005 to −0.18.
+
 ## The fix, and why it is not being swapped in
 A `control-all` probe — drive *every* rendered range and take the union of change — would remove the
 sampling asymmetry. It should be **pre-registered and run as a separate, labelled measurement**, not

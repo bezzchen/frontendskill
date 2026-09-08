@@ -1,0 +1,35 @@
+{
+ "run": "S1BOTH-rep1",
+ "url": "http://localhost:3391",
+ "measured_at": "2026-09-08T18:35:13.267Z",
+ "scrollHeldAt": 1200,
+ "perControl": [
+  {
+   "kind": "role-slider",
+   "idx": 0,
+   "label": "Control point 1",
+   "delta": 0.1362
+  },
+  {
+   "kind": "role-slider",
+   "idx": 1,
+   "label": "Control point 2",
+   "delta": 0.1354
+  },
+  {
+   "kind": "role-slider",
+   "idx": 2,
+   "label": "Playhead",
+   "delta": 0.0157
+  }
+ ],
+ "idle": 0,
+ "inventory": {
+  "ranges": 0,
+  "sliders": 3
+ },
+ "controlsDriven": 3,
+ "unionFraction": 0.172,
+ "controlAllUnion": 0.172,
+ "bestSingle": 0.1362
+}

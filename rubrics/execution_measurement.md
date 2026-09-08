@@ -309,3 +309,44 @@ and 4 still need judgement. M7 discriminates 0–1 from 2–4, and its magnitude
 - **`S1-fable-rep1` cannot be included**: archived with no source snapshot and no run dir
   (`results/deviations/FACTORIAL_REMEASURE_DEVIATION.md`). The pass therefore covers 10 of 11
   builds, leaving the `neither` cell at n=2.
+
+---
+
+## M8 — control-all interaction probe (PRE-REGISTERED 2026-09-08, before any build was run)
+
+**Why.** M7's `control` probe moved only the **first** rendered `input[type=range]`. Skill-loaded
+builds carry 3.3 and 2.0 range controls per build against 0.5 for non-skill builds, so that probe
+sampled roughly one instrument in four for the former and the whole interactive surface for the
+latter. M7's headline skill deficit of −0.0893 rests largely on that probe and on `key`, while its
+one cleanly-sampled probe (`pointer`) pointed the other way. M8 removes the sampling asymmetry.
+
+**Second under-sampling M7 missed entirely.** Several builds implement their keyframe handles as
+`[role="slider"]` **buttons**, not `input[type=range]`. M7's selector never touched them. M8 drives
+those too, by focus + repeated ArrowRight.
+
+**Method.** `scripts/measure_control_all.mjs`. Scroll pinned at the same fixed offset as M7.
+1. Capture a baseline of the surface, and an `idle` re-capture for the null.
+2. For **every** rendered, enabled `input[type=range]`: drive it to the opposite end, capture,
+   then **restore its original value** so each control's effect is isolated.
+3. For **every** rendered, enabled `[role="slider"]` that is not an input: focus it, press
+   ArrowRight ×8, capture, then press ArrowLeft ×8 to restore.
+4. Maintain a **union mask** of pixels changed by more than 6/255 in *any* control's isolated probe.
+
+**Derived scores, fixed now:**
+- `controlAllUnion = |union mask| / pixels − idle` — the headline. How much of the surface responds
+  to its own instruments, ambience subtracted.
+- `bestSingle = max(per-control delta) − idle` — directly comparable to M7's `control`.
+- `controlsDriven` — how many were actually exercised, reported so coverage is auditable.
+
+**Prediction, recorded before running.** If M7's `control` result was a sampling artefact,
+`controlAllUnion` should rise substantially for skill-loaded builds (which have more instruments)
+and barely move for non-skill builds (which have 0–1), narrowing or reversing the deficit. **If the
+deficit survives M8, the sampling explanation is dead** and the skill's lower measured causality
+should be treated as real.
+
+**This is an additional measurement, not a replacement.** M7's pre-registered index stands as
+reported. M8 is labelled separately and both are kept.
+
+**Limits.** A build with zero controls of either kind cannot be measured and is reported
+`NOT_MEASURED`, never as zero — absence of instruments is a design choice, not a failure to respond.
+Union is order-independent by construction. One scroll offset, as in M7.

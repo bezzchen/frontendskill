@@ -1,0 +1,35 @@
+{
+ "run": "CAL-fable-rep2",
+ "url": "http://localhost:3391",
+ "measured_at": "2026-09-08T18:33:42.875Z",
+ "scrollHeldAt": 1200,
+ "perControl": [
+  {
+   "kind": "role-slider",
+   "idx": 0,
+   "label": "Control point 1 — arrows move it, shift for coarse",
+   "delta": 0.2491
+  },
+  {
+   "kind": "role-slider",
+   "idx": 1,
+   "label": "Control point 2 — arrows move it, shift for coarse",
+   "delta": 0.217
+  },
+  {
+   "kind": "role-slider",
+   "idx": 2,
+   "label": "Playhead",
+   "delta": 0.1144
+  }
+ ],
+ "idle": 0.0439,
+ "inventory": {
+  "ranges": 0,
+  "sliders": 3
+ },
+ "controlsDriven": 3,
+ "unionFraction": 0.3372,
+ "controlAllUnion": 0.2933,
+ "bestSingle": 0.2052
+}

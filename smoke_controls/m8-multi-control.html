@@ -1,0 +1,24 @@
+<!doctype html><title>M8 multi-control</title>
+<style>body{margin:0;background:#111;height:400vh}canvas{position:fixed;top:0;left:0}
+.ui{position:fixed;bottom:16px;left:16px;z-index:9;display:flex;gap:12px}</style>
+<canvas id="c" width="1440" height="900"></canvas>
+<div class="ui">
+  <input type="range" id="a" min="0" max="100" value="10" aria-label="First (small effect)">
+  <input type="range" id="b" min="0" max="100" value="10" aria-label="Second (LARGE effect)">
+  <button role="slider" id="s" aria-label="Handle" tabindex="0" aria-valuenow="0">handle</button>
+</div>
+<script>
+const c=document.getElementById('c'),x=c.getContext('2d');
+let A=10,B=10,S=0;
+a.addEventListener('input',e=>A=+e.target.value);
+b.addEventListener('input',e=>B=+e.target.value);
+s.addEventListener('keydown',e=>{if(e.key==='ArrowRight')S+=30;if(e.key==='ArrowLeft')S-=30});
+(function f(){x.fillStyle='#111';x.fillRect(0,0,1440,900);
+ // first control: tiny dot cluster top-left
+ x.fillStyle='#9fd8ff';for(let i=0;i<40;i++)x.fillRect(60+i*2, 60+A, 3,3);
+ // second control: large sweeping band
+ x.fillStyle='#e6b455';for(let i=0;i<900;i++)x.fillRect(200+i, 300+Math.sin(i/60)*B*3, 3,3);
+ // role=slider: vertical bar
+ x.fillStyle='#f1ece1';x.fillRect(1100+S,100,8,700);
+ requestAnimationFrame(f)})();
+</script>

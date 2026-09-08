@@ -1,0 +1,49 @@
+{
+ "run": "S1ws-rep2",
+ "url": "http://localhost:3391",
+ "measured_at": "2026-09-08T18:34:39.884Z",
+ "scrollHeldAt": 1200,
+ "perControl": [
+  {
+   "kind": "range",
+   "idx": 0,
+   "label": null,
+   "from": 180,
+   "to": 600,
+   "delta": 0.2784
+  },
+  {
+   "kind": "range",
+   "idx": 1,
+   "label": null,
+   "from": 14,
+   "to": 60,
+   "delta": 0.279
+  },
+  {
+   "kind": "range",
+   "idx": 2,
+   "label": null,
+   "from": 1,
+   "to": 5,
+   "delta": 0.2811
+  },
+  {
+   "kind": "range",
+   "idx": 3,
+   "label": "Playhead",
+   "from": 6.65,
+   "to": 50,
+   "delta": 0.9973
+  }
+ ],
+ "idle": 0.2778,
+ "inventory": {
+  "ranges": 4,
+  "sliders": 0
+ },
+ "controlsDriven": 4,
+ "unionFraction": 0.9995,
+ "controlAllUnion": 0.7217,
+ "bestSingle": 0.7195
+}

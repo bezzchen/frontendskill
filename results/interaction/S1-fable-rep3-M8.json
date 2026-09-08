@@ -1,0 +1,15 @@
+{
+ "run": "S1-fable-rep3",
+ "url": "http://localhost:3391",
+ "measured_at": "2026-09-08T18:33:21.802Z",
+ "scrollHeldAt": 1200,
+ "perControl": [],
+ "idle": 0.0623,
+ "inventory": {
+  "ranges": 0,
+  "sliders": 0
+ },
+ "controlsDriven": 0,
+ "status": "NOT_MEASURED",
+ "reason": "no rendered enabled range or role=slider control"
+}

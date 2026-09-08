@@ -1,0 +1,41 @@
+{
+ "run": "S1BOTH-rep2",
+ "url": "http://localhost:3391",
+ "measured_at": "2026-09-08T18:35:31.301Z",
+ "scrollHeldAt": 1200,
+ "perControl": [
+  {
+   "kind": "range",
+   "idx": 0,
+   "label": null,
+   "from": 170,
+   "to": 400,
+   "delta": 0.1082
+  },
+  {
+   "kind": "range",
+   "idx": 1,
+   "label": null,
+   "from": 9,
+   "to": 40,
+   "delta": 0.1007
+  },
+  {
+   "kind": "range",
+   "idx": 2,
+   "label": "Scrub the composition",
+   "from": 39,
+   "to": 240,
+   "delta": 0.175
+  }
+ ],
+ "idle": 0.1082,
+ "inventory": {
+  "ranges": 3,
+  "sliders": 0
+ },
+ "controlsDriven": 3,
+ "unionFraction": 0.2087,
+ "controlAllUnion": 0.1005,
+ "bestSingle": 0.0668
+}

@@ -1,0 +1,102 @@
+[
+ {
+  "run": "S1-fable-rep2",
+  "cell": "neither",
+  "status": null,
+  "driven": 4,
+  "inv": "1r+3s",
+  "m8": 0.3817,
+  "best": 0.1996,
+  "m7": -0.01
+ },
+ {
+  "run": "S1-fable-rep3",
+  "cell": "neither",
+  "status": "NOT_MEASURED",
+  "driven": 0,
+  "inv": "0r+0s",
+  "m8": null,
+  "best": null,
+  "m7": null
+ },
+ {
+  "run": "CAL-fable-rep1",
+  "cell": "pack",
+  "status": null,
+  "driven": 1,
+  "inv": "1r+0s",
+  "m8": 0.1982,
+  "best": 0.1982,
+  "m7": 0.2007
+ },
+ {
+  "run": "CAL-fable-rep2",
+  "cell": "pack",
+  "status": null,
+  "driven": 3,
+  "inv": "0r+3s",
+  "m8": 0.2933,
+  "best": 0.2052,
+  "m7": null
+ },
+ {
+  "run": "S1ws-rep1",
+  "cell": "skill",
+  "status": null,
+  "driven": 11,
+  "inv": "3r+8s",
+  "m8": 0.1376,
+  "best": 0.0487,
+  "m7": -0.0052
+ },
+ {
+  "run": "S1ws-rep2",
+  "cell": "skill",
+  "status": null,
+  "driven": 4,
+  "inv": "4r+0s",
+  "m8": 0.7217,
+  "best": 0.7195,
+  "m7": 0.003
+ },
+ {
+  "run": "S1ws-rep3",
+  "cell": "skill",
+  "status": null,
+  "driven": 3,
+  "inv": "3r+0s",
+  "m8": 0.0673,
+  "best": 0.0621,
+  "m7": -0.0013
+ },
+ {
+  "run": "S1BOTH-rep1",
+  "cell": "both",
+  "status": null,
+  "driven": 3,
+  "inv": "0r+3s",
+  "m8": 0.172,
+  "best": 0.1362,
+  "m7": null
+ },
+ {
+  "run": "S1BOTH-rep2",
+  "cell": "both",
+  "status": null,
+  "driven": 3,
+  "inv": "3r+0s",
+  "m8": 0.1005,
+  "best": 0.0668,
+  "m7": -0.0445
+ },
+ {
+  "run": "S1BOTH-rep3",
+  "cell": "both",
+  "status": null,
+  "driven": 3,
+  "inv": "3r+0s",
+  "m8": 0.0807,
+  "best": 0.0246,
+  "m7": 0.0507
+ }
+]

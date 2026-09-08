@@ -1,0 +1,41 @@
+{
+ "run": "S1BOTH-rep3",
+ "url": "http://localhost:3391",
+ "measured_at": "2026-09-08T18:35:47.469Z",
+ "scrollHeldAt": 1200,
+ "perControl": [
+  {
+   "kind": "range",
+   "idx": 0,
+   "label": null,
+   "from": 18,
+   "to": 100,
+   "delta": 0.0729
+  },
+  {
+   "kind": "range",
+   "idx": 1,
+   "label": null,
+   "from": 68,
+   "to": 0,
+   "delta": 0.0632
+  },
+  {
+   "kind": "range",
+   "idx": 2,
+   "label": "Timeline position",
+   "from": 135,
+   "to": 400,
+   "delta": 0.0875
+  }
+ ],
+ "idle": 0.0629,
+ "inventory": {
+  "ranges": 3,
+  "sliders": 0
+ },
+ "controlsDriven": 3,
+ "unionFraction": 0.1436,
+ "controlAllUnion": 0.0807,
+ "bestSingle": 0.0246
+}

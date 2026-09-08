@@ -1,0 +1,25 @@
+{
+ "run": "CAL-fable-rep1",
+ "url": "http://localhost:3391",
+ "measured_at": "2026-09-08T18:33:31.437Z",
+ "scrollHeldAt": 1200,
+ "perControl": [
+  {
+   "kind": "range",
+   "idx": 0,
+   "label": "Playhead — scrub the composition",
+   "from": 9,
+   "to": 60,
+   "delta": 0.2379
+  }
+ ],
+ "idle": 0.0397,
+ "inventory": {
+  "ranges": 1,
+  "sliders": 0
+ },
+ "controlsDriven": 1,
+ "unionFraction": 0.2379,
+ "controlAllUnion": 0.1982,
+ "bestSingle": 0.1982
+}

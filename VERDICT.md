@@ -179,11 +179,27 @@ cells measure *lower* interaction causality (−0.0893), the same direction as t
 skill-loaded builds (`control` moves one of the 3–4 instruments those builds carry; `key` is
 Space-triggers-play), while the one cleanly-sampled probe — `pointer` — *favours* skill.
 
-**So the skill's apparent visual penalty is neither explained away nor confirmed.** Newly established:
-**skill-loaded builds construct 4–6× more interactive affordance** (3.3 and 2.0 range controls per
-build vs 0.5), and nothing in this pass exercises more than one of it. A `control-all` probe would
-settle it and is the cheapest open experiment left; it must be pre-registered separately rather than
-swapped into M7 after the fact.
+**M8 then ran the `control-all` probe** (`results/M8_CONTROL_ALL_RESULT.md`), pre-registered with its
+prediction stated in advance, and validated on a page where M7's first-control sampling missed 17× of
+the response.
+
+**M7's under-sampling was real and large** — every build responds to its controls far more than M7
+detected, several by two orders of magnitude. **But correcting it did not reverse the deficit**: the
+skill main effect moved only from −0.0893 to −0.0778. **The sampling explanation for the visual
+factorial's −0.653 is therefore tested and rejected.**
+
+**What is still not established is the effect itself.** The `neither` cell collapses to n=1 (one
+baseline build has zero controls, so it is `NOT_MEASURED`), that exclusion removes a *low*-interaction
+non-skill build and so inflates the deficit, and the largest skill value sits at metric saturation
+(99.95% of pixels changed). Across two defensible analyses the estimate spans **−0.005 to −0.18** —
+a sign with an unstable magnitude, not a measurement.
+
+**The one interaction finding robust to every analytic choice:** the skill reliably produces more
+interactive surface — controls driven 6.0 and 3.0 per build against 2.0 and 2.0 for non-skill cells,
+with one build exposing **eleven** drivable instruments. More affordance, no more measured response
+per unit of surface.
+
+**No further probe should be built.** The binding limit is now the sample, not the instrument.
 
 ## Honest limitations of this verdict
 
