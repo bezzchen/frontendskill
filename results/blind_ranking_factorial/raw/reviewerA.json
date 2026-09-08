@@ -1,0 +1,168 @@
+{
+ "reviewer": "A",
+ "scores": [
+  {
+   "id": "V01",
+   "realtime_centrality": 4,
+   "authored_continuity": 4,
+   "graphics_craft": 4,
+   "original_integration": 4,
+   "visual_defects": [
+    "minor: SCROLL TO SCRUB caption crowds the CTA button",
+    "fullpage flat dark region - pinned-stage signature",
+    "NO text collisions, clipping or contrast failures found"
+   ],
+   "one_line_rationale": "Curl-noise velocity field with hue drift, persistent timecode transport naming five acts, dark-to-cream finale reprising the visitor's own tuned curve: reads as one continuous live composition rather than sections."
+  },
+  {
+   "id": "V02",
+   "realtime_centrality": 3,
+   "authored_continuity": 3,
+   "graphics_craft": 3,
+   "original_integration": 3,
+   "visual_defects": [
+    "mobile eyebrow collision, 'WEB' wrapping across the wordmark",
+    "mobile: gold arc behind body copy lowers contrast",
+    "fullpage almost entirely flat navy"
+   ],
+   "one_line_rationale": "Elegant gold particle arc and serif display over a finely drawn scrub ruler with five named acts, but the visible system is a single motif and mobile has a real text collision."
+  },
+  {
+   "id": "V03",
+   "realtime_centrality": 2,
+   "authored_continuity": 2,
+   "graphics_craft": 2,
+   "original_integration": 2,
+   "visual_defects": [
+    "desktop: sticky wordmark on top of 'Damping' label - direct text-on-text",
+    "desktop: Stiffness/120 row clipped by viewport top",
+    "mobile: transport bar covers last line of Act IV paragraph",
+    "dot-grid field very dim across all three captures"
+   ],
+   "one_line_rationale": "Explicit Act I-V structure with timecodes and a transport bar, but the particle field is faint and decorative while acts repeat one left-text/right-widget layout, and the sticky header collides with panel controls."
+  },
+  {
+   "id": "V04",
+   "realtime_centrality": 3,
+   "authored_continuity": 4,
+   "graphics_craft": 4,
+   "original_integration": 3,
+   "visual_defects": [
+    "mobile: act tabs mislabeled 'I II II IV V' (VERIFIED BY CROP)",
+    "'K1' chip very low contrast, close to illegible",
+    "white particle clump reads as a rendering artifact"
+   ],
+   "one_line_rationale": "Exquisite didone-and-mono art direction over an atmospheric dust field, framed as LAUNCH.MRD in five acts closing on a genuine 'roll credits' beat, though the field stays ambient backdrop rather than structural."
+  },
+  {
+   "id": "V05",
+   "realtime_centrality": 4,
+   "authored_continuity": 3,
+   "graphics_craft": 4,
+   "original_integration": 3,
+   "visual_defects": [
+    "mid-page headings very low contrast (may be pre-reveal state, could not confirm)",
+    "mobile: timeline strip overflows right edge, clipping act V column",
+    "comet flare washes across hero paragraph"
+   ],
+   "one_line_rationale": "A starfield-and-comet world spined by a bespoke multi-lane timeline with named acts, curve editor and code export - the most complete visible act structure in the set."
+  },
+  {
+   "id": "V06",
+   "realtime_centrality": 3,
+   "authored_continuity": 3,
+   "graphics_craft": 3,
+   "original_integration": 3,
+   "visual_defects": [
+    "SEVERE mobile: sticky header directly on top of body paragraph, both illegible",
+    "mobile: transport bar cuts 'Export what you made.' in half",
+    "desktop: lower ~45% of Springs act empty",
+    "wireframe sphere is the most stock-looking element"
+   ],
+   "one_line_rationale": "A physically expressive spring-trajectory swarm and confident serif setting, badly undermined by a header-over-body collision that makes mobile unreadable."
+  },
+  {
+   "id": "V07",
+   "realtime_centrality": 3,
+   "authored_continuity": 3,
+   "graphics_craft": 3,
+   "original_integration": 3,
+   "visual_defects": [
+    "desktop: field extremely dim inside a hard-edged rectangle, reads as boxed panel not full-bleed stage",
+    "desktop: field nearly disappears against near-black; renders far stronger on mobile",
+    "no text collisions"
+   ],
+   "one_line_rationale": "Outstanding typography and a genuinely interesting moire interference field, held back by the field being boxed and nearly invisible at desktop brightness."
+  },
+  {
+   "id": "V08",
+   "realtime_centrality": 4,
+   "authored_continuity": 3,
+   "graphics_craft": 4,
+   "original_integration": 4,
+   "visual_defects": [
+    "mobile: sticky header clipped by top edge, wordmark and pill cut in half",
+    "mobile: transport ruler runs past right edge",
+    "ACT III label under the particle wave, lowered contrast",
+    "long flat dark stretch - pinned stage"
+   ],
+   "one_line_rationale": "A particle spring-lattice rendering several damped oscillations as ribbons, backed by real physics telemetry and a warm-black/orange material language - distinctive enough that no library provenance is legible."
+  },
+  {
+   "id": "V09",
+   "realtime_centrality": 3,
+   "authored_continuity": 3,
+   "graphics_craft": 2,
+   "original_integration": 3,
+   "visual_defects": [
+    "mobile: transport bar overflows right edge, 'Calm motion' wraps awkwardly",
+    "mobile: 3D bar field almost entirely hidden behind opaque card",
+    "desktop: hard vertical cut at field's left edge",
+    "large flat cream region - pinned stage"
+   ],
+   "one_line_rationale": "A light, spatial day-cycle world where acts are Dawn through Night and the sky carries state forward - genuinely authored conceit, let down by near-default panel UI and a field that all but disappears on mobile."
+  },
+  {
+   "id": "V10",
+   "realtime_centrality": 2,
+   "authored_continuity": 2,
+   "graphics_craft": 2,
+   "original_integration": 2,
+   "visual_defects": [
+    "desktop: sticky header collides with body paragraph - direct overlap",
+    "desktop: transport bar covers a paragraph, clipping two lines",
+    "SEVERE mobile: header over body copy AND floating Easing card on top of the export headline",
+    "mobile: transport bar again overlaps closing paragraph",
+    "fullpage: mid-page sections near-invisible grey on black"
+   ],
+   "one_line_rationale": "Competent white-and-amber particle streaks with a bezier easing card, but the page around them collides at every layer on both breakpoints."
+  },
+  {
+   "id": "V11",
+   "realtime_centrality": 4,
+   "authored_continuity": 3,
+   "graphics_craft": 4,
+   "original_integration": 3,
+   "visual_defects": [
+    "MAJOR: no headline, body copy or value proposition visible anywhere capturable",
+    "cannot distinguish whether copy is canvas-drawn or genuinely absent - flagged not assumed",
+    "entire fullpage below hero uniform flat navy - fully pinned stage"
+   ],
+   "one_line_rationale": "The most convincing pure realtime stage in the set - depth-of-field point plane receding to a lit horizon with CAMERA/WORLD/TYPE keyframe lanes - but could not verify it functions as a page, because no copy is visible."
+  }
+ ],
+ "ranking_best_to_worst": [
+  "V01",
+  "V08",
+  "V05",
+  "V04",
+  "V11",
+  "V07",
+  "V06",
+  "V02",
+  "V09",
+  "V03",
+  "V10"
+ ],
+ "notes": "Six builds present large flat regions = pinned-stage signature; treated as uncapturable not dead space, so their middle acts are largely unassessed and continuity rests on transport labels. V11 above all could not be fairly assessed - strongest single frame in the pool but every capture landed on Act 00 with no copy visible, so its ranking is DELIBERATELY HELD AT FIFTH rather than higher until someone confirms the page has readable content. Nine of eleven use a fixed bottom transport with timecode and named acts; nine are dark; amber-on-near-black recurs in seven. Only V09 commits to light and explicit 3D perspective. Most common failure across the pool: fixed header or transport bar overlapping body text (V03, V06, V08, V10)."
+}

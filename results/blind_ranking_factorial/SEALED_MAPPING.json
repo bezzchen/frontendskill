@@ -1,0 +1,50 @@
+{
+ "seed": 20260907,
+ "created": "2026-09-07",
+ "mapping": {
+  "V01": {
+   "run": "S1-fable-rep1",
+   "cell": "neither"
+  },
+  "V02": {
+   "run": "S1-fable-rep3",
+   "cell": "neither"
+  },
+  "V03": {
+   "run": "S1ws-rep3",
+   "cell": "skill"
+  },
+  "V04": {
+   "run": "S1-fable-rep2",
+   "cell": "neither"
+  },
+  "V05": {
+   "run": "CAL-fable-rep2",
+   "cell": "pack"
+  },
+  "V06": {
+   "run": "S1ws-rep1",
+   "cell": "skill"
+  },
+  "V07": {
+   "run": "S1BOTH-rep1",
+   "cell": "both"
+  },
+  "V08": {
+   "run": "S1BOTH-rep2",
+   "cell": "both"
+  },
+  "V09": {
+   "run": "S1ws-rep2",
+   "cell": "skill"
+  },
+  "V10": {
+   "run": "S1BOTH-rep3",
+   "cell": "both"
+  },
+  "V11": {
+   "run": "CAL-fable-rep1",
+   "cell": "pack"
+  }
+ }
+}

@@ -1,0 +1,170 @@
+{
+ "reviewer": "C",
+ "scores": [
+  {
+   "id": "V01",
+   "realtime_centrality": 4,
+   "authored_continuity": 3,
+   "graphics_craft": 3,
+   "original_integration": 3,
+   "visual_defects": [
+    "mobile: playhead sits on the '00' act chip",
+    "mobile: act chips cramped",
+    "fullpage ~70% flat - middle acts 01-03 unassessable"
+   ],
+   "one_line_rationale": "Dense full-bleed flow field plus a real transport bar and act tabs frame the whole page as one 24-second composition; the dark-to-cream finale is a genuine material shift between acts."
+  },
+  {
+   "id": "V02",
+   "realtime_centrality": 2,
+   "authored_continuity": 3,
+   "graphics_craft": 3,
+   "original_integration": 2,
+   "visual_defects": [
+    "mobile: eyebrow breaks, stranded 'WEB' line (CONFIRMED AT 4x)",
+    "mobile: gold arc behind display type lowers contrast",
+    "fullpage ~85% flat - acts 01-04 unassessable"
+   ],
+   "one_line_rationale": "Genuinely refined gold-on-navy art direction and a named-act ruler, but the only visible graphic is a single thin particle arc that reads as hero decoration rather than a system."
+  },
+  {
+   "id": "V03",
+   "realtime_centrality": 2,
+   "authored_continuity": 2,
+   "graphics_craft": 2,
+   "original_integration": 2,
+   "visual_defects": [
+    "desktop: sticky wordmark collides with 'Damping' label and value",
+    "desktop: Stiffness/120 row clipped off by viewport top",
+    "mobile: transport bar covers body paragraph, cutting a line in half",
+    "desktop: right two-thirds empty, field barely registers"
+   ],
+   "one_line_rationale": "Acts I-V explicitly labelled with running timecode, but the visual system is a near-invisible dot grid inside a repeated left-column layout, and the sticky header visibly collides with the controls."
+  },
+  {
+   "id": "V04",
+   "realtime_centrality": 3,
+   "authored_continuity": 3,
+   "graphics_craft": 3,
+   "original_integration": 3,
+   "visual_defects": [
+    "stray bright white puff sprite, off-material; on mobile collides with the orange line",
+    "low-contrast 'K1' chip close to illegible",
+    "dust clumps left, right ~40% near-empty",
+    "large pinned-stage regions"
+   ],
+   "one_line_rationale": "Didone italic over warm dust with a full film-project frame - .mrd project header, five named acts, fps and help keys, and a 'roll credits' outro that closes the loop."
+  },
+  {
+   "id": "V05",
+   "realtime_centrality": 3,
+   "authored_continuity": 3,
+   "graphics_craft": 3,
+   "original_integration": 3,
+   "visual_defects": [
+    "mobile: timeline overflows container, diamonds spill past panel edge and clip at viewport",
+    "fullpage: mid-page headings very low contrast (possibly mid-fade)",
+    "mobile: flare core cropped hard at right edge"
+   ],
+   "one_line_rationale": "The most complete page in the pool - comet, anamorphic streak, starfield and orbit path under a genuine two-track NLE transport, all five acts visible through to a 'starts at 00:00' close."
+  },
+  {
+   "id": "V06",
+   "realtime_centrality": 3,
+   "authored_continuity": 3,
+   "graphics_craft": 2,
+   "original_integration": 3,
+   "visual_defects": [
+    "mobile SEVERE: sticky header directly on top of body paragraph, words unreadable",
+    "mobile: 'Export what you made.' cut in half by transport bar",
+    "desktop: lower ~45% empty",
+    "generic wireframe globe sits apart from the visual language"
+   ],
+   "one_line_rationale": "The damped spring-trail drawn as a particle velocity streak is genuinely bespoke and the italic act scrubber is well art-directed, but the mobile header collision is a hard legibility break."
+  },
+  {
+   "id": "V07",
+   "realtime_centrality": 3,
+   "authored_continuity": 3,
+   "graphics_craft": 3,
+   "original_integration": 3,
+   "visual_defects": [
+    "desktop: field so dark it nearly disappears, reads as grey noise rectangle with hard straight edges",
+    "desktop: left half empty",
+    "fullpage ~80% flat - acts II-IV unassessable"
+   ],
+   "one_line_rationale": "Superb Didone-and-italic typography with an integrated act nav and a real 30-second ruler, but the interference field it depends on is too dim on desktop to carry the page."
+  },
+  {
+   "id": "V08",
+   "realtime_centrality": 3,
+   "authored_continuity": 3,
+   "graphics_craft": 3,
+   "original_integration": 4,
+   "visual_defects": [
+    "mobile SEVERE: sticky header sliced in half by viewport top",
+    "mobile: ribbon crosses the ACT III eyebrow, reducing legibility",
+    "mobile: transport ruler overflows, diamonds clipped",
+    "desktop: stray hairline to far right edge, right ~45% empty"
+   ],
+   "one_line_rationale": "The swept array of damped-oscillation tracks is the pool's most conceptually integrated graphic - the picture IS the product - but the mobile header is visibly broken."
+  },
+  {
+   "id": "V09",
+   "realtime_centrality": 3,
+   "authored_continuity": 4,
+   "graphics_craft": 2,
+   "original_integration": 3,
+   "visual_defects": [
+    "desktop: thin grey scratch-like streaks cross the sky - bar geometry rendering outside the intended stage",
+    "mobile: transport bar clipped, act cells render empty",
+    "mobile: bar field shows through translucent card as grey noise",
+    "plain white card, default sliders and buttons read as stock UI"
+   ],
+   "one_line_rationale": "The only light build, and the only one to bind acts to a day cycle so the sky and light literally carry material forward - a strong authored idea let down by a raw render and default-looking controls."
+  },
+  {
+   "id": "V10",
+   "realtime_centrality": 2,
+   "authored_continuity": 2,
+   "graphics_craft": 1,
+   "original_integration": 2,
+   "visual_defects": [
+    "desktop SEVERE: sticky wordmark on top of body paragraph",
+    "desktop: transport bar covers last two lines of body copy",
+    "mobile SEVERE: header and toggle overlap body paragraph",
+    "mobile: floating Easing panel on top of the export headline",
+    "mobile: transport bar overlaps paragraph mid-sentence",
+    "fullpage: two mid-page sections near-black on black"
+   ],
+   "one_line_rationale": "Modest particle brush strokes over ordinary stacked sections, and the heaviest defect load in the pool - collisions at header, floating panel and transport bar on both breakpoints."
+  },
+  {
+   "id": "V11",
+   "realtime_centrality": 4,
+   "authored_continuity": 3,
+   "graphics_craft": 4,
+   "original_integration": 4,
+   "visual_defects": [
+    "desktop and mobile: first viewport carries NO headline, subhead or body copy - only wordmark, two buttons and transport",
+    "fullpage ~92% flat navy, most extreme pinned capture - scenes 01-05 entirely unassessable",
+    "desktop: fps readout very low contrast"
+   ],
+   "one_line_rationale": "A true spatial world - receding keyframe ground plane, depth of field, horizon glow - under the pool's most elaborate authored transport, though it shows no hero copy and almost nothing past scene 00."
+  }
+ ],
+ "ranking_best_to_worst": [
+  "V11",
+  "V01",
+  "V08",
+  "V05",
+  "V04",
+  "V07",
+  "V09",
+  "V06",
+  "V02",
+  "V03",
+  "V10"
+ ],
+ "notes": "Every build hides most of its middle in a pinned stage. V11 (~92% flat) and V02 (~85%) least fairly assessable - for V11 effectively only scene 00 was seen. Conversely V03, V04, V05, V06, V09, V10 revealed most of their acts, AN ASYMMETRY THAT LIKELY WORKS AGAINST THE MORE AGGRESSIVELY PINNED BUILDS. EXCLUDING DIMENSION 2 PENALISES THE INPUT-THESIS BUILDS SPECIFICALLY: V03, V06, V09, V10 all print pointer instructions whose payoff is invisible in stills. Large cluster V01/V02/V04/V05/V07/V08/V11 shares near-black ground, amber accent, persistent bottom transport with SMPTE timecode, five or six named acts; several repeat 'scroll to scrub' and 'Motion: Full/Reduced' almost verbatim. Second cluster V03/V06/V10 uses a stiffness/damping slider panel as its third act. V09 sole outlier: only light ground, only day-cycle acts. Most common failure: fixed chrome colliding with flowing text. Mobile markedly weaker than desktop across the whole pool."
+}

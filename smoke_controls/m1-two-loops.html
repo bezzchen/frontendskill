@@ -4,8 +4,8 @@
 <script>
 // Loop A: well behaved.
 (function a(){ requestAnimationFrame(a); })();
-// Loop B: same frame, blocks 50ms on 2% of frames -> ground truth ~2% hitch.
+// Loop B: same frame, blocks 90ms on 2% of frames (harness hitch threshold is >50ms; 50 sat exactly on the boundary) -> ground truth ~2% hitch.
 let n=0;
-(function b(){ n++; if (n % 50 === 0){ const s=performance.now(); while(performance.now()-s < 50){} }
+(function b(){ n++; if (n % 50 === 0){ const s=performance.now(); while(performance.now()-s < 90){} }
   requestAnimationFrame(b); })();
 </script>

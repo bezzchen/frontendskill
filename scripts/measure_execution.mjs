@@ -78,11 +78,16 @@ const pct = (sorted, p) => (sorted.length ? sorted[Math.min(sorted.length - 1, M
 
 async function sampleFrames(page, ms) {
   await page.evaluate(() => {
+    // M1 amendment 2026-09-07: clearing the arrays is not enough — the cadence CURSOR
+    // (last / lastT) must reset too, or the first interval of this window is measured against
+    // the final frame of the previous one, injecting a spurious gap that counts as a hitch.
+    if (window.__probe.resetCadence) window.__probe.resetCadence();
     window.__probe.frames = [];
     window.__probe.rafCalls = 0;
+    window.__probe.maxCallbacksPerFrame = 0;
   });
   await page.waitForTimeout(ms);
-  return page.evaluate(() => ({ frames: window.__probe.frames.slice(), rafCalls: window.__probe.rafCalls }));
+  return page.evaluate(() => ({ frames: window.__probe.frames.slice(), rafCalls: window.__probe.rafCalls, maxCallbacksPerFrame: window.__probe.maxCallbacksPerFrame }));
 }
 
 async function jigglePointer(page, ms) {
@@ -153,6 +158,10 @@ async function profile(browser, profileName) {
     p99: pct(sorted, 99),
     hitchPct: sorted.length ? (100 * sorted.filter((d) => d > 50).length) / sorted.length : null,
     onscreenRafPerSec: onscreenRate,
+    // 2026-09-07: surfaced so multi-loop pages are visible rather than silently averaged.
+    // >1 means several rAF callbacks share a browser frame (the old instrument counted each as
+    // a separate frame and diluted hitchPct).
+    maxCallbacksPerFrame: onscreen.maxCallbacksPerFrame ?? null,
   };
   const t = THRESHOLDS[profileName];
   // A page with no continuous rAF loop is not a performance failure — there is simply
