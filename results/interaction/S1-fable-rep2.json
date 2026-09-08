@@ -1,0 +1,39 @@
+{
+ "run": "S1-fable-rep2",
+ "url": "http://localhost:3390",
+ "measured_at": "2026-09-08T18:23:23.753Z",
+ "scrollHeldAt": 1200,
+ "probes": {
+  "idle": {
+   "changedFraction": 0.1993,
+   "meanDelta": 4.061,
+   "pixels": 1296000
+  },
+  "pointer": {
+   "changedFraction": 0.1897,
+   "meanDelta": 3.532,
+   "pixels": 1296000
+  },
+  "drag": {
+   "changedFraction": 0.1896,
+   "meanDelta": 3.528,
+   "pixels": 1296000
+  },
+  "key": {
+   "changedFraction": 0.3921,
+   "meanDelta": 8.163,
+   "pixels": 1296000
+  },
+  "control": {
+   "changedFraction": 0.1893,
+   "meanDelta": 3.493,
+   "pixels": 1296000,
+   "moved": {
+    "from": 120,
+    "to": 320,
+    "label": "stagger"
+   }
+  }
+ },
+ "rangeControls": 1
+}

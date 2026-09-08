@@ -255,3 +255,57 @@ major integer. Report the resolved version in the verdict line.
 These repairs correct **definitions of failure**, never thresholds. Any measurement that cannot be
 taken remains `NOT_MEASURED`, which is never a pass. Historical records measured under the old
 instruments are labelled with the instrument version rather than silently re-interpreted.
+
+---
+
+## M7 — Interaction causality, measured (PRE-REGISTERED 2026-09-08, before any build was run)
+
+**Why.** `rubrics/spectacle_fit.md` dimension 2 ("the visitor's input materially changes what they
+see") was excluded from both blind visual rankings because stills cannot carry it. A blind reviewer
+then flagged that the exclusion **penalises input-thesis builds specifically**, and all four builds
+they named were skill-loaded cells. The skill main effect of −0.653 in
+`results/VISUAL_LAYER_FACTORIAL_RESULT.md` therefore rests on an axis chosen to omit what those
+builds invested in. M7 measures the omitted axis instead of estimating it.
+
+**Method.** `scripts/measure_interaction.mjs`. Five probes against the first rendered `canvas`,
+**scroll held at a fixed offset throughout** so scroll-driven change cannot masquerade as input
+response. Each probe captures the surface before and after, and reports the fraction of pixels
+changed by more than 6/255 per channel, plus the mean absolute channel delta. PNG is decoded in
+process (`node:zlib` + manual unfiltering) because no image library is installed.
+
+| probe | input |
+|---|---|
+| `idle` | **none** — the null |
+| `pointer` | pointer moved between two distant points over the surface |
+| `drag` | press, move, release across the surface |
+| `key` | Space, then ArrowRight ×4 |
+| `control` | first rendered, enabled `input[type=range]` driven to the opposite end |
+
+**Derived score, fixed now: `causality = max(pointer, drag, key, control) − idle`.**
+The idle probe is the whole point: a page that animates on its own registers change under every
+probe. Subtracting idle isolates response from ambience.
+
+**Validated in both directions before use** (`smoke_controls/m7-responsive.html`,
+`m7-ambient-only.html`):
+
+| control | idle | pointer | drag | key | causality |
+|---|---|---|---|---|---|
+| responsive (input-driven, static at rest) | 0.0000 | 0.0080 | 0.0079 | 0.0040 | **+0.0080** |
+| ambient-only (self-animating, ignores input) | 0.0047 | 0.0033 | 0.0046 | 0.0045 | **−0.0001** |
+
+**Mapping to the dimension-2 anchors.** M7 is evidence for the anchors, not a replacement: it
+establishes *whether* input changes the render and by how much, not whether the change is
+narratively meaningful (anchor 4 requires interaction to be "part of the world logic"). Anchors 3
+and 4 still need judgement. M7 discriminates 0–1 from 2–4, and its magnitude informs the rest.
+
+**Known limits, stated before running.**
+- Absolute fractions are small for sparse particle fields; only the contrast against `idle` is
+  interpretable, never the raw number across differently-dense builds.
+- A build whose interaction lives at a scroll offset other than the fixed one may under-register.
+  The offset is identical for every build, so this is noise, not bias.
+- `control` moves the *first* rendered range only.
+- Absence of change is not proof of absence of response — it is proof of no response *to these
+  inputs at this offset*. Reported as measured, not generalised.
+- **`S1-fable-rep1` cannot be included**: archived with no source snapshot and no run dir
+  (`results/deviations/FACTORIAL_REMEASURE_DEVIATION.md`). The pass therefore covers 10 of 11
+  builds, leaving the `neither` cell at n=2.

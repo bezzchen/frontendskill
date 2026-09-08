@@ -1,0 +1,39 @@
+{
+ "run": "CAL-fable-rep1",
+ "url": "http://localhost:3390",
+ "measured_at": "2026-09-08T18:24:04.743Z",
+ "scrollHeldAt": 1200,
+ "probes": {
+  "idle": {
+   "changedFraction": 0.0385,
+   "meanDelta": 2.827,
+   "pixels": 1296000
+  },
+  "pointer": {
+   "changedFraction": 0.0505,
+   "meanDelta": 3.947,
+   "pixels": 1296000
+  },
+  "drag": {
+   "changedFraction": 0.0487,
+   "meanDelta": 3.522,
+   "pixels": 1296000
+  },
+  "key": {
+   "changedFraction": 0.0957,
+   "meanDelta": 7.55,
+   "pixels": 1296000
+  },
+  "control": {
+   "changedFraction": 0.2392,
+   "meanDelta": 15.482,
+   "pixels": 1296000,
+   "moved": {
+    "from": 9,
+    "to": 60,
+    "label": "Playhead — scrub the composition"
+   }
+  }
+ },
+ "rangeControls": 1
+}

@@ -53,6 +53,25 @@ quality finding without a live interaction pass.** That pass is now the single h
 follow-up in the programme, and unlike a G1 re-run it is not fishing: the confound was identified by
 a blind reviewer, not after seeing the arm labels.
 
+## FOLLOW-UP: the confound was measured, not left open (2026-09-08)
+
+M7 (`results/M7_INTERACTION_RESULT.md`) measured dimension 2 directly on 10 of these 11 builds —
+driving pointer, drag, keyboard and a range control with scroll pinned, against an idle null.
+
+**On its pre-registered index the confound is NOT supported:** skill-loaded cells measure *lower*
+interaction causality (skill main effect **−0.0893**), pointing the same way as the visual scores
+rather than reversing them. Pack effect **+0.0054**, again nil.
+
+**But the index is not decisive.** Its headline is carried by the two probes with structural sampling
+problems that disadvantage skill-loaded builds — `control` moves only the *first* of the 3–4 range
+controls those builds carry (non-skill builds average 0.5), and `key` is dominated by Space-triggers-play.
+The one cleanly-sampled probe, `pointer`, **favours skill** (+0.0084; non-skill builds show essentially
+zero pointer response).
+
+**Net: the −0.653 skill effect below is neither explained away nor confirmed.** What is newly
+established is that skill-loaded builds construct **4–6× more interactive affordance** and that no
+probe here exercises more than one of it per build.
+
 ## What is robust regardless
 - **All three reviewers ranked the same build last: V10 (S1BOTH-rep3)**, with the heaviest defect load
   in the pool — sticky header over body copy on both breakpoints, a floating panel over the export

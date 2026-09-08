@@ -1,0 +1,82 @@
+[
+ {
+  "run": "CAL-fable-rep1",
+  "cell": "pack",
+  "idle": 0.0385,
+  "best": 0.2392,
+  "caus": 0.2007,
+  "ranges": 1
+ },
+ {
+  "run": "S1-fable-rep2",
+  "cell": "neither",
+  "idle": 0.1993,
+  "best": 0.3921,
+  "caus": 0.1928,
+  "ranges": 1
+ },
+ {
+  "run": "S1-fable-rep3",
+  "cell": "neither",
+  "idle": 0.0633,
+  "best": 0.1878,
+  "caus": 0.1245,
+  "ranges": 0
+ },
+ {
+  "run": "CAL-fable-rep2",
+  "cell": "pack",
+  "idle": 0.0443,
+  "best": 0.1426,
+  "caus": 0.0983,
+  "ranges": 0
+ },
+ {
+  "run": "S1BOTH-rep1",
+  "cell": "both",
+  "idle": 0.0,
+  "best": 0.0918,
+  "caus": 0.0918,
+  "ranges": 0
+ },
+ {
+  "run": "S1ws-rep2",
+  "cell": "skill",
+  "idle": 0.2782,
+  "best": 0.3649,
+  "caus": 0.0867,
+  "ranges": 4
+ },
+ {
+  "run": "S1ws-rep3",
+  "cell": "skill",
+  "idle": 0.0156,
+  "best": 0.0913,
+  "caus": 0.0757,
+  "ranges": 3
+ },
+ {
+  "run": "S1BOTH-rep2",
+  "cell": "both",
+  "idle": 0.1088,
+  "best": 0.1821,
+  "caus": 0.07330000000000002,
+  "ranges": 3
+ },
+ {
+  "run": "S1BOTH-rep3",
+  "cell": "both",
+  "idle": 0.0615,
+  "best": 0.1135,
+  "caus": 0.052000000000000005,
+  "ranges": 3
+ },
+ {
+  "run": "S1ws-rep1",
+  "cell": "skill",
+  "idle": 0.0209,
+  "best": 0.0303,
+  "caus": 0.009400000000000002,
+  "ranges": 3
+ }
+]

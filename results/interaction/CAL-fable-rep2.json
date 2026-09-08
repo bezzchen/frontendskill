@@ -1,0 +1,32 @@
+{
+ "run": "CAL-fable-rep2",
+ "url": "http://localhost:3390",
+ "measured_at": "2026-09-08T18:24:26.075Z",
+ "scrollHeldAt": 1200,
+ "probes": {
+  "idle": {
+   "changedFraction": 0.0443,
+   "meanDelta": 1.747,
+   "pixels": 1296000
+  },
+  "pointer": {
+   "changedFraction": 0.0419,
+   "meanDelta": 1.474,
+   "pixels": 1296000
+  },
+  "drag": {
+   "changedFraction": 0.0885,
+   "meanDelta": 2.843,
+   "pixels": 1296000
+  },
+  "key": {
+   "changedFraction": 0.1426,
+   "meanDelta": 6.412,
+   "pixels": 1296000
+  },
+  "control": {
+   "skipped": "no rendered range control"
+  }
+ },
+ "rangeControls": 0
+}

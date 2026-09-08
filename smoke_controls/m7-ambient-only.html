@@ -1,0 +1,10 @@
+<!doctype html><title>M7 ambient-only control</title>
+<style>body{margin:0;background:#111;height:400vh}canvas{position:fixed;top:0;left:0}</style>
+<canvas id="c" width="1440" height="900"></canvas>
+<script>
+const c=document.getElementById('c'),x=c.getContext('2d');let t=0;
+(function f(){t+=0.05;x.fillStyle='#111';x.fillRect(0,0,1440,900);
+ x.fillStyle='#9fd8ff';for(let i=0;i<400;i++){const a=i/400*6.28+t;
+ x.fillRect(720+Math.cos(a)*300, 450+Math.sin(a)*200, 4,4);}
+ requestAnimationFrame(f)})();
+</script>

@@ -166,6 +166,25 @@ had no stopping condition). **The draft was revised to rev2** accordingly. Crite
 been re-labelled *qualified*, *scope-limited* and *provisional* respectively, for reasons the review
 identified and this document had recorded only in its limitations.
 
+## The live interaction pass (2026-09-08) — the open lever, now measured
+
+`results/M7_INTERACTION_RESULT.md`. Dimension 2 was measured directly rather than estimated: a
+pre-registered probe set (pointer, drag, keyboard, range control) driven against 10 of the 11
+factorial builds with scroll pinned and an **idle null** to separate response from ambience;
+instrument validated both directions on controls first.
+
+**On its pre-registered index, the confound that hung over the factorial is not supported** — skill-loaded
+cells measure *lower* interaction causality (−0.0893), the same direction as the visual scores.
+**But the index is not decisive**: it is driven by the two probes that structurally under-sample
+skill-loaded builds (`control` moves one of the 3–4 instruments those builds carry; `key` is
+Space-triggers-play), while the one cleanly-sampled probe — `pointer` — *favours* skill.
+
+**So the skill's apparent visual penalty is neither explained away nor confirmed.** Newly established:
+**skill-loaded builds construct 4–6× more interactive affordance** (3.3 and 2.0 range controls per
+build vs 0.5), and nothing in this pass exercises more than one of it. A `control-all` probe would
+settle it and is the cheapest open experiment left; it must be pre-registered separately rather than
+swapped into M7 after the fact.
+
 ## Honest limitations of this verdict
 
 - **n is small everywhere.** 3 reps per cell. G1's arm comparison has p = 0.80 with a floor of 0.05.

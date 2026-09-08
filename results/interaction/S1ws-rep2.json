@@ -1,0 +1,39 @@
+{
+ "run": "S1ws-rep2",
+ "url": "http://localhost:3390",
+ "measured_at": "2026-09-08T18:25:05.515Z",
+ "scrollHeldAt": 1200,
+ "probes": {
+  "idle": {
+   "changedFraction": 0.2782,
+   "meanDelta": 12.692,
+   "pixels": 1296000
+  },
+  "pointer": {
+   "changedFraction": 0.2805,
+   "meanDelta": 12.92,
+   "pixels": 1296000
+  },
+  "drag": {
+   "changedFraction": 0.2806,
+   "meanDelta": 12.751,
+   "pixels": 1296000
+  },
+  "key": {
+   "changedFraction": 0.3649,
+   "meanDelta": 18.056,
+   "pixels": 1296000
+  },
+  "control": {
+   "changedFraction": 0.2812,
+   "meanDelta": 12.901,
+   "pixels": 1296000,
+   "moved": {
+    "from": 180,
+    "to": 600,
+    "label": null
+   }
+  }
+ },
+ "rangeControls": 4
+}

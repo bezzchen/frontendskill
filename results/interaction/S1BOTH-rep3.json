@@ -1,0 +1,39 @@
+{
+ "run": "S1BOTH-rep3",
+ "url": "http://localhost:3390",
+ "measured_at": "2026-09-08T18:26:26.539Z",
+ "scrollHeldAt": 1200,
+ "probes": {
+  "idle": {
+   "changedFraction": 0.0615,
+   "meanDelta": 1.991,
+   "pixels": 1296000
+  },
+  "pointer": {
+   "changedFraction": 0.062,
+   "meanDelta": 2.161,
+   "pixels": 1296000
+  },
+  "drag": {
+   "changedFraction": 0.0591,
+   "meanDelta": 2.089,
+   "pixels": 1296000
+  },
+  "key": {
+   "changedFraction": 0.1135,
+   "meanDelta": 10.529,
+   "pixels": 1296000
+  },
+  "control": {
+   "changedFraction": 0.1122,
+   "meanDelta": 10.062,
+   "pixels": 1296000,
+   "moved": {
+    "from": 50,
+    "to": 100,
+    "label": null
+   }
+  }
+ },
+ "rangeControls": 3
+}

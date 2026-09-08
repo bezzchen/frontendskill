@@ -1,0 +1,15 @@
+<!doctype html><title>M7 responsive control</title>
+<style>body{margin:0;background:#111;height:400vh}canvas{position:fixed;top:0;left:0}</style>
+<canvas id="c" width="1440" height="900"></canvas>
+<input type="range" id="r" min="0" max="100" value="50" aria-label="Amount"
+       style="position:fixed;bottom:20px;left:20px;z-index:9">
+<script>
+const c=document.getElementById('c'),x=c.getContext('2d');let mx=200,my=200,amt=50;
+addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY});
+document.getElementById('r').addEventListener('input',e=>amt=+e.target.value);
+addEventListener('keydown',e=>{if(e.key==='ArrowRight')mx+=200});
+(function f(){x.fillStyle='#111';x.fillRect(0,0,1440,900);
+ x.fillStyle='#e6b455';for(let i=0;i<400;i++){const a=i/400*6.28;
+ x.fillRect(mx+Math.cos(a)*(amt*3), my+Math.sin(a)*(amt*3), 4,4);}
+ requestAnimationFrame(f)})();
+</script>
