@@ -80,6 +80,13 @@ Then invoke it by name (`/creative-frontend-architect`), or let it activate on i
 written to trigger on creative-direction and rendering-architecture decisions and to stay out of
 execution-only work.
 
+**How you brief it matters more than the skill does.** See
+[`skill/creative-frontend-architect/README.md`](skill/creative-frontend-architect/README.md) — one
+sentence naming the register (Q/W/S) is the highest-leverage thing you can write, because agents
+left to themselves picked spectacle 0/3 even on a brief that asked for "something unforgettable".
+That guide also covers why naming the register still will not get you spatial 3D, and what is not
+worth warning agents about.
+
 | file | status |
 |---|---|
 | `SKILL.md` | **active — v1.1 rev2**, cut over 2026-09-09 |
