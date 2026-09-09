@@ -44,7 +44,11 @@ carries state), and Roselli's general argument against `role=switch` on screen-r
 `<label>`) independently. The duplication is near-total.
 
 ## Why this matters beyond one run
-1. **Every stalled with-skill run is under-reported the same way.** 10 of 13 with-skill runs stalled.
+1. **Every stalled with-skill run is under-reported the same way.** 10 of 15 with-skill runs stalled.
+   *(Corrected 2026-09-08: this line read "10 of 13" as written on 2026-09-02, which was the count at
+   that moment. Two further with-skill runs completed afterwards without stalling, giving the final
+   10/15 used in `results/CRITERION_A_ROUTING_FINDINGS.md` §5. The numerator is unchanged; no figure
+   derived from this document changes.)*
    Each parent's token figure omits whatever its orphaned child spent. The per-run costs recorded in
    results/proposals_f/*.md are therefore LOWER BOUNDS, not totals, for every stalled run.
 2. **Criterion D cannot be computed from parent figures alone.** The clean comparison points remain

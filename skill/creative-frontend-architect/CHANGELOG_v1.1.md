@@ -1,8 +1,13 @@
-# creative-frontend-architect v1.1 — DRAFT, not cut over
+# creative-frontend-architect v1.1 — CUT OVER 2026-09-09
 
-**Status:** drafted 2026-09-02 as `SKILL.v1.1-draft.md`. **`SKILL.md` (v1) is untouched and remains
-the frozen version.** Cutting over is the owner's call, because every arm in the programme was run
-against v1 and results cannot be pooled across versions.
+**Status:** drafted 2026-09-02, revised to rev2 2026-09-07, validated 2026-09-08, **cut over
+2026-09-09 at the owner's instruction.** `SKILL.md` is now the v1.1 rev2 body; v1 is preserved
+verbatim at `SKILL.v1-frozen.md`.
+
+The shipped body was verified byte-identical to the text the five v1.1 validation runs actually
+received (`results/V11_INLINE_VALIDATION_RESULT.md`). Results still cannot be pooled across
+versions: every criterion in `results/SUCCESS_BAR_STATUS.md` was measured against v1 unless its row
+says otherwise.
 
 ## What changed, and the evidence for each
 
@@ -52,8 +57,45 @@ with no architect skill loaded). That is a real finding, but it is a finding abo
 line to the skill on that basis would be asserting a mechanism no controlled arm has tested — the
 skill has never been run with and without such a line. Left out until it has its own arm.
 
-## Consequence if cut over
-Every criterion measured against v1 (C 70/70 activation, G2, G4, G5, F, and the routing arm) would
-need re-running to be pooled with v1.1 results. Recommended sequencing: close the remaining v1 arms
-first (G1's S1 with-skill arm is the main one), then cut over, then re-run activation (criterion C)
-since line-3's added sentence changes the body the trigger probe sees.
+## What the validation found — and the correction it forced
+
+Ten paired runs (E1-E5 x v1/v1.1, plan-only) plus one solo control, 2026-09-08. Full result:
+`results/V11_INLINE_VALIDATION_RESULT.md`.
+
+**Line 3's stated rationale did not hold up.** The stall this change was written to fix did not
+occur in *either* arm: v1 stalled 0/5, v1.1 stalled 0/5, Fisher p = 1.0. v1 today against v1 on
+2026-09-02 (10/15) gives p = 0.016, so something changed — but whether the environment changed or
+the orchestrator's own 10-way concurrency suppressed child-spawning is **not established**. A solo
+control run also did not delegate, which is evidence against the concurrency explanation at
+p = 0.333 — weak, and pre-registered as weak.
+
+**So line 3 is retained on a different basis than it was drafted for.** v1.1 was cheaper on **5 of
+5 prompts** (median -13,013 tokens; mean tool calls 20.6 vs 27.8), the direction its bounded-search
+sentence was written to produce. That endpoint was pre-registered as secondary with **no direction
+specified**, so it is suggestive, not confirmatory (sign test p = 0.031, chosen after seeing data).
+
+**Line 1 also carries an independent correctness argument** that no measurement was needed for:
+v1 instructs the reader to stop "any library ticker that runs by default", which on a page with two
+surfaces freezes the visible one. rev2 replaced this with pausing the work owned by the inactive
+surface, and stopping shared infrastructure only when no still-active consumer depends on it.
+
+## Correction to this document
+
+An earlier version of this section said criterion C "would need re-running… since line-3's added
+sentence changes the body the trigger probe sees." **That was wrong.**
+`evals/trigger_probe_protocol.md` shows the probe agent **names and descriptions only** — "the body
+is not shown, matching how activation works at runtime." Verified 2026-09-08: v1.1's `name` and
+`description` are byte-identical to v1's, and the description frozen in the protocol is
+byte-identical (967 bytes) to the live one. The activation surface is unchanged, so **70/70
+transfers by construction** and criterion C did not need re-running at all.
+
+## Still open after cutover
+
+- **No design-director fallback in the body.** The skill names Impeccable "where available" but does
+  not say what to do when no director skill exists. Deliberately *not* added at cutover: it would
+  ship untested text, which is the one thing this programme exists to avoid. Empirically the gap is
+  milder than it looks — 4 of the 11 validation runs spontaneously nominated `frontend-design` as
+  the single director and explicitly refused to load a second one, with no instruction to do so.
+  Queued for v1.2 with its own arm.
+- **v1.1's output quality has never been scored.** The validation measured process and cost only.
+  F and G1 failed against v1; nothing here changes that, and nothing here shows v1.1 does better.

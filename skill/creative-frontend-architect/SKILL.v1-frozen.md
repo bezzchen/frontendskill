@@ -5,9 +5,6 @@ description: Use when a frontend task involves choosing the visual or creative d
 
 # Creative Frontend Architect
 
-<!-- v1.1-draft rev2 (2026-09-07). NOT the frozen v1. See CHANGELOG_v1.1.md.
-     Do not run an eval arm against this file until the owner cuts over. -->
-
 A thin router for creative frontend work. It owns register selection, rendering
 architecture, and adopt-vs-build decisions. Design taste belongs to the design director;
 current API details belong to specialist/vendor skills. It adds constraints, not a style.
@@ -17,32 +14,15 @@ current API details belong to specialist/vendor skills. It adds constraints, not
 Each of these exists because measured runs failed without it. None is optional.
 
 1. **Ambient or continuous animation must pause when its surface is offscreen and when the
-   document is hidden — unprompted, and promptly (within a frame or two, not on a timer).**
-   Pause the work owned by the inactive surface. Assume any engine you did not write runs a
-   ticker until you have checked, and check what that ticker actually drives: stopping *shared*
-   infrastructure is correct only when no still-active consumer depends on it — on a page with
-   two surfaces, killing a shared ticker freezes the visible one too. Pixi is the worked
-   example of the trap: `app.ticker.stop()` does not stop `Ticker.system`, which its event
-   system registers on independently, so a "paused" app can still hold a live rAF loop. Do this
-   even when the brief never mentions it.
+   document is hidden — unprompted.** Stop your own loop *and* any library ticker that runs
+   by default (e.g. Pixi's shared ticker). Do this even when the brief never mentions it.
 2. **Verify behavioral claims under the actual condition, not a proxy.** "Pauses when
-   scrolled away" is not verified by flipping `document.hidden`; really scroll it away.
-   "Pauses when hidden" is not verified by dispatching `visibilitychange`; really background
-   the tab. Use a global `requestAnimationFrame` wrapper to *discover* activity your own flag
-   would miss, then **attribute** what you find to a specific callback or renderer — a global
-   count stays high for unrelated visible animation, so it is evidence to explain, not a
-   verdict. Where the environment cannot produce the real condition, say so and label any
-   synthetic stand-in as such. Never report a mitigation you have not observed working.
+   scrolled away" is not verified by flipping `document.hidden`; test the exact condition
+   you claim, and never report a mitigation you have not observed working.
 3. **Before hand-building a common visual effect, check the available component/effect
    catalogs, then apply the fit gate: adopt / adapt / reference-only / custom.** Cite what
    you checked. "Nothing fits, build custom" is a valid outcome; skipping the search is not.
    Catalogs supply primitives — they never set the page's art direction.
-   **Bound the search.** Name the primitive first, look at the few sources most likely to
-   carry it, reuse what you already found earlier in this task, and stop as soon as the
-   evidence supports a verdict — this is a sourcing check, not a survey. **Run it inline,
-   yourself**: a search you commission and then block on is the most common way this work
-   stalls, and it routinely gets done twice. If the catalogs are unreachable, record that
-   limitation and proceed from what the project already has.
 4. **When a brief signals unforgettable, experimental, or immersive, explicitly weigh the
    spectacle register — a realtime graphical system as the structural core — and choose it
    knowingly or decline it explicitly.** Silence is not a decision. Spectacle is a register,
