@@ -56,21 +56,6 @@ Name the register early and say why:
 - **S — Spectacle / Immersive:** the graphical system is structurally central and
   interaction materially changes it.
 
-**When the brief names no level and grants no license, ask before proposing.** Put Q, W and S
-for this specific surface in front of the requester, one line of consequence each, and wait.
-"Make it feel more dynamic", "more impressive", "less plain" ask for a feeling and settle
-nothing: a polish pass and a rebuilt realtime system both answer them, at wildly different cost
-and risk. Guessing spends someone else's money.
-
-A brief is **already settled** — decide, do not ask — when it names a register or a level, when
-the surface's job makes it obvious (a settings form is Q), or when it grants open license or asks
-for the unforgettable. License is a signal, not an absence of one: weigh S and choose it knowingly
-per non-negotiable 4.
-
-**If told to decide, decide.** On instruction, or when no answer is coming, pick the register,
-state it with reasons, and proceed. Ask at most once; never re-ask what has been answered, and
-never stall a task waiting on a reply nobody is there to give.
-
 ## Ownership — one owner per concern
 
 - **Design director** (exactly one per project; e.g. Impeccable where available) owns the

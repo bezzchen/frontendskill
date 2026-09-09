@@ -61,20 +61,31 @@ Swap the three middle lines for what you want. `Register:` is the one that chang
 
 ## If you genuinely don't know what you want
 
-Say so, and ask for the choice to be made explicitly:
+**It will ask you.** As of v1.2, when a brief names no level and grants no license, the skill stops
+and puts Q, W and S in front of you with the consequence of each, and waits.
+
+That triggers on briefs like *"make it feel more dynamic"*, *"more impressive"*, *"less plain"* —
+which sound clear but settle nothing: a hover-state polish pass and a rebuilt realtime system both
+answer them, at wildly different cost.
+
+It will **not** ask when the brief is already settled — when you name a register or a level, when
+the surface's job is obvious (a settings form is Q), or when you grant open license or ask for
+something unforgettable. Open license is treated as a signal to aim high and decide, not as
+missing information.
+
+**To skip the question**, just say so:
 
 ```
-I'm not sure which register this should be. Weigh Q, W and S for this surface,
-recommend one with reasons, and wait for my answer before proposing an architecture.
+Pick the register yourself, tell me which and why, and carry on.
 ```
 
-The skill's fourth non-negotiable already forbids silent register choices — "Silence is not a
-decision" — so it will name its pick either way. This just stops it proceeding on the guess.
+It also won't stall: told to decide, or with nobody there to answer, it chooses and proceeds. It
+asks at most once.
 
-**Note on current behaviour:** the skill does **not** ask you a question on its own when a brief is
-ambiguous. It decides, states the decision, and continues. Making it stop and ask has never been
-tested, and the evidence above shows deciding-out-loud already works on vague briefs (3/3), so the
-behaviour was not changed on speculation. The prompt above is how to get asking behaviour today.
+**This behaviour is new and unmeasured.** Every other line in the skill earned its place by a
+measurement showing the agent failed without it. This one was added on judgment. If it asks when
+you think the brief was clear, that is the known risk — say so, and it is worth recording. See
+`CHANGELOG_v1.2.md`.
 
 ---
 
