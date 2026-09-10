@@ -73,3 +73,28 @@ real tab — it can't be done from source, and I won't report a mitigation I hav
 
 That is non-negotiable 2 behaving exactly as written under a permission denial — a condition no arm
 in the programme was designed to test, and the skill held.
+
+---
+
+## Pruned 2026-09-10 — standing practice superseded by the owner
+
+The owner instructed the prune ("if there is no harm in pruning them then lets just prune them"),
+which overrides the flag-do-not-edit rule above. **That rule is now retired for this file.**
+
+Removed 9 of 10 configurations: `constellation-prod`, `meridian-s1ws`, `meridian-s1ws-prod`,
+`meridian-s1both`, `meridian-s1both-prod`, `meridian-s1both2`, `meridian-s1both2-prod`,
+`b2e6-dev`, `c3e1-dev`. Kept `meridian` (`http://localhost:3457`, attach-only, no command — the
+owner's own). Backup at `~/Documents/.claude/launch.json.bak-20260910`; JSON re-parsed after the
+edit to confirm validity.
+
+Assessed before removing: every entry was **inert**. Nothing auto-starts a configuration —
+`preview_start` runs one only when named — and all ten referenced ports were free at the time.
+One entry had genuine nuisance value: `constellation-prod` claimed **port 3000**, the common dev
+default, while already pointing at a deleted run dir (`runs/I5ws-rep3`). The rest pointed into the
+session scratchpad under `/private/tmp/`, so they were destined to become dead entries anyway.
+
+**The underlying cause is unfixed.** Runs that start a preview server still write to the nearest
+`.claude/launch.json`, which is the owner's, because run dirs live under a scratchpad with no
+`.claude/` of its own. Expect regrowth on the next wave that previews anything. A real fix would
+place a `.claude/` inside each run dir before launch so the write lands there instead — untried,
+and out of scope for the arms that remain.
