@@ -98,3 +98,53 @@ session scratchpad under `/private/tmp/`, so they were destined to become dead e
 `.claude/` of its own. Expect regrowth on the next wave that previews anything. A real fix would
 place a `.claude/` inside each run dir before launch so the write lands there instead — untried,
 and out of scope for the arms that remain.
+
+---
+
+## The stated cause was WRONG, and the proposed fix does not work — tested 2026-09-10
+
+The "Why it happens" section above says the tooling writes "into the **nearest** `.claude/launch.json`",
+and the prune note proposed seeding a `.claude/` inside each run dir to capture the write.
+**Both are refuted by direct test.**
+
+Test: a fixture copy at `<scratchpad>/seedtest/RUN` was given its own
+`.claude/launch.json` (`{"version":"0.0.1","configurations":[]}`) before launch. A fresh agent was
+asked to start the dev server and preview the page.
+
+**Result:** the seeded file was never consulted.
+
+> "`preview_start` resolves `.claude/launch.json` relative to the **session cwd**
+> (`/Users/bezzchen/Documents`), not the project. This file was never consulted by `preview_start`."
+
+The run still appended to the owner's file (`next-dev`, port 3000); that entry has been removed.
+
+### Corrected mechanism
+
+Resolution is **session-cwd-relative, not path-relative to the work directory.** Consequences:
+
+1. **Seeding a `.claude/` in the run dir cannot work** — nothing reads it. The proposed fix is dead.
+2. **No run-dir-side fix exists.** The only levers are the session's cwd, or pruning after the fact.
+3. **Real users are unaffected, for a different reason than previously recorded.** A user running the
+   skill has their session cwd *in their own project*, so the write lands in that project's
+   `.claude/launch.json` — correct and expected. The accumulation is purely an artifact of this
+   harness running evals from a session rooted at `~/Documents` while the work happens in a
+   scratchpad. **It is a harness artifact, not a skill defect**, and nothing in `SKILL.md` is implicated.
+
+### Second finding: silent fallback
+
+With only the project-local config present, `preview_start name="next-dev"` **did not error**. It
+silently fell back to the unrelated `meridian` entry and tried to attach to `:3457`, where nothing
+was listening. A missing named configuration failing quietly as "attach to some other entry" is a
+real footgun for any run that trusts the name it just wrote.
+
+### Third finding: the permission classifier again
+
+`preview_start` was then **denied** by the auto-mode classifier, so the agent started the server with
+plain Bash instead and pointed the browser tab at it. Third instance in two days of the same class of
+action being allowed or denied inconsistently (cf. B1 denied / B2 allowed in the v1.2 arm).
+
+### Standing practice, revised
+
+Prune when it grows; do not attempt a run-dir-side fix. If a future wave wants the writes contained,
+the only candidate left is running the eval session itself with its cwd inside the scratchpad —
+untested, and it would change the whole session's working directory, which has its own costs.
