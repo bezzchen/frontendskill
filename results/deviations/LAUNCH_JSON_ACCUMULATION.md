@@ -38,3 +38,38 @@ recreated between waves.
 Whether to prune the eight eval-created entries. They are harmless but they clutter the launch
 picker, and `meridian` / `constellation-prod` need the owner's judgement because the programme
 cannot tell whether those two are theirs.
+
+---
+
+## Recurrence and turnover — checked 2026-09-10 (v1.2 ask-validation arm)
+
+`B2-E6`, a **plan-only** run, appended `b2e6-dev` (port 3021). It reported the write itself rather
+than leaving it to be found: *"one `b2e6-dev` entry appended to `/Users/bezzchen/Documents/.claude/
+launch.json` (port 3021) for when the server is allowed."*
+
+**The eval entries have turned over completely since 2026-09-01.** None of the nine entries listed
+above is still present; the file now holds a different set. Whatever removed them was not recorded
+here, so the mechanism is unknown — the entries are not simply monotonic accumulation.
+
+Current contents (9):
+
+| name | port | origin |
+|---|---|---|
+| `meridian` | — | owner's own (probably) — DO NOT touch without asking |
+| `constellation-prod` | 3000 | unclear — may be owner's or an eval leftover |
+| `meridian-s1ws` / `-prod` | 3011 / 3012 | G1 S1 with-skill arm |
+| `meridian-s1both` / `-prod` | 3013 / 3014 | visual-layer factorial |
+| `meridian-s1both2` / `-prod` | 3015 / 3016 | visual-layer factorial |
+| `b2e6-dev` | 3021 | **this arm**, 2026-09-10 |
+
+Standing practice unchanged: **flag, do not edit.** Left in place, owner's call.
+
+## Second-order finding: the harness denied the server, and the run took the refusal correctly
+
+B2's dev server was denied twice. The run did not route around it through Bash, said so plainly,
+and refused to assert the pause behaviour it could not observe: *"Verifying 'pauses when scrolled
+away' and 'pauses when the tab is hidden' requires actually scrolling and actually backgrounding a
+real tab — it can't be done from source, and I won't report a mitigation I haven't watched work."*
+
+That is non-negotiable 2 behaving exactly as written under a permission denial — a condition no arm
+in the programme was designed to test, and the skill held.

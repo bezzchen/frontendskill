@@ -1,9 +1,12 @@
 # creative-frontend-architect v1.2 — 2026-09-09
 
-**Status: SHIPPED AND UNTESTED.** Added at the owner's explicit instruction after the tradeoff below
-was put to them and they reaffirmed. This is the first text in the skill's history that entered the
-body without a measurement showing the agent fails without it — the Iron Law is knowingly suspended
-here, and this file exists so that is on the record rather than buried.
+**Status: SHIPPED, THEN MEASURED — validated 2026-09-10.** Added at the owner's explicit
+instruction after the tradeoff below was put to them and they reaffirmed. It entered the body
+*before* any measurement — the first text in the skill's history to do so — and the Iron Law was
+knowingly suspended for one release. **That suspension is now closed:**
+`results/V12_ASK_VALIDATION_RESULT.md` reports 9/9 runs on-target across three arms, all three
+pre-registered bars met, and **criterion G2 not regressed**. The order was wrong; the outcome
+happened to be right. This file keeps both facts.
 
 Bodies preserved: `SKILL.v1-frozen.md` (v1, the archive baseline) and `SKILL.v1.1-validated.md`
 (v1.1 rev2, the body the cost validation actually measured).
@@ -39,10 +42,9 @@ place where guessing is genuinely expensive and no measurement defends the curre
 
 ## Risks, stated before anyone finds them
 
-- **Criterion G2 is now at risk in principle.** Its bar requires classifying the unlabeled brief
-  into S and *proposing* a system in ≥2/3 reps. The wording is intended to leave S0 on the
-  decide path, but that intent is **untested** — if the skill now asks on S0, G2 fails as written.
-  This must be re-run before G2 is claimed for v1.2.
+- ~~**Criterion G2 is now at risk in principle.**~~ **RESOLVED 2026-09-10: 3/3 S0 runs proposed,
+  none asked.** All three cited the settled-brief clause by name before deciding. G2 holds for v1.2
+  and the risk is retired.
 - **Ask-fatigue.** An agent that stops to ask on briefs a human considers clear is worse than one
   that decides. Guarded by "ask at most once" and by the settled-brief list, neither measured.
 - **Body size.** 917 words, up from 739 (+24%). Every invocation pays it.
@@ -58,5 +60,10 @@ Cheap and well-defined:
    actually gates the claim.
 3. **A settled brief (E1-E5)** — does it stay quiet? Ask-fatigue check.
 
-Until that runs, `results/SUCCESS_BAR_STATUS.md` describes **v1.1 and earlier**. No criterion has
-been measured against v1.2.
+**All three ran, 2026-09-10.** Results in `results/V12_ASK_VALIDATION_RESULT.md`: arm A 3/3
+proposed, arm B 3/3 asked, arm C 3/3 stayed quiet. Ask-fatigue did not appear; no run stalled
+waiting for an answer; the pre-existing non-negotiables still fired (all 9 named a register, and
+one asked run ran the full catalog sweep as well).
+
+`results/SUCCESS_BAR_STATUS.md` still describes **v1 or v1.1** for every criterion except **G2**,
+which is now measured against v1.2 as well.
