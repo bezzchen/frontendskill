@@ -1,0 +1,64 @@
+{
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "body": "Skip to registration\nField Notes\nAn independent studio gathering\n\nSTUDIO DAY · AUTUMN EDITION\n\nA better day\nfor making.\n\nSaturday 24 October · 10:00–16:00\n\nA small gathering for people who make thoughtful things. Share a work in progress, learn a new approach, and leave with a fresh idea.\n\nRoom to try something.\n\nJoin us at North Hall, 18 Garden Street, or tune in online. Everyone is welcome, and there is no charge to attend.\n\n10:00\nCoffee and introductions\n11:00\nSmall experiments, shared openly\n14:00\nMake something together\nSave your place.\n\nTwo details, and you are on the list.\n\nYour name\nEmail address\nHow will you join?\nIn person at North Hall\nOnline\nReserve my seat\n\nMake a little room for new ideas.\nDoors open at 09:30. Bring your curiosity.\n\nField Notes Studio Day · A place to meet, share and make.",
+  "controls": [
+    {
+      "tag": "A",
+      "type": "",
+      "label": null,
+      "text": "Skip to registration",
+      "id": "",
+      "name": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "label": null,
+      "text": "",
+      "id": "guest-name",
+      "name": "name",
+      "placeholder": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "email",
+      "label": null,
+      "text": "",
+      "id": "guest-email",
+      "name": "email",
+      "placeholder": ""
+    },
+    {
+      "tag": "SELECT",
+      "type": "select-one",
+      "label": null,
+      "text": "\n                In person at North Hall\n                Online\n              ",
+      "id": "attendance",
+      "name": "attendance"
+    },
+    {
+      "tag": "BUTTON",
+      "type": "submit",
+      "label": null,
+      "text": "Reserve my seat",
+      "id": "submit-button",
+      "name": ""
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "label": null,
+      "text": "Register another guest",
+      "id": "reset-button",
+      "name": ""
+    }
+  ],
+  "width": {
+    "innerWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 1131
+  }
+}

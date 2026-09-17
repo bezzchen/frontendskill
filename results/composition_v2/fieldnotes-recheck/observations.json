@@ -1,0 +1,328 @@
+{
+  "reviewer": "/root/v2_director_adapter",
+  "review_cycles": 1,
+  "route": "http://127.0.0.1:8767/",
+  "log": [
+    {
+      "name": "desktop-initial",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to registration\nField Notes\nAn independent studio gathering\n\nSTUDIO DAY · AUTUMN EDITION\n\nA better day\nfor making.\n\nSaturday 24 October · 10:00–16:00\n\nA small gathering for people who make thoughtful things. Share a work in progress, learn a new approach, and leave with a fresh idea.\n\nRoom to try something.\n\nJoin us at North Hall, 18 Garden Street, or tune in online. Everyone is welcome, and there is no charge to attend.\n\n10:00\nCoffee and introductions\n11:00\nSmall experiments, shared openly\n14:00\nMake something together\nSave your place.\n\nTwo details, and you are on the list.\n\nYour name\nEmail address\nHow will you join?\nIn person at North Hall\nOnline\nReserve my seat\n\nMake a little room for new ideas.\nDoors open at 09:30. Bring your curiosity.\n\nField Notes Studio Day · A place to meet, share and make.",
+      "focus": {
+        "tag": "BODY",
+        "id": "",
+        "text": null
+      },
+      "width": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440
+      }
+    },
+    {
+      "name": "desktop-empty-errors",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to registration\nField Notes\nAn independent studio gathering\n\nSTUDIO DAY · AUTUMN EDITION\n\nA better day\nfor making.\n\nSaturday 24 October · 10:00–16:00\n\nA small gathering for people who make thoughtful things. Share a work in progress, learn a new approach, and leave with a fresh idea.\n\nRoom to try something.\n\nJoin us at North Hall, 18 Garden Street, or tune in online. Everyone is welcome, and there is no charge to attend.\n\n10:00\nCoffee and introductions\n11:00\nSmall experiments, shared openly\n14:00\nMake something together\nSave your place.\n\nTwo details, and you are on the list.\n\nYour name\n\nPlease enter your name.\n\nEmail address\n\nEnter a valid email address.\n\nHow will you join?\nIn person at North Hall\nOnline\nReserve my seat\n\nPlease check the highlighted fields.\n\nMake a little room for new ideas.\nDoors open at 09:30. Bring your curiosity.\n\nField Notes Studio Day · A place to meet, share and make.",
+      "focus": {
+        "tag": "INPUT",
+        "id": "guest-name",
+        "text": ""
+      },
+      "width": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440
+      }
+    },
+    {
+      "name": "desktop-button-hit-test",
+      "rect": {
+        "x": 781,
+        "y": 718.21875,
+        "width": 458,
+        "height": 52
+      },
+      "hit": {
+        "tag": "BUTTON",
+        "id": "submit-button",
+        "text": "Reserve my seat"
+      }
+    },
+    {
+      "name": "desktop-ready-pointer",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to registration\nField Notes\nAn independent studio gathering\n\nSTUDIO DAY · AUTUMN EDITION\n\nA better day\nfor making.\n\nSaturday 24 October · 10:00–16:00\n\nA small gathering for people who make thoughtful things. Share a work in progress, learn a new approach, and leave with a fresh idea.\n\nRoom to try something.\n\nJoin us at North Hall, 18 Garden Street, or tune in online. Everyone is welcome, and there is no charge to attend.\n\n10:00\nCoffee and introductions\n11:00\nSmall experiments, shared openly\n14:00\nMake something together\nSave your place.\n\nTwo details, and you are on the list.\n\nYour name\n\nPlease enter your name.\n\nEmail address\n\nEnter a valid email address.\n\nHow will you join?\nIn person at North Hall\nOnline\nReserve my seat\n\nPlease check the highlighted fields.\n\nMake a little room for new ideas.\nDoors open at 09:30. Bring your curiosity.\n\nField Notes Studio Day · A place to meet, share and make.",
+      "focus": {
+        "tag": "INPUT",
+        "id": "guest-email",
+        "text": ""
+      },
+      "width": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440
+      }
+    },
+    {
+      "name": "desktop-submitting",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to registration\nField Notes\nAn independent studio gathering\n\nSTUDIO DAY · AUTUMN EDITION\n\nA better day\nfor making.\n\nSaturday 24 October · 10:00–16:00\n\nA small gathering for people who make thoughtful things. Share a work in progress, learn a new approach, and leave with a fresh idea.\n\nRoom to try something.\n\nJoin us at North Hall, 18 Garden Street, or tune in online. Everyone is welcome, and there is no charge to attend.\n\n10:00\nCoffee and introductions\n11:00\nSmall experiments, shared openly\n14:00\nMake something together\nSave your place.\n\nTwo details, and you are on the list.\n\nYour name\nEmail address\nHow will you join?\nIn person at North Hall\nOnline\nReserving…\n\nSaving your place…\n\nMake a little room for new ideas.\nDoors open at 09:30. Bring your curiosity.\n\nField Notes Studio Day · A place to meet, share and make.",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "submit-button",
+        "text": "Reserving…"
+      },
+      "width": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440
+      }
+    },
+    {
+      "name": "desktop-pointer-success",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to registration\nField Notes\nAn independent studio gathering\n\nSTUDIO DAY · AUTUMN EDITION\n\nA better day\nfor making.\n\nSaturday 24 October · 10:00–16:00\n\nA small gathering for people who make thoughtful things. Share a work in progress, learn a new approach, and leave with a fresh idea.\n\nRoom to try something.\n\nJoin us at North Hall, 18 Garden Street, or tune in online. Everyone is welcome, and there is no charge to attend.\n\n10:00\nCoffee and introductions\n11:00\nSmall experiments, shared openly\n14:00\nMake something together\nSave your place.\n\nTwo details, and you are on the list.\n\nYou are on the list.\n\nThanks, River Chen. Your place is reserved online. Your confirmation address is river@example.com.\n\nRegister another guest\n\nMake a little room for new ideas.\nDoors open at 09:30. Bring your curiosity.\n\nField Notes Studio Day · A place to meet, share and make.",
+      "focus": {
+        "tag": "H2",
+        "id": "success-title",
+        "text": "You are on the list."
+      },
+      "width": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440
+      }
+    },
+    {
+      "name": "desktop-reset",
+      "focus": "guest-name",
+      "nameValue": "",
+      "emailValue": ""
+    },
+    {
+      "name": "desktop-shift-tab",
+      "focus": "guest-email"
+    },
+    {
+      "name": "desktop-button-keyboard-focus",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to registration\nField Notes\nAn independent studio gathering\n\nSTUDIO DAY · AUTUMN EDITION\n\nA better day\nfor making.\n\nSaturday 24 October · 10:00–16:00\n\nA small gathering for people who make thoughtful things. Share a work in progress, learn a new approach, and leave with a fresh idea.\n\nRoom to try something.\n\nJoin us at North Hall, 18 Garden Street, or tune in online. Everyone is welcome, and there is no charge to attend.\n\n10:00\nCoffee and introductions\n11:00\nSmall experiments, shared openly\n14:00\nMake something together\nSave your place.\n\nTwo details, and you are on the list.\n\nYour name\nEmail address\nHow will you join?\nIn person at North Hall\nOnline\nReserve my seat\n\nMake a little room for new ideas.\nDoors open at 09:30. Bring your curiosity.\n\nField Notes Studio Day · A place to meet, share and make.",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "submit-button",
+        "text": "Reserve my seat"
+      },
+      "width": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440
+      }
+    },
+    {
+      "name": "desktop-keyboard-success",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to registration\nField Notes\nAn independent studio gathering\n\nSTUDIO DAY · AUTUMN EDITION\n\nA better day\nfor making.\n\nSaturday 24 October · 10:00–16:00\n\nA small gathering for people who make thoughtful things. Share a work in progress, learn a new approach, and leave with a fresh idea.\n\nRoom to try something.\n\nJoin us at North Hall, 18 Garden Street, or tune in online. Everyone is welcome, and there is no charge to attend.\n\n10:00\nCoffee and introductions\n11:00\nSmall experiments, shared openly\n14:00\nMake something together\nSave your place.\n\nTwo details, and you are on the list.\n\nYou are on the list.\n\nThanks, Jamie Vale. Your place is reserved in person. Your confirmation address is jamie@example.com.\n\nRegister another guest\n\nMake a little room for new ideas.\nDoors open at 09:30. Bring your curiosity.\n\nField Notes Studio Day · A place to meet, share and make.",
+      "focus": {
+        "tag": "H2",
+        "id": "success-title",
+        "text": "You are on the list."
+      },
+      "width": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440
+      }
+    },
+    {
+      "name": "desktop-keyboard-reset",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to registration\nField Notes\nAn independent studio gathering\n\nSTUDIO DAY · AUTUMN EDITION\n\nA better day\nfor making.\n\nSaturday 24 October · 10:00–16:00\n\nA small gathering for people who make thoughtful things. Share a work in progress, learn a new approach, and leave with a fresh idea.\n\nRoom to try something.\n\nJoin us at North Hall, 18 Garden Street, or tune in online. Everyone is welcome, and there is no charge to attend.\n\n10:00\nCoffee and introductions\n11:00\nSmall experiments, shared openly\n14:00\nMake something together\nSave your place.\n\nTwo details, and you are on the list.\n\nYour name\nEmail address\nHow will you join?\nIn person at North Hall\nOnline\nReserve my seat\n\nMake a little room for new ideas.\nDoors open at 09:30. Bring your curiosity.\n\nField Notes Studio Day · A place to meet, share and make.",
+      "focus": {
+        "tag": "INPUT",
+        "id": "guest-name",
+        "text": ""
+      },
+      "width": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440
+      }
+    },
+    {
+      "name": "mobile-initial",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "body": "Skip to registration\nField Notes\nAn independent studio gathering\n\nSTUDIO DAY · AUTUMN EDITION\n\nA better day\nfor making.\n\nSaturday 24 October · 10:00–16:00\n\nA small gathering for people who make thoughtful things. Share a work in progress, learn a new approach, and leave with a fresh idea.\n\nRoom to try something.\n\nJoin us at North Hall, 18 Garden Street, or tune in online. Everyone is welcome, and there is no charge to attend.\n\n10:00\nCoffee and introductions\n11:00\nSmall experiments, shared openly\n14:00\nMake something together\nSave your place.\n\nTwo details, and you are on the list.\n\nYour name\nEmail address\nHow will you join?\nIn person at North Hall\nOnline\nReserve my seat\n\nMake a little room for new ideas.\nDoors open at 09:30. Bring your curiosity.\n\nField Notes Studio Day · A place to meet, share and make.",
+      "focus": {
+        "tag": "BODY",
+        "id": "",
+        "text": null
+      },
+      "width": {
+        "innerWidth": 375,
+        "scrollWidth": 375
+      }
+    },
+    {
+      "name": "mobile-empty-errors",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "body": "Skip to registration\nField Notes\nAn independent studio gathering\n\nSTUDIO DAY · AUTUMN EDITION\n\nA better day\nfor making.\n\nSaturday 24 October · 10:00–16:00\n\nA small gathering for people who make thoughtful things. Share a work in progress, learn a new approach, and leave with a fresh idea.\n\nRoom to try something.\n\nJoin us at North Hall, 18 Garden Street, or tune in online. Everyone is welcome, and there is no charge to attend.\n\n10:00\nCoffee and introductions\n11:00\nSmall experiments, shared openly\n14:00\nMake something together\nSave your place.\n\nTwo details, and you are on the list.\n\nYour name\n\nPlease enter your name.\n\nEmail address\n\nEnter a valid email address.\n\nHow will you join?\nIn person at North Hall\nOnline\nReserve my seat\n\nPlease check the highlighted fields.\n\nMake a little room for new ideas.\nDoors open at 09:30. Bring your curiosity.\n\nField Notes Studio Day · A place to meet, share and make.",
+      "focus": {
+        "tag": "INPUT",
+        "id": "guest-name",
+        "text": ""
+      },
+      "width": {
+        "innerWidth": 375,
+        "scrollWidth": 375
+      }
+    },
+    {
+      "name": "mobile-button-hit-test",
+      "rect": {
+        "x": 43,
+        "y": 579.625,
+        "width": 289,
+        "height": 52
+      },
+      "hit": {
+        "tag": "BUTTON",
+        "id": "submit-button",
+        "text": "Reserve my seat"
+      }
+    },
+    {
+      "name": "mobile-ready-pointer",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "body": "Skip to registration\nField Notes\nAn independent studio gathering\n\nSTUDIO DAY · AUTUMN EDITION\n\nA better day\nfor making.\n\nSaturday 24 October · 10:00–16:00\n\nA small gathering for people who make thoughtful things. Share a work in progress, learn a new approach, and leave with a fresh idea.\n\nRoom to try something.\n\nJoin us at North Hall, 18 Garden Street, or tune in online. Everyone is welcome, and there is no charge to attend.\n\n10:00\nCoffee and introductions\n11:00\nSmall experiments, shared openly\n14:00\nMake something together\nSave your place.\n\nTwo details, and you are on the list.\n\nYour name\n\nPlease enter your name.\n\nEmail address\n\nEnter a valid email address.\n\nHow will you join?\nIn person at North Hall\nOnline\nReserve my seat\n\nPlease check the highlighted fields.\n\nMake a little room for new ideas.\nDoors open at 09:30. Bring your curiosity.\n\nField Notes Studio Day · A place to meet, share and make.",
+      "focus": {
+        "tag": "INPUT",
+        "id": "guest-email",
+        "text": ""
+      },
+      "width": {
+        "innerWidth": 375,
+        "scrollWidth": 375
+      }
+    },
+    {
+      "name": "mobile-submitting",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "body": "Skip to registration\nField Notes\nAn independent studio gathering\n\nSTUDIO DAY · AUTUMN EDITION\n\nA better day\nfor making.\n\nSaturday 24 October · 10:00–16:00\n\nA small gathering for people who make thoughtful things. Share a work in progress, learn a new approach, and leave with a fresh idea.\n\nRoom to try something.\n\nJoin us at North Hall, 18 Garden Street, or tune in online. Everyone is welcome, and there is no charge to attend.\n\n10:00\nCoffee and introductions\n11:00\nSmall experiments, shared openly\n14:00\nMake something together\nSave your place.\n\nTwo details, and you are on the list.\n\nYour name\nEmail address\nHow will you join?\nIn person at North Hall\nOnline\nReserving…\n\nSaving your place…\n\nMake a little room for new ideas.\nDoors open at 09:30. Bring your curiosity.\n\nField Notes Studio Day · A place to meet, share and make.",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "submit-button",
+        "text": "Reserving…"
+      },
+      "width": {
+        "innerWidth": 375,
+        "scrollWidth": 375
+      }
+    },
+    {
+      "name": "mobile-pointer-success",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "body": "Skip to registration\nField Notes\nAn independent studio gathering\n\nSTUDIO DAY · AUTUMN EDITION\n\nA better day\nfor making.\n\nSaturday 24 October · 10:00–16:00\n\nA small gathering for people who make thoughtful things. Share a work in progress, learn a new approach, and leave with a fresh idea.\n\nRoom to try something.\n\nJoin us at North Hall, 18 Garden Street, or tune in online. Everyone is welcome, and there is no charge to attend.\n\n10:00\nCoffee and introductions\n11:00\nSmall experiments, shared openly\n14:00\nMake something together\nSave your place.\n\nTwo details, and you are on the list.\n\nYou are on the list.\n\nThanks, River Chen. Your place is reserved online. Your confirmation address is river@example.com.\n\nRegister another guest\n\nMake a little room for new ideas.\nDoors open at 09:30. Bring your curiosity.\n\nField Notes Studio Day · A place to meet, share and make.",
+      "focus": {
+        "tag": "H2",
+        "id": "success-title",
+        "text": "You are on the list."
+      },
+      "width": {
+        "innerWidth": 375,
+        "scrollWidth": 375
+      }
+    },
+    {
+      "name": "mobile-reset",
+      "focus": "guest-name",
+      "nameValue": "",
+      "emailValue": ""
+    },
+    {
+      "name": "mobile-shift-tab",
+      "focus": "guest-email"
+    },
+    {
+      "name": "mobile-button-keyboard-focus",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "body": "Skip to registration\nField Notes\nAn independent studio gathering\n\nSTUDIO DAY · AUTUMN EDITION\n\nA better day\nfor making.\n\nSaturday 24 October · 10:00–16:00\n\nA small gathering for people who make thoughtful things. Share a work in progress, learn a new approach, and leave with a fresh idea.\n\nRoom to try something.\n\nJoin us at North Hall, 18 Garden Street, or tune in online. Everyone is welcome, and there is no charge to attend.\n\n10:00\nCoffee and introductions\n11:00\nSmall experiments, shared openly\n14:00\nMake something together\nSave your place.\n\nTwo details, and you are on the list.\n\nYour name\nEmail address\nHow will you join?\nIn person at North Hall\nOnline\nReserve my seat\n\nMake a little room for new ideas.\nDoors open at 09:30. Bring your curiosity.\n\nField Notes Studio Day · A place to meet, share and make.",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "submit-button",
+        "text": "Reserve my seat"
+      },
+      "width": {
+        "innerWidth": 375,
+        "scrollWidth": 375
+      }
+    },
+    {
+      "name": "mobile-keyboard-success",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "body": "Skip to registration\nField Notes\nAn independent studio gathering\n\nSTUDIO DAY · AUTUMN EDITION\n\nA better day\nfor making.\n\nSaturday 24 October · 10:00–16:00\n\nA small gathering for people who make thoughtful things. Share a work in progress, learn a new approach, and leave with a fresh idea.\n\nRoom to try something.\n\nJoin us at North Hall, 18 Garden Street, or tune in online. Everyone is welcome, and there is no charge to attend.\n\n10:00\nCoffee and introductions\n11:00\nSmall experiments, shared openly\n14:00\nMake something together\nSave your place.\n\nTwo details, and you are on the list.\n\nYou are on the list.\n\nThanks, Jamie Vale. Your place is reserved in person. Your confirmation address is jamie@example.com.\n\nRegister another guest\n\nMake a little room for new ideas.\nDoors open at 09:30. Bring your curiosity.\n\nField Notes Studio Day · A place to meet, share and make.",
+      "focus": {
+        "tag": "H2",
+        "id": "success-title",
+        "text": "You are on the list."
+      },
+      "width": {
+        "innerWidth": 375,
+        "scrollWidth": 375
+      }
+    },
+    {
+      "name": "mobile-keyboard-reset",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "body": "Skip to registration\nField Notes\nAn independent studio gathering\n\nSTUDIO DAY · AUTUMN EDITION\n\nA better day\nfor making.\n\nSaturday 24 October · 10:00–16:00\n\nA small gathering for people who make thoughtful things. Share a work in progress, learn a new approach, and leave with a fresh idea.\n\nRoom to try something.\n\nJoin us at North Hall, 18 Garden Street, or tune in online. Everyone is welcome, and there is no charge to attend.\n\n10:00\nCoffee and introductions\n11:00\nSmall experiments, shared openly\n14:00\nMake something together\nSave your place.\n\nTwo details, and you are on the list.\n\nYour name\nEmail address\nHow will you join?\nIn person at North Hall\nOnline\nReserve my seat\n\nMake a little room for new ideas.\nDoors open at 09:30. Bring your curiosity.\n\nField Notes Studio Day · A place to meet, share and make.",
+      "focus": {
+        "tag": "INPUT",
+        "id": "guest-name",
+        "text": ""
+      },
+      "width": {
+        "innerWidth": 375,
+        "scrollWidth": 375
+      }
+    }
+  ],
+  "errors": []
+}

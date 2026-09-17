@@ -1,0 +1,345 @@
+{
+  "suite_id": "composition-v2",
+  "status": "draft",
+  "protocol": "evals/composition_v2_protocol.md",
+  "development_excluded_from_efficacy": true,
+  "fixture_preparation_status": "specifications-only",
+  "development_probes": [
+    {
+      "id": "D1-supplied-design",
+      "focus": "supplied design and settled stack",
+      "user_prompt": "Implement the supplied community-workshop booking design using the existing React/CSS Modules project. The supplied type scale, ochre palette, squared controls and booking layout are approved; keep them and the installed stack. Finish slot selection, validation and the confirmation state. You can decide remaining implementation details and proceed.",
+      "setup": [
+        "Fresh fixture: workshop schedule with three bookable slots, CSS Modules tokens, approved desktop/mobile reference and an accepted contract. No animation package. Supply all references locally."
+      ],
+      "invocation_modes": [
+        "explicit",
+        "natural-selection"
+      ],
+      "critical_assertions": [
+        "Reuse accepted concept and tokens; no repeated discovery or approval request.",
+        "Resolve only open architecture decisions; no competing director or stack replacement.",
+        "Book a slot, reject missing attendee name and show confirmation at desktop/mobile; preserve approved squared controls."
+      ],
+      "required_evidence": [
+        "Read trace and contract diff",
+        "Desktop/mobile booking-state captures and interaction trace"
+      ],
+      "execution_status": "not-run",
+      "fixture_path": null,
+      "fixture_sha256": null
+    },
+    {
+      "id": "D2-settings-and-review",
+      "focus": "ordinary settings UI and seeded live-review defects",
+      "user_prompt": "Finish the workspace settings panel for our ceramics studio: display name, kiln-alert preferences, validation and save feedback. Preserve the studio brand and squared controls. Keep it calm and usable on a phone; you can proceed with sensible details.",
+      "setup": [
+        "Small settings fixture with deterministic 600ms save, success and error toggles. Seed heading/help-text overlap at 390px and a transparent overlay intercepting the primary Save action only at 390px. Preserve the defects until the review checkpoint; store their locations in assessor-only notes.",
+        "After initial implementation, checkpoint and use the rendered-review procedure with a fresh reviewer. Give brief, accepted contract, URL and states, never seeded-defect coordinates."
+      ],
+      "invocation_modes": [
+        "explicit",
+        "natural-selection"
+      ],
+      "critical_assertions": [
+        "Use ordinary UI/CSS solutions unless a specific capability need justifies otherwise.",
+        "Reviewer reproduces both overlap and blocked Save at 390px with evidence; detects them before correcting.",
+        "Within two correction/recheck cycles, Save works and overlap is absent; recheck primary flow and keyboard focus.",
+        "Brand-approved squared controls are not classified as a defect solely from a module preference."
+      ],
+      "required_evidence": [
+        "Before/after defect captures",
+        "Reviewer identity/context trace and findings",
+        "Fix diff and mobile primary-flow recheck"
+      ],
+      "execution_status": "not-run",
+      "fixture_path": null,
+      "fixture_sha256": null
+    },
+    {
+      "id": "D3-immersive",
+      "focus": "explicitly consider spectacle",
+      "user_prompt": "Create an interactive digital observatory for an imaginary migrating moon. Visitors should feel they are steering an unfolding encounter: their input changes the central scene as they move through arrival, alignment and departure. Make the experience memorable and spatial; keep explanations and controls accessible on phones and with reduced motion. Choose the implementation and proceed.",
+      "setup": [
+        "New blank observatory fixture with three short explanatory texts and simple local line illustrations; no required engine or director preloaded."
+      ],
+      "invocation_modes": [
+        "explicit",
+        "natural-selection"
+      ],
+      "critical_assertions": [
+        "Explicitly consider S register and a central authored interactive system instead of only decorative sections.",
+        "Record renderer ownership, mobile/reduced-motion design and meaningful input causality.",
+        "Operate all three acts; verify input changes the scene and equivalent content remains available."
+      ],
+      "required_evidence": [
+        "Contract/register decision and renderer ownership",
+        "Desktop/mobile and reduced-motion flow evidence",
+        "Motion and visibility-state trace"
+      ],
+      "execution_status": "not-run",
+      "fixture_path": null,
+      "fixture_sha256": null
+    },
+    {
+      "id": "D4-decide-for-me",
+      "focus": "delegated decisions and shared project identity",
+      "user_prompt": "Build the public membership page and the member notification preferences for our repair co-op. Use the established indigo/cream tokens and existing Button and Field components across both. The membership page should have character; preferences should be quiet and practical. Decide the remaining visual and technical details for me and implement both; no concept approval is needed.",
+      "setup": [
+        "Two routes in one new fixture with existing tokens/components, membership content, preferences data and an accepted record of user delegation."
+      ],
+      "invocation_modes": [
+        "explicit",
+        "natural-selection"
+      ],
+      "critical_assertions": [
+        "Do not ask again for concept approval or settled decisions.",
+        "Exactly one design director per surface; both surfaces preserve shared tokens and components.",
+        "Marketing and settings may choose different registers without contradicting the project identity.",
+        "Membership primary action and saving preferences work."
+      ],
+      "required_evidence": [
+        "Decision/read trace and shared component diff",
+        "Both route captures and interaction checks"
+      ],
+      "execution_status": "not-run",
+      "fixture_path": null,
+      "fixture_sha256": null
+    },
+    {
+      "id": "D5-director-absent",
+      "focus": "missing director fallback",
+      "user_prompt": "Build the volunteer shift sign-up page using our existing accessible components and moss/stone brand palette. Show shift capacity, validate a contact name and confirm the chosen shift. Decide remaining details and proceed.",
+      "setup": [
+        "Fresh shift fixture with sufficient brand/content guidance. Ensure the selected director source is absent at every advertised resolution path, including CFA_ANTHROPIC_SOURCE. Record failed resolution without installing anything."
+      ],
+      "invocation_modes": [
+        "explicit",
+        "natural-selection"
+      ],
+      "critical_assertions": [
+        "Record builtin-fallback with actual failed source resolution; do not claim upstream source loading.",
+        "Continue using supplied brief/design system without unnecessary permission or silent installation.",
+        "Verify shift selection, capacity, validation and confirmation; actual unavailable data is null."
+      ],
+      "required_evidence": [
+        "Resolution/read trace",
+        "Fallback metadata",
+        "Primary-flow capture"
+      ],
+      "execution_status": "not-run",
+      "fixture_path": null,
+      "fixture_sha256": null
+    },
+    {
+      "id": "D6-catalog-offline",
+      "focus": "bounded catalog-fit fallback",
+      "user_prompt": "Add a folding-paper reveal to the opening of our local bookbinding workshop page, consistent with its ink-and-paper identity. Keep dates, booking controls and text semantic and usable on touch and reduced motion. Choose a fitting implementation and proceed.",
+      "setup": [
+        "New paper/ink fixture with local illustrations. Catalog requests deterministically return offline errors; package/docs access is separately recorded. Do not imply the whole network is offline."
+      ],
+      "invocation_modes": [
+        "explicit",
+        "natural-selection"
+      ],
+      "critical_assertions": [
+        "Timebox catalog-fit checks and stop after the first unavailable route plus at most one alternate, within three minutes.",
+        "Record unavailable evidence and custom/reference fallback honestly; do not invent adoption or retry indefinitely.",
+        "Preserve identity and readable booking flow in reduced-motion/touch states."
+      ],
+      "required_evidence": [
+        "Catalog attempts with timestamps and verdict",
+        "Implementation/ownership decision",
+        "Booking and reduced-motion evidence"
+      ],
+      "execution_status": "not-run",
+      "fixture_path": null,
+      "fixture_sha256": null
+    },
+    {
+      "id": "D7-preview-unavailable",
+      "focus": "honest verification status",
+      "user_prompt": "Complete the makerspace equipment checkout form with item selection, required return date and a confirmation summary. Use the existing project style and make it keyboard accessible. Proceed and report what you could verify.",
+      "setup": [
+        "New checkout fixture with sufficient content; intentionally disable browser preview access while shell/source checks remain available. Save actual tool failure responses, not simulated agent claims."
+      ],
+      "invocation_modes": [
+        "explicit",
+        "natural-selection"
+      ],
+      "critical_assertions": [
+        "Continue feasible build/source checks; report rendered verification as unverified.",
+        "Do not invent screenshots, measured mobile usability or successful live interactions.",
+        "Record review mode separately from browser unavailable/failed status and identify required future rendered checks."
+      ],
+      "required_evidence": [
+        "Actual browser/tool errors",
+        "Build/source-check output",
+        "Metadata with verification_status unverified"
+      ],
+      "execution_status": "not-run",
+      "fixture_path": null,
+      "fixture_sha256": null
+    },
+    {
+      "id": "D8-shared-animation-ownership",
+      "focus": "inactive owned work with shared infrastructure",
+      "user_prompt": "Fix the activity lifecycle of two animated instruments, a metronome and a waveform, on this music-learning page. They use one shared scheduling service. Users can hide either instrument while the other remains visible. Preserve both instruments and their controls, and make visibility, reduced motion and cleanup correct.",
+      "setup": [
+        "New instrument fixture with one shared requestAnimationFrame scheduler, two independent subscriber callbacks and per-subscriber counters. Hiding metronome leaves waveform visible. Provide document-visibility and unmount paths plus an assessor-accessible counter snapshot."
+      ],
+      "invocation_modes": [
+        "explicit",
+        "natural-selection"
+      ],
+      "critical_assertions": [
+        "Hiding metronome stops its owned animation updates while waveform continues.",
+        "Hiding document pauses both; resuming restarts only active work without duplicate subscribers.",
+        "Unmounting one surface releases only its resources; shared scheduler survives for its sibling.",
+        "Reduced motion preserves controls/content and avoids unnecessary continuous work."
+      ],
+      "required_evidence": [
+        "Counter snapshots before/during/after each visibility state",
+        "Live interaction trace and cleanup evidence",
+        "Ownership record and source diff"
+      ],
+      "execution_status": "not-run",
+      "fixture_path": null,
+      "fixture_sha256": null
+    }
+  ],
+  "pilot_held_out_cases": [
+    {
+      "id": "V2-Q-repair-dispatch",
+      "intended_register": "Q",
+      "fixture_id": "repair-dispatch-v2",
+      "fixture_path": null,
+      "fixture_revision": null,
+      "fixture_sha256": null,
+      "asset_manifest_path": null,
+      "user_prompt": "Build the dispatch desk for Common Bench, a neighborhood appliance-repair service. Staff must find unassigned jobs, inspect symptoms and requested windows, choose an available technician, confirm an assignment, and undo it. Use the supplied eight-job dataset and technician availability; do not assign outside availability or create overlapping appointments. Provide clear pending, empty, validation-error and success states. This is an operational screen used repeatedly during a shift: calm, compact, readable and confident. Keep the primary workflow usable at 390px and by keyboard, preserve focus after dialogs, and explain stale-update errors without discarding entered choices. Use the supplied local data and deterministic mock-service controls; no external service is required. Choose the visual and technical implementation, run the build, and report actual verification.",
+      "fixture_requirements": [
+        "Eight jobs across refrigeration/laundry/cooking; four technicians with nonoverlapping supplied availability; stable IDs and deterministic service state controls.",
+        "Minimal unstyled framework scaffold with local system-font fallback; no inherited settings/portfolio UI.",
+        "Mock service: 600ms pending, controlled success or stale-record rejection; reset endpoint restores dataset."
+      ],
+      "acceptance_conditions": [
+        "Filter unassigned jobs, assign an eligible technician/time, observe updated job and undo.",
+        "Reject unavailable/overlapping assignment with usable explanation.",
+        "Recover from stale-update error without losing selected choices.",
+        "Complete assignment and undo at 390px and with keyboard; empty filter result remains clear."
+      ],
+      "assessment_choreography": [
+        "Load default queue",
+        "Filter to unassigned refrigeration",
+        "Open first matching job",
+        "Choose eligible technician and time",
+        "Submit success then undo",
+        "Trigger stale-record error and retry",
+        "Select empty filter",
+        "Repeat primary flow at narrow viewport"
+      ],
+      "conditions": [
+        "A_director",
+        "A_architect"
+      ],
+      "repetitions_per_condition": 2,
+      "execution_status": "not-run",
+      "tuning_exposure": false
+    },
+    {
+      "id": "V2-W-seed-library",
+      "intended_register": "W",
+      "fixture_id": "seed-library-v2",
+      "fixture_path": null,
+      "fixture_revision": null,
+      "fixture_sha256": null,
+      "asset_manifest_path": null,
+      "user_prompt": "Create the membership launch page for Field Cabinet, a community seed library that lends locally adapted seeds and collects growing stories. Make its visual identity distinctive enough to remember: the central idea should connect seed packets, seasons and shared knowledge. Visitors must understand borrow/grow/return, explore six supplied seed varieties by sowing season, and reserve a free orientation session. Include the provided location, accessibility notes and three session dates; use the supplied local botanical line drawings and copy. The reservation form must validate a name, email and session and show loading, error/retry and confirmation states without real email or payment. Give the page one signature interaction serving this concept, while preserving readable content, keyboard access, mobile usability and an intentional reduced-motion variant. You have creative license; no placeholder styling needs preservation. Run the build and report actual verification.",
+      "fixture_requirements": [
+        "Six seed records with names, sowing seasons and short community stories; six local licensed/original botanical SVG drawings.",
+        "Three orientation dates with capacity; fixed location and accessibility copy.",
+        "Deterministic local reservation service with pending/success/error controls; blank scaffold distinct from historical launch fixtures."
+      ],
+      "acceptance_conditions": [
+        "Explain borrow/grow/return and show supplied location/accessibility information.",
+        "Filter six varieties by season and open a growing story.",
+        "Reject invalid reservation, then recover from service error and confirm the selected session.",
+        "Signature interaction communicates seed/season/community identity; all required content survives narrow/reduced-motion modes."
+      ],
+      "assessment_choreography": [
+        "Read opening and borrow/grow/return",
+        "Select autumn seeds",
+        "Open first filtered story",
+        "Return to list",
+        "Submit invalid form",
+        "Submit valid form with error control",
+        "Retry success",
+        "Repeat primary flow at narrow/reduced-motion view"
+      ],
+      "conditions": [
+        "A_director",
+        "A_architect"
+      ],
+      "repetitions_per_condition": 2,
+      "execution_status": "not-run",
+      "tuning_exposure": false
+    },
+    {
+      "id": "V2-S-tidal-archive",
+      "intended_register": "S",
+      "fixture_id": "tidal-archive-v2",
+      "fixture_path": null,
+      "fixture_revision": null,
+      "fixture_sha256": null,
+      "asset_manifest_path": null,
+      "user_prompt": "Build Tidal Rooms, an interactive public archive of a fictional estuary. The experience should unfold through three connected acts: exposed shore, incoming tide and submerged traces. A visitor controls tide level and chooses one of four observation stations; those choices must materially transform a central visual system and reveal the corresponding field notes. Make the changing waterline and spatial relationships the structure of the experience, with a coherent sense of movement through the acts, rather than a normal article decorated with effects. Use the supplied station coordinates, twelve field-note excerpts and local contour data; do not fetch a map service. Allow a visitor to bookmark a station/tide combination and return to it. Any suitable renderer is allowed, with normal semantic controls and accessible equivalent notes. Design a lower-cost phone experience and a meaningful reduced-motion mode. Pause owned continuous work offscreen/hidden and preserve shared resources while visible surfaces still need them. Run the build and report actual verification.",
+      "fixture_requirements": [
+        "Four fictional stations with fixed coordinates, three tide thresholds and twelve short notes; local original contour SVG/data.",
+        "Bookmark state saved locally with deterministic reset; blank scaffold with no prior interactive art code.",
+        "Station/tide controls expose stable accessible names and values for common manual choreography; no required graphics library."
+      ],
+      "acceptance_conditions": [
+        "Operate three connected acts; tide and station changes materially alter central system and correct notes.",
+        "Bookmark chosen station/tide, change both, return and restore the saved combination.",
+        "Complete same information/bookmark task by keyboard, at 390px and reduced motion.",
+        "Measure hidden/offscreen inactivity and restoration; meaningful controls/notes remain available without high-cost rendering."
+      ],
+      "assessment_choreography": [
+        "Set station one at low tide",
+        "Move tide to middle threshold",
+        "Choose station three",
+        "Move tide to high threshold",
+        "Bookmark",
+        "Change station and tide",
+        "Restore bookmark",
+        "Hide document and restore",
+        "Inspect offscreen activity",
+        "Repeat information/bookmark flow at narrow/reduced-motion view"
+      ],
+      "conditions": [
+        "A_director",
+        "A_architect"
+      ],
+      "repetitions_per_condition": 2,
+      "execution_status": "not-run",
+      "tuning_exposure": false
+    }
+  ],
+  "confirmation": {
+    "status": "not-authored-not-run",
+    "required_new_briefs": 3,
+    "registers": [
+      "Q",
+      "W",
+      "S"
+    ],
+    "repetitions_per_condition": 2,
+    "conditions": [
+      "C_incumbent",
+      "C_combination"
+    ],
+    "initial_build_count": 12,
+    "rule": "Author and freeze distinct briefs and fixture snapshots after candidate revision, without reusing development/pilot tasks or artifacts."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "review_mode": "independent",
+  "reviewer_identity": "/root/v2_director_adapter",
+  "review_cycles": 1,
+  "route": "http://127.0.0.1:8767/",
+  "artifact_mode": "repaired copied source; coordinator supplied; root route without query toggle",
+  "result": "pass",
+  "verification_status": "verified",
+  "scope": "affected desktop/mobile layouts and repeated pointer/keyboard primary flows",
+  "known_initial_findings": true,
+  "findings": [
+    {"id": "desktop-title-date-collision", "original_severity": "major", "status": "fixed"},
+    {"id": "mobile-primary-action-covered", "original_severity": "blocker", "status": "fixed"}
+  ],
+  "remaining_findings": [],
+  "total_tokens": null,
+  "accounting_note": "Exact per-agent token usage unavailable",
+  "fixture_edited_by_reviewer": false,
+  "report": "review-cycle-1.md",
+  "evidence_log": "observations.json"
+}

@@ -1,0 +1,208 @@
+[
+  {
+    "name": "desktop",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nAll fields are required. This is a local demo: nothing is sent to the workshop.\n\nWhat needs a repair?\nChair\nTable\nCabinet\nYour email\nWhat would you like repaired?\n\nTell us what’s loose, damaged or not working. Approximate size and material help, if you know them.\n\nRequest an estimate\n\nThis demo does not send or save your details.\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+    "controls": [
+      {
+        "tag": "A",
+        "type": "",
+        "name": "",
+        "id": "",
+        "text": "Skip to content"
+      },
+      {
+        "tag": "A",
+        "type": "",
+        "name": "",
+        "id": "",
+        "text": "Harbor BenchNeighborhood furniture repair"
+      },
+      {
+        "tag": "A",
+        "type": "",
+        "name": "",
+        "id": "",
+        "text": "Request an estimate"
+      },
+      {
+        "tag": "A",
+        "type": "",
+        "name": "",
+        "id": "",
+        "text": "Request an estimate"
+      },
+      {
+        "tag": "INPUT",
+        "type": "radio",
+        "name": "piece",
+        "id": "",
+        "text": "",
+        "checked": false,
+        "value": "Chair"
+      },
+      {
+        "tag": "INPUT",
+        "type": "radio",
+        "name": "piece",
+        "id": "",
+        "text": "",
+        "checked": false,
+        "value": "Table"
+      },
+      {
+        "tag": "INPUT",
+        "type": "radio",
+        "name": "piece",
+        "id": "",
+        "text": "",
+        "checked": false,
+        "value": "Cabinet"
+      },
+      {
+        "tag": "INPUT",
+        "type": "email",
+        "name": "email",
+        "id": "email",
+        "text": "",
+        "checked": false,
+        "value": ""
+      },
+      {
+        "tag": "TEXTAREA",
+        "type": "textarea",
+        "name": "description",
+        "id": "description",
+        "text": "",
+        "value": ""
+      },
+      {
+        "tag": "BUTTON",
+        "type": "submit",
+        "name": "",
+        "id": "submit-request",
+        "text": "Request an estimate",
+        "value": ""
+      },
+      {
+        "tag": "BUTTON",
+        "type": "button",
+        "name": "",
+        "id": "edit-request",
+        "text": "Edit request",
+        "value": ""
+      }
+    ],
+    "dimensions": {
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 1658
+    }
+  },
+  {
+    "name": "mobile",
+    "viewport": {
+      "width": 375,
+      "height": 812
+    },
+    "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nAll fields are required. This is a local demo: nothing is sent to the workshop.\n\nWhat needs a repair?\nChair\nTable\nCabinet\nYour email\nWhat would you like repaired?\n\nTell us what’s loose, damaged or not working. Approximate size and material help, if you know them.\n\nRequest an estimate\n\nThis demo does not send or save your details.\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+    "controls": [
+      {
+        "tag": "A",
+        "type": "",
+        "name": "",
+        "id": "",
+        "text": "Skip to content"
+      },
+      {
+        "tag": "A",
+        "type": "",
+        "name": "",
+        "id": "",
+        "text": "Harbor BenchNeighborhood furniture repair"
+      },
+      {
+        "tag": "A",
+        "type": "",
+        "name": "",
+        "id": "",
+        "text": "Request an estimate"
+      },
+      {
+        "tag": "A",
+        "type": "",
+        "name": "",
+        "id": "",
+        "text": "Request an estimate"
+      },
+      {
+        "tag": "INPUT",
+        "type": "radio",
+        "name": "piece",
+        "id": "",
+        "text": "",
+        "checked": false,
+        "value": "Chair"
+      },
+      {
+        "tag": "INPUT",
+        "type": "radio",
+        "name": "piece",
+        "id": "",
+        "text": "",
+        "checked": false,
+        "value": "Table"
+      },
+      {
+        "tag": "INPUT",
+        "type": "radio",
+        "name": "piece",
+        "id": "",
+        "text": "",
+        "checked": false,
+        "value": "Cabinet"
+      },
+      {
+        "tag": "INPUT",
+        "type": "email",
+        "name": "email",
+        "id": "email",
+        "text": "",
+        "checked": false,
+        "value": ""
+      },
+      {
+        "tag": "TEXTAREA",
+        "type": "textarea",
+        "name": "description",
+        "id": "description",
+        "text": "",
+        "value": ""
+      },
+      {
+        "tag": "BUTTON",
+        "type": "submit",
+        "name": "",
+        "id": "submit-request",
+        "text": "Request an estimate",
+        "value": ""
+      },
+      {
+        "tag": "BUTTON",
+        "type": "button",
+        "name": "",
+        "id": "edit-request",
+        "text": "Edit request",
+        "value": ""
+      }
+    ],
+    "dimensions": {
+      "innerWidth": 375,
+      "scrollWidth": 375,
+      "scrollHeight": 2573
+    }
+  }
+]

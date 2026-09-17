@@ -1,0 +1,24 @@
+--- a/index.html
++++ b/index.html
+@@ -51,7 +51,7 @@
+     .event-note { margin: 20px 0 0; color: var(--muted); font-size: 14px; }
+     .footer { max-width: 1160px; margin: auto; padding: 0 32px 30px; color: var(--muted); font-size: 13px; }
+     @media (min-width: 800px) {
+-      .event-meta { margin-top: -30px; }
++      .event-meta { margin-top: 20px; }
+       .fixed .event-meta { margin-top: 20px; }
+     }
+     @media (max-width: 760px) {
+@@ -63,9 +63,9 @@
+       .footer { padding-inline: 20px; }
+     }
+     @media (max-width: 600px) {
+-      body { padding-bottom: 116px; }
+-      .submit-button { position: fixed; bottom: 20px; left: 20px; width: calc(100% - 40px); z-index: 20; }
+-      .event-note { position: fixed; bottom: 0; left: 0; width: 100%; z-index: 30; height: 94px; margin: 0; padding: 20px; background: #eee7f7; border-top: 1px solid #c7b6dc; color: #4a365f; }
++      body { padding-bottom: 0; }
++      .submit-button { position: static; width: 100%; }
++      .event-note { position: static; width: 100%; height: auto; margin-top: 20px; padding: 12px; background: #eee7f7; border-radius: 5px; color: #4a365f; }
+       .fixed body { padding-bottom: 0; }
+       .fixed .submit-button { position: static; width: 100%; }
+       .fixed .event-note { position: static; height: auto; margin-top: 20px; border-top: 0; border-radius: 5px; padding: 12px; }

@@ -1,0 +1,234 @@
+{
+  "schema_version": "2.0",
+  "run_id": "SMOKE-HARBOR-2026-09-17",
+  "date_time": "2026-09-17",
+  "experiment_id": "development-only",
+  "condition_id": "explicit-composition-smoke",
+  "actual_workflow": "prepared Anthropic scoped adaptation + architect + local build, followed by separately accounted independent browser review",
+  "eval_id": null,
+  "repetition": null,
+  "parent_run_id": null,
+  "paired_run_id": null,
+  "protocol_revision": null,
+  "freeze_record_path": null,
+  "fixture_name": null,
+  "fixture_revision": null,
+  "fixture_sha256": null,
+  "asset_manifest_path": null,
+  "model": "gpt-6-astra",
+  "model_version_or_snapshot": null,
+  "agent_product": "Codex CLI",
+  "agent_version": "0.153.4",
+  "reasoning_or_effort_setting": "high",
+  "temperature_or_sampling_settings_if_exposed": null,
+  "context_limit": null,
+  "skill_revision": "2.0.0-alpha.1 precommit content hashes",
+  "other_installed_skills": [
+    "using-superpowers",
+    "brainstorming"
+  ],
+  "environment_notes": null,
+  "hardware": null,
+  "browser_version": null,
+  "tools_available": [],
+  "network_policy": null,
+  "activation": {
+    "invocation_mode": "explicit",
+    "roster_path": null,
+    "roster_sha256": null,
+    "selected_skills": [],
+    "selection_trace_path": null,
+    "read_trace_path": "forward-build-trace.jsonl",
+    "contamination": [
+      "General using-superpowers and brainstorming instructions were also loaded; no second design director observed."
+    ]
+  },
+  "design_director_loaded": "anthropic-scoped-adaptation",
+  "director_adapter_revision": "df47a6f0efe4943158378886b8d9d257e5bd9f282780aac87fb4f1e8171ac044",
+  "expected_director_revision": "34040c9c568585f6929bedeaad110ad08f079624",
+  "source_resolution": [],
+  "loaded_files": [
+    {
+      "path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-implementation/installed/creative-frontend-architect/SKILL.md",
+      "sha256": "abeb51e1c1a769366ea7ea134b85b0d2acfa00aeaa16d3ac565adc5dd72883e5",
+      "role": "architect-skill",
+      "load_status": "read"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/using-superpowers/SKILL.md",
+      "sha256": "55379fe7c1c473a02c61961c822996bff30e1320d6921d9062509bc508482c05",
+      "role": "process-skill",
+      "load_status": "read"
+    },
+    {
+      "path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-implementation/installed/creative-frontend-architect/references/design-contract.md",
+      "sha256": "feb07483fa3a178279ecd50cf503887601f37c6799cca560eb48f67d5b9551ae",
+      "role": "contract-reference",
+      "load_status": "read"
+    },
+    {
+      "path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-implementation/installed/creative-frontend-architect/references/directors/anthropic.md",
+      "sha256": "df47a6f0efe4943158378886b8d9d257e5bd9f282780aac87fb4f1e8171ac044",
+      "role": "director-adapter",
+      "load_status": "read"
+    },
+    {
+      "path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-implementation/installed/creative-frontend-architect/references/architecture.md",
+      "sha256": "012aabe7dcc34cead0f6caaeb42320666ec08c7e097723798d6bbce5d22504ce",
+      "role": "architecture-reference",
+      "load_status": "read"
+    },
+    {
+      "path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-implementation/installed/creative-frontend-architect/references/rendered-review.md",
+      "sha256": "3b3ca0e92a14d46718c7c551b30c4b6a2f0fba1dedf393c596424ddbd5e4b8cb",
+      "role": "review-reference",
+      "load_status": "read"
+    },
+    {
+      "path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-implementation/installed/creative-frontend-architect/integrations.lock.json",
+      "sha256": "d6c9f031d1b0c25357b4a2d200aa5f192d1ee4f9e6d003385400ce166cdbf4e3",
+      "role": "integration-manifest",
+      "load_status": "read"
+    },
+    {
+      "path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-implementation/sources/frontend-design/SKILL.md",
+      "sha256": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3",
+      "role": "director-source",
+      "load_status": "read"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/brainstorming/SKILL.md",
+      "sha256": "e14914605f640e0841758e45d0ab2a53243b59b921f929e47921c99668f2e61d",
+      "role": "process-skill",
+      "load_status": "read"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/using-superpowers/references/codex-tools.md",
+      "sha256": "9310bb2315eed2c1cebea02cd1c9e8fe121cb788fc6b41e8b8f8b5ff46f85f37",
+      "role": "host-reference",
+      "load_status": "read"
+    }
+  ],
+  "contract_path": "harbor-build/design-contract.md",
+  "specialist_skills_consulted": [],
+  "reference_calibration_used": null,
+  "component_catalogs_checked": [],
+  "catalog_primitives_adopted": [],
+  "catalog_primitives_rejected": [],
+  "renderer_ownership": [],
+  "review_mode": "independent",
+  "reviewer_identity": "/root/v2_director_adapter",
+  "reviewer_context_isolation": {
+    "fresh_context": false,
+    "context_checkpoint_id": null,
+    "inputs": [
+      "brief",
+      "harbor-build/design-contract.md",
+      "running URL",
+      "review protocol"
+    ],
+    "isolation_trace_path": "harbor-review/review-cycle-0.md",
+    "builder_assessment_exposed": false
+  },
+  "review_cycles": [],
+  "fallbacks": [],
+  "verification_status": "verified",
+  "browser_status": "available",
+  "verification_checks": [],
+  "total_budget": {
+    "enforcement_mode": null,
+    "tokens": null,
+    "duration_seconds": null,
+    "phase_allocations": [],
+    "command_timeout_seconds": null,
+    "build_install_timeout_seconds": null,
+    "preview_readiness_timeout_seconds": null,
+    "enforcement_trace_path": null
+  },
+  "tokens_input": 304091,
+  "tokens_output": 11227,
+  "total_tokens": null,
+  "known_partial_tokens": 315318,
+  "duration_seconds": null,
+  "total_duration_seconds": null,
+  "summed_agent_active_seconds": null,
+  "total_cost_usd": null,
+  "agent_accounting": [
+    {
+      "agent_id": "01a0b0a2-7a39-73a2-97e0-d4504d2457b5",
+      "role": "builder",
+      "input_tokens": 304091,
+      "cached_input_tokens": 260480,
+      "output_tokens": 11227,
+      "reasoning_tokens": 590,
+      "usage_trace_path": "forward-build-trace.jsonl"
+    },
+    {
+      "agent_id": "/root/v2_director_adapter",
+      "role": "independent-browser-reviewer",
+      "input_tokens": null,
+      "output_tokens": null,
+      "unavailable_reason": "Collaboration tool does not expose per-turn token accounting."
+    }
+  ],
+  "accounting_unavailable_reasons": [
+    "Reviewer usage and coordinator accounting unavailable; aggregate total cannot be claimed. Model alias not an immutable snapshot."
+  ],
+  "token_accounting_semantics": "CLI input includes cached_input_tokens; output includes reasoning_output_tokens. Subsets are not added again. Known partial covers builder only.",
+  "assessment_accounting": [],
+  "build_result": "standalone HTML/JS/CSS created; syntax and synthetic source checks passed; required bounded live flows passed later",
+  "terminal_status": "completed",
+  "cutoff_reason": null,
+  "command_timeouts": [],
+  "deviations": [],
+  "notes": [
+    "Development smoke only; not an efficacy comparison or execution of all eight full probes.",
+    "Build-stage rendered verification was correctly unverified; later review is separately recorded.",
+    "Actual source repository revision unknown to builder; prepared exported bytes match the reviewed source hash.",
+    "CLI reported a pre-existing global hooks.json parse warning and continued; global configuration was not modified.",
+    "The current rendered-review reference adds an assigned-reviewer guard after the build snapshot; loaded_files records actual earlier hash."
+  ],
+  "artifacts": {
+    "original_brief_path": "forward-build-prompt.txt",
+    "condition_prompt_path": null,
+    "trace_path": "forward-build-trace.jsonl",
+    "initial_checkpoint_path": null,
+    "final_checkpoint_path": "harbor-build/index.html",
+    "diff_path": null,
+    "build_log_path": null,
+    "before_evidence_paths": [],
+    "after_evidence_paths": [],
+    "screenshots_paths": [
+      "harbor-review/desktop-initial.png",
+      "harbor-review/mobile-initial.png"
+    ],
+    "motion_recording_paths": [],
+    "measurement_paths": [],
+    "findings_paths": [
+      "harbor-review/review-cycle-0.md"
+    ],
+    "outcome_assessment_path": null,
+    "anonymized_artifact_path": null,
+    "blind_label": null,
+    "label_mapping_path": null,
+    "choreography_path": null
+  },
+  "assessment": {
+    "assessor_identity": null,
+    "assessor_independent_of_builder_and_reviewer": null,
+    "primary_flow_status": null,
+    "dimension_scores": {
+      "task_completion": null,
+      "mobile_usability": null,
+      "visual_coherence": null,
+      "brief_specificity": null,
+      "accessibility": null
+    },
+    "remaining_actionable_defects": null,
+    "blocking_defects": null,
+    "major_defects": null,
+    "minor_defects": null,
+    "paired_preference": null,
+    "preference_rationale": null
+  }
+}

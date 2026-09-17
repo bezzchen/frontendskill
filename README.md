@@ -1,147 +1,102 @@
-# creative-frontend-architect — an evidence-first Agent Skill and the harness that judged it
+# Creative Frontend Architect
 
-> ## → Read [`VERDICT.md`](VERDICT.md) first
-> The programme is complete. **Five criteria met, two failed, one not measured, four owner-open.**
-> Short version: the skill is a *process* intervention — it reliably changes how work is approached
-> and modestly improves architectural decisions, but it does not improve what gets built, and it
-> increases variance in both directions. Recommendation: ship v1.1, not v1, and position it as a
-> decision aid rather than a quality-of-output intervention.
+An experimental Agent Skill for connecting frontend design direction, architecture,
+implementation and review of the running result.
 
-This repository contains a Claude/Agent **Skill** for creative frontend work (animation, WebGL,
-interactive pages) **and the evaluation harness that decided what belongs in it**.
+**This branch contains skill v2.0.0-alpha.1.** It is an integration candidate, not a proven
+visual-quality improvement. [Development evidence](results/composition_v2/README.md)
+distinguishes checks performed from the comparative experiments still required.
 
-The project began as a 31-page wish-list spec built on an assumption: that coding agents
-over-engineer visual work — reaching for Three.js on a settings page, stacking animation
-libraries, defaulting to purple-gradient clichés. That spec was never built. Instead the harness
-came first, to measure whether those failures actually happen.
+## What it does
 
-**Mostly they don't.** Across 24 routing runs on three model tiers, agents added exactly **one**
-unjustified dependency in total. So the routing and restraint rules were *cut*, and the skill that
-exists is four lines long.
+1. Reuses the brief and project identity in a compact surface-level design contract.
+2. Uses one director: an already established director, the pinned Anthropic scoped
+   adaptation, or an explicitly labeled builtin fallback.
+3. Resolves open Q/W/S expression, sourcing and rendering choices.
+4. Implements within settled decisions, consulting specialists only as needed.
+5. Reviews the live result against the brief, corrects findings and rechecks.
 
-**The Iron Law:** nothing enters the skill until a measurement shows the agent fails without it.
+The four measured v1 behaviors remain: pause inactive owned work, verify real conditions,
+check catalog fit before custom effects, and explicitly weigh spectacle when warranted.
+New composition instructions are experimental. Plans, registry entries and successful
+syntax checks do not establish design quality.
 
-## What the measurements found
+## Install the candidate
 
-| Probe | Baseline result | Meaning |
-|---|---|---|
-| I2 — Anime.js implementation ×3 | **0/3** paused animation offscreen | Not done unprompted |
-| I5 — PixiJS ×3 | **1/3** passed, though the prompt *demanded* pausing | Capable but unreliable |
-| I5 rep3 | claimed "verified" — had tested `document.hidden`, not scroll-out | Claims ≠ verification |
-| D0 — no catalog hint ×3 | **0/3** searched component catalogs | Awareness is the gap |
-| D1 — catalogs in view ×3 | **3/3** evidence-cited adopt/adapt verdicts | Judgment at ceiling once aware |
-| Q1 / W1 — quiet vs expressive ×3 each | **3/3** each, no over-design, no timidity | Register instincts fine |
-| S0 — "unforgettable", no tech named ×3 | **0/3** proposed a realtime graphical system | Spectacle never self-selected |
-| S1 — spectacle explicitly briefed ×3 | **3/3** shipped 60fps WebGL2 systems, zero dependencies | Capable when asked |
+Install **the whole folder**, including `references/` and `integrations.lock.json`.
+Choose the command for your host from this repository checkout:
 
-Four gaps survived measurement, and those four are the skill:
-`skill/creative-frontend-architect/SKILL.md`.
+```sh
+# Codex
+mkdir -p ~/.codex/skills
+cp -R skill/creative-frontend-architect ~/.codex/skills/
 
-## Does the skill work?
-
-The programme is complete. Against the pre-registered bar in `rubrics/success_bar.md`:
-
-**What it reliably does — process:**
-
-- **Activation** — 70/70 across 14 queries × 5 fresh contexts. **Met** (scope-limited: description
-  classification against a fixed six-skill roster, not real-world selection).
-- **Spectacle recognition (S0)** — 3/3 vs 0/3 baseline. **Met.**
-- **Catalog discovery (D0)** — 3/3 vs 0/3 baseline. **Met.**
-- **Offscreen pausing** — I2 0/3 → 3/3 (operative measure); I5 1/3 → 2/3 binding. Target met, and
-  **one with-skill rep failed honestly** — its own frame counter read zero while a second Pixi
-  ticker ran at full rate, caught only by instrumenting global `requestAnimationFrame`.
-- **Routing decisions** — +0.334 on the pooled blind score, p = 0.032. **Met, qualified.**
-
-**What it does not do — output:**
-
-- **Criterion F** (execution quality) — **FAILED.**
-- **Criterion G1** (pooled blind spectacle ranking) — **FAILED.**
-- A pre-registered 2×2 visual factorial (11 builds, 3 blind reviewers) found **skill −0.653**,
-  reference pack +0.103, interaction nil.
-
-Three independent looks, one answer: it changes how the work is approached, not how good the
-result is — and it **widens variance in both directions**. It produced both the best and the worst
-build in the G1 pool.
-
-Current status per criterion: `results/SUCCESS_BAR_STATUS.md`. Full reasoning: `VERDICT.md`.
-
-## Installing the skill
-
-The skill is self-contained: `SKILL.md` references no other file in this repository, so it works
-installed on its own. The registries and reference packs here are harness material, not
-dependencies.
-
-```bash
-mkdir -p ~/.claude/skills/creative-frontend-architect
-cp skill/creative-frontend-architect/SKILL.md ~/.claude/skills/creative-frontend-architect/
+# Claude Code
+mkdir -p ~/.claude/skills
+cp -R skill/creative-frontend-architect ~/.claude/skills/
 ```
 
-Then invoke it by name (`/creative-frontend-architect`), or let it activate on its own — it is
-written to trigger on creative-direction and rendering-architecture decisions and to stay out of
-execution-only work.
+Use a temporary project skill directory for a trial before replacing a current installation.
+Only hosts named in the development evidence have been exercised. The core references use
+ordinary file/browser/agent capabilities; there is no installer service or custom dispatcher.
 
-**How you brief it matters more than the skill does.** See
-[`skill/creative-frontend-architect/README.md`](skill/creative-frontend-architect/README.md) — one
-sentence naming the register (Q/W/S) is the highest-leverage thing you can write, because agents
-left to themselves picked spectacle 0/3 even on a brief that asked for "something unforgettable".
-That guide also covers why naming the register still will not get you spatial 3D, and what is not
-worth warning agents about.
+Invoke `/creative-frontend-architect` or use your host's skill selection for a new interface
+or substantive redesign with open direction/architecture. Isolated style fixes and exact
+execution of supplied designs stay outside automatic scope. Explicit invocation preserves
+settled choices rather than reopening them.
 
-| file | status |
-|---|---|
-| `SKILL.md` | **active — v1.1 rev2**, cut over 2026-09-09 |
-| `SKILL.v1-frozen.md` | v1, preserved verbatim; the body every archived measurement was made against |
-| `CHANGELOG_v1.1.md` | what changed, the evidence for each line, and one correction |
+### Optional Anthropic source
 
-**Read `VERDICT.md` before adopting it.** Ship it as a decision aid. It is not an
-output-quality intervention, and the evidence that it is not is stronger than the evidence that it
-helps.
+The adapter reads a separately prepared local source. It does not download or install one.
+Use the `frontend-design/SKILL.md` advertised by the host roster, or set
+`CFA_ANTHROPIC_SOURCE` to an existing file. The [manifest](skill/creative-frontend-architect/integrations.lock.json)
+pins revision `34040c9c568585f6929bedeaad110ad08f079624` of
+[Anthropic's frontend-design](https://github.com/anthropics/skills/tree/34040c9c568585f6929bedeaad110ad08f079624/skills/frontend-design).
+Keep its license with the prepared source.
 
-**It expects a design director.** The skill deliberately does not own visual taste and defers to a
-single director skill. It does not yet say what to do when no director is installed — see the open
-item in `CHANGELOG_v1.1.md`.
+The adapter checks actual file content, not just the skill name or repository revision.
+Missing, mismatched or incompatible sources use `builtin-fallback` and record why.
+`anthropic-scoped-adaptation` means the source informed the bounded art-direction handoff;
+it does not mean the entire upstream workflow ran. Review-method provenance is separately
+attributed to OneRedOak. No external source is required for the packaged fallback.
 
-## Layout
+## Verify and evaluate
 
-```
-skill/          the skill itself (four earned lines + activation description)
-evals/          pinned eval definitions, prompts, choreography, protocols
-rubrics/        success bar, measurement thresholds (M1–M6), scoring anchors
-fixtures/       three pinned Next.js 16 repos + integrity manifest
-scripts/        measurement, capture, and verification tooling
-results/        every run's records, diffs, screenshots, recordings, findings
-docs/           the original spec, and dated session notes
+```sh
+python3 scripts/check_skill_package.py
+python3 -m unittest discover -s tests -p 'test_skill_package.py'
 ```
 
-## Running it
+These check packaging and failure behavior, not visual quality. The review development
+fixture is in `evals/fixtures/composition_v2_review/`; its README is a runner answer key
+and must not be shown to the initial reviewer.
 
-```bash
-./scripts/restore_fixture_git.sh   # fixtures ship as dot-git/; this restores + verifies them
-```
+[The v2 protocol](evals/composition_v2_protocol.md) separates the architect/handoff
+contribution from independent review versus equally funded self-review. Its development
+probes are separate from held-out build briefs. Freeze the exact environment and budgets
+before efficacy runs. Impeccable and the specialist shortlist remain future trials until
+that path demonstrates value; the research registry is not a dependency manifest.
 
-The fixtures are pinned by SHA **and** content hash; that script must print PASS before any run is
-comparable. Measurement needs Playwright and, for WebGL/WebGPU pages, a **GPU-capable browser** —
-`chrome-headless-shell` software-rasterizes and will report ~7fps for a page genuinely running at
-60. That lesson, and several others, are in `HANDOFF.md` §8.
+## Stable version and historical evidence
 
-## Method rules that make the data mean anything
+The pre-v2 entrypoint is preserved byte-for-byte in
+[`SKILL.v1.2-frozen.md`](skill/creative-frontend-architect/SKILL.v1.2-frozen.md).
+To restore that single-file version, install it under the name `SKILL.md` in the host skill
+directory. The reviewed pre-v2 repository revision is
+`f1754947a3ad6841413e1235f0d9c21bbc32dd30`.
 
-Baseline before build · criteria pre-registered and frozen · fixtures carry no hint they are
-fixtures · measured not described (`NOT_MEASURED` is never a pass) · everything pinned ·
-prompts de-leaded · **taste stays human** — design coherence, register fit and spectacle scoring
-are the owner's blind judgments and are deliberately not automated.
+Read [VERDICT.md](VERDICT.md) for the historical programme: the earlier skill changed
+process and modestly improved some architecture decisions, but did not establish better
+built outputs. Those historical measurements primarily concern older skill bodies and
+specific tested conditions. They do not measure the new v2 composition or all v1.2 behavior.
+Frozen protocols, fixtures, verdicts and result records remain unchanged.
 
-## Honest caveats
+## Repository map
 
-Single-owner scoring on most dimensions; concept diversity across runs is low (six of six
-spectacle runs converged on the same premise family); and every `SEALED_MAPPING.json` is sealed
-only by convention — they are in this repository, so those rankings are no longer strictly blind
-to anyone who reads them.
-
-Criterion **A′** is `NOT_MEASURED`, **B** and **E** rest on owner judgments that remain open, and
-**G3** was met in substance but not in the form its criterion specified. An external appraisal
-found four real false-pass paths in the harness itself (M1/M3/M5/M6); all four were reproduced and
-repaired, and **no archived verdict changed** — blast radius is worked out in
-`results/INSTRUMENT_REPAIRS_20260907.md`.
-
-Full history in `CHANGELOG.md`; cold-start orientation in `HANDOFF.md`.
+- `skill/creative-frontend-architect/`: installable candidate and frozen earlier bodies.
+- `evals/`: historical protocols plus the new composition experiment definitions.
+- `scripts/`: existing measurement tools and the package validator.
+- `results/`: historical evidence and separately identified v2 development evidence.
+- `registries/`: research candidates, not automatically loaded dependencies.
+- [ARCHITECTURE_V2.md](ARCHITECTURE_V2.md): implemented boundaries and deferred integrations.
+- [Skill usage](skill/creative-frontend-architect/README.md): examples and fallback behavior.

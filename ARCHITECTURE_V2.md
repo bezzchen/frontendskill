@@ -1,113 +1,75 @@
-# Creative frontend architecture v2 — synthesis target
+# Creative frontend architecture v2 — experimental implementation
 
-This file specifies what the future skill should eventually do. It is **not yet the skill**.
-The eval harness exists to test whether each layer adds value before encoding it permanently.
+The installable candidate now connects the stages below using Markdown references and the
+host's existing tools. It is not a custom runtime. Source loading, independent-agent
+availability and live browser checks must be observed; instructions alone do not prove them.
 
-## Pipeline
-
-```
-USER BRIEF
-   ↓
-REFERENCE CALIBRATION (only when references / high-expression target matter)
-   ↓
-DESIGN DIRECTOR
-   Impeccable preferred when available; otherwise minimal internal design read
-   ↓
-REGISTER
-   Q = Quiet / Operate
-   W = Expressive / Persuade-Experience
-   S = Spectacle / Immersive realtime creative development
-   ↓
-CREATIVE ASSET DISCOVERY
-   React Bits / Aceternity / Magic UI / Animate UI / Motion Primitives / etc.
-   ↓
-ADOPT / ADAPT / REFERENCE-ONLY / CUSTOM?
-   ↓
-CREATIVE TECH ROUTER
-   CSS/WAAPI/View Transitions | Motion | Anime.js | GSAP | Rive
-   Canvas/Pixi | DOM+GPU | OGL | Three/R3F | WebGPU/TSL | physics | specialty
-   ↓
-SPECIALIST SKILL
-   prefer official/vendor-current specialists
-   ↓
-IMPLEMENTATION
-   ↓
-RUNTIME MEASUREMENT + A11Y
-   ↓
-MOTION/VIDEO + SCREENSHOT REVIEW
-   ↓
-DESIGN CRITIQUE / POLISH
+```text
+Brief + established project identity
+  -> reuse or complete the surface design contract
+  -> one design director (only if direction remains open)
+  -> open register / sourcing / renderer decisions
+  -> relevant available specialist, if needed
+  -> implementation
+  -> independent rendered review, or labeled self-review/unverified fallback
+  -> bounded correction and recheck
 ```
 
-## Ownership rules
+Skip settled stages. Respect plan-only scope. Reuse existing conventions and user decisions;
+clarify only consequential missing information. Selective loading reduces unnecessary reads
+but cannot remove conflicting instructions already loaded into a conversation.
 
-### Impeccable / design director owns
-- visual thesis and surface mode
-- hierarchy, typography, layout, palette, design-system continuity
-- whether the work should be quieter/bolder/experiential
-- final visual critique and polish
+## Runtime package
 
-### Creative frontend architect owns
-- whether an existing creative primitive is worth adopting
-- rendering architecture and boundaries
-- renderer/engine selection when nontrivial
-- composition across renderers without overlapping ownership
-- specialist discovery/loading and version-freshness policy
-- performance architecture for realtime systems
+`skill/creative-frontend-architect/` contains the complete workflow:
 
-### Specialist owns
-- current API details, lifecycle patterns, plugin-specific gotchas
-- deep tool capabilities and implementation technique
+- `SKILL.md`: triggers, stage routing, ownership and four visible behavioral invariants.
+- `references/design-contract.md`: shared surface contract and builtin fallback design read.
+- `references/architecture.md`: Q/W/S, bounded sourcing, engine ownership and lifecycle.
+- `references/directors/anthropic.md`: prepared-source resolution and scoped art direction.
+- `references/rendered-review.md`: live checks, evidence format, independence and bounded fixes.
+- `integrations.lock.json`: reviewed pins, prerequisites, compatibility and provenance.
 
-### Catalogs vs substrates (explicit architect concept, v2.1)
-- **Catalogs** (React Bits, SmoothUI, Fancy Components...) hold copy-in effect sources: they pass
-  through the component-fit gate (adopt / adapt / reference-only / custom) and never define identity.
-- **Substrates** (Paper Shaders, drei/postprocessing, GSAP as engine) are installed rendering/compute
-  infrastructure: they are selected by the creative tech router, not browsed as effects.
-- Confusing the two produces either component soup (catalog treated as architecture) or wheel
-  reinvention (substrate treated as forbidden convenience).
+## One owner per concern
 
-### Component/effect catalog owns
-- discoverable implementation primitives only
-- never the page's art direction
+One director per **surface** owns concept, hierarchy, typography, palette and composition,
+while preserving project-wide identity and tokens. The architect operationalizes intended
+expression and owns sourcing, renderer boundaries, engine choice and performance architecture.
+Specialists own current APIs/deep technique. The reviewer distinguishes reproducible defects
+from preferences; it does not become a second director.
 
-## One-owner-per-concern
+Multiple libraries may coexist when they own separate concerns; two engines may not control
+the same transform, timeline or rendering work. Catalogs provide copy-in primitives assessed
+as adopt/adapt/reference-only/custom. Substrates provide rendering infrastructure. Neither
+substitutes for art direction.
 
-Multiple libraries may coexist if they own different concerns. Example:
-- Motion: app/component state transitions
-- GSAP: one isolated scroll narrative
-- R3F: one spatial canvas
+Continuous-work checks retain surface-level ownership, active shared consumers and real
+scroll/visibility conditions. Global rAF counts are discovery evidence, not an automatic
+failure. Missing conditions are explicitly unverified.
 
-The prohibited case is two engines both controlling the same transform/timeline/render concern.
+## Source and host boundaries
 
-## Component-fit gate
+Anthropic's pinned skill is read as source material through the documented scoped adaptation,
+not independently activated as a full competing workflow. Actual bytes must match the pin;
+installed revision and tested revision remain separate facts. Missing or incompatible source
+uses the builtin fallback. The package does not auto-install or track upstream main silently.
 
-Before commissioning a common creative effect from scratch:
-1. identify the visual primitive required by the committed thesis;
-2. search the active component/effect catalogs;
-3. estimate fit:
-   - near-complete fit → adopt + deeply art-direct;
-   - strong substrate → adapt;
-   - useful technique but wrong identity → reference only;
-   - poor fit → custom specialist;
-4. reject component soup even when many attractive primitives are available.
+The review method is attributed to OneRedOak, without loading its provider-specific agent.
+Hosts without separate agents use labeled self-review; hosts without browser access cannot
+claim rendered approval. Compatibility is recorded only for configurations actually exercised.
 
-## Spectacle is a register, not a default
+## Evaluation and deferred work
 
-S1 is not “always add 3D.” Spectacle can be WebGPU shaders, 2D particle systems, procedural typography,
-physics, canvas, spatial 3D, audio-reactive systems or other realtime media. The defining property is
-that the graphical system is structurally central to the experience and interaction materially changes it.
+See `results/composition_v2/README.md` for development evidence and
+`evals/composition_v2_protocol.md` for the staged comparison. The architect/handoff and
+independent-review effects are measured separately with matched total budgets. Development
+fixtures are excluded from efficacy results; promotion needs fresh confirmation.
 
-## Freshness policy
+Impeccable's runtime/context prerequisites and ordinary new-work rendering decisions need
+their own adapter and trial. Interface-design remains a product-surface director candidate.
+Emil's prototype/motion and Scottstts's camera/graphics validation are selected next trials,
+along with engine-specific vendor guidance. These candidates are not supported dependencies
+merely because they appear in the research registry.
 
-- inspect installed package version before coding;
-- prefer vendor/first-party skill when available;
-- otherwise consult current official docs for volatile APIs;
-- do not cache full third-party skill bodies into this architect;
-- registries are awareness/routing metadata and must be periodically re-verified.
-
-## Reference policy
-
-References calibrate ambition and extract principles. Do not copy protected assets, exact page structures,
-brand identity, or pixel arrangements. If a user provides references, extract world/material/motion/interaction
-traits and produce an original design thesis.
+Historical verdicts and frozen skill bodies remain available; their results are not relabeled
+as v2 measurements.

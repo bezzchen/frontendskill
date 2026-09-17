@@ -1,0 +1,130 @@
+{
+  "schema_version": "2.0-development-summary",
+  "date": "2026-09-17",
+  "candidate": "2.0.0-alpha.1",
+  "efficacy": "not-run",
+  "full_development_suite": "not-run-as-defined",
+  "checks": [
+    {
+      "id": "package",
+      "result": "pass",
+      "evidence": "package-report.md",
+      "detail": "18 stdlib failure/positive tests; actual and isolated complete folder pass; entrypoint validator passes."
+    },
+    {
+      "id": "source-resolution-helper",
+      "result": "pass",
+      "detail": "Pinned, mutated and absent source branches exercised by adapter implementer; fresh missing-source run independently confirms fallback."
+    },
+    {
+      "id": "explicit-build",
+      "result": "pass",
+      "evidence": "harbor-run.json",
+      "detail": "Fresh CLI source-read/hash/contract/build; decide-and-proceed respected; builder correctly leaves preview unverified."
+    },
+    {
+      "id": "rendered-generated-page",
+      "result": "pass",
+      "evidence": "harbor-review/review-cycle-0.md",
+      "detail": "Independent of builder; not a fresh session. Bounded desktop/mobile keyboard/pointer review passes."
+    },
+    {
+      "id": "fresh-seeded-review",
+      "result": "pass",
+      "evidence": "fieldnotes-initial/review.md",
+      "detail": "Fresh separate reviewer found both defects, preserved approved style. Reviewed app correctly fails acceptance."
+    },
+    {
+      "id": "actual-correction-recheck",
+      "result": "pass",
+      "evidence": "fieldnotes-recheck/review-cycle-1.md",
+      "detail": "Root repaired copied CSS; separate reviewer confirmed both fixes using plain route, not positive-control query."
+    },
+    {
+      "id": "natural-positive",
+      "result": "pass",
+      "evidence": "activation-trace.jsonl",
+      "detail": "Candidate auto-selected from project roster; settled design reused, offline catalog caveat and S/ownership decision; planning only."
+    },
+    {
+      "id": "natural-negative",
+      "result": "pass",
+      "evidence": "near-miss-trace.jsonl",
+      "detail": "Only button radius changed; candidate body not read."
+    },
+    {
+      "id": "missing-director",
+      "result": "pass",
+      "evidence": "fallback/work-log.md",
+      "detail": "Fresh process resolves missing selected source, labels builtin-fallback and continues plan without install or repeated approval."
+    }
+  ],
+  "remaining": [
+    "Run eight complete development fixtures as specified, including live shared-animation/offscreen/document-hidden conditions.",
+    "Freeze and execute matched A/B pilot and fresh C confirmation.",
+    "Test additional hosts/models/efforts and more activation cases.",
+    "Add Impeccable and specialist adapters only after the tested composition earns expansion."
+  ],
+  "usage": {
+    "forward-build": {
+      "reported_cli_usage": {
+        "input_tokens": 304091,
+        "cached_input_tokens": 260480,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 11227,
+        "reasoning_output_tokens": 590
+      },
+      "known_parent_tokens": 315318,
+      "aggregate_all_agents": 315318,
+      "note": "Cached input/reasoning output are subsets; no double counting. Excludes coordinator and separate review work."
+    },
+    "fresh-review": {
+      "reported_cli_usage": {
+        "input_tokens": 538400,
+        "cached_input_tokens": 504832,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2150,
+        "reasoning_output_tokens": 285
+      },
+      "known_parent_tokens": 540550,
+      "aggregate_all_agents": null,
+      "note": "Fresh-review nested child usage is not independently exposed; parent totals must not be presented as all-agent totals."
+    },
+    "activation": {
+      "reported_cli_usage": {
+        "input_tokens": 184239,
+        "cached_input_tokens": 152704,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 5503,
+        "reasoning_output_tokens": 216
+      },
+      "known_parent_tokens": 189742,
+      "aggregate_all_agents": 189742,
+      "note": "Cached input/reasoning output are subsets; no double counting. Excludes coordinator and separate review work."
+    },
+    "near-miss": {
+      "reported_cli_usage": {
+        "input_tokens": 88603,
+        "cached_input_tokens": 78976,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 420,
+        "reasoning_output_tokens": 11
+      },
+      "known_parent_tokens": 89023,
+      "aggregate_all_agents": 89023,
+      "note": "Cached input/reasoning output are subsets; no double counting. Excludes coordinator and separate review work."
+    },
+    "fallback": {
+      "reported_cli_usage": {
+        "input_tokens": 141541,
+        "cached_input_tokens": 89344,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2592,
+        "reasoning_output_tokens": 118
+      },
+      "known_parent_tokens": 144133,
+      "aggregate_all_agents": 144133,
+      "note": "Cached input/reasoning output are subsets; no double counting. Excludes coordinator and separate review work."
+    }
+  }
+}

@@ -1,102 +1,50 @@
-# How to brief this skill
+# Using the experimental v2 skill
 
-The skill decides three things: **which register** a surface belongs to, **what renders it**, and
-**whether to adopt or build** each effect. Everything below is about giving it what it needs to
-decide those well.
+Install this complete directory. `SKILL.md` loads the relevant references; copying it alone
+omits the handoff, director adapter and review protocol. This candidate's composition is
+not yet established as a visual-quality improvement.
 
-Every claim here is measured. Sources are in `results/` of the harness repo.
+## Briefing it
 
----
+Describe the audience, primary task and what is fixed. Name Q (quiet operate), W (expressive
+persuade), or S (immersive realtime) when you know the intended expression. When you want
+the agent to choose, say so; that does not require another approval round.
 
-## The single highest-leverage sentence: name the register
-
-The skill sorts every surface into one of three. Say which you want.
-
-| register | what it means | typical surface |
-|---|---|---|
-| **Q — Quiet** | craft disappears behind the task; micro-motion only, no new dependencies by default | settings, dashboards, forms, admin |
-| **W — Expressive** | distinctive art direction, motion serves one signature idea | marketing, portfolio, launch |
-| **S — Spectacle** | the graphical system *is* the page — realtime, multi-act, interaction materially changes it | experiential, "people will talk about this" |
-
-**Why this matters more than anything else you could write:** on a brief that said "something
-unforgettable… full creative license", agents without the skill chose spectacle **0 times out of 3**.
-Left to themselves they land on W. If you want S, you have to say so.
-
-With the skill loaded that same brief produced spectacle 3/3 — so it does compensate. But it is
-guessing at your intent, and it will tell you which register it picked and why. **Read that line and
-redirect if it guessed wrong.**
-
-## If you want depth, say "depth" — the register alone won't get you there
-
-Naming spectacle gets you a realtime graphical system. It does **not** get you spatial 3D.
-
-On an explicit spectacle brief, agents built 60fps WebGL systems **3/3** — and adopted spatial 3D
-with an authored camera **0/3**. Every one chose a flat 2.5D particle field.
-
-So if what you actually want is space, depth, and a camera that travels, name those words. "Make it
-impressive" will not produce them.
-
-## Say what is fixed, not what to avoid
-
-Worth stating: a zero-dependency budget, a library you must keep, a fixed design system, SEO or
-accessibility that cannot regress, a reduced-motion requirement.
-
-**Not worth stating:** warnings against over-engineering. Across 24 routing runs agents added
-exactly **one** unjustified dependency in total. The failure you are probably guarding against
-mostly does not happen, and the warning costs you brief space.
-
-## A brief that works
-
-```
-[what the surface is and who it is for]
-
-Register: W — expressive. One signature idea, not a spectacle.
-Ceiling: flat is fine; no 3D, no camera work.
-Fixed: keep Tailwind, zero new runtime dependencies, reduced-motion parity required.
-
-Inspect the repo first and propose the architecture. Do not implement yet.
+```text
+Build a page for our furniture repair workshop. Help local visitors decide whether we
+can repair their piece and request an estimate. Keep our navy/copper palette, existing
+components and runtime dependencies. Choose the expression level and proceed. Verify
+the form on desktop and mobile.
 ```
 
-Swap the three middle lines for what you want. `Register:` is the one that changes the most.
+For a supplied design, state which decisions are settled. The workflow should skip those
+stages. A plan-only request stays plan-only. Small changes do not need a separate design
+document or a new director.
 
-## If you genuinely don't know what you want
+## What happens
 
-**It will ask you.** As of v1.2, when a brief names no level and grants no license, the skill stops
-and puts Q, W and S in front of you with the consequence of each, and waits.
+One compact contract carries the brief, hierarchy, visual concept, project tokens, responsive
+behavior, states and implementation choices. One director owns the current surface's
+visual direction; shared identity carries across surfaces. The architect handles open
+sourcing/renderer decisions. A reviewer operates the running result against the original
+brief, identifies concrete defects, and rechecks corrections within two cycles by default.
 
-That triggers on briefs like *"make it feel more dynamic"*, *"more impressive"*, *"less plain"* —
-which sound clear but settle nothing: a hover-state polish pass and a rebuilt realtime system both
-answer them, at wildly different cost.
+The included Anthropic adapter is a scoped adaptation and requires a matching prepared
+source or matching installed file. Its [manifest](integrations.lock.json) records the pin.
+`CFA_ANTHROPIC_SOURCE` can identify an explicit local source file. It is optional: absent or
+incompatible sources use the packaged `builtin-fallback`, with the limitation recorded.
+No runtime installation or silent source upgrade occurs.
 
-It will **not** ask when the brief is already settled — when you name a register or a level, when
-the surface's job is obvious (a settings form is Q), or when you grant open license or ask for
-something unforgettable. Open license is treated as a signal to aim high and decide, not as
-missing information.
+Without a separate reviewer, the check is labeled self-review. Without a browser, rendered
+verification remains unverified. No successful build or code inspection substitutes for
+observing the interface.
 
-**To skip the question**, just say so:
+## What remains experimental
 
-```
-Pick the register yourself, tell me which and why, and carry on.
-```
+The new design handoff and independent-review integration require comparative build trials.
+Impeccable, interface-design and specialist integrations are not bundled or validated by
+this release. Existing available specialists can still inform their chosen implementation
+concern; actual loading and evidence must be recorded.
 
-It also won't stall: told to decide, or with nobody there to answer, it chooses and proceeds. It
-asks at most once.
-
-**This behaviour is new and unmeasured.** Every other line in the skill earned its place by a
-measurement showing the agent failed without it. This one was added on judgment. If it asks when
-you think the brief was clear, that is the known risk — say so, and it is worth recording. See
-`CHANGELOG_v1.2.md`.
-
----
-
-## What this skill will not do for you
-
-It does not own visual taste — that belongs to a design director skill, and this one refuses to act
-as a second one. It will not choose your palette, typography, or layout.
-
-More importantly: **it is a decision aid, not a quality upgrade.** It reliably changes how work is
-approached and modestly improves architectural choices. It does **not** demonstrably improve how
-good the result looks — two criteria failed on exactly that, and a blind visual factorial found no
-benefit. It also widens variance in both directions.
-
-Read `VERDICT.md` in the harness repo before you rely on it for anything.
+The frozen v1.2 body remains in `SKILL.v1.2-frozen.md`. Earlier changelogs describe their
+own revisions and do not establish v2 results.

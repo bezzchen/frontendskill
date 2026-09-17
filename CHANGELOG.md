@@ -1,5 +1,28 @@
 # Changelog
 
+## Skill v2.0.0-alpha.1 — 2026-09-17 (experimental composition)
+
+This is a **skill candidate**, separate from the historical harness version sequence below.
+No historical efficacy result is attributed to this revision.
+
+- Retain the four measured behavioral invariants in a shorter entrypoint; route conditional
+  details to references shipped inside the installable directory.
+- Add a shared surface-level design contract, one director per surface and explicit
+  director/architect/specialist/reviewer boundaries. Preserve project identity and settled
+  user choices; skip completed stages and honor delegated decisions.
+- Add a pinned Anthropic scoped adapter with actual source/hash checks, source attribution
+  and license, prepared-source resolution and honest builtin fallback. No runtime installs.
+- Add a host-neutral live-review method informed by OneRedOak, separate-agent/self-review
+  labeling, evidence-backed findings and at most two correction/recheck cycles.
+- Add package-integrity validation, meaningful failure-case tests, a seeded development
+  fixture, v2 run metadata and separate draft comparative experiment definitions.
+- Update installation to include the entire skill folder and preserve the exact previous
+  body as `SKILL.v1.2-frozen.md`. Historical protocols, verdicts and results are unchanged.
+
+See `results/composition_v2/README.md` for performed checks and remaining limits. Impeccable
+and specialist integrations, comprehensive activation/behavior probes and efficacy promotion
+remain gated experiments; they are not implied by the manifest.
+
 ## v3.6 — 2026-08-30
 
 **Instrument release: the two checks that were producing false positives on every asset-bearing

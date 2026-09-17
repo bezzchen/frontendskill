@@ -1,0 +1,64 @@
+[
+  {
+    "name": "motion-no-preference",
+    "samples": [
+      {
+        "time": 63.5,
+        "runningAnimations": 0,
+        "headingY": 148.5
+      },
+      {
+        "time": 471.5,
+        "runningAnimations": 0,
+        "headingY": 148.5
+      },
+      {
+        "time": 878.5,
+        "runningAnimations": 0,
+        "headingY": 148.5
+      }
+    ]
+  },
+  {
+    "name": "mobile-skip-tab",
+    "focus": "guest-name"
+  },
+  {
+    "name": "mobile-shift-tab",
+    "focus": "guest-name"
+  },
+  {
+    "name": "mobile-empty-errors",
+    "body": "Skip to registration\nField Notes\nAn independent studio gathering\n\nSTUDIO DAY · AUTUMN EDITION\n\nA better day\nfor making.\n\nSaturday 24 October · 10:00–16:00\n\nA small gathering for people who make thoughtful things. Share a work in progress, learn a new approach, and leave with a fresh idea.\n\nRoom to try something.\n\nJoin us at North Hall, 18 Garden Street, or tune in online. Everyone is welcome, and there is no charge to attend.\n\n10:00\nCoffee and introductions\n11:00\nSmall experiments, shared openly\n14:00\nMake something together\nSave your place.\n\nTwo details, and you are on the list.\n\nYour name\n\nPlease enter your name.\n\nEmail address\n\nEnter a valid email address.\n\nHow will you join?\nIn person at North Hall\nOnline\nReserve my seat\n\nPlease check the highlighted fields.\n\nMake a little room for new ideas.\nDoors open at 09:30. Bring your curiosity.\n\nField Notes Studio Day · A place to meet, share and make.",
+    "focus": "guest-name"
+  },
+  {
+    "name": "mobile-real-pointer-click",
+    "coords": {
+      "x": 187.5,
+      "y": 766
+    },
+    "successVisible": false,
+    "body": "Skip to registration\nField Notes\nAn independent studio gathering\n\nSTUDIO DAY · AUTUMN EDITION\n\nA better day\nfor making.\n\nSaturday 24 October · 10:00–16:00\n\nA small gathering for people who make thoughtful things. Share a work in progress, learn a new approach, and leave with a fresh idea.\n\nRoom to try something.\n\nJoin us at North Hall, 18 Garden Street, or tune in online. Everyone is welcome, and there is no charge to attend.\n\n10:00\nCoffee and introductions\n11:00\nSmall experiments, shared openly\n14:00\nMake something together\nSave your place.\n\nTwo details, and you are on the list.\n\nYour name\n\nPlease enter your name.\n\nEmail address\n\nEnter a valid email address.\n\nHow will you join?\nIn person at North Hall\nOnline\nReserve my seat\n\nPlease check the highlighted fields.\n\nMake a little room for new ideas.\nDoors open at 09:30. Bring your curiosity.\n\nField Notes Studio Day · A place to meet, share and make."
+  },
+  {
+    "name": "motion-reduce",
+    "samples": [
+      {
+        "time": 15.700000017881393,
+        "runningAnimations": 0,
+        "headingY": 148.5
+      },
+      {
+        "time": 418.30000001192093,
+        "runningAnimations": 0,
+        "headingY": 148.5
+      },
+      {
+        "time": 823.9000000059605,
+        "runningAnimations": 0,
+        "headingY": 148.5
+      }
+    ]
+  }
+]

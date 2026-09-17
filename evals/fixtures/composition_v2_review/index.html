@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Field Notes — Studio Day registration</title>
+  <script>
+    if (new URLSearchParams(location.search).get('fixed') === '1') {
+      document.documentElement.classList.add('fixed');
+    }
+  </script>
+  <style>
+    :root { --ink: #23133c; --muted: #60536d; --paper: #faf8fd; --accent: #552a99; --line: #d6cde0; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 system-ui, sans-serif; }
+    a { color: inherit; }
+    button, input, select { font: inherit; }
+    [hidden] { display: none !important; }
+    :focus-visible { outline: 3px solid #974b00; outline-offset: 4px; }
+    .skip-link { position: absolute; left: 16px; top: -100px; z-index: 50; padding: 10px; background: white; }
+    .skip-link:focus { top: 12px; }
+    .masthead { max-width: 1160px; margin: auto; padding: 26px 32px; display: flex; justify-content: space-between; gap: 20px; }
+    .brand { font-weight: 750; letter-spacing: -.035em; font-size: 23px; }
+    .edition { color: var(--muted); align-self: center; font-size: 14px; }
+    .hero { background: linear-gradient(115deg, #e6d6ff, #f2e8ff 65%, #ded7fb); border-block: 1px solid var(--line); }
+    .hero-inner { max-width: 1160px; margin: auto; padding: 48px 32px 42px; }
+    .eyebrow { font-size: 13px; text-transform: uppercase; letter-spacing: .12em; font-weight: 700; margin: 0 0 18px; }
+    h1 { font-family: Georgia, serif; font-weight: 400; font-size: clamp(44px, 6vw, 76px); line-height: 1.02; letter-spacing: -.045em; margin: 0; }
+    h1 span { display: block; }
+    .event-meta { margin: 20px 0 0; font-size: 18px; font-weight: 650; }
+    .intro { max-width: 580px; margin: 20px 0 0; color: #4a365f; font-size: 18px; }
+    .content { max-width: 1160px; margin: auto; padding: 42px 32px 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; }
+    h2 { font-family: Georgia, serif; font-size: 31px; line-height: 1.2; font-weight: 400; margin: 0 0 16px; }
+    .details p { color: var(--muted); max-width: 42ch; }
+    .agenda { list-style: none; padding: 0; margin: 28px 0; }
+    .agenda li { display: grid; grid-template-columns: 70px 1fr; gap: 14px; padding: 12px 0; border-top: 1px solid var(--line); }
+    .agenda time { font-variant-numeric: tabular-nums; color: var(--muted); }
+    .registration { padding: 28px; border: 1px solid var(--line); background: white; border-radius: 10px; }
+    .registration > p { color: var(--muted); margin: -5px 0 24px; }
+    .field { margin-bottom: 18px; }
+    label { display: block; font-weight: 650; margin-bottom: 6px; }
+    input, select { width: 100%; min-height: 46px; padding: 10px 12px; border: 1px solid #9687a6; border-radius: 5px; background: white; color: var(--ink); }
+    input[aria-invalid="true"] { border: 2px solid #a7253a; }
+    .field-error { color: #a7253a; margin: 6px 0 0; font-size: 14px; }
+    .submit-button, .reset-button { border: 0; border-radius: 5px; background: var(--accent); color: white; padding: 14px 20px; cursor: pointer; font-weight: 650; min-height: 50px; }
+    .submit-button { width: 100%; }
+    button:disabled { opacity: .7; cursor: wait; }
+    .success { padding-top: 12px; }
+    .success p { color: var(--muted); }
+    .event-note { margin: 20px 0 0; color: var(--muted); font-size: 14px; }
+    .footer { max-width: 1160px; margin: auto; padding: 0 32px 30px; color: var(--muted); font-size: 13px; }
+    @media (min-width: 800px) {
+      .event-meta { margin-top: -30px; }
+      .fixed .event-meta { margin-top: 20px; }
+    }
+    @media (max-width: 760px) {
+      .masthead { padding: 20px; }
+      .edition { max-width: 120px; text-align: right; font-size: 12px; }
+      .hero-inner { padding: 34px 20px; }
+      .content { grid-template-columns: 1fr; padding: 30px 20px 40px; gap: 24px; }
+      .registration { padding: 22px; }
+      .footer { padding-inline: 20px; }
+    }
+    @media (max-width: 600px) {
+      body { padding-bottom: 116px; }
+      .submit-button { position: fixed; bottom: 20px; left: 20px; width: calc(100% - 40px); z-index: 20; }
+      .event-note { position: fixed; bottom: 0; left: 0; width: 100%; z-index: 30; height: 94px; margin: 0; padding: 20px; background: #eee7f7; border-top: 1px solid #c7b6dc; color: #4a365f; }
+      .fixed body { padding-bottom: 0; }
+      .fixed .submit-button { position: static; width: 100%; }
+      .fixed .event-note { position: static; height: auto; margin-top: 20px; border-top: 0; border-radius: 5px; padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#registration">Skip to registration</a>
+  <header class="masthead">
+    <div class="brand">Field Notes</div>
+    <div class="edition">An independent studio gathering</div>
+  </header>
+  <main>
+    <section class="hero" aria-labelledby="event-title">
+      <div class="hero-inner">
+        <p class="eyebrow">Studio Day · Autumn edition</p>
+        <h1 id="event-title"><span>A better day</span><span>for making.</span></h1>
+        <p class="event-meta">Saturday 24 October · 10:00–16:00</p>
+        <p class="intro">A small gathering for people who make thoughtful things. Share a work in progress, learn a new approach, and leave with a fresh idea.</p>
+      </div>
+    </section>
+    <div class="content">
+      <section class="details" aria-labelledby="day-title">
+        <h2 id="day-title">Room to try something.</h2>
+        <p>Join us at North Hall, 18 Garden Street, or tune in online. Everyone is welcome, and there is no charge to attend.</p>
+        <ul class="agenda" aria-label="Day schedule">
+          <li><time>10:00</time><span>Coffee and introductions</span></li>
+          <li><time>11:00</time><span>Small experiments, shared openly</span></li>
+          <li><time>14:00</time><span>Make something together</span></li>
+        </ul>
+      </section>
+      <section class="registration" id="registration" aria-labelledby="registration-title" tabindex="-1">
+        <h2 id="registration-title">Save your place.</h2>
+        <p>Two details, and you are on the list.</p>
+        <form id="registration-form" novalidate data-state="ready">
+          <div id="fields">
+            <div class="field">
+              <label for="guest-name">Your name</label>
+              <input id="guest-name" name="name" autocomplete="name" required aria-describedby="name-error">
+              <p class="field-error" id="name-error" hidden>Please enter your name.</p>
+            </div>
+            <div class="field">
+              <label for="guest-email">Email address</label>
+              <input id="guest-email" name="email" type="email" autocomplete="email" required aria-describedby="email-error">
+              <p class="field-error" id="email-error" hidden>Enter a valid email address.</p>
+            </div>
+            <div class="field">
+              <label for="attendance">How will you join?</label>
+              <select id="attendance" name="attendance">
+                <option value="in person">In person at North Hall</option>
+                <option value="online">Online</option>
+              </select>
+            </div>
+          </div>
+          <button class="submit-button" id="submit-button" type="submit">Reserve my seat</button>
+          <div class="success" id="success" hidden>
+            <h2 id="success-title" tabindex="-1">You are on the list.</h2>
+            <p id="confirmation"></p>
+            <button class="reset-button" id="reset-button" type="button">Register another guest</button>
+          </div>
+          <p id="form-status" role="status" class="field-error" hidden></p>
+        </form>
+        <p class="event-note">Make a little room for new ideas.<br>Doors open at 09:30. Bring your curiosity.</p>
+      </section>
+    </div>
+  </main>
+  <footer class="footer">Field Notes Studio Day · A place to meet, share and make.</footer>
+  <script>
+    const form = document.getElementById('registration-form');
+    const nameInput = document.getElementById('guest-name');
+    const emailInput = document.getElementById('guest-email');
+    const attendance = document.getElementById('attendance');
+    const fields = document.getElementById('fields');
+    const submitButton = document.getElementById('submit-button');
+    const statusMessage = document.getElementById('form-status');
+    const success = document.getElementById('success');
+
+    function showValidity(input, valid, errorId) {
+      input.setAttribute('aria-invalid', String(!valid));
+      document.getElementById(errorId).hidden = valid;
+    }
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (form.dataset.state === 'submitting' || form.dataset.state === 'success') return;
+      const validName = nameInput.value.trim().length > 0;
+      const validEmail = emailInput.validity.valid;
+      showValidity(nameInput, validName, 'name-error');
+      showValidity(emailInput, validEmail, 'email-error');
+      if (!validName || !validEmail) {
+        form.dataset.state = 'invalid';
+        statusMessage.hidden = false;
+        statusMessage.textContent = 'Please check the highlighted fields.';
+        (validName ? emailInput : nameInput).focus();
+        return;
+      }
+      form.dataset.state = 'submitting';
+      form.setAttribute('aria-busy', 'true');
+      submitButton.disabled = true;
+      submitButton.textContent = 'Reserving…';
+      statusMessage.hidden = false;
+      statusMessage.textContent = 'Saving your place…';
+      window.setTimeout(() => {
+        document.getElementById('confirmation').textContent =
+          `Thanks, ${nameInput.value.trim()}. Your place is reserved ${attendance.value}. Your confirmation address is ${emailInput.value.trim()}.`;
+        fields.hidden = true;
+        submitButton.hidden = true;
+        success.hidden = false;
+        statusMessage.hidden = true;
+        statusMessage.textContent = '';
+        form.dataset.state = 'success';
+        form.removeAttribute('aria-busy');
+        document.getElementById('success-title').focus();
+      }, 250);
+    });
+
+    document.getElementById('reset-button').addEventListener('click', () => {
+      form.reset();
+      form.dataset.state = 'ready';
+      fields.hidden = false;
+      submitButton.hidden = false;
+      submitButton.disabled = false;
+      submitButton.textContent = 'Reserve my seat';
+      success.hidden = true;
+      statusMessage.hidden = true;
+      statusMessage.textContent = '';
+      showValidity(nameInput, true, 'name-error');
+      showValidity(emailInput, true, 'email-error');
+      nameInput.focus();
+    });
+  </script>
+</body>
+</html>

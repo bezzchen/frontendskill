@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123347">
+  <meta name="description" content="Harbor Bench is a neighborhood furniture repair workshop. Tell us about your chair, table or cabinet and explore a repair estimate.">
+  <title>Harbor Bench — Furniture worth keeping</title>
+  <style>
+    :root { --navy: #123347; --white: #FAF7F0; --copper: #A9532B; --wood: #E5CEAA; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--white); color: var(--navy); font-family: "Trebuchet MS", Arial, sans-serif; font-size: 17px; line-height: 1.6; }
+    [hidden] { display: none !important; }
+    a { color: inherit; text-underline-offset: 5px; }
+    button, input, textarea { font: inherit; }
+    button, a, input, textarea { -webkit-tap-highlight-color: transparent; }
+    :focus-visible { outline: 3px solid var(--copper); outline-offset: 5px; }
+    .dark :focus-visible { outline-color: var(--wood); }
+    .wrap { width: min(1120px, calc(100% - 80px)); margin-inline: auto; }
+    .skip { position: absolute; z-index: 2; top: 12px; left: 12px; padding: 12px; background: var(--white); color: var(--navy); transform: translateY(-180%); }
+    .skip:focus { transform: translateY(0); }
+    .dark { background: var(--navy); color: var(--white); }
+    .header { min-height: 105px; display: flex; justify-content: space-between; align-items: center; gap: 24px; border-bottom: 1px solid #faf7f03b; }
+    .brand { font-size: 25px; font-weight: 700; letter-spacing: -1px; text-decoration: none; }
+    .brand span { display: block; font-size: 12px; font-weight: 400; letter-spacing: .5px; }
+    .header > a:last-child { font-size: 15px; }
+    .hero { display: grid; grid-template-columns: 1.1fr 1fr; align-items: center; gap: 48px; padding-block: 64px 70px; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { font-size: clamp(48px, 5.8vw, 76px); line-height: 1.04; font-weight: 400; letter-spacing: -3px; margin-bottom: 28px; }
+    .intro { max-width: 37ch; margin-bottom: 32px; color: var(--white); font-size: 19px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; min-height: 50px; padding: 12px 23px; border: 1px solid var(--navy); border-radius: 3px; background: var(--navy); color: var(--white); cursor: pointer; font-weight: 700; text-decoration: none; }
+    .button:hover { background: var(--copper); border-color: var(--copper); }
+    .button:disabled { cursor: not-allowed; opacity: .6; }
+    .hero .button { background: var(--white); border-color: var(--white); color: var(--navy); }
+    .hero .button:hover { background: var(--wood); border-color: var(--wood); }
+    .hero-note { display: block; margin-top: 16px; font-size: 14px; color: var(--wood); }
+    figure { margin: 0; }
+    .chair { display: block; width: 100%; height: auto; max-height: 370px; }
+    figcaption { margin-top: 14px; text-align: center; font-size: 14px; color: var(--wood); }
+    .repairs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 42px; padding-block: 42px 48px; border-bottom: 1px solid #12334740; }
+    .repairs h2 { font-size: 23px; margin-bottom: 8px; font-weight: 400; }
+    .repairs p { font-size: 16px; line-height: 1.65; margin-bottom: 0; max-width: 34ch; }
+    .estimate { display: grid; grid-template-columns: .9fr 1.1fr; gap: 90px; padding-block: 74px 80px; scroll-margin-top: 28px; }
+    h2 { font-size: 39px; line-height: 1.15; letter-spacing: -1px; font-weight: 400; margin-bottom: 22px; }
+    .estimate-copy p { max-width: 34ch; }
+    .approach { margin-top: 35px; border-left: 3px solid var(--copper); padding-left: 20px; }
+    .approach h3 { font-size: 17px; margin-bottom: 7px; }
+    .approach p { font-size: 15px; margin-bottom: 0; }
+    .form-note { font-size: 14px; margin-bottom: 22px; }
+    fieldset { padding: 0; margin: 0 0 23px; border: 0; min-width: 0; }
+    legend, .field-label { display: block; margin-bottom: 9px; font-size: 16px; font-weight: 700; }
+    .choices { display: flex; gap: 10px; }
+    .choice { display: flex; align-items: center; gap: 9px; padding: 10px 14px; border: 1px solid #12334780; border-radius: 3px; cursor: pointer; flex: 1; font-size: 15px; }
+    .choice:has(input:checked) { border-color: var(--navy); background: var(--navy); color: var(--white); }
+    input[type="radio"] { accent-color: var(--copper); margin: 0; width: 17px; height: 17px; flex-shrink: 0; }
+    input[type="email"], textarea { width: 100%; min-width: 0; border: 1px solid #12334780; border-radius: 3px; padding: 11px 13px; background: transparent; color: var(--navy); }
+    input[aria-invalid="true"], textarea[aria-invalid="true"] { border: 2px solid var(--copper); }
+    textarea { display: block; min-height: 126px; resize: vertical; }
+    .field { margin-bottom: 22px; }
+    .hint { margin: -3px 0 10px; font-size: 14px; }
+    .error { color: var(--copper); font-size: 14px; font-weight: 700; margin: 7px 0 0; }
+    .error-summary { color: var(--copper); font-size: 15px; margin-bottom: 16px; }
+    .privacy { font-size: 13px; margin: 13px 0 0; }
+    .confirmation { border-top: 4px solid var(--copper); padding-top: 25px; }
+    .confirmation h3 { font-size: 28px; line-height: 1.2; font-weight: 400; margin-bottom: 15px; }
+    .confirmation dl { margin-block: 25px; }
+    .confirmation dt { font-weight: 700; font-size: 14px; margin-top: 16px; }
+    .confirmation dd { margin: 3px 0 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+    .footer { border-top: 1px solid #12334740; padding-block: 24px; display: flex; justify-content: space-between; gap: 16px; font-size: 13px; }
+    .footer p { margin: 0; }
+    @media (max-width: 900px) { .hero { gap: 20px; } .estimate { gap: 42px; } .choice { padding-inline: 10px; } }
+    @media (max-width: 760px) {
+      .wrap { width: calc(100% - 48px); }
+      .header { min-height: 90px; }
+      .hero { grid-template-columns: 1fr; padding-block: 44px; gap: 36px; }
+      h1 { letter-spacing: -2px; }
+      .intro { max-width: 44ch; }
+      .chair { max-height: 300px; }
+      .repairs { gap: 24px; padding-block: 32px; }
+      .repairs h2 { font-size: 21px; }
+      .estimate { grid-template-columns: 1fr; gap: 34px; padding-block: 45px 55px; }
+      .estimate-copy p { max-width: 52ch; }
+      .approach { margin-top: 24px; }
+      h2 { font-size: 36px; }
+    }
+    @media (max-width: 480px) {
+      .brand { font-size: 22px; }
+      .brand span { font-size: 10px; }
+      .header > a:last-child { font-size: 13px; }
+      .repairs { grid-template-columns: 1fr; gap: 25px; }
+      .repairs p { max-width: none; }
+      .choices { gap: 7px; }
+      .choice { padding: 10px 8px; gap: 6px; font-size: 14px; }
+      .footer { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="dark">
+    <header class="header wrap">
+      <a class="brand" href="#" aria-label="Harbor Bench home">Harbor Bench<span>Neighborhood furniture repair</span></a>
+      <a href="#estimate">Request an estimate</a>
+    </header>
+  </div>
+  <main id="main">
+    <div class="dark">
+      <section class="hero wrap" aria-labelledby="hero-title">
+        <div>
+          <h1 id="hero-title">Good furniture.<br>More life.</h1>
+          <p class="intro">A chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.</p>
+          <a class="button" href="#estimate">Request an estimate</a>
+          <span class="hero-note">Chairs, tables &amp; cabinets. Built to be used again.</span>
+        </div>
+        <figure>
+          <svg class="chair" viewBox="0 0 460 390" role="img" aria-labelledby="chair-title chair-desc" xmlns="http://www.w3.org/2000/svg">
+            <title id="chair-title">A chair, with attention to the joints</title>
+            <desc id="chair-desc">A workshop-style line drawing of a wooden chair. Copper rings mark the seat joints, with a note to make it steady again.</desc>
+            <g fill="none" stroke="#E5CEAA" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+              <path d="M139 190 130 48 274 26 282 171"/>
+              <path d="m135 76 141-22M137 103l140-23" stroke-width="12"/>
+              <path d="m174 99 5 81m53-91 5 81" stroke-width="5"/>
+              <path d="m139 187 143-20 55 46-145 28Z" fill="#123347"/>
+              <path d="m139 187 1 16 52 47 145-29v-8M192 241v9" stroke-width="3"/>
+              <path d="m147 211-9 99m63-60-5 106m131-132 9 111m-59-158 6 105"/>
+              <path d="m141 272 55 47 138-28m-53-51 47 37" stroke-width="4"/>
+              <path d="m156 190 120-16 42 37-120 23Z" stroke-width="1.5" opacity=".6"/>
+            </g>
+            <g fill="none" stroke="#A9532B" stroke-width="4">
+              <circle cx="145" cy="199" r="16"/><circle cx="198" cy="246" r="16"/><circle cx="327" cy="220" r="16"/>
+            </g>
+            <g fill="none" stroke="#E5CEAA" stroke-width="1.5">
+              <path d="M128 200H58v39M343 220h55v-47"/>
+              <path d="M117 371h231" opacity=".4"/>
+            </g>
+            <g fill="#FAF7F0" font-family="Trebuchet MS, Arial, sans-serif" font-size="14">
+              <text x="22" y="262">Keep the character.</text>
+              <text x="311" y="149">Lose the wobble.</text>
+            </g>
+          </svg>
+          <figcaption>A sound joint makes all the difference.</figcaption>
+        </figure>
+      </section>
+    </div>
+  <div class="wrap">
+    <section class="repairs" aria-label="What we repair">
+      <div><h2>Chairs</h2><p>Loose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.</p></div>
+      <div><h2>Tables</h2><p>Wobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.</p></div>
+      <div><h2>Cabinets</h2><p>Sticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.</p></div>
+    </section>
+    <section class="estimate" id="estimate" aria-labelledby="estimate-title">
+      <div class="estimate-copy">
+        <h2 id="estimate-title">Tell us about<br>your piece.</h2>
+        <p>Start with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.</p>
+        <div class="approach"><h3>Repair starts with a closer look.</h3><p>A description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.</p></div>
+      </div>
+      <div>
+        <form id="estimate-form" novalidate>
+          <p class="form-note">All fields are required. This is a local demo: nothing is sent to the workshop.</p>
+          <p class="error-summary" id="error-summary" role="alert" hidden></p>
+          <fieldset aria-describedby="piece-error">
+            <legend>What needs a repair?</legend>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="piece" value="Chair" required>Chair</label>
+              <label class="choice"><input type="radio" name="piece" value="Table" required>Table</label>
+              <label class="choice"><input type="radio" name="piece" value="Cabinet" required>Cabinet</label>
+            </div>
+            <p class="error" id="piece-error" hidden>Choose a chair, table or cabinet.</p>
+          </fieldset>
+          <div class="field">
+            <label class="field-label" for="email">Your email</label>
+            <input type="email" id="email" name="email" autocomplete="email" maxlength="254" required aria-describedby="email-error">
+            <p class="error" id="email-error" hidden>Enter a valid email, like sam@example.com.</p>
+          </div>
+          <div class="field">
+            <label class="field-label" for="description">What would you like repaired?</label>
+            <p class="hint" id="description-hint">Tell us what’s loose, damaged or not working. Approximate size and material help, if you know them.</p>
+            <textarea id="description" name="description" rows="4" maxlength="3000" required aria-describedby="description-hint description-error"></textarea>
+            <p class="error" id="description-error" hidden>Describe what needs repairing.</p>
+          </div>
+          <button class="button" id="submit-request" type="submit" disabled>Request an estimate</button>
+          <p class="privacy">This demo does not send or save your details.</p>
+          <noscript><p>Enable JavaScript to try the local estimate form. Nothing has been sent.</p></noscript>
+        </form>
+        <section class="confirmation" id="confirmation" aria-labelledby="confirmation-title" hidden>
+          <h3 id="confirmation-title" tabindex="-1">Your estimate request is ready.</h3>
+          <p>This is a demo confirmation. Nothing was sent, and no email will follow. Here’s the request you put together:</p>
+          <dl><dt>Furniture</dt><dd id="summary-piece"></dd><dt>Email</dt><dd id="summary-email"></dd><dt>Repair details</dt><dd id="summary-description"></dd></dl>
+          <button type="button" class="button" id="edit-request">Edit request</button>
+        </section>
+      </div>
+    </section>
+  </div>
+  </main>
+  <footer class="footer wrap"><p><strong>Harbor Bench</strong> · Furniture worth keeping.</p><p>Neighborhood craft. A little more life.</p></footer>
+  <script>
+    'use strict';
+    const form = document.getElementById('estimate-form');
+    const email = document.getElementById('email');
+    const description = document.getElementById('description');
+    const radios = Array.from(form.querySelectorAll('input[name="piece"]'));
+    const confirmation = document.getElementById('confirmation');
+    const errorSummary = document.getElementById('error-summary');
+    let attempted = false;
+
+    function validate() {
+      const selected = radios.find(radio => radio.checked);
+      const states = [
+        { id: 'piece', controls: radios, valid: Boolean(selected) },
+        { id: 'email', controls: [email], valid: Boolean(email.value.trim()) && email.validity.valid },
+        { id: 'description', controls: [description], valid: Boolean(description.value.trim()) && description.value.length <= 3000 }
+      ];
+      states.forEach(state => {
+        document.getElementById(state.id + '-error').hidden = state.valid;
+        state.controls.forEach(control => control.setAttribute('aria-invalid', String(!state.valid)));
+      });
+      const invalid = states.filter(state => !state.valid);
+      errorSummary.hidden = invalid.length === 0;
+      errorSummary.textContent = invalid.length ? 'Check the marked fields to finish your request.' : '';
+      return { selected, invalid };
+    }
+
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      attempted = true;
+      email.value = email.value.trim();
+      const { selected, invalid } = validate();
+      if (invalid.length) {
+        invalid[0].controls[0].focus();
+        return;
+      }
+      document.getElementById('summary-piece').textContent = selected.value;
+      document.getElementById('summary-email').textContent = email.value;
+      document.getElementById('summary-description').textContent = description.value.trim();
+      form.hidden = true;
+      confirmation.hidden = false;
+      document.getElementById('confirmation-title').focus();
+    });
+    form.addEventListener('input', () => { if (attempted) validate(); });
+    document.getElementById('edit-request').addEventListener('click', () => {
+      confirmation.hidden = true;
+      form.hidden = false;
+      (radios.find(radio => radio.checked) || radios[0]).focus();
+    });
+    document.getElementById('submit-request').disabled = false;
+  </script>
+</body>
+</html>

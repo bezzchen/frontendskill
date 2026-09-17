@@ -1,0 +1,1 @@
+Change only the .button border radius in styles.css from4px to6px. The approved design and stack are settled. Keep the panel radius and all other styling unchanged. No design exploration or implementation plan is needed. Make the edit and report it.

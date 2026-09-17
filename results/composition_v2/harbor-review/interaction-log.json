@@ -1,0 +1,1133 @@
+{
+  "reviewer": "/root/v2_director_adapter",
+  "route": "http://127.0.0.1:8766/",
+  "log": [
+    {
+      "name": "desktop-skip-focus",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nAll fields are required. This is a local demo: nothing is sent to the workshop.\n\nWhat needs a repair?\nChair\nTable\nCabinet\nYour email\nWhat would you like repaired?\n\nTell us what’s loose, damaged or not working. Approximate size and material help, if you know them.\n\nRequest an estimate\n\nThis demo does not send or save your details.\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "A",
+        "id": "",
+        "text": "Skip to content"
+      },
+      "scroll": {
+        "x": 0,
+        "y": 0,
+        "width": 1440
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": false
+        },
+        {
+          "name": "email",
+          "value": "",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "name": "desktop-after-skip-tab",
+      "focus": {
+        "tag": "A",
+        "text": "Request an estimate"
+      }
+    },
+    {
+      "name": "desktop-estimate-anchor",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nAll fields are required. This is a local demo: nothing is sent to the workshop.\n\nWhat needs a repair?\nChair\nTable\nCabinet\nYour email\nWhat would you like repaired?\n\nTell us what’s loose, damaged or not working. Approximate size and material help, if you know them.\n\nRequest an estimate\n\nThis demo does not send or save your details.\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "BODY",
+        "id": "",
+        "text": "\n  Skip to content\n  \n    \n      Harbor BenchNeighborhood furniture repair\n      Request an estimate\n    \n  \n  \n    \n      \n        \n          Good furniture.More life.\n          A chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n          Request an estimate\n          Chairs, tables & cabinets. Built to be used again.\n        \n        \n          \n            A chair, with attention to the joints\n            A workshop-style line drawing of a wooden chair. Copper rings mark the seat joints, with a note to make it steady again.\n            \n              \n              \n              \n              \n              \n              \n              \n              \n            \n            \n              \n            \n            \n              \n              \n            \n            \n              Keep the character.\n              Lose the wobble.\n            \n          \n          A sound joint makes all the difference.\n        \n      \n    \n  \n    \n      ChairsLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n      TablesWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n      CabinetsSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n    \n    \n      \n        Tell us aboutyour piece.\n        Start with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n        Repair starts with a closer look.A description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n      \n      \n        \n          All fields are required. This is a local demo: nothing is sent to the workshop.\n          \n          \n            What needs a repair?\n            \n              Chair\n              Table\n              Cabinet\n            \n            Choose a chair, table or cabinet.\n          \n          \n            Your email\n            \n            Enter a valid email, like sam@example.com.\n          \n          \n            What would you like repaired?\n            Tell us what’s loose, damaged or not working. Approximate size and material help, if you know them.\n            \n            Describe what needs repairing.\n          \n          Request an estimate\n          This demo does not send or save your details.\n          <p>Enable JavaScript to try the local estimate form. Nothing has been sent.</p>\n        \n        \n          Your estimate request is ready.\n          This is a demo confirmation. Nothing was sent, and no email will follow. Here’s the request you put together:\n          FurnitureEmailRepair details\n          Edit request\n        \n      \n    \n  \n  \n  Harbor Bench · Furniture worth keeping.Neighborhood craft. A little more life.\n  \n    'use strict';\n    const form = document.getElementById('estimate-form');\n    const email = document.getElementById('email');\n    const description = document.getElementById('description');\n    const radios = Array.from(form.querySelectorAll('input[name=\"piece\"]'));\n    const confirmation = document.getElementById('confirmation');\n    const errorSummary = document.getElementById('error-summary');\n    let attempted = false;\n\n    function validate() {\n      const selected = radios.find(radio => radio.checked);\n      const states = [\n        { id: 'piece', controls: radios, valid: Boolean(selected) },\n        { id: 'email', controls: [email], valid: Boolean(email.value.trim()) && email.validity.valid },\n        { id: 'description', controls: [description], valid: Boolean(description.value.trim()) && description.value.length <= 3000 }\n      ];\n      states.forEach(state => {\n        document.getElementById(state.id + '-error').hidden = state.valid;\n        state.controls.forEach(control => control.setAttribute('aria-invalid', String(!state.valid)));\n      });\n      const invalid = states.filter(state => !state.valid);\n      errorSummary.hidden = invalid.length === 0;\n      errorSummary.textContent = invalid.length ? 'Check the marked fields to finish your request.' : '';\n      return { selected, invalid };\n    }\n\n    form.addEventListener('submit', event => {\n      event.preventDefault();\n      attempted = true;\n      email.value = email.value.trim();\n      const { selected, invalid } = validate();\n      if (invalid.length) {\n        invalid[0].controls[0].focus();\n        return;\n      }\n      document.getElementById('summary-piece').textContent = selected.value;\n      document.getElementById('summary-email').textContent = email.value;\n      document.getElementById('summary-description').textContent = description.value.trim();\n      form.hidden = true;\n      confirmation.hidden = false;\n      document.getElementById('confirmation-title').focus();\n    });\n    form.addEventListener('input', () => { if (attempted) validate(); });\n    document.getElementById('edit-request').addEventListener('click', () => {\n      confirmation.hidden = true;\n      form.hidden = false;\n      (radios.find(radio => radio.checked) || radios[0]).focus();\n    });\n    document.getElementById('submit-request').disabled = false;\n  \n\n\n"
+      },
+      "scroll": {
+        "x": 0,
+        "y": 758,
+        "width": 1440
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": false
+        },
+        {
+          "name": "email",
+          "value": "",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "name": "desktop-empty-errors",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nAll fields are required. This is a local demo: nothing is sent to the workshop.\n\nCheck the marked fields to finish your request.\n\nWhat needs a repair?\nChair\nTable\nCabinet\n\nChoose a chair, table or cabinet.\n\nYour email\n\nEnter a valid email, like sam@example.com.\n\nWhat would you like repaired?\n\nTell us what’s loose, damaged or not working. Approximate size and material help, if you know them.\n\nDescribe what needs repairing.\n\nRequest an estimate\n\nThis demo does not send or save your details.\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "INPUT",
+        "id": "",
+        "text": "",
+        "value": "Chair"
+      },
+      "scroll": {
+        "x": 0,
+        "y": 758,
+        "width": 1440
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": false
+        },
+        {
+          "name": "email",
+          "value": "",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "name": "desktop-invalid-errors",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nAll fields are required. This is a local demo: nothing is sent to the workshop.\n\nCheck the marked fields to finish your request.\n\nWhat needs a repair?\nChair\nTable\nCabinet\nYour email\n\nEnter a valid email, like sam@example.com.\n\nWhat would you like repaired?\n\nTell us what’s loose, damaged or not working. Approximate size and material help, if you know them.\n\nDescribe what needs repairing.\n\nRequest an estimate\n\nThis demo does not send or save your details.\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "INPUT",
+        "id": "email",
+        "text": "",
+        "value": "broken-email"
+      },
+      "scroll": {
+        "x": 0,
+        "y": 758,
+        "width": 1440
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": true
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": false
+        },
+        {
+          "name": "email",
+          "value": "broken-email",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": "   "
+        }
+      ]
+    },
+    {
+      "name": "desktop-chair-success",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nYour estimate request is ready.\n\nThis is a demo confirmation. Nothing was sent, and no email will follow. Here’s the request you put together:\n\nFurniture\nChair\nEmail\nmorgan@example.com\nRepair details\nThe rear joint on my oak dining chair is loose. The seat is about 45 cm wide.\nEdit request\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "H3",
+        "id": "confirmation-title",
+        "text": "Your estimate request is ready."
+      },
+      "scroll": {
+        "x": 0,
+        "y": 626,
+        "width": 1440
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": true
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": false
+        },
+        {
+          "name": "email",
+          "value": "morgan@example.com",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": "The rear joint on my oak dining chair is loose. The seat is about 45 cm wide."
+        }
+      ]
+    },
+    {
+      "name": "desktop-edit-preserved",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nAll fields are required. This is a local demo: nothing is sent to the workshop.\n\nWhat needs a repair?\nChair\nTable\nCabinet\nYour email\nWhat would you like repaired?\n\nTell us what’s loose, damaged or not working. Approximate size and material help, if you know them.\n\nRequest an estimate\n\nThis demo does not send or save your details.\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "INPUT",
+        "id": "",
+        "text": "",
+        "value": "Chair"
+      },
+      "scroll": {
+        "x": 0,
+        "y": 626,
+        "width": 1440
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": true
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": false
+        },
+        {
+          "name": "email",
+          "value": "morgan@example.com",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": "The rear joint on my oak dining chair is loose. The seat is about 45 cm wide."
+        }
+      ]
+    },
+    {
+      "name": "desktop-table-success",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nYour estimate request is ready.\n\nThis is a demo confirmation. Nothing was sent, and no email will follow. Here’s the request you put together:\n\nFurniture\nTable\nEmail\nmorgan@example.com\nRepair details\nThe small kitchen table rocks on one leg.\nEdit request\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "H3",
+        "id": "confirmation-title",
+        "text": "Your estimate request is ready."
+      },
+      "scroll": {
+        "x": 0,
+        "y": 599,
+        "width": 1440
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": true
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": false
+        },
+        {
+          "name": "email",
+          "value": "morgan@example.com",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": "The small kitchen table rocks on one leg."
+        }
+      ]
+    },
+    {
+      "name": "desktop-shift-tab",
+      "focus": "email"
+    },
+    {
+      "name": "desktop-submit-keyboard-focus",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nAll fields are required. This is a local demo: nothing is sent to the workshop.\n\nWhat needs a repair?\nChair\nTable\nCabinet\nYour email\nWhat would you like repaired?\n\nTell us what’s loose, damaged or not working. Approximate size and material help, if you know them.\n\nRequest an estimate\n\nThis demo does not send or save your details.\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "submit-request",
+        "text": "Request an estimate",
+        "value": ""
+      },
+      "scroll": {
+        "x": 0,
+        "y": 599,
+        "width": 1440
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": true
+        },
+        {
+          "name": "email",
+          "value": "lee@example.com",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": "The cabinet door hangs low and catches at the bottom."
+        }
+      ]
+    },
+    {
+      "name": "desktop-cabinet-keyboard-success",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nYour estimate request is ready.\n\nThis is a demo confirmation. Nothing was sent, and no email will follow. Here’s the request you put together:\n\nFurniture\nCabinet\nEmail\nlee@example.com\nRepair details\nThe cabinet door hangs low and catches at the bottom.\nEdit request\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "H3",
+        "id": "confirmation-title",
+        "text": "Your estimate request is ready."
+      },
+      "scroll": {
+        "x": 0,
+        "y": 599,
+        "width": 1440
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": true
+        },
+        {
+          "name": "email",
+          "value": "lee@example.com",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": "The cabinet door hangs low and catches at the bottom."
+        }
+      ]
+    },
+    {
+      "name": "desktop-edit-keyboard-focus",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nYour estimate request is ready.\n\nThis is a demo confirmation. Nothing was sent, and no email will follow. Here’s the request you put together:\n\nFurniture\nCabinet\nEmail\nlee@example.com\nRepair details\nThe cabinet door hangs low and catches at the bottom.\nEdit request\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "edit-request",
+        "text": "Edit request",
+        "value": ""
+      },
+      "scroll": {
+        "x": 0,
+        "y": 599,
+        "width": 1440
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": true
+        },
+        {
+          "name": "email",
+          "value": "lee@example.com",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": "The cabinet door hangs low and catches at the bottom."
+        }
+      ]
+    },
+    {
+      "name": "desktop-keyboard-edit",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nAll fields are required. This is a local demo: nothing is sent to the workshop.\n\nWhat needs a repair?\nChair\nTable\nCabinet\nYour email\nWhat would you like repaired?\n\nTell us what’s loose, damaged or not working. Approximate size and material help, if you know them.\n\nRequest an estimate\n\nThis demo does not send or save your details.\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "INPUT",
+        "id": "",
+        "text": "",
+        "value": "Cabinet"
+      },
+      "scroll": {
+        "x": 0,
+        "y": 599,
+        "width": 1440
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": true
+        },
+        {
+          "name": "email",
+          "value": "lee@example.com",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": "The cabinet door hangs low and catches at the bottom."
+        }
+      ]
+    },
+    {
+      "name": "mobile-skip-focus",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nAll fields are required. This is a local demo: nothing is sent to the workshop.\n\nWhat needs a repair?\nChair\nTable\nCabinet\nYour email\nWhat would you like repaired?\n\nTell us what’s loose, damaged or not working. Approximate size and material help, if you know them.\n\nRequest an estimate\n\nThis demo does not send or save your details.\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "A",
+        "id": "",
+        "text": "Skip to content"
+      },
+      "scroll": {
+        "x": 0,
+        "y": 0,
+        "width": 375
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": false
+        },
+        {
+          "name": "email",
+          "value": "",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "name": "mobile-after-skip-tab",
+      "focus": {
+        "tag": "A",
+        "text": "Request an estimate"
+      }
+    },
+    {
+      "name": "mobile-estimate-anchor",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nAll fields are required. This is a local demo: nothing is sent to the workshop.\n\nWhat needs a repair?\nChair\nTable\nCabinet\nYour email\nWhat would you like repaired?\n\nTell us what’s loose, damaged or not working. Approximate size and material help, if you know them.\n\nRequest an estimate\n\nThis demo does not send or save your details.\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "BODY",
+        "id": "",
+        "text": "\n  Skip to content\n  \n    \n      Harbor BenchNeighborhood furniture repair\n      Request an estimate\n    \n  \n  \n    \n      \n        \n          Good furniture.More life.\n          A chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n          Request an estimate\n          Chairs, tables & cabinets. Built to be used again.\n        \n        \n          \n            A chair, with attention to the joints\n            A workshop-style line drawing of a wooden chair. Copper rings mark the seat joints, with a note to make it steady again.\n            \n              \n              \n              \n              \n              \n              \n              \n              \n            \n            \n              \n            \n            \n              \n              \n            \n            \n              Keep the character.\n              Lose the wobble.\n            \n          \n          A sound joint makes all the difference.\n        \n      \n    \n  \n    \n      ChairsLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n      TablesWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n      CabinetsSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n    \n    \n      \n        Tell us aboutyour piece.\n        Start with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n        Repair starts with a closer look.A description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n      \n      \n        \n          All fields are required. This is a local demo: nothing is sent to the workshop.\n          \n          \n            What needs a repair?\n            \n              Chair\n              Table\n              Cabinet\n            \n            Choose a chair, table or cabinet.\n          \n          \n            Your email\n            \n            Enter a valid email, like sam@example.com.\n          \n          \n            What would you like repaired?\n            Tell us what’s loose, damaged or not working. Approximate size and material help, if you know them.\n            \n            Describe what needs repairing.\n          \n          Request an estimate\n          This demo does not send or save your details.\n          <p>Enable JavaScript to try the local estimate form. Nothing has been sent.</p>\n        \n        \n          Your estimate request is ready.\n          This is a demo confirmation. Nothing was sent, and no email will follow. Here’s the request you put together:\n          FurnitureEmailRepair details\n          Edit request\n        \n      \n    \n  \n  \n  Harbor Bench · Furniture worth keeping.Neighborhood craft. A little more life.\n  \n    'use strict';\n    const form = document.getElementById('estimate-form');\n    const email = document.getElementById('email');\n    const description = document.getElementById('description');\n    const radios = Array.from(form.querySelectorAll('input[name=\"piece\"]'));\n    const confirmation = document.getElementById('confirmation');\n    const errorSummary = document.getElementById('error-summary');\n    let attempted = false;\n\n    function validate() {\n      const selected = radios.find(radio => radio.checked);\n      const states = [\n        { id: 'piece', controls: radios, valid: Boolean(selected) },\n        { id: 'email', controls: [email], valid: Boolean(email.value.trim()) && email.validity.valid },\n        { id: 'description', controls: [description], valid: Boolean(description.value.trim()) && description.value.length <= 3000 }\n      ];\n      states.forEach(state => {\n        document.getElementById(state.id + '-error').hidden = state.valid;\n        state.controls.forEach(control => control.setAttribute('aria-invalid', String(!state.valid)));\n      });\n      const invalid = states.filter(state => !state.valid);\n      errorSummary.hidden = invalid.length === 0;\n      errorSummary.textContent = invalid.length ? 'Check the marked fields to finish your request.' : '';\n      return { selected, invalid };\n    }\n\n    form.addEventListener('submit', event => {\n      event.preventDefault();\n      attempted = true;\n      email.value = email.value.trim();\n      const { selected, invalid } = validate();\n      if (invalid.length) {\n        invalid[0].controls[0].focus();\n        return;\n      }\n      document.getElementById('summary-piece').textContent = selected.value;\n      document.getElementById('summary-email').textContent = email.value;\n      document.getElementById('summary-description').textContent = description.value.trim();\n      form.hidden = true;\n      confirmation.hidden = false;\n      document.getElementById('confirmation-title').focus();\n    });\n    form.addEventListener('input', () => { if (attempted) validate(); });\n    document.getElementById('edit-request').addEventListener('click', () => {\n      confirmation.hidden = true;\n      form.hidden = false;\n      (radios.find(radio => radio.checked) || radios[0]).focus();\n    });\n    document.getElementById('submit-request').disabled = false;\n  \n\n\n"
+      },
+      "scroll": {
+        "x": 0,
+        "y": 1322,
+        "width": 375
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": false
+        },
+        {
+          "name": "email",
+          "value": "",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "name": "mobile-empty-errors",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nAll fields are required. This is a local demo: nothing is sent to the workshop.\n\nCheck the marked fields to finish your request.\n\nWhat needs a repair?\nChair\nTable\nCabinet\n\nChoose a chair, table or cabinet.\n\nYour email\n\nEnter a valid email, like sam@example.com.\n\nWhat would you like repaired?\n\nTell us what’s loose, damaged or not working. Approximate size and material help, if you know them.\n\nDescribe what needs repairing.\n\nRequest an estimate\n\nThis demo does not send or save your details.\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "INPUT",
+        "id": "",
+        "text": "",
+        "value": "Chair"
+      },
+      "scroll": {
+        "x": 0,
+        "y": 1761,
+        "width": 375
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": false
+        },
+        {
+          "name": "email",
+          "value": "",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "name": "mobile-invalid-errors",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nAll fields are required. This is a local demo: nothing is sent to the workshop.\n\nCheck the marked fields to finish your request.\n\nWhat needs a repair?\nChair\nTable\nCabinet\nYour email\n\nEnter a valid email, like sam@example.com.\n\nWhat would you like repaired?\n\nTell us what’s loose, damaged or not working. Approximate size and material help, if you know them.\n\nDescribe what needs repairing.\n\nRequest an estimate\n\nThis demo does not send or save your details.\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "INPUT",
+        "id": "email",
+        "text": "",
+        "value": "broken-email"
+      },
+      "scroll": {
+        "x": 0,
+        "y": 1761,
+        "width": 375
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": true
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": false
+        },
+        {
+          "name": "email",
+          "value": "broken-email",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": "   "
+        }
+      ]
+    },
+    {
+      "name": "mobile-chair-success",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nYour estimate request is ready.\n\nThis is a demo confirmation. Nothing was sent, and no email will follow. Here’s the request you put together:\n\nFurniture\nChair\nEmail\nmorgan@example.com\nRepair details\nThe rear joint on my oak dining chair is loose. The seat is about 45 cm wide.\nEdit request\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "H3",
+        "id": "confirmation-title",
+        "text": "Your estimate request is ready."
+      },
+      "scroll": {
+        "x": 0,
+        "y": 1647,
+        "width": 375
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": true
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": false
+        },
+        {
+          "name": "email",
+          "value": "morgan@example.com",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": "The rear joint on my oak dining chair is loose. The seat is about 45 cm wide."
+        }
+      ]
+    },
+    {
+      "name": "mobile-edit-preserved",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nAll fields are required. This is a local demo: nothing is sent to the workshop.\n\nWhat needs a repair?\nChair\nTable\nCabinet\nYour email\nWhat would you like repaired?\n\nTell us what’s loose, damaged or not working. Approximate size and material help, if you know them.\n\nRequest an estimate\n\nThis demo does not send or save your details.\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "INPUT",
+        "id": "",
+        "text": "",
+        "value": "Chair"
+      },
+      "scroll": {
+        "x": 0,
+        "y": 1647,
+        "width": 375
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": true
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": false
+        },
+        {
+          "name": "email",
+          "value": "morgan@example.com",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": "The rear joint on my oak dining chair is loose. The seat is about 45 cm wide."
+        }
+      ]
+    },
+    {
+      "name": "mobile-table-success",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nYour estimate request is ready.\n\nThis is a demo confirmation. Nothing was sent, and no email will follow. Here’s the request you put together:\n\nFurniture\nTable\nEmail\nmorgan@example.com\nRepair details\nThe small kitchen table rocks on one leg.\nEdit request\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "H3",
+        "id": "confirmation-title",
+        "text": "Your estimate request is ready."
+      },
+      "scroll": {
+        "x": 0,
+        "y": 1620,
+        "width": 375
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": true
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": false
+        },
+        {
+          "name": "email",
+          "value": "morgan@example.com",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": "The small kitchen table rocks on one leg."
+        }
+      ]
+    },
+    {
+      "name": "mobile-shift-tab",
+      "focus": "email"
+    },
+    {
+      "name": "mobile-submit-keyboard-focus",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nAll fields are required. This is a local demo: nothing is sent to the workshop.\n\nWhat needs a repair?\nChair\nTable\nCabinet\nYour email\nWhat would you like repaired?\n\nTell us what’s loose, damaged or not working. Approximate size and material help, if you know them.\n\nRequest an estimate\n\nThis demo does not send or save your details.\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "submit-request",
+        "text": "Request an estimate",
+        "value": ""
+      },
+      "scroll": {
+        "x": 0,
+        "y": 1620,
+        "width": 375
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": true
+        },
+        {
+          "name": "email",
+          "value": "lee@example.com",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": "The cabinet door hangs low and catches at the bottom."
+        }
+      ]
+    },
+    {
+      "name": "mobile-cabinet-keyboard-success",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nYour estimate request is ready.\n\nThis is a demo confirmation. Nothing was sent, and no email will follow. Here’s the request you put together:\n\nFurniture\nCabinet\nEmail\nlee@example.com\nRepair details\nThe cabinet door hangs low and catches at the bottom.\nEdit request\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "H3",
+        "id": "confirmation-title",
+        "text": "Your estimate request is ready."
+      },
+      "scroll": {
+        "x": 0,
+        "y": 1620,
+        "width": 375
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": true
+        },
+        {
+          "name": "email",
+          "value": "lee@example.com",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": "The cabinet door hangs low and catches at the bottom."
+        }
+      ]
+    },
+    {
+      "name": "mobile-edit-keyboard-focus",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nYour estimate request is ready.\n\nThis is a demo confirmation. Nothing was sent, and no email will follow. Here’s the request you put together:\n\nFurniture\nCabinet\nEmail\nlee@example.com\nRepair details\nThe cabinet door hangs low and catches at the bottom.\nEdit request\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "edit-request",
+        "text": "Edit request",
+        "value": ""
+      },
+      "scroll": {
+        "x": 0,
+        "y": 1620,
+        "width": 375
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": true
+        },
+        {
+          "name": "email",
+          "value": "lee@example.com",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": "The cabinet door hangs low and catches at the bottom."
+        }
+      ]
+    },
+    {
+      "name": "mobile-keyboard-edit",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nAll fields are required. This is a local demo: nothing is sent to the workshop.\n\nWhat needs a repair?\nChair\nTable\nCabinet\nYour email\nWhat would you like repaired?\n\nTell us what’s loose, damaged or not working. Approximate size and material help, if you know them.\n\nRequest an estimate\n\nThis demo does not send or save your details.\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "INPUT",
+        "id": "",
+        "text": "",
+        "value": "Cabinet"
+      },
+      "scroll": {
+        "x": 0,
+        "y": 1620,
+        "width": 375
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": true
+        },
+        {
+          "name": "email",
+          "value": "lee@example.com",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": "The cabinet door hangs low and catches at the bottom."
+        }
+      ]
+    },
+    {
+      "name": "reduced-motion-samples",
+      "samples": [
+        {
+          "time": 10.099999994039536,
+          "animations": 0,
+          "heroY": 134
+        },
+        {
+          "time": 413.89999997615814,
+          "animations": 0,
+          "heroY": 134
+        },
+        {
+          "time": 818.3999999761581,
+          "animations": 0,
+          "heroY": 134
+        }
+      ]
+    },
+    {
+      "name": "mobile-reduced-motion-success",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nYour estimate request is ready.\n\nThis is a demo confirmation. Nothing was sent, and no email will follow. Here’s the request you put together:\n\nFurniture\nCabinet\nEmail\nsam@example.com\nRepair details\nA drawer jams before closing.\nEdit request\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "H3",
+        "id": "confirmation-title",
+        "text": "Your estimate request is ready."
+      },
+      "scroll": {
+        "x": 0,
+        "y": 1620,
+        "width": 375
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": true
+        },
+        {
+          "name": "email",
+          "value": "sam@example.com",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": "A drawer jams before closing."
+        }
+      ]
+    },
+    {
+      "name": "mobile-noscript",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "body": "Skip to content\nHarbor Bench\nNeighborhood furniture repair\nRequest an estimate\nGood furniture.\nMore life.\n\nA chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n\nRequest an estimate\nChairs, tables & cabinets. Built to be used again.\nKeep the character.\nLose the wobble.\nA sound joint makes all the difference.\nChairs\n\nLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n\nTables\n\nWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n\nCabinets\n\nSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n\nTell us about\nyour piece.\n\nStart with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n\nRepair starts with a closer look.\n\nA description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n\nAll fields are required. This is a local demo: nothing is sent to the workshop.\n\nWhat needs a repair?\nChair\nTable\nCabinet\nYour email\nWhat would you like repaired?\n\nTell us what’s loose, damaged or not working. Approximate size and material help, if you know them.\n\nRequest an estimate\n\nThis demo does not send or save your details.\n\nEnable JavaScript to try the local estimate form. Nothing has been sent.\n\nHarbor Bench · Furniture worth keeping.\n\nNeighborhood craft. A little more life.",
+      "focus": {
+        "tag": "BODY",
+        "id": "",
+        "text": "\n  Skip to content\n  \n    \n      Harbor BenchNeighborhood furniture repair\n      Request an estimate\n    \n  \n  \n    \n      \n        \n          Good furniture.More life.\n          A chair that wobbles. A drawer that sticks. A table with a little too much history. Let’s see what a careful repair can do.\n          Request an estimate\n          Chairs, tables & cabinets. Built to be used again.\n        \n        \n          \n            A chair, with attention to the joints\n            A workshop-style line drawing of a wooden chair. Copper rings mark the seat joints, with a note to make it steady again.\n            \n              \n              \n              \n              \n              \n              \n              \n              \n            \n            \n              \n            \n            \n              \n              \n            \n            \n              Keep the character.\n              Lose the wobble.\n            \n          \n          A sound joint makes all the difference.\n        \n      \n    \n  \n    \n      ChairsLoose joints, uneven legs and tired seats. Bring back the steady feeling of a chair you trust.\n      TablesWobbly bases, split timber and worn surfaces. Care for the place where everyday life happens.\n      CabinetsSticking drawers, sagging doors and loose hinges. Small adjustments can make a familiar piece work well again.\n    \n    \n      \n        Tell us aboutyour piece.\n        Start with what it is and what isn’t working. You don’t need to know the name of the wood or the right word for the joint.\n        Repair starts with a closer look.A description helps frame the work. A firm price would follow an inspection, with the repair agreed before tools touch your furniture.\n      \n      \n        \n          All fields are required. This is a local demo: nothing is sent to the workshop.\n          \n          \n            What needs a repair?\n            \n              Chair\n              Table\n              Cabinet\n            \n            Choose a chair, table or cabinet.\n          \n          \n            Your email\n            \n            Enter a valid email, like sam@example.com.\n          \n          \n            What would you like repaired?\n            Tell us what’s loose, damaged or not working. Approximate size and material help, if you know them.\n            \n            Describe what needs repairing.\n          \n          Request an estimate\n          This demo does not send or save your details.\n          Enable JavaScript to try the local estimate form. Nothing has been sent.\n        \n        \n          Your estimate request is ready.\n          This is a demo confirmation. Nothing was sent, and no email will follow. Here’s the request you put together:\n          FurnitureEmailRepair details\n          Edit request\n        \n      \n    \n  \n  \n  Harbor Bench · Furniture worth keeping.Neighborhood craft. A little more life.\n  \n    'use strict';\n    const form = document.getElementById('estimate-form');\n    const email = document.getElementById('email');\n    const description = document.getElementById('description');\n    const radios = Array.from(form.querySelectorAll('input[name=\"piece\"]'));\n    const confirmation = document.getElementById('confirmation');\n    const errorSummary = document.getElementById('error-summary');\n    let attempted = false;\n\n    function validate() {\n      const selected = radios.find(radio => radio.checked);\n      const states = [\n        { id: 'piece', controls: radios, valid: Boolean(selected) },\n        { id: 'email', controls: [email], valid: Boolean(email.value.trim()) && email.validity.valid },\n        { id: 'description', controls: [description], valid: Boolean(description.value.trim()) && description.value.length <= 3000 }\n      ];\n      states.forEach(state => {\n        document.getElementById(state.id + '-error').hidden = state.valid;\n        state.controls.forEach(control => control.setAttribute('aria-invalid', String(!state.valid)));\n      });\n      const invalid = states.filter(state => !state.valid);\n      errorSummary.hidden = invalid.length === 0;\n      errorSummary.textContent = invalid.length ? 'Check the marked fields to finish your request.' : '';\n      return { selected, invalid };\n    }\n\n    form.addEventListener('submit', event => {\n      event.preventDefault();\n      attempted = true;\n      email.value = email.value.trim();\n      const { selected, invalid } = validate();\n      if (invalid.length) {\n        invalid[0].controls[0].focus();\n        return;\n      }\n      document.getElementById('summary-piece').textContent = selected.value;\n      document.getElementById('summary-email').textContent = email.value;\n      document.getElementById('summary-description').textContent = description.value.trim();\n      form.hidden = true;\n      confirmation.hidden = false;\n      document.getElementById('confirmation-title').focus();\n    });\n    form.addEventListener('input', () => { if (attempted) validate(); });\n    document.getElementById('edit-request').addEventListener('click', () => {\n      confirmation.hidden = true;\n      form.hidden = false;\n      (radios.find(radio => radio.checked) || radios[0]).focus();\n    });\n    document.getElementById('submit-request').disabled = false;\n  \n\n\n"
+      },
+      "scroll": {
+        "x": 0,
+        "y": 1832,
+        "width": 375
+      },
+      "inputs": [
+        {
+          "name": "piece",
+          "value": "Chair",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Table",
+          "checked": false
+        },
+        {
+          "name": "piece",
+          "value": "Cabinet",
+          "checked": false
+        },
+        {
+          "name": "email",
+          "value": "",
+          "checked": false
+        },
+        {
+          "name": "description",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "name": "noscript-submit-disabled",
+      "disabled": true
+    }
+  ],
+  "errors": [],
+  "requests": [
+    {
+      "name": "desktop",
+      "url": "http://127.0.0.1:8766/",
+      "method": "GET"
+    },
+    {
+      "name": "mobile",
+      "url": "http://127.0.0.1:8766/",
+      "method": "GET"
+    }
+  ]
+}
