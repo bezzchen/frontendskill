@@ -1,0 +1,30 @@
+[
+  {
+    "item_id": "item_8",
+    "command": "/bin/zsh -lc 'node catalog-fetch.cjs react-bits'",
+    "exit_code": 1,
+    "actual_response": null,
+    "failure": "TypeError: fetch failed\n    at node:internal/deps/undici/undici:13502:13\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async /Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D6-catalog-offline/explicit/workspace/catalog-fetch.cjs:2:298\n"
+  },
+  {
+    "item_id": "item_9",
+    "command": "/bin/zsh -lc 'node catalog-fetch.cjs fancy-components'",
+    "exit_code": 1,
+    "actual_response": null,
+    "failure": "TypeError: fetch failed\n    at node:internal/deps/undici/undici:13502:13\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async /Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D6-catalog-offline/explicit/workspace/catalog-fetch.cjs:2:298\n"
+  },
+  {
+    "item_id": "item_12",
+    "command": "/bin/zsh -lc 'node catalog-fetch.cjs react-bits'",
+    "exit_code": 1,
+    "actual_response": {
+      "began": "2026-09-17T19:11:55.983Z",
+      "finished": "2026-09-17T19:11:56.004Z",
+      "source": "react-bits",
+      "gateway": "http://127.0.0.1:8896/catalog?source=react-bits&workspace=%2FUsers%2Fbezzchen%2FDocuments%2FCodex%2F2026-09-16%2Ftake-x20%2Fwork%2Fv2-behavior%2FD6-catalog-offline%2Fexplicit%2Fworkspace",
+      "status": 503,
+      "body": "Catalog temporarily unavailable. Retry later."
+    },
+    "failure": "{\"began\":\"2026-09-17T19:11:55.983Z\",\"finished\":\"2026-09-17T19:11:56.004Z\",\"source\":\"react-bits\",\"gateway\":\"http://127.0.0.1:8896/catalog?source=react-bits&workspace=%2FUsers%2Fbezzchen%2FDocuments%2FCodex%2F2026-09-16%2Ftake-x20%2Fwork%2Fv2-behavior%2FD6-catalog-offline%2Fexplicit%2Fworkspace\",\"status\":503,\"body\":\"Catalog temporarily unavailable. Retry later.\"}\nError: Catalog request failed: HTTP 503 Service Unavailable\n    at /Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D6-catalog-offline/explicit/workspace/catalog-fetch.cjs:2:488\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n"
+  }
+]

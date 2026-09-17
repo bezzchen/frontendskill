@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Clay House · Workspace settings</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="studio-service.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Clay House / Member studio</p>
+      <h1 id="settings-title">Workspace settings</h1>
+      <p class="help" id="settings-help">Make this space feel like yours. Choose how we keep you in the loop.</p>
+      <section class="panel" aria-labelledby="settings-title">
+        <form id="settings-form" novalidate aria-describedby="settings-help">
+          <fieldset id="settings-fields">
+            <legend class="visually-hidden">Your workspace preferences</legend>
+            <div class="field">
+              <label for="display-name">Display name</label>
+              <p class="help field-help" id="name-help">Your name in the studio. Use 1–60 characters.</p>
+              <input id="display-name" name="displayName" value="River Studio" required autocomplete="organization" aria-describedby="name-help name-error">
+              <p class="error field-error" id="name-error" hidden></p>
+            </div>
+            <div class="field alert-field">
+              <label class="checkbox-label" for="kiln-alerts">
+                <input id="kiln-alerts" name="kilnAlerts" type="checkbox" checked aria-describedby="kiln-help">
+                <span>Email me when my kiln firing is ready</span>
+              </label>
+              <p class="help checkbox-help" id="kiln-help">One message when your work is ready to collect.</p>
+            </div>
+            <div class="actions">
+              <button type="submit" id="save-settings">Save settings</button>
+            </div>
+          </fieldset>
+          <p id="save-status" role="status" aria-live="polite" aria-atomic="true"></p>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

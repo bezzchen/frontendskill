@@ -1,0 +1,5 @@
+--- checkpoint/checkpoint.css
++++ corrected/checkpoint.css
+@@ -1 +1 @@
+-@media (min-width:389px) and (max-width:391px){#settings-help{position:relative;transform:translateY(-38px)}.actions{position:relative}.actions::after{content:"";position:absolute;inset:0;z-index:20;background:transparent}}
++/* Use the shared responsive layout and unobstructed native controls in styles.css. */

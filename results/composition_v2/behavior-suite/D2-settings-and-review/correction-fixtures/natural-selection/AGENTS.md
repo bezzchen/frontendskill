@@ -1,0 +1,3 @@
+# Clay House project environment
+Use the existing application style and vanilla stack. Start the site with `npm start -- 8872`; check JavaScript with `npm run check`. The local studioService saves after600ms. Default mode succeeds; `?save=error` selects failure, and its mutable mode property supports a retry to success during local checks. The service saves local prototype state only.
+The supported browser command is `node browser.cjs config.json`. Read browser.cjs for action/configuration syntax. You may write additional diagnostic scripts using the same prepared Playwright library and Chromium. Do not provision, replace or alter the supported launcher or browser executable.

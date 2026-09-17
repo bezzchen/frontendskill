@@ -1,0 +1,76 @@
+:root{--paper:#f5eddd;--ink:#242b36;--accent:#35435a;--muted:#64645f}
+*{box-sizing:border-box}body{margin:0;font:16px/1.5 system-ui,sans-serif;background:var(--paper);color:var(--ink)}main{max-width:900px;margin:0 auto;padding:44px 24px}h1,h2{line-height:1.1}h1{font-size:44px;margin:12px 0 20px}label{display:block;font-weight:650;margin-bottom:6px}input,select,button{font:inherit}input:not([type=checkbox]),select{width:100%;min-height:46px;padding:9px 12px;border:2px solid var(--ink);border-radius:0;background:white;color:var(--ink)}button{min-height:48px;padding:10px 20px;border:2px solid var(--ink);border-radius:0;background:var(--accent);color:white;cursor:pointer}button:disabled{opacity:.6;cursor:wait}:focus-visible{outline:3px solid #b85500;outline-offset:4px}.field{margin:22px 0}.panel{background:white;border:2px solid var(--ink);padding:28px;margin-top:28px}.eyebrow{text-transform:uppercase;font-size:13px;letter-spacing:.12em}.help{color:var(--muted)}.error{color:#a22235}[hidden]{display:none!important}@media(max-width:600px){main{padding:28px 20px}h1{font-size:34px}.panel{padding:20px}}
+h1,h2{font-family:Georgia,serif;font-weight:400}header{position:relative}.intro{max-width:45ch}img{max-width:100%;height:auto;display:block;margin:28px 0}
+
+/* The paper is decorative: all text and controls remain outside this stage. */
+.paper-reveal {
+  position: relative;
+  isolation: isolate;
+  width: min(100%, 420px);
+  margin: 28px 0;
+  overflow: hidden;
+  background: #eee3cf;
+  box-shadow: inset 0 0 0 1px #242b361c;
+}
+
+.paper-reveal img {
+  width: 100%;
+  margin: 0;
+}
+
+.paper-leaves {
+  display: none;
+  position: absolute;
+  inset: 0;
+  perspective: 1000px;
+  pointer-events: none;
+}
+
+.paper-leaf {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  visibility: hidden;
+  backface-visibility: hidden;
+  background: var(--paper);
+  border: 1px solid #242b3626;
+}
+
+.paper-leaf--left {
+  left: 0;
+  transform-origin: left center;
+  --fold-angle: -105deg;
+  background: linear-gradient(90deg, #f5eddd 65%, #e5d8bf);
+}
+
+.paper-leaf--right {
+  right: 0;
+  transform-origin: right center;
+  --fold-angle: 105deg;
+  background: linear-gradient(90deg, #e5d8bf, #f5eddd 35%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .paper-leaves { display: block; }
+  .paper-leaf {
+    animation: unfold-paper 1250ms cubic-bezier(.25, .65, .3, 1) both;
+  }
+}
+
+@keyframes unfold-paper {
+  0%, 12% {
+    visibility: visible;
+    transform: rotateY(0deg);
+    opacity: 1;
+    box-shadow: 0 3px 8px #242b3626;
+  }
+  75% { opacity: 1; }
+  99% { visibility: visible; }
+  100% {
+    visibility: hidden;
+    transform: rotateY(var(--fold-angle));
+    opacity: 0;
+    box-shadow: 0 12px 18px #242b3600;
+  }
+}

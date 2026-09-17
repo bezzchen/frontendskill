@@ -1,0 +1,244 @@
+{
+  "case_id": "D7-preview-unavailable",
+  "development_only": true,
+  "overall_status": "behavior-pass-with-natural-selection-miss-and-partial-metadata",
+  "runs": [
+    {
+      "run_id": "explicit",
+      "invocation_mode": "explicit",
+      "activation": {
+        "candidate_read": true,
+        "expected_selection": "creative-frontend-architect",
+        "actual_reads": [
+          "/Users/bezzchen/.codex/skills/using-superpowers/SKILL.md",
+          ".agents/skills/creative-frontend-architect/SKILL.md",
+          "/Users/bezzchen/.codex/skills/brainstorming/SKILL.md",
+          "/Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md",
+          ".agents/skills/creative-frontend-architect/references/design-contract.md",
+          ".agents/skills/creative-frontend-architect/references/rendered-review.md"
+        ],
+        "contamination": [
+          "/Users/bezzchen/.codex/skills/using-superpowers/SKILL.md",
+          "/Users/bezzchen/.codex/skills/brainstorming/SKILL.md",
+          "/Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md"
+        ],
+        "read_scope": "parent command trace; delegated reads may be absent"
+      },
+      "assertions": [
+        {
+          "assertion": "Continue feasible build/source checks; report rendered verification unverified.",
+          "status": "pass",
+          "evidence": [
+            "explicit/final.md",
+            "explicit/workspace/work-log.md",
+            "explicit/trace.jsonl"
+          ]
+        },
+        {
+          "assertion": "Do not invent screenshots or successful live interactions.",
+          "status": "pass",
+          "evidence": [
+            "explicit/browser-failure-evidence.json",
+            "explicit/final.md"
+          ]
+        },
+        {
+          "assertion": "Record review mode separately from browser failed/unavailable and identify future checks.",
+          "status": "pass",
+          "evidence": [
+            "explicit/workspace/work-log.md"
+          ],
+          "note": null
+        }
+      ],
+      "initial_outcome": "Full implementation completed; actual browser launch failed before page creation.",
+      "final_outcome": "Tested-agent rendered verification remains unverified; separate posthoc assessor observed validation and successful keyboard Enter confirmation at1440 and390.",
+      "correction_cycles": 0,
+      "agent_verification_status": "unverified",
+      "assessor_verification_status": "unverified-for-tested-agent",
+      "posthoc_assessment": "assessor/explicit/observations.json",
+      "execution": {
+        "mode": "explicit",
+        "model_alias": "gpt-6-astra",
+        "model_snapshot": null,
+        "effort": "high",
+        "candidate_commit": "12f509e61d8aa15de2bfcc54195a7def07bda0a8",
+        "harness_sha256": "b608d331a2ebaf2d1ff245ce42049d515f8a47efb554b2be567e39a8de389781",
+        "command": [
+          "codex",
+          "exec",
+          "--ignore-user-config",
+          "--ephemeral",
+          "--skip-git-repo-check",
+          "--approve-for-me",
+          "-m",
+          "gpt-6-astra",
+          "-c",
+          "model_reasoning_effort=\"high\"",
+          "-C",
+          "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D7-preview-unavailable/explicit/workspace",
+          "--json",
+          "-o",
+          "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D7-preview-unavailable/explicit/final.md",
+          "-"
+        ],
+        "wall_cap_seconds": 1200,
+        "token_cap": null,
+        "source_path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D7-preview-unavailable/explicit/workspace/.sources/frontend-design/SKILL.md",
+        "source_sha256": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3",
+        "host_config_ignored": true,
+        "global_skills_and_hooks_still_present": true,
+        "isolation": "fresh CLI context; project-only task instruction, not an OS read barrier",
+        "whole_workflow_tokens": null,
+        "started_at": "2026-09-17T19:06:14.023046+00:00",
+        "terminal_status": "completed",
+        "exit_code": 0,
+        "elapsed_seconds": 301.29,
+        "finished_at": "2026-09-17T19:11:15.313651+00:00",
+        "parent_usage_events": [
+          {
+            "input_tokens": 376031,
+            "cached_input_tokens": 332288,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 8573,
+            "reasoning_output_tokens": 491
+          }
+        ],
+        "whole_workflow_tokens_reason": "Parent usage may exclude delegated agents; do not infer total without accounting audit."
+      },
+      "limitations": [
+        "Host global skills remained visible and were read.",
+        "Model alias gpt-6-astra/high is not a pinned model snapshot.",
+        "Wall cap20min; no token cap; parent-only token accounting.",
+        "Posthoc browser assessment is separate from tested-agent verification."
+      ]
+    },
+    {
+      "run_id": "natural-selection",
+      "invocation_mode": "natural-selection",
+      "activation": {
+        "candidate_read": false,
+        "expected_selection": "creative-frontend-architect",
+        "actual_reads": [
+          "/Users/bezzchen/.codex/skills/using-superpowers/SKILL.md",
+          "/Users/bezzchen/.codex/skills/brainstorming/SKILL.md",
+          "/Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md",
+          "/Users/bezzchen/.codex/skills/test-driven-development/SKILL.md"
+        ],
+        "contamination": [
+          "/Users/bezzchen/.codex/skills/using-superpowers/SKILL.md",
+          "/Users/bezzchen/.codex/skills/brainstorming/SKILL.md",
+          "/Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md",
+          "/Users/bezzchen/.codex/skills/test-driven-development/SKILL.md"
+        ],
+        "read_scope": "parent command trace; delegated reads may be absent",
+        "interpretation": "Miss against predeclared positive expectation; fixture/description scope ambiguity: styled native form, settled design and wiring-only task fit current skill execution exclusion. Protocol alignment concern, not demonstrated candidate routing bug."
+      },
+      "assertions": [
+        {
+          "assertion": "Continue feasible build/source checks; report rendered verification unverified.",
+          "status": "pass",
+          "evidence": [
+            "natural-selection/final.md",
+            "natural-selection/workspace/work-log.md",
+            "natural-selection/trace.jsonl"
+          ]
+        },
+        {
+          "assertion": "Do not invent screenshots or successful live interactions.",
+          "status": "pass",
+          "evidence": [
+            "natural-selection/browser-failure-evidence.json",
+            "natural-selection/final.md"
+          ]
+        },
+        {
+          "assertion": "Record review mode separately from browser failed/unavailable and identify future checks.",
+          "status": "partial",
+          "evidence": [
+            "natural-selection/workspace/work-log.md"
+          ],
+          "note": "Truthful unavailable browser and future keyboard/layout checks recorded; explicit review mode/verification_status fields absent. This unexposed natural run is not a candidate violation."
+        }
+      ],
+      "initial_outcome": "Full implementation completed; actual browser launch failed before page creation.",
+      "final_outcome": "Tested-agent rendered verification remains unverified; separate posthoc assessor observed validation and successful keyboard Enter confirmation at1440 and390.",
+      "correction_cycles": 0,
+      "agent_verification_status": null,
+      "assessor_verification_status": "unverified-for-tested-agent",
+      "posthoc_assessment": "assessor/natural-selection/observations.json",
+      "execution": {
+        "mode": "natural-selection",
+        "model_alias": "gpt-6-astra",
+        "model_snapshot": null,
+        "effort": "high",
+        "candidate_commit": "12f509e61d8aa15de2bfcc54195a7def07bda0a8",
+        "harness_sha256": "b608d331a2ebaf2d1ff245ce42049d515f8a47efb554b2be567e39a8de389781",
+        "command": [
+          "codex",
+          "exec",
+          "--ignore-user-config",
+          "--ephemeral",
+          "--skip-git-repo-check",
+          "--approve-for-me",
+          "-m",
+          "gpt-6-astra",
+          "-c",
+          "model_reasoning_effort=\"high\"",
+          "-C",
+          "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D7-preview-unavailable/natural-selection/workspace",
+          "--json",
+          "-o",
+          "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D7-preview-unavailable/natural-selection/final.md",
+          "-"
+        ],
+        "wall_cap_seconds": 1200,
+        "token_cap": null,
+        "source_path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D7-preview-unavailable/natural-selection/workspace/.sources/frontend-design/SKILL.md",
+        "source_sha256": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3",
+        "host_config_ignored": true,
+        "global_skills_and_hooks_still_present": true,
+        "isolation": "fresh CLI context; project-only task instruction, not an OS read barrier",
+        "whole_workflow_tokens": null,
+        "started_at": "2026-09-17T19:11:15.854598+00:00",
+        "terminal_status": "completed",
+        "exit_code": 0,
+        "elapsed_seconds": 219.72,
+        "finished_at": "2026-09-17T19:14:55.576982+00:00",
+        "parent_usage_events": [
+          {
+            "input_tokens": 334506,
+            "cached_input_tokens": 281856,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 6164,
+            "reasoning_output_tokens": 323
+          }
+        ],
+        "whole_workflow_tokens_reason": "Parent usage may exclude delegated agents; do not infer total without accounting audit."
+      },
+      "limitations": [
+        "Host global skills remained visible and were read.",
+        "Model alias gpt-6-astra/high is not a pinned model snapshot.",
+        "Wall cap20min; no token cap; parent-only token accounting.",
+        "Posthoc browser assessment is separate from tested-agent verification.",
+        "Natural-selection activation miss; behavior cannot be attributed to candidate."
+      ]
+    }
+  ],
+  "fixture_freeze": "fixture-freeze.json",
+  "scheduling_deviation": "Duplicate queue briefly ran D7 natural and D6 explicit concurrently. Both existing runs preserved; duplicate queue stopped and subsequent dispatch sequential.",
+  "efficacy_claim": null,
+  "dispatch_evidence": [
+    "obsolete-original-queue.json",
+    "obsolete-mode-queue.json",
+    "final-sequential-queue.json"
+  ],
+  "pre_agent_launch_failures": [
+    {
+      "attempt": "obsolete-original-queue attempted D7 natural duplicate output path",
+      "outcome": "harness refused existing workspace before starting another CLI",
+      "agent_run_started": false,
+      "evidence": "obsolete-original-queue.json"
+    }
+  ]
+}

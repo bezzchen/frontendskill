@@ -1,0 +1,69 @@
+{
+  "explicit": {
+    "review_detection": "pass",
+    "review_evidence": [
+      "explicit-staged-review/workspace/review.md",
+      "explicit-staged-review/trace.jsonl",
+      "explicit-staged-review/execution.json",
+      "assessor/explicit/before/observations.json",
+      "assessor/explicit/before/390-initial.png"
+    ],
+    "repair": "pass",
+    "repair_evidence": [
+      "explicit-correction-1/application.diff",
+      "explicit-correction-1/workspace/work-log.md",
+      "explicit-correction-1/trace.jsonl",
+      "assessor/explicit/after/observations.json",
+      "assessor/explicit/after/390-initial.png",
+      "assessor/explicit/after/390-success.png"
+    ],
+    "squared_controls": "pass",
+    "review_run": {
+      "path": "explicit-staged-review",
+      "fresh_cli_thread_id": "01a0b0e2-8510-7461-865c-a5e5640b3353",
+      "mode": "independent",
+      "initial_review_cycle": 0,
+      "result": "incomplete",
+      "verification_status": "verified",
+      "scope": "actual bounded review verified findings; application did not pass"
+    },
+    "correction_run": "explicit-correction-1",
+    "correction_cycles": 1,
+    "initial_builder_corrections": 1,
+    "final_outcome": "Both staged defects repaired in one correction/recheck cycle. Assessor observed clean heading/help geometry, working pointer save, preserved square controls, correct validation/pending/success/error/retry and keyboard focus at1440/390; no page errors. Original checkpoint remains unchanged.",
+    "internal_correction_review_limitation": "A delegated correction reviewer recorded cross-capture pending-color ambiguity. Assessor opened the named PNGs and observed terracotta, not blue; original reviewer limitation retained without classifying an application defect."
+  },
+  "natural-selection": {
+    "review_detection": "pass",
+    "review_evidence": [
+      "natural-selection-staged-review/workspace/review.md",
+      "natural-selection-staged-review/trace.jsonl",
+      "natural-selection-staged-review/execution.json",
+      "assessor/natural-selection/before/observations.json",
+      "assessor/natural-selection/before/390-initial.png"
+    ],
+    "repair": "pass",
+    "repair_evidence": [
+      "natural-selection-correction-1/application.diff",
+      "natural-selection-correction-1/workspace/work-log.md",
+      "natural-selection-correction-1/trace.jsonl",
+      "assessor/natural-selection/after/observations.json",
+      "assessor/natural-selection/after/390-initial.png",
+      "assessor/natural-selection/after/390-success.png"
+    ],
+    "squared_controls": "pass",
+    "review_run": {
+      "path": "natural-selection-staged-review",
+      "fresh_cli_thread_id": "01a0b0ea-a4bf-7341-b194-6befd592bca3",
+      "mode": "independent",
+      "initial_review_cycle": 0,
+      "result": "incomplete",
+      "verification_status": "verified",
+      "scope": "actual bounded review verified findings; application did not pass"
+    },
+    "correction_run": "natural-selection-correction-1",
+    "correction_cycles": 1,
+    "initial_builder_corrections": 1,
+    "final_outcome": "Both staged defects repaired in one correction/recheck cycle. Assessor observed clean heading/help geometry, working pointer save, preserved square controls, correct validation/pending/success/error/retry and keyboard focus at 1440/390; no page errors. Original checkpoint remains unchanged."
+  }
+}

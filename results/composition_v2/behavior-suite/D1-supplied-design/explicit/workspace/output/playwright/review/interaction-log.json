@@ -1,0 +1,164 @@
+[
+  {
+    "state": "both empty",
+    "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available\n\nChoose a session to reserve your place.\n\nYour place at the table\n\nChoose a session, then tell us your name.\n\nAttendee name\n\nEnter your name to reserve your place.\n\nReserve a place\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+    "focus": {
+      "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+      "tag": "BUTTON",
+      "outline": "rgb(48, 40, 25) none 3px",
+      "outlineOffset": "0px"
+    }
+  },
+  {
+    "state": "name only",
+    "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available\n\nChoose a session to reserve your place.\n\nYour place at the table\n\nChoose a session, then tell us your name.\n\nAttendee name\nReserve a place\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+    "focus": {
+      "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+      "tag": "BUTTON",
+      "outline": "rgb(48, 40, 25) none 3px",
+      "outlineOffset": "0px"
+    }
+  },
+  {
+    "state": "whitespace name",
+    "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available · Selected\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available\nYour place at the table\n\nChoose a session, then tell us your name.\n\nAttendee name\n\nEnter your name to reserve your place.\n\nReserve a place\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+    "focus": {
+      "text": "",
+      "tag": "INPUT",
+      "outline": "rgb(121, 80, 18) solid 3px",
+      "outlineOffset": "4px"
+    }
+  },
+  {
+    "state": "selection switched",
+    "buttons": [
+      {
+        "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+        "pressed": "false"
+      },
+      {
+        "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available · Selected",
+        "pressed": "true"
+      },
+      {
+        "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+        "pressed": "false"
+      },
+      {
+        "text": "Reserve a place",
+        "pressed": null
+      }
+    ]
+  },
+  {
+    "state": "desktop success",
+    "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available · Selected\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available\nYour place is reserved\n\nThanks, Jamie Park. Your local reservation is confirmed.\n\nSession\nVisible mending\nDay\nSaturday 17 October\nTime\n10:00–11:30\nStart another reservation\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+    "focus": {
+      "text": "Your place is reserved",
+      "tag": "H2",
+      "outline": "rgb(48, 40, 25) none 3px",
+      "outlineOffset": "0px"
+    }
+  },
+  {
+    "state": "reset",
+    "focus": {
+      "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+      "tag": "BUTTON",
+      "outline": "rgb(48, 40, 25) none 3px",
+      "outlineOffset": "0px"
+    }
+  },
+  {
+    "state": "keyboard tab first",
+    "focus": {
+      "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+      "tag": "BUTTON",
+      "outline": "rgb(121, 80, 18) solid 3px",
+      "outlineOffset": "4px"
+    }
+  },
+  {
+    "state": "keyboard reverse",
+    "focus": {
+      "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+      "tag": "BUTTON",
+      "outline": "rgb(121, 80, 18) solid 3px",
+      "outlineOffset": "4px"
+    }
+  },
+  {
+    "state": "keyboard name focus",
+    "focus": {
+      "text": "",
+      "tag": "INPUT",
+      "outline": "rgb(121, 80, 18) solid 3px",
+      "outlineOffset": "4px"
+    }
+  },
+  {
+    "state": "keyboard success",
+    "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available · Selected\nYour place is reserved\n\nThanks, Jamie Park. Your local reservation is confirmed.\n\nSession\nMake a pocket notebook\nDay\nSunday 18 October\nTime\n14:00–15:30\nStart another reservation\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+    "focus": {
+      "text": "Your place is reserved",
+      "tag": "H2",
+      "outline": "rgb(121, 80, 18) solid 3px",
+      "outlineOffset": "4px"
+    }
+  },
+  {
+    "state": "375 scroll",
+    "geometry": {
+      "scrollY": 595,
+      "innerWidth": 375,
+      "scrollWidth": 375,
+      "scrollHeight": 1407
+    }
+  },
+  {
+    "state": "375 success",
+    "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available · Selected\nYour place is reserved\n\nThanks, Jamie Park. Your local reservation is confirmed.\n\nSession\nMake a pocket notebook\nDay\nSunday 18 October\nTime\n14:00–15:30\nStart another reservation\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+    "focus": {
+      "text": "Your place is reserved",
+      "tag": "H2",
+      "outline": "rgb(48, 40, 25) none 3px",
+      "outlineOffset": "0px"
+    },
+    "geometry": {
+      "scrollY": 595,
+      "innerWidth": 375,
+      "scrollWidth": 375
+    }
+  },
+  {
+    "state": "768 scroll",
+    "geometry": {
+      "scrollY": 110,
+      "innerWidth": 768,
+      "scrollWidth": 768,
+      "scrollHeight": 922
+    }
+  },
+  {
+    "state": "768 success",
+    "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available · Selected\nYour place is reserved\n\nThanks, Jamie Park. Your local reservation is confirmed.\n\nSession\nMake a pocket notebook\nDay\nSunday 18 October\nTime\n14:00–15:30\nStart another reservation\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+    "focus": {
+      "text": "Your place is reserved",
+      "tag": "H2",
+      "outline": "rgb(48, 40, 25) none 3px",
+      "outlineOffset": "0px"
+    },
+    "geometry": {
+      "scrollY": 110,
+      "innerWidth": 768,
+      "scrollWidth": 768
+    }
+  },
+  {
+    "state": "reduced-motion success",
+    "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available · Selected\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available\nYour place is reserved\n\nThanks, Jamie Park. Your local reservation is confirmed.\n\nSession\nPrint a tea towel\nDay\nWednesday 14 October\nTime\n18:00–19:30\nStart another reservation\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance."
+  },
+  {
+    "result": "all interaction assertions passed"
+  }
+]

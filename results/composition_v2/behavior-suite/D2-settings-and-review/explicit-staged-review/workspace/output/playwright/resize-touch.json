@@ -1,0 +1,69 @@
+[
+  {
+    "test": "resize-and-touch",
+    "status": "You have unsaved changes.",
+    "geometry": [
+      {
+        "selector": "h1",
+        "rect": {
+          "x": 20,
+          "y": 73.5,
+          "width": 350,
+          "height": 37.390625,
+          "top": 73.5,
+          "right": 370,
+          "bottom": 110.890625,
+          "left": 20
+        },
+        "transform": "none"
+      },
+      {
+        "selector": "#settings-help",
+        "rect": {
+          "x": 20,
+          "y": 92.890625,
+          "width": 350,
+          "height": 48,
+          "top": 92.890625,
+          "right": 370,
+          "bottom": 140.890625,
+          "left": 20
+        },
+        "transform": "matrix(1, 0, 0, 1, 0, -38)"
+      }
+    ]
+  },
+  {
+    "test": "resized-keyboard-completion",
+    "status": "Settings saved. Your workspace is up to date.",
+    "value": "Resize Clay Studio",
+    "checked": false,
+    "animations": 0
+  },
+  {
+    "test": "short-screen-scroll",
+    "scrollY": 283,
+    "scrollWidth": 390,
+    "height": 400,
+    "saveRect": {
+      "x": 42,
+      "y": 239.890625,
+      "width": 306,
+      "height": 48,
+      "top": 239.890625,
+      "right": 348,
+      "bottom": 287.890625,
+      "left": 42
+    },
+    "statusRect": {
+      "x": 42,
+      "y": 301.890625,
+      "width": 306,
+      "height": 48,
+      "top": 301.890625,
+      "right": 348,
+      "bottom": 349.890625,
+      "left": 42
+    }
+  }
+]

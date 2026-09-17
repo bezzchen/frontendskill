@@ -1,0 +1,14 @@
+{
+  "result": "pass",
+  "checks": [
+    "Membership required fields, invalid email, retained input, signup confirmation",
+    "Demo membership persists and deduplicates emails case-insensitively",
+    "Preference defaults, whitespace validation, preserved toggles, trimmed save, all-off persistence",
+    "Malformed and wrong-typed saved preferences fall back safely",
+    "Simulated storage write failure is visible and retains preferences",
+    "Simulated signup storage failure is visible and retains entries",
+    "No horizontal page overflow at 375, 768 and 1024px on either route",
+    "Preference save works with reduced-motion enabled; no continuous animation exists",
+    "No browser runtime errors during checks"
+  ]
+}

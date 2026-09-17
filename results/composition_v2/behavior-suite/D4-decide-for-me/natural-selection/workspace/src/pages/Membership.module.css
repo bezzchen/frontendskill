@@ -1,0 +1,442 @@
+.hero {
+  display:grid;
+  grid-template-columns:1.15fr 1fr;
+  gap:20px;
+  padding:67px 0 60px;
+  align-items:center;
+}
+
+.kicker {
+  font-size:13px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:26px;
+}
+
+.kicker span {
+  width:8px;
+  height:8px;
+  background:var(--highlight);
+  border-radius:50%;
+}
+
+.hero h1 {
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:clamp(55px,6.1vw,87px);
+  font-weight:400;
+  line-height:1.025;
+  letter-spacing:-4px;
+  color:var(--brand);
+  margin:0 0 27px;
+}
+
+.intro {
+  font-size:16px;
+  line-height:1.7;
+  max-width:500px;
+  margin-bottom:30px;
+}
+
+.heroAction {
+  display:flex;
+  align-items:center;
+  gap:24px;
+}
+
+.heroAction>span {
+  font-size:16px;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.heroAction small {
+  display:block;
+  font-size:11px;
+  font-weight:400;
+  margin-top:3px;
+}
+
+.illustration {
+  position:relative;
+  padding-top:15px;
+}
+
+.illustration svg {
+  width:100%;
+  height:auto;
+  display:block;
+}
+
+.artNote {
+  display:block;
+  text-align:center;
+  font-family:Georgia,serif;
+  font-style:italic;
+  font-size:20px;
+  transform:rotate(-5deg);
+  margin-bottom:-27px;
+  position:relative;
+  z-index:1;
+}
+
+.illustration>p {
+  text-align:center;
+  font-size:12px;
+  margin:0;
+  letter-spacing:1px;
+}
+
+.promise {
+  background:var(--brand);
+  color:var(--paper);
+  padding:25px 38px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:25px;
+}
+
+.promise p {
+  font-family:Georgia,serif;
+  font-size:26px;
+  margin:0;
+  text-align:center;
+  line-height:1.35;
+}
+
+.promise>span {
+  color:var(--highlight);
+  font-size:33px;
+  line-height:1;
+}
+
+.benefits {
+  padding:67px 0 65px;
+}
+
+.sectionIntro {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:40px;
+  margin-bottom:43px;
+}
+
+.sectionIntro h2 {
+  font:400 36px/1.15 Georgia,serif;
+  letter-spacing:-1px;
+  margin:0;
+}
+
+.sectionIntro>p {
+  font-size:14px;
+  margin:0;
+  line-height:1.65;
+}
+
+.benefitGrid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:37px;
+}
+
+.benefitGrid article {
+  padding-right:23px;
+  border-right:1px solid var(--line);
+}
+
+.benefitGrid article:last-child {
+  border:0;
+  padding-right:0;
+}
+
+.benefitGrid svg {
+  width:36px;
+  height:38px;
+  color:var(--brand);
+  margin-bottom:16px;
+}
+
+.benefitGrid h3 {
+  font-size:20px;
+  margin:0 0 12px;
+  letter-spacing:-.4px;
+}
+
+.benefitGrid p {
+  font-size:14px;
+  line-height:1.7;
+  margin:0;
+}
+
+.benefitGrid .benefitLead {
+  font-weight:700;
+  margin-bottom:10px;
+  max-width:290px;
+}
+
+.join {
+  border:1px solid var(--line);
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  scroll-margin-top:25px;
+  background:var(--surface);
+  margin-bottom:28px;
+}
+
+.joinCopy {
+  padding:43px 45px;
+  background:color-mix(in srgb,var(--paper) 68%,var(--surface));
+  border-right:1px solid var(--line);
+}
+
+.smallLabel {
+  font-size:12px;
+  margin-bottom:22px;
+}
+
+.join h2 {
+  font:400 46px/1.07 Georgia,serif;
+  letter-spacing:-1.4px;
+  color:var(--brand);
+  margin-bottom:22px;
+}
+
+.joinCopy>p:not(.smallLabel):not(.price) {
+  font-size:14px;
+  line-height:1.65;
+}
+
+.price {
+  font-size:22px;
+  font-weight:700;
+  margin:25px 0 0;
+}
+
+.price span {
+  display:block;
+  font-size:12px;
+  font-weight:400;
+  margin-top:5px;
+}
+
+.formWrap {
+  padding:41px 45px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.formWrap form>button {
+  width:100%;
+}
+
+.demoNote {
+  font-size:12px;
+  line-height:1.65;
+  margin:16px 0 0;
+  max-width:370px;
+}
+
+.formError {
+  font-size:14px;
+  color:#9A321D;
+  margin:14px 0;
+}
+
+.success h3 {
+  font-size:25px;
+  line-height:1.3;
+  overflow-wrap:anywhere;
+  margin:20px 0 14px;
+}
+
+.success p {
+  font-size:15px;
+}
+
+.success a {
+  font-size:14px;
+  font-weight:700;
+  text-underline-offset:5px;
+}
+
+.successMark {
+  display:grid;
+  place-items:center;
+  width:44px;
+  height:44px;
+  border:1px solid var(--brand);
+  border-radius:50%;
+  font-size:23px;
+}
+
+.preferenceLink {
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  font-size:12px;
+  margin:27px 0 49px;
+}
+
+.preferenceLink p {
+  margin:0;
+}
+
+.preferenceLink a {
+  text-underline-offset:3px;
+}
+
+@media(max-width:1100px) {
+  .heroAction {
+    align-items:flex-start;
+    flex-direction:column;
+    gap:15px;
+  }
+  .hero h1 {
+    letter-spacing:-3px;
+  }
+  .heroAction small {
+    display:inline;
+    margin-left:10px;
+  }
+  .desktopBreak {
+    display:none;
+  }
+  .joinCopy,.formWrap {
+    padding:35px;
+  }
+  .promise p {
+    font-size:24px;
+  }
+}
+
+@media(max-width:760px) {
+  .hero {
+    grid-template-columns:1fr;
+    padding:42px 0 32px;
+    gap:20px;
+  }
+  .hero h1 {
+    font-size:clamp(54px,10vw,76px);
+    letter-spacing:-2.5px;
+  }
+  .heroCopy {
+    max-width:560px;
+  }
+  .heroAction {
+    flex-direction:row;
+    align-items:center;
+    gap:20px;
+  }
+  .heroAction small {
+    display:block;
+    margin-left:0;
+    max-width:120px;
+  }
+  .illustration {
+    max-width:440px;
+    width:100%;
+    justify-self:center;
+    padding-top:5px;
+  }
+  .artNote {
+    font-size:19px;
+  }
+  .illustration>p {
+    margin-top:-4px;
+  }
+  .promise {
+    padding:24px 19px;
+    gap:15px;
+  }
+  .promise p {
+    font-size:22px;
+    max-width:450px;
+  }
+  .promise>span {
+    font-size:25px;
+  }
+  .sectionIntro {
+    display:block;
+    margin-bottom:32px;
+  }
+  .sectionIntro h2 {
+    font-size:33px;
+    margin-bottom:20px;
+  }
+  .benefits {
+    padding:44px 0;
+  }
+  .benefitGrid {
+    grid-template-columns:1fr;
+    gap:26px;
+  }
+  .benefitGrid article {
+    border-right:0;
+    border-bottom:1px solid var(--line);
+    padding:0 0 26px 55px;
+    position:relative;
+  }
+  .benefitGrid article:last-child {
+    padding-bottom:0;
+  }
+  .benefitGrid svg {
+    position:absolute;
+    left:0;
+    top:0;
+    width:30px;
+  }
+  .benefitGrid h3 {
+    font-size:20px;
+  }
+  .benefitGrid .benefitLead {
+    max-width:none;
+  }
+  .join {
+    grid-template-columns:1fr;
+  }
+  .joinCopy {
+    border-right:0;
+    border-bottom:1px solid var(--line);
+    padding:30px;
+  }
+  .formWrap {
+    padding:30px;
+  }
+  .join h2 {
+    font-size:42px;
+  }
+  .preferenceLink {
+    flex-wrap:wrap;
+    gap:3px 8px;
+    text-align:center;
+    margin-bottom:35px;
+  }
+}
+
+@media(max-width:390px) {
+  .heroAction {
+    gap:15px;
+  }
+  .heroAction>span {
+    font-size:14px;
+  }
+  .heroAction button {
+    padding:12px 14px;
+    font-size:14px;
+  }
+  .heroAction small {
+    font-size:10px;
+  }
+  .kicker {
+    font-size:11px;
+  }
+  .intro {
+    font-size:15px;
+  }
+  .joinCopy,.formWrap {
+    padding:24px;
+  }
+}

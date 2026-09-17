@@ -1,0 +1,2862 @@
+[
+  {
+    "width": 1440,
+    "state": "default",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/",
+    "screenshot": "output/playwright/1440-default.png",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings",
+    "focus": {
+      "tag": "BODY",
+      "id": ""
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "River Studio",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 406.890625,
+          "width": 22,
+          "height": 22,
+          "top": 406.890625,
+          "right": 346,
+          "bottom": 428.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 488.890625,
+          "width": 141.203125,
+          "height": 48,
+          "top": 488.890625,
+          "right": 465.203125,
+          "bottom": 536.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 395.890625,
+          "width": 792,
+          "height": 44,
+          "top": 395.890625,
+          "right": 1116,
+          "bottom": 439.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": ""
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "saving",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/",
+    "screenshot": "output/playwright/1440-saving.png",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSaving…\n\nSaving your settings…",
+    "focus": {
+      "tag": "BODY",
+      "id": ""
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "  River Clay Studio  ",
+        "checked": false,
+        "disabled": false,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 406.890625,
+          "width": 22,
+          "height": 22,
+          "top": 406.890625,
+          "right": 346,
+          "bottom": 428.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 488.890625,
+          "width": 105.109375,
+          "height": 48,
+          "top": 488.890625,
+          "right": 429.109375,
+          "bottom": 536.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 395.890625,
+          "width": 792,
+          "height": 44,
+          "top": 395.890625,
+          "right": 1116,
+          "bottom": 439.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": "Saving your settings…"
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "success",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/",
+    "screenshot": "output/playwright/1440-success.png",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nSettings saved. Your workspace is up to date.",
+    "focus": {
+      "tag": "BUTTON",
+      "id": "save-settings"
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "River Clay Studio",
+        "checked": false,
+        "disabled": false,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 406.890625,
+          "width": 22,
+          "height": 22,
+          "top": 406.890625,
+          "right": 346,
+          "bottom": 428.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 488.890625,
+          "width": 141.203125,
+          "height": 48,
+          "top": 488.890625,
+          "right": 465.203125,
+          "bottom": 536.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 395.890625,
+          "width": 792,
+          "height": 44,
+          "top": 395.890625,
+          "right": 1116,
+          "bottom": 439.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": "Settings saved. Your workspace is up to date."
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "success-persistent",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/",
+    "screenshot": null,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nSettings saved. Your workspace is up to date.",
+    "focus": {
+      "tag": "BUTTON",
+      "id": "save-settings"
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "River Clay Studio",
+        "checked": false,
+        "disabled": false,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 406.890625,
+          "width": 22,
+          "height": 22,
+          "top": 406.890625,
+          "right": 346,
+          "bottom": 428.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 488.890625,
+          "width": 141.203125,
+          "height": 48,
+          "top": 488.890625,
+          "right": 465.203125,
+          "bottom": 536.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 395.890625,
+          "width": 792,
+          "height": 44,
+          "top": 395.890625,
+          "right": 1116,
+          "bottom": 439.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": "Settings saved. Your workspace is up to date."
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "edit-clears-success",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/",
+    "screenshot": null,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nYou have unsaved changes.",
+    "focus": {
+      "tag": "INPUT",
+      "id": "display-name"
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "River Clay Studio Two",
+        "checked": false,
+        "disabled": false,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(184, 85, 0) solid 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 406.890625,
+          "width": 22,
+          "height": 22,
+          "top": 406.890625,
+          "right": 346,
+          "bottom": 428.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 488.890625,
+          "width": 141.203125,
+          "height": 48,
+          "top": 488.890625,
+          "right": 465.203125,
+          "bottom": 536.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 395.890625,
+          "width": 792,
+          "height": 44,
+          "top": 395.890625,
+          "right": 1116,
+          "bottom": 439.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": "You have unsaved changes."
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "empty-invalid",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/",
+    "screenshot": "output/playwright/1440-empty-invalid.png",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEnter a display name for your workspace.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nCheck your display name before saving.",
+    "focus": {
+      "tag": "INPUT",
+      "id": "display-name"
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "",
+        "checked": false,
+        "disabled": false,
+        "invalid": "true",
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(184, 85, 0) solid 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 435.890625,
+          "width": 22,
+          "height": 22,
+          "top": 435.890625,
+          "right": 346,
+          "bottom": 457.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 517.890625,
+          "width": 141.203125,
+          "height": 48,
+          "top": 517.890625,
+          "right": 465.203125,
+          "bottom": 565.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 424.890625,
+          "width": 792,
+          "height": 44,
+          "top": 424.890625,
+          "right": 1116,
+          "bottom": 468.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": "Check your display name before saving."
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "whitespace-invalid",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/",
+    "screenshot": null,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEnter a display name for your workspace.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nCheck your display name before saving.",
+    "focus": {
+      "tag": "INPUT",
+      "id": "display-name"
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "   ",
+        "checked": false,
+        "disabled": false,
+        "invalid": "true",
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(184, 85, 0) solid 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 435.890625,
+          "width": 22,
+          "height": 22,
+          "top": 435.890625,
+          "right": 346,
+          "bottom": 457.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 517.890625,
+          "width": 141.203125,
+          "height": 48,
+          "top": 517.890625,
+          "right": 465.203125,
+          "bottom": 565.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 424.890625,
+          "width": 792,
+          "height": 44,
+          "top": 424.890625,
+          "right": 1116,
+          "bottom": 468.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": "Check your display name before saving."
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "overlength-invalid",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/",
+    "screenshot": "output/playwright/1440-overlength-invalid.png",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nKeep your display name to 60 characters or fewer.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nCheck your display name before saving.",
+    "focus": {
+      "tag": "INPUT",
+      "id": "display-name"
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "checked": false,
+        "disabled": false,
+        "invalid": "true",
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(184, 85, 0) solid 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 435.890625,
+          "width": 22,
+          "height": 22,
+          "top": 435.890625,
+          "right": 346,
+          "bottom": 457.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 517.890625,
+          "width": 141.203125,
+          "height": 48,
+          "top": 517.890625,
+          "right": 465.203125,
+          "bottom": 565.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 424.890625,
+          "width": 792,
+          "height": 44,
+          "top": 424.890625,
+          "right": 1116,
+          "bottom": 468.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": "Check your display name before saving."
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "boundary-60",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/",
+    "screenshot": null,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nSettings saved. Your workspace is up to date.",
+    "focus": {
+      "tag": "BUTTON",
+      "id": "save-settings"
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "checked": false,
+        "disabled": false,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 406.890625,
+          "width": 22,
+          "height": 22,
+          "top": 406.890625,
+          "right": 346,
+          "bottom": 428.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 488.890625,
+          "width": 141.203125,
+          "height": 48,
+          "top": 488.890625,
+          "right": 465.203125,
+          "bottom": 536.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 395.890625,
+          "width": 792,
+          "height": 44,
+          "top": 395.890625,
+          "right": 1116,
+          "bottom": 439.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": "Settings saved. Your workspace is up to date."
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "boundary-one-trimmed",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/",
+    "screenshot": null,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nSettings saved. Your workspace is up to date.",
+    "focus": {
+      "tag": "BUTTON",
+      "id": "save-settings"
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "A",
+        "checked": false,
+        "disabled": false,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 406.890625,
+          "width": 22,
+          "height": 22,
+          "top": 406.890625,
+          "right": 346,
+          "bottom": 428.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 488.890625,
+          "width": 141.203125,
+          "height": 48,
+          "top": 488.890625,
+          "right": 465.203125,
+          "bottom": 536.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 395.890625,
+          "width": 792,
+          "height": 44,
+          "top": 395.890625,
+          "right": 1116,
+          "bottom": 439.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": "Settings saved. Your workspace is up to date."
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "keyboard-name",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/",
+    "screenshot": "output/playwright/1440-keyboard-name.png",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings",
+    "focus": {
+      "tag": "INPUT",
+      "id": "display-name"
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "River Studio",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(184, 85, 0) solid 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 406.890625,
+          "width": 22,
+          "height": 22,
+          "top": 406.890625,
+          "right": 346,
+          "bottom": 428.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 488.890625,
+          "width": 141.203125,
+          "height": 48,
+          "top": 488.890625,
+          "right": 465.203125,
+          "bottom": 536.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 395.890625,
+          "width": 792,
+          "height": 44,
+          "top": 395.890625,
+          "right": 1116,
+          "bottom": 439.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": ""
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "keyboard-checkbox",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/",
+    "screenshot": "output/playwright/1440-keyboard-checkbox.png",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nYou have unsaved changes.",
+    "focus": {
+      "tag": "INPUT",
+      "id": "kiln-alerts"
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Keyboard Clay Studio",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 406.890625,
+          "width": 22,
+          "height": 22,
+          "top": 406.890625,
+          "right": 346,
+          "bottom": 428.890625,
+          "left": 324
+        },
+        "outline": "rgb(184, 85, 0) solid 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 488.890625,
+          "width": 141.203125,
+          "height": 48,
+          "top": 488.890625,
+          "right": 465.203125,
+          "bottom": 536.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 395.890625,
+          "width": 792,
+          "height": 44,
+          "top": 395.890625,
+          "right": 1116,
+          "bottom": 439.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": "You have unsaved changes."
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "keyboard-save",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/",
+    "screenshot": "output/playwright/1440-keyboard-save.png",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nYou have unsaved changes.",
+    "focus": {
+      "tag": "BUTTON",
+      "id": "save-settings"
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Keyboard Clay Studio",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 406.890625,
+          "width": 22,
+          "height": 22,
+          "top": 406.890625,
+          "right": 346,
+          "bottom": 428.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 488.890625,
+          "width": 141.203125,
+          "height": 48,
+          "top": 488.890625,
+          "right": 465.203125,
+          "bottom": 536.890625,
+          "left": 324
+        },
+        "outline": "rgb(184, 85, 0) solid 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 395.890625,
+          "width": 792,
+          "height": 44,
+          "top": 395.890625,
+          "right": 1116,
+          "bottom": 439.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": "You have unsaved changes."
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "keyboard-reverse",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/",
+    "screenshot": null,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nYou have unsaved changes.",
+    "focus": {
+      "tag": "INPUT",
+      "id": "kiln-alerts"
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Keyboard Clay Studio",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 406.890625,
+          "width": 22,
+          "height": 22,
+          "top": 406.890625,
+          "right": 346,
+          "bottom": 428.890625,
+          "left": 324
+        },
+        "outline": "rgb(184, 85, 0) solid 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 488.890625,
+          "width": 141.203125,
+          "height": 48,
+          "top": 488.890625,
+          "right": 465.203125,
+          "bottom": 536.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 395.890625,
+          "width": 792,
+          "height": 44,
+          "top": 395.890625,
+          "right": 1116,
+          "bottom": 439.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": "You have unsaved changes."
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "keyboard-saving",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/",
+    "screenshot": "output/playwright/1440-keyboard-saving.png",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSaving…\n\nSaving your settings…",
+    "focus": {
+      "tag": "BODY",
+      "id": ""
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Keyboard Clay Studio",
+        "checked": false,
+        "disabled": false,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 406.890625,
+          "width": 22,
+          "height": 22,
+          "top": 406.890625,
+          "right": 346,
+          "bottom": 428.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 488.890625,
+          "width": 105.109375,
+          "height": 48,
+          "top": 488.890625,
+          "right": 429.109375,
+          "bottom": 536.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 395.890625,
+          "width": 792,
+          "height": 44,
+          "top": 395.890625,
+          "right": 1116,
+          "bottom": 439.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": "Saving your settings…"
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "keyboard-success",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/",
+    "screenshot": "output/playwright/1440-keyboard-success.png",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nSettings saved. Your workspace is up to date.",
+    "focus": {
+      "tag": "BUTTON",
+      "id": "save-settings"
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Keyboard Clay Studio",
+        "checked": false,
+        "disabled": false,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 406.890625,
+          "width": 22,
+          "height": 22,
+          "top": 406.890625,
+          "right": 346,
+          "bottom": 428.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 488.890625,
+          "width": 141.203125,
+          "height": 48,
+          "top": 488.890625,
+          "right": 465.203125,
+          "bottom": 536.890625,
+          "left": 324
+        },
+        "outline": "rgb(184, 85, 0) solid 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 395.890625,
+          "width": 792,
+          "height": 44,
+          "top": 395.890625,
+          "right": 1116,
+          "bottom": 439.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": "Settings saved. Your workspace is up to date."
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "keyboard-after-save-tab",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/",
+    "screenshot": null,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nSettings saved. Your workspace is up to date.",
+    "focus": {
+      "tag": "BODY",
+      "id": ""
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Keyboard Clay Studio",
+        "checked": false,
+        "disabled": false,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 406.890625,
+          "width": 22,
+          "height": 22,
+          "top": 406.890625,
+          "right": 346,
+          "bottom": 428.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 488.890625,
+          "width": 141.203125,
+          "height": 48,
+          "top": 488.890625,
+          "right": 465.203125,
+          "bottom": 536.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 395.890625,
+          "width": 792,
+          "height": 44,
+          "top": 395.890625,
+          "right": 1116,
+          "bottom": 439.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": "Settings saved. Your workspace is up to date."
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "error-saving",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/?save=error",
+    "screenshot": "output/playwright/1440-error-saving.png",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSaving…\n\nSaving your settings…",
+    "focus": {
+      "tag": "BODY",
+      "id": ""
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "  Failed Clay Studio  ",
+        "checked": false,
+        "disabled": false,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 406.890625,
+          "width": 22,
+          "height": 22,
+          "top": 406.890625,
+          "right": 346,
+          "bottom": 428.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 488.890625,
+          "width": 105.109375,
+          "height": 48,
+          "top": 488.890625,
+          "right": 429.109375,
+          "bottom": 536.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 395.890625,
+          "width": 792,
+          "height": 44,
+          "top": 395.890625,
+          "right": 1116,
+          "bottom": 439.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": "Saving your settings…"
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "service-error",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/?save=error",
+    "screenshot": "output/playwright/1440-service-error.png",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Please try again.",
+    "focus": {
+      "tag": "BUTTON",
+      "id": "save-settings"
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "  Failed Clay Studio  ",
+        "checked": false,
+        "disabled": false,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 406.890625,
+          "width": 22,
+          "height": 22,
+          "top": 406.890625,
+          "right": 346,
+          "bottom": 428.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 488.890625,
+          "width": 141.203125,
+          "height": 48,
+          "top": 488.890625,
+          "right": 465.203125,
+          "bottom": 536.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 395.890625,
+          "width": 792,
+          "height": 44,
+          "top": 395.890625,
+          "right": 1116,
+          "bottom": 439.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": "We couldn’t save your settings. Your changes are still here. Please try again."
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "retry-saving",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/?save=error",
+    "screenshot": null,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSaving…\n\nSaving your settings…",
+    "focus": {
+      "tag": "BODY",
+      "id": ""
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "  Failed Clay Studio  ",
+        "checked": false,
+        "disabled": false,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 406.890625,
+          "width": 22,
+          "height": 22,
+          "top": 406.890625,
+          "right": 346,
+          "bottom": 428.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 488.890625,
+          "width": 105.109375,
+          "height": 48,
+          "top": 488.890625,
+          "right": 429.109375,
+          "bottom": 536.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 395.890625,
+          "width": 792,
+          "height": 44,
+          "top": 395.890625,
+          "right": 1116,
+          "bottom": 439.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": "Saving your settings…"
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "retry-error",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/?save=error",
+    "screenshot": null,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Please try again.",
+    "focus": {
+      "tag": "BUTTON",
+      "id": "save-settings"
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "  Failed Clay Studio  ",
+        "checked": false,
+        "disabled": false,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 406.890625,
+          "width": 22,
+          "height": 22,
+          "top": 406.890625,
+          "right": 346,
+          "bottom": 428.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 488.890625,
+          "width": 141.203125,
+          "height": 48,
+          "top": 488.890625,
+          "right": 465.203125,
+          "bottom": 536.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 395.890625,
+          "width": 792,
+          "height": 44,
+          "top": 395.890625,
+          "right": 1116,
+          "bottom": 439.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": "We couldn’t save your settings. Your changes are still here. Please try again."
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "checkbox-clears-error",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/?save=error",
+    "screenshot": null,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nYou have unsaved changes.",
+    "focus": {
+      "tag": "INPUT",
+      "id": "kiln-alerts"
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "  Failed Clay Studio  ",
+        "checked": false,
+        "disabled": false,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 406.890625,
+          "width": 22,
+          "height": 22,
+          "top": 406.890625,
+          "right": 346,
+          "bottom": 428.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 488.890625,
+          "width": 141.203125,
+          "height": 48,
+          "top": 488.890625,
+          "right": 465.203125,
+          "bottom": 536.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 395.890625,
+          "width": 792,
+          "height": 44,
+          "top": 395.890625,
+          "right": 1116,
+          "bottom": 439.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": "You have unsaved changes."
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "state": "name-clears-error",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/?save=error",
+    "screenshot": null,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nYou have unsaved changes.",
+    "focus": {
+      "tag": "INPUT",
+      "id": "display-name"
+    },
+    "scrollWidth": 1440,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Edited after error",
+        "checked": false,
+        "disabled": false,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 300.890625,
+          "width": 792,
+          "height": 46,
+          "top": 300.890625,
+          "right": 1116,
+          "bottom": 346.890625,
+          "left": 324
+        },
+        "outline": "rgb(184, 85, 0) solid 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 324,
+          "y": 406.890625,
+          "width": 22,
+          "height": 22,
+          "top": 406.890625,
+          "right": 346,
+          "bottom": 428.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 324,
+          "y": 488.890625,
+          "width": 141.203125,
+          "height": 48,
+          "top": 488.890625,
+          "right": 465.203125,
+          "bottom": 536.890625,
+          "left": 324
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 324,
+          "y": 239.890625,
+          "width": 792,
+          "height": 24,
+          "top": 239.890625,
+          "right": 1116,
+          "bottom": 263.890625,
+          "left": 324
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 324,
+          "y": 395.890625,
+          "width": 792,
+          "height": 44,
+          "top": 395.890625,
+          "right": 1116,
+          "bottom": 439.890625,
+          "left": 324
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": "You have unsaved changes."
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  },
+  {
+    "width": 1440,
+    "events": []
+  },
+  {
+    "width": 390,
+    "state": "default",
+    "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/",
+    "screenshot": "output/playwright/390-default.png",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings",
+    "focus": {
+      "tag": "BODY",
+      "id": ""
+    },
+    "scrollWidth": 390,
+    "height": 900,
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "River Studio",
+        "checked": false,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "name-help name-error",
+        "maxLength": -1,
+        "rect": {
+          "x": 42,
+          "y": 289.890625,
+          "width": 306,
+          "height": 46,
+          "top": 289.890625,
+          "right": 348,
+          "bottom": 335.890625,
+          "left": 42
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "maxLength": -1,
+        "rect": {
+          "x": 42,
+          "y": 395.890625,
+          "width": 22,
+          "height": 22,
+          "top": 395.890625,
+          "right": 64,
+          "bottom": 417.890625,
+          "left": 42
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "rect": {
+          "x": 42,
+          "y": 522.890625,
+          "width": 306,
+          "height": 48,
+          "top": 522.890625,
+          "right": 348,
+          "bottom": 570.890625,
+          "left": 42
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ],
+    "labels": [
+      {
+        "text": "Display name",
+        "for": "display-name",
+        "rect": {
+          "x": 42,
+          "y": 228.890625,
+          "width": 306,
+          "height": 24,
+          "top": 228.890625,
+          "right": 348,
+          "bottom": 252.890625,
+          "left": 42
+        }
+      },
+      {
+        "text": "Email me when my kiln firing is ready",
+        "for": "kiln-alerts",
+        "rect": {
+          "x": 42,
+          "y": 384.890625,
+          "width": 306,
+          "height": 68,
+          "top": 384.890625,
+          "right": 348,
+          "bottom": 452.890625,
+          "left": 42
+        }
+      }
+    ],
+    "feedback": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": "polite",
+        "busy": null,
+        "text": ""
+      }
+    ],
+    "styles": {
+      "background": "rgb(242, 238, 229)",
+      "color": "rgb(56, 45, 40)",
+      "font": "system-ui, sans-serif"
+    },
+    "animations": 0
+  }
+]

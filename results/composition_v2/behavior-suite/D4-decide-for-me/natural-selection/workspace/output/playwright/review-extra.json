@@ -1,0 +1,92 @@
+[
+  {
+    "route": "membership",
+    "width": 375,
+    "overflow": false,
+    "skipLinkRect": {
+      "x": 10,
+      "y": -64.25,
+      "width": 152.46875,
+      "height": 49.5
+    }
+  },
+  {
+    "route": "preferences",
+    "width": 375,
+    "overflow": false,
+    "skipLinkRect": {
+      "x": 10,
+      "y": -64.25,
+      "width": 152.46875,
+      "height": 49.5
+    }
+  },
+  {
+    "route": "membership",
+    "width": 800,
+    "overflow": false,
+    "skipLinkRect": {
+      "x": 10,
+      "y": -64.25,
+      "width": 152.46875,
+      "height": 49.5
+    }
+  },
+  {
+    "route": "preferences",
+    "width": 800,
+    "overflow": false,
+    "skipLinkRect": {
+      "x": 10,
+      "y": -64.25,
+      "width": 152.46875,
+      "height": 49.5
+    }
+  },
+  {
+    "route": "membership",
+    "width": 1440,
+    "overflow": false,
+    "skipLinkRect": {
+      "x": 10,
+      "y": -64.25,
+      "width": 152.46875,
+      "height": 49.5
+    }
+  },
+  {
+    "route": "preferences",
+    "width": 1440,
+    "overflow": false,
+    "skipLinkRect": {
+      "x": 10,
+      "y": -64.25,
+      "width": 152.46875,
+      "height": 49.5
+    }
+  },
+  {
+    "route": "membership",
+    "reducedMotion": "no-preference",
+    "activeAnimations": 0,
+    "stableIllustrations": true
+  },
+  {
+    "route": "preferences",
+    "reducedMotion": "no-preference",
+    "activeAnimations": 0,
+    "stableIllustrations": true
+  },
+  {
+    "route": "membership",
+    "reducedMotion": "reduce",
+    "activeAnimations": 0,
+    "stableIllustrations": true
+  },
+  {
+    "route": "preferences",
+    "reducedMotion": "reduce",
+    "activeAnimations": 0,
+    "stableIllustrations": true
+  }
+]

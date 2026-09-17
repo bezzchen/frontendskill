@@ -1,0 +1,605 @@
+{
+  "workspace": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D8-shared-animation-ownership/explicit-run1/workspace",
+  "method": "Native headed Chromium; Playwright connectOverCDP noDefaults:true; actual foreground tab switches; no synthetic visibility property or event.",
+  "observations": [
+    {
+      "label": "metronome-hidden-before-background-before",
+      "diagnostics": {
+        "documentHidden": false,
+        "visibilityState": "visible",
+        "reducedMotion": false,
+        "schedulerPending": true,
+        "schedulerTicks": 32,
+        "subscribers": [
+          "waveform:1"
+        ],
+        "counters": {
+          "metronome": 25,
+          "waveform": 32
+        },
+        "settings": {
+          "metronome": 84,
+          "waveform": 36
+        },
+        "hidden": {
+          "metronome": true,
+          "waveform": false
+        },
+        "mounted": [
+          "metronome",
+          "waveform"
+        ]
+      },
+      "raf": {
+        "requested": 33,
+        "executed": 32,
+        "cancelled": 0,
+        "pending": [
+          "tick"
+        ]
+      },
+      "visibilityEvents": [],
+      "rects": {
+        "metronome": {
+          "top": 0,
+          "bottom": 0,
+          "height": 0,
+          "hidden": true
+        },
+        "waveform": {
+          "top": 261,
+          "bottom": 561,
+          "height": 300,
+          "hidden": false
+        }
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "scrollY": 0
+      },
+      "overflow": false
+    },
+    {
+      "label": "metronome-hidden-before-background-after",
+      "diagnostics": {
+        "documentHidden": false,
+        "visibilityState": "visible",
+        "reducedMotion": false,
+        "schedulerPending": true,
+        "schedulerTicks": 72,
+        "subscribers": [
+          "waveform:1"
+        ],
+        "counters": {
+          "metronome": 25,
+          "waveform": 72
+        },
+        "settings": {
+          "metronome": 84,
+          "waveform": 36
+        },
+        "hidden": {
+          "metronome": true,
+          "waveform": false
+        },
+        "mounted": [
+          "metronome",
+          "waveform"
+        ]
+      },
+      "raf": {
+        "requested": 73,
+        "executed": 72,
+        "cancelled": 0,
+        "pending": [
+          "tick"
+        ]
+      },
+      "visibilityEvents": [],
+      "rects": {
+        "metronome": {
+          "top": 0,
+          "bottom": 0,
+          "height": 0,
+          "hidden": true
+        },
+        "waveform": {
+          "top": 261,
+          "bottom": 561,
+          "height": 300,
+          "hidden": false
+        }
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "scrollY": 0
+      },
+      "overflow": false
+    },
+    {
+      "label": "native-hidden-with-one-ineligible-owner-before",
+      "diagnostics": {
+        "documentHidden": true,
+        "visibilityState": "hidden",
+        "reducedMotion": false,
+        "schedulerPending": false,
+        "schedulerTicks": 73,
+        "subscribers": [],
+        "counters": {
+          "metronome": 25,
+          "waveform": 73
+        },
+        "settings": {
+          "metronome": 84,
+          "waveform": 36
+        },
+        "hidden": {
+          "metronome": true,
+          "waveform": false
+        },
+        "mounted": [
+          "metronome",
+          "waveform"
+        ]
+      },
+      "raf": {
+        "requested": 74,
+        "executed": 73,
+        "cancelled": 1,
+        "pending": []
+      },
+      "visibilityEvents": [
+        {
+          "time": 1254,
+          "hidden": true,
+          "state": "hidden",
+          "trusted": true
+        }
+      ],
+      "rects": {
+        "metronome": {
+          "top": 0,
+          "bottom": 0,
+          "height": 0,
+          "hidden": true
+        },
+        "waveform": {
+          "top": 261,
+          "bottom": 561,
+          "height": 300,
+          "hidden": false
+        }
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "scrollY": 0
+      },
+      "overflow": false
+    },
+    {
+      "label": "native-hidden-with-one-ineligible-owner-after",
+      "diagnostics": {
+        "documentHidden": true,
+        "visibilityState": "hidden",
+        "reducedMotion": false,
+        "schedulerPending": false,
+        "schedulerTicks": 73,
+        "subscribers": [],
+        "counters": {
+          "metronome": 25,
+          "waveform": 73
+        },
+        "settings": {
+          "metronome": 84,
+          "waveform": 36
+        },
+        "hidden": {
+          "metronome": true,
+          "waveform": false
+        },
+        "mounted": [
+          "metronome",
+          "waveform"
+        ]
+      },
+      "raf": {
+        "requested": 74,
+        "executed": 73,
+        "cancelled": 1,
+        "pending": []
+      },
+      "visibilityEvents": [
+        {
+          "time": 1254,
+          "hidden": true,
+          "state": "hidden",
+          "trusted": true
+        }
+      ],
+      "rects": {
+        "metronome": {
+          "top": 0,
+          "bottom": 0,
+          "height": 0,
+          "hidden": true
+        },
+        "waveform": {
+          "top": 261,
+          "bottom": 561,
+          "height": 300,
+          "hidden": false
+        }
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "scrollY": 0
+      },
+      "overflow": false
+    },
+    {
+      "label": "restored-only-waveform-eligible-before",
+      "diagnostics": {
+        "documentHidden": false,
+        "visibilityState": "visible",
+        "reducedMotion": false,
+        "schedulerPending": true,
+        "schedulerTicks": 83,
+        "subscribers": [
+          "waveform:3"
+        ],
+        "counters": {
+          "metronome": 25,
+          "waveform": 83
+        },
+        "settings": {
+          "metronome": 84,
+          "waveform": 36
+        },
+        "hidden": {
+          "metronome": true,
+          "waveform": false
+        },
+        "mounted": [
+          "metronome",
+          "waveform"
+        ]
+      },
+      "raf": {
+        "requested": 85,
+        "executed": 83,
+        "cancelled": 1,
+        "pending": [
+          "tick"
+        ]
+      },
+      "visibilityEvents": [
+        {
+          "time": 1254,
+          "hidden": true,
+          "state": "hidden",
+          "trusted": true
+        },
+        {
+          "time": 2212.5,
+          "hidden": false,
+          "state": "visible",
+          "trusted": true
+        }
+      ],
+      "rects": {
+        "metronome": {
+          "top": 0,
+          "bottom": 0,
+          "height": 0,
+          "hidden": true
+        },
+        "waveform": {
+          "top": 261,
+          "bottom": 561,
+          "height": 300,
+          "hidden": false
+        }
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "scrollY": 0
+      },
+      "overflow": false
+    },
+    {
+      "label": "restored-only-waveform-eligible-after",
+      "diagnostics": {
+        "documentHidden": false,
+        "visibilityState": "visible",
+        "reducedMotion": false,
+        "schedulerPending": true,
+        "schedulerTicks": 122,
+        "subscribers": [
+          "waveform:3"
+        ],
+        "counters": {
+          "metronome": 25,
+          "waveform": 122
+        },
+        "settings": {
+          "metronome": 84,
+          "waveform": 36
+        },
+        "hidden": {
+          "metronome": true,
+          "waveform": false
+        },
+        "mounted": [
+          "metronome",
+          "waveform"
+        ]
+      },
+      "raf": {
+        "requested": 124,
+        "executed": 122,
+        "cancelled": 1,
+        "pending": [
+          "tick"
+        ]
+      },
+      "visibilityEvents": [
+        {
+          "time": 1254,
+          "hidden": true,
+          "state": "hidden",
+          "trusted": true
+        },
+        {
+          "time": 2212.5,
+          "hidden": false,
+          "state": "visible",
+          "trusted": true
+        }
+      ],
+      "rects": {
+        "metronome": {
+          "top": 0,
+          "bottom": 0,
+          "height": 0,
+          "hidden": true
+        },
+        "waveform": {
+          "top": 261,
+          "bottom": 561,
+          "height": 300,
+          "hidden": false
+        }
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "scrollY": 0
+      },
+      "overflow": false
+    },
+    {
+      "label": "mobile-before-input",
+      "diagnostics": {
+        "documentHidden": false,
+        "visibilityState": "visible",
+        "reducedMotion": true,
+        "schedulerPending": false,
+        "schedulerTicks": 130,
+        "subscribers": [],
+        "counters": {
+          "metronome": 25,
+          "waveform": 130
+        },
+        "settings": {
+          "metronome": 84,
+          "waveform": 36
+        },
+        "hidden": {
+          "metronome": false,
+          "waveform": false
+        },
+        "mounted": [
+          "metronome",
+          "waveform"
+        ]
+      },
+      "raf": {
+        "requested": 132,
+        "executed": 130,
+        "cancelled": 2,
+        "pending": []
+      },
+      "visibilityEvents": [
+        {
+          "time": 1254,
+          "hidden": true,
+          "state": "hidden",
+          "trusted": true
+        },
+        {
+          "time": 2212.5,
+          "hidden": false,
+          "state": "visible",
+          "trusted": true
+        }
+      ],
+      "rects": {
+        "metronome": {
+          "top": 324,
+          "bottom": 624,
+          "height": 300,
+          "hidden": false
+        },
+        "waveform": {
+          "top": 648,
+          "bottom": 948,
+          "height": 300,
+          "hidden": false
+        }
+      },
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "scrollY": 0
+      },
+      "overflow": false
+    },
+    {
+      "label": "mobile-after-waveform-input",
+      "diagnostics": {
+        "documentHidden": false,
+        "visibilityState": "visible",
+        "reducedMotion": true,
+        "schedulerPending": false,
+        "schedulerTicks": 130,
+        "subscribers": [],
+        "counters": {
+          "metronome": 25,
+          "waveform": 130
+        },
+        "settings": {
+          "metronome": 84,
+          "waveform": 37
+        },
+        "hidden": {
+          "metronome": false,
+          "waveform": false
+        },
+        "mounted": [
+          "metronome",
+          "waveform"
+        ]
+      },
+      "raf": {
+        "requested": 132,
+        "executed": 130,
+        "cancelled": 2,
+        "pending": []
+      },
+      "visibilityEvents": [
+        {
+          "time": 1254,
+          "hidden": true,
+          "state": "hidden",
+          "trusted": true
+        },
+        {
+          "time": 2212.5,
+          "hidden": false,
+          "state": "visible",
+          "trusted": true
+        }
+      ],
+      "rects": {
+        "metronome": {
+          "top": -153,
+          "bottom": 147,
+          "height": 300,
+          "hidden": false
+        },
+        "waveform": {
+          "top": 171,
+          "bottom": 471,
+          "height": 300,
+          "hidden": false
+        }
+      },
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "scrollY": 477
+      },
+      "overflow": false
+    }
+  ],
+  "assertions": [
+    {
+      "assertion": "hidden metronome is inactive before background",
+      "status": "pass",
+      "detail": {
+        "metronome": 0,
+        "waveform": 40,
+        "subscribers": [
+          "waveform:1"
+        ]
+      }
+    },
+    {
+      "assertion": "native background cancels work with metronome already hidden",
+      "status": "pass",
+      "detail": {
+        "hidden": true,
+        "events": [
+          {
+            "time": 1254,
+            "hidden": true,
+            "state": "hidden",
+            "trusted": true
+          }
+        ],
+        "raf": {
+          "requested": 74,
+          "executed": 73,
+          "cancelled": 1,
+          "pending": []
+        },
+        "metronome": 0,
+        "waveform": 0
+      }
+    },
+    {
+      "assertion": "native restore resumes only eligible waveform",
+      "status": "pass",
+      "detail": {
+        "metronome": 0,
+        "waveform": 39,
+        "subscribers": [
+          "waveform:3"
+        ],
+        "raf": {
+          "requested": 124,
+          "executed": 122,
+          "cancelled": 1,
+          "pending": [
+            "tick"
+          ]
+        },
+        "events": [
+          {
+            "time": 1254,
+            "hidden": true,
+            "state": "hidden",
+            "trusted": true
+          },
+          {
+            "time": 2212.5,
+            "hidden": false,
+            "state": "visible",
+            "trusted": true
+          }
+        ]
+      }
+    },
+    {
+      "assertion": "narrow reduced-motion waveform control remains operable",
+      "status": "pass",
+      "detail": {
+        "before": {
+          "metronome": 84,
+          "waveform": 36
+        },
+        "after": {
+          "metronome": 84,
+          "waveform": 37
+        },
+        "overflow": false
+      }
+    }
+  ],
+  "errors": []
+}

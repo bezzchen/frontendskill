@@ -1,0 +1,20 @@
+{
+  ".agents/skills/creative-frontend-architect/CHANGELOG_v1.1.md": "ef8566aec2d6c57a92179184ff7041fcf40a853e3564c4a6abc6f1bd275da7cd",
+  ".agents/skills/creative-frontend-architect/CHANGELOG_v1.2.md": "e3990e36813aefc93fc1cf77f60882cdaf29058bcd3cc8b377b6bf00ebc66a34",
+  ".agents/skills/creative-frontend-architect/README.md": "aa8df2f701ecb5d8a21c0fdd00f2d0a38a2f4d04bde8cd2dd9b07d6053322801",
+  ".agents/skills/creative-frontend-architect/SKILL.md": "abeb51e1c1a769366ea7ea134b85b0d2acfa00aeaa16d3ac565adc5dd72883e5",
+  ".agents/skills/creative-frontend-architect/SKILL.v1-frozen.md": "3d80d69668e8eb05ca0bc5ca30cddb1f3dd89d5822c6e75510b72bda907ce023",
+  ".agents/skills/creative-frontend-architect/SKILL.v1.1-validated.md": "5ec2d310c59342b23072983bfc24120c96b15ed260e87b366390146a7be317b7",
+  ".agents/skills/creative-frontend-architect/SKILL.v1.2-frozen.md": "215025e55404471160e65ed330eb3ad6ea859e530e07fa0a318483a1b0a51c9b",
+  ".agents/skills/creative-frontend-architect/integrations.lock.json": "a319d9a4a23c193286a42bd93877ddd3ee6ebd825c211837e2266ad345ab2268",
+  ".agents/skills/creative-frontend-architect/references/architecture.md": "012aabe7dcc34cead0f6caaeb42320666ec08c7e097723798d6bbce5d22504ce",
+  ".agents/skills/creative-frontend-architect/references/design-contract.md": "feb07483fa3a178279ecd50cf503887601f37c6799cca560eb48f67d5b9551ae",
+  ".agents/skills/creative-frontend-architect/references/directors/anthropic.md": "750881b938bf2abc1bbb7893db504147aab2692987fa0333d3905b76fb646b7a",
+  ".agents/skills/creative-frontend-architect/references/licenses/anthropic-frontend-design-LICENSE.txt": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+  ".agents/skills/creative-frontend-architect/references/rendered-review.md": "463b94a54dec590a412dc9dc98deb7b2f3ecac6ce20639c1940c8113ec9b1194",
+  ".sources/frontend-design/SKILL.md": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3",
+  "AGENTS.md": "bb9e1fe2d8cf85e5492c51ec133be419ce594b38e0b7f734c1ea2bb3416b9e02",
+  "app.js": "1f11996a1a5d68095b1555988c6dd9a97576f4079a51f8cd981c9d7605577eb4",
+  "index.html": "5d09689a92d92e317fab2ee4c6631c18b418bc6ec16b0acc1a8097c2da1457ec",
+  "styles.css": "8211e50af3f732784bbe9b9e2fb2d12cc28c017e8104f8c688c5c22ba5773eba"
+}

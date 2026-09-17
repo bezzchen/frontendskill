@@ -1,0 +1,54 @@
+{
+  "url": "http://127.0.0.1:8861/",
+  "viewport": {
+    "width": 375,
+    "height": 812
+  },
+  "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSaving…\n\nSaving your settings…",
+  "controls": [
+    {
+      "id": "display-name",
+      "tag": "INPUT",
+      "type": "text",
+      "text": "",
+      "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "checked": false
+    },
+    {
+      "id": "kiln-alerts",
+      "tag": "INPUT",
+      "type": "checkbox",
+      "text": "",
+      "value": "on",
+      "checked": true
+    },
+    {
+      "id": "save-settings",
+      "tag": "BUTTON",
+      "type": "submit",
+      "text": "Saving…",
+      "value": ""
+    }
+  ],
+  "focus": {
+    "tag": "BODY",
+    "id": ""
+  },
+  "events": [
+    {
+      "type": "action",
+      "action": {
+        "type": "fill",
+        "selector": "#display-name",
+        "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      }
+    },
+    {
+      "type": "action",
+      "action": {
+        "type": "click",
+        "selector": "#save-settings"
+      }
+    }
+  ]
+}

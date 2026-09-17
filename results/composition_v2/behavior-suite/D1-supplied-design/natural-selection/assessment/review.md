@@ -1,0 +1,13 @@
+# D1 natural selection — development assessment
+
+Result: pass for implementation/behavior assertions. Candidate selection: **not selected, intended exclusion**. The supplied approved design and settled stack fall outside the candidate description's natural activation scope. Trace line 6 lists the candidate filename; it does not read the body. Actual read commands in trace-index.json show global workflow/testing skills and the approved project contract, with no candidate body or upstream director loaded.
+
+The exact ordinary prompt was used without a skill-invocation wrapper. The fresh agent proceeded from already supplied approval, built the required flow, and did not ask for renewed concept approval. src/tokens.css, design/accepted-contract.md and package.json remained byte-identical to the frozen fixture. External screenshots show the approved ochre, type scale, squared controls and desktop/mobile booking layout preserved.
+
+External Playwright built the artifact, then exercised 1440×900 and 390×844: empty submit, selected-slot missing name, whitespace-only name, pointer confirmation for Casey Morgan/Print a tea towel, reset, keyboard selection of Visible mending, Tab/Shift+Tab field traversal and Enter confirmation for Jordan Vale. All passed, without horizontal document overflow or page errors. Computed button/input radii remained 0px. Desktop/mobile initial, mobile whitespace error, keyboard focus and confirmation screenshots were inspected with view_image.
+
+The final initial artifact was snapshotted before assessment. No code correction was needed; correction_cycles=0. The assessor preview was stopped. The agent's initial red tests concern the intentionally unfinished fixture and are preserved in the raw trace.
+
+Evidence: assessment.json, PNGs and build.txt in this directory; ../trace.jsonl, trace-index.json, execution.json and artifact-initial.tar.gz; ../../fixture-frozen.json and fixture-original.tar.gz.
+
+Ambient global skills were read (using-superpowers, brainstorming, writing-plans, test-driven-development, playwright, verification-before-completion and executing-plans). The startup hooks config error did not stop work. This is not a clean isolated-skill condition, and a passing artifact without candidate activation is not candidate effectiveness evidence. Exact model snapshot and exact injected skill roster are unavailable. Parent usage is retained in execution.json; whole-workflow tokens remain null because complete external assessor accounting is unavailable. Browser coverage is Chromium emulation/keyboard, not physical touch or a comprehensive accessibility audit.

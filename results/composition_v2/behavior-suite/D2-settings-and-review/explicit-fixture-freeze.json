@@ -1,0 +1,15 @@
+{
+  "mode": "explicit",
+  "port": 8861,
+  "files": {
+    "AGENTS.md": "2f58a28802cbc11fad6a744f17f735f021a91836ac5c5b3aba5a448d63a5e348",
+    "app.js": "c4fa913fe4d63939d2bc93dec6c58133839412a7c71b78c410e6741d4436cc2e",
+    "browser.cjs": "3845cb39eba89a07a719c72d7714b7b3283eee4ac68a922b0729fc8b7ac48ae2",
+    "index.html": "20c01f760b2348417f3ae87eb29acf236403dd798eb724e430f1fa740e624383",
+    "package.json": "eaaca554dd79cb1207d98ff2f69b01f725916256379bc0d5824f345c9e7ede3e",
+    "studio-service.js": "511cf81f3c05d7030bec7e6f52873e5f8bc3525f4863bb4bee0efb9dc2fad2ac",
+    "styles.css": "605543cb701a52306a7e5a186f06232216f7164c1f02241ba1b5e04ccc79d798"
+  },
+  "scope": "original application plus mode-specific technical port before dispatch",
+  "deviation": null
+}

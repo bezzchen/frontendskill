@@ -1,0 +1,11 @@
+{
+  "files": {
+    "app.js": "44da3ee4993156f1df2fce6fd0c1f73f8beae81f689ae3b766425c3bc80a475e",
+    "checkpoint.css": "683f1679337f8cca9f0fd7ffcbe5a7d403c94ec9919a576942cd43ac2da5930e",
+    "index.html": "7af11f346cd3fcfd532b6454c07e461af5aff3e27e5dbb1fbb6cd4451e2a7cc3",
+    "studio-service.js": "511cf81f3c05d7030bec7e6f52873e5f8bc3525f4863bb4bee0efb9dc2fad2ac",
+    "styles.css": "826b152e1adf6013410fbee44b7d33b7104f2156702e0e4fcdbf83a4297f0b15"
+  },
+  "method": "assessor-owned checkpoint stylesheet applied after original full builder run; supplemental staged reviewer probe, not natural builder discovery",
+  "review_inputs": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D2-settings-and-review/reviewer-fixtures/explicit"
+}

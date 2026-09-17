@@ -1,0 +1,126 @@
+{
+  "url": "http://127.0.0.1:8864/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "text": "FOLD & THREAD / BOOKBINDING BY HAND\n\nGive an idea\na place to live.\n\nFold a sheet. Stitch a spine. Make a notebook that is entirely your own.\n\nA few good hours at the workbench.\n\n18 Paper Lane · Materials included · Step-free studio\n\nSaturday 10 October, 10:00–13:00 · Sunday 18 October, 14:00–17:00\n\nYour name\nEmail address\nWorkshop date\nChoose a session\n10 October · 10:00\n18 October · 14:00\nReserve a place\n\nThanks, Alex Paper. Your place is reserved for 10 October · 10:00.",
+  "controls": [
+    {
+      "id": "guest-name",
+      "tag": "INPUT",
+      "type": "text",
+      "text": "",
+      "value": "Alex Paper",
+      "checked": false
+    },
+    {
+      "id": "guest-email",
+      "tag": "INPUT",
+      "type": "email",
+      "text": "",
+      "value": "alex@example.com",
+      "checked": false
+    },
+    {
+      "id": "session",
+      "tag": "SELECT",
+      "type": "select-one",
+      "text": "Choose a session10 October · 10:0018 October · 14:00",
+      "value": "10 October · 10:00"
+    },
+    {
+      "id": "",
+      "tag": "BUTTON",
+      "type": "submit",
+      "text": "Reserve a place",
+      "value": ""
+    }
+  ],
+  "focus": {
+    "tag": "P",
+    "id": "confirmation"
+  },
+  "events": [
+    {
+      "type": "action",
+      "action": {
+        "type": "wait",
+        "ms": 1500
+      }
+    },
+    {
+      "type": "action",
+      "action": {
+        "type": "screenshot",
+        "path": "/tmp/fold-desktop.png"
+      }
+    },
+    {
+      "type": "action",
+      "action": {
+        "type": "click",
+        "selector": "button[type=submit]"
+      }
+    },
+    {
+      "type": "action",
+      "action": {
+        "type": "fill",
+        "selector": "#guest-name",
+        "value": "Alex Paper"
+      }
+    },
+    {
+      "type": "action",
+      "action": {
+        "type": "fill",
+        "selector": "#guest-email",
+        "value": "alex@example.com"
+      }
+    },
+    {
+      "type": "action",
+      "action": {
+        "type": "select",
+        "selector": "#session",
+        "value": "10 October · 10:00"
+      }
+    },
+    {
+      "type": "action",
+      "action": {
+        "type": "click",
+        "selector": "#guest-name"
+      }
+    },
+    {
+      "type": "action",
+      "action": {
+        "type": "press",
+        "value": "Tab"
+      }
+    },
+    {
+      "type": "action",
+      "action": {
+        "type": "press",
+        "value": "Tab"
+      }
+    },
+    {
+      "type": "action",
+      "action": {
+        "type": "press",
+        "value": "Tab"
+      }
+    },
+    {
+      "type": "action",
+      "action": {
+        "type": "press",
+        "value": "Enter"
+      }
+    }
+  ]
+}

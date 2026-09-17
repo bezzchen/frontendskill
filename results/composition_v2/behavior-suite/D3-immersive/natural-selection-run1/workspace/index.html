@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#080f14">
+  <meta name="description" content="An interactive field station for Iona, a moon passing through an imaginary sky. Steer its arrival, alignment, and departure.">
+  <title>Iona — The Moonward Observatory</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#passage">Skip to observation controls</a>
+  <main>
+    <section class="observatory" aria-label="Interactive lunar observatory">
+      <canvas id="sky" aria-label="Iona in a star field, following a tilted orbit" role="img"></canvas>
+      <header class="masthead">
+        <a class="wordmark" href="./" aria-label="The Moonward Observatory home"><span class="brand-orbit" aria-hidden="true">◒</span><span>Moonward<span class="wordmark-sub">An imaginary observatory</span></span></a>
+        <div class="station"><span class="status-dot"></span> Station 01 <span class="station-divider">/</span> An open sky</div>
+        <button class="text-button guide-open" type="button">Field guide <span aria-hidden="true">↗</span></button>
+      </header>
+
+      <div class="encounter">
+        <div class="introduction">
+          <p class="eyebrow">A wandering moon. A passing moment.</p>
+          <h1>Iona<span>.</span></h1>
+          <p class="invitation">Some moons don’t belong<br>to a single sky.</p>
+          <p class="intro-copy">Meet Iona, a moon in migration.<br>Follow its passage. Shift your perspective.<br>Stay a little while.</p>
+          <a class="begin-link" href="#passage"><span class="circle-arrow" aria-hidden="true">↓</span> Take the observer’s seat</a>
+        </div>
+        <div class="sky-caption" aria-hidden="true"><span class="tiny-cross">+</span><span>IONA / WANDERING BODY<br><span class="caption-muted">No fixed orbit. No permanent home.</span></span></div>
+        <div class="scene-coordinates" aria-hidden="true"><span>FIELD OF VIEW</span><span id="fov">42° 08′</span></div>
+        <div class="scene-tools"><button id="guides" type="button" aria-pressed="true"><span class="guide-symbol" aria-hidden="true">⌖</span> Star guides <span class="toggle-light"></span></button><span class="scene-hint">Your perspective changes the encounter.</span></div>
+      </div>
+
+      <div class="instrument-panel" id="controls">
+        <section class="field-note" aria-labelledby="act-title">
+          <div class="section-label"><span id="act-number">01 / 03</span><span>Field notes</span></div>
+          <h2 id="act-title">The arrival.</h2>
+          <p id="act-copy">Iona appears above the eastern ridge. A faint trail reveals the journey that brought it here.</p>
+          <div class="phase-announcement sr-only" aria-live="polite" id="announcement"></div>
+        </section>
+        <section class="passage-console" aria-label="Passage controls">
+          <div class="chapter-buttons" aria-label="Choose a chapter">
+            <button type="button" data-phase="12" aria-pressed="true"><span>01</span> Arrival</button>
+            <button type="button" data-phase="50" aria-pressed="false"><span>02</span> Alignment</button>
+            <button type="button" data-phase="90" aria-pressed="false"><span>03</span> Departure</button>
+          </div>
+          <div class="range-heading"><label for="passage">Move through the passage</label><output for="passage" id="passage-value">12%</output></div>
+          <input id="passage" type="range" min="0" max="100" step="1" value="12" aria-describedby="passage-help">
+          <div class="range-ends"><span>Eastern horizon</span><span>Western dark</span></div>
+          <div class="playback-row"><button id="play" class="text-button" type="button"><span id="play-icon" aria-hidden="true">▷</span><span id="play-label">Let it wander</span></button><p id="passage-help">Drag to explore at your own pace.</p></div>
+        </section>
+        <section class="view-console" aria-label="Viewpoint controls">
+          <div class="range-heading"><label for="viewpoint">Your viewpoint</label><output for="viewpoint" id="view-value">0°</output></div>
+          <input id="viewpoint" type="range" min="-30" max="30" step="1" value="0" aria-describedby="view-help">
+          <div class="range-ends"><span>−30°</span><span>+30°</span></div>
+          <p id="view-help">A small shift. A different sky.</p>
+          <button id="reset" class="text-button" type="button"><span aria-hidden="true">↺</span> Reset observation</button>
+        </section>
+      </div>
+      <footer class="observatory-footer"><span><span class="status-dot"></span> <span id="observation-status">You are here. Iona is passing.</span></span><a href="#about">A note from the observatory <span aria-hidden="true">↓</span></a><span class="edition">An encounter, not a destination.</span></footer>
+    </section>
+    <section class="about" id="about" aria-labelledby="about-heading">
+      <span class="about-symbol" aria-hidden="true">☾</span>
+      <p class="eyebrow">A note from the observatory</p>
+      <h2 id="about-heading">Nothing stays.<br>That’s why we look.</h2>
+      <p>Iona is an imaginary moon with no planet to call home. For a moment, its long migration brings it into our field of view. This observatory is a place to notice that moment.</p>
+      <p>There’s no right speed and no perfect angle. Move through its passage, find your own alignment, and watch it leave.</p>
+      <button class="text-button guide-open" type="button">How to observe <span aria-hidden="true">↗</span></button>
+      <a class="return-link" href="#passage">Return to the sky ↑</a>
+      <p class="fiction-note">An imagined celestial encounter. Readings are poetic, not astronomical.</p>
+    </section>
+  </main>
+  <dialog id="field-guide" aria-labelledby="guide-title">
+    <div class="dialog-top"><span class="eyebrow">Observer’s handbook</span><button id="guide-close" class="close-button" aria-label="Close field guide">×</button></div>
+    <img src="assets/moon.svg" class="guide-moon" alt="" width="70" height="70">
+    <h2 id="guide-title">Make a little space<br>for wonder.</h2>
+    <p>There is no task to finish. You control how Iona crosses this imaginary sky.</p>
+    <dl><dt>Follow the passage</dt><dd>Drag the passage slider or choose Arrival, Alignment, or Departure. With a keyboard, focus a slider and use the arrow keys.</dd><dt>Find your alignment</dt><dd>Shift Your viewpoint to move Iona against the fixed guide stars. At the middle of its passage and 0°, the moon meets the station’s reference line.</dd><dt>Let it wander</dt><dd>Play the passage, or pause it wherever you like. Playback pauses when you leave the sky or switch tabs. With reduced motion, this control becomes “Next chapter” and moves directly to the next stage without animation.</dd></dl>
+    <img src="assets/star-map.svg" class="guide-map" alt="A line joining five reference stars" width="220" height="70">
+    <p class="fiction-note">All celestial names, distances, and readings in this observatory are imagined.</p>
+  </dialog>
+  <noscript><p class="noscript-note">Turn on JavaScript to steer Iona. You can still read about the encounter below.</p></noscript>
+</body>
+</html>

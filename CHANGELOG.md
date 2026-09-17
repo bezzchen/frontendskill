@@ -1,5 +1,25 @@
 # Changelog
 
+## v2 behavioral development evidence — 2026-09-17
+
+Runtime remains **skill v2.0.0-alpha.1**; this is an evaluation/data update.
+
+- Exercise eight development scenarios with sixteen fresh initial builds: explicit
+  invocation and ordinary-prompt selection, plus separately recorded browser assessments.
+- Preserve two fresh staged settings reviews, both seeded defects, one repair/recheck
+  cycle per artifact, actual unavailable-source/catalog/browser evidence, and native
+  offscreen/document-hidden/shared-scheduler checks.
+- Record natural-selection misses separately from successful unexposed artifacts. Keep
+  D2/D7 fixture-scope ambiguity, D5's competing global director, and D6's strict-assessor
+  catalog-count failure with unresolved route/retry semantics visible.
+- Archive original prompts/fixtures, source hashes, traces, screenshots, failed starts,
+  corrections and partial usage accounting. Full workflow cost remains unknown.
+- Keep the development acceptance gate unresolved and all comparative A/B/C experiments
+  draft, unfrozen and unexecuted. No historical verdict or runtime instruction changed.
+
+See [the behavioral suite](results/composition_v2/behavior-suite/README.md) for findings,
+limits and targeted next steps.
+
 ## Skill v2.0.0-alpha.1 — 2026-09-17 (experimental composition)
 
 This is a **skill candidate**, separate from the historical harness version sequence below.

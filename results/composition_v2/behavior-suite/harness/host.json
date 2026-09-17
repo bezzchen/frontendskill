@@ -1,0 +1,13 @@
+{
+  "system": "macOS-26.6.2-arm64-arm-64bit",
+  "machine": "arm64",
+  "python": "3.12.8",
+  "codex_version": "codex-cli 0.153.4",
+  "node_version": "v22.14.0",
+  "model_alias": "gpt-6-astra",
+  "immutable_model_snapshot": null,
+  "effort": "high",
+  "process_skills_present": true,
+  "independent_run_contexts": true,
+  "statistical_efficacy": false
+}

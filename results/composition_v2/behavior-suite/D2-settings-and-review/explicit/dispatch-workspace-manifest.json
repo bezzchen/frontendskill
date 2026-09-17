@@ -1,0 +1,23 @@
+{
+  ".agents/skills/creative-frontend-architect/CHANGELOG_v1.1.md": "ef8566aec2d6c57a92179184ff7041fcf40a853e3564c4a6abc6f1bd275da7cd",
+  ".agents/skills/creative-frontend-architect/CHANGELOG_v1.2.md": "e3990e36813aefc93fc1cf77f60882cdaf29058bcd3cc8b377b6bf00ebc66a34",
+  ".agents/skills/creative-frontend-architect/README.md": "aa8df2f701ecb5d8a21c0fdd00f2d0a38a2f4d04bde8cd2dd9b07d6053322801",
+  ".agents/skills/creative-frontend-architect/SKILL.md": "abeb51e1c1a769366ea7ea134b85b0d2acfa00aeaa16d3ac565adc5dd72883e5",
+  ".agents/skills/creative-frontend-architect/SKILL.v1-frozen.md": "3d80d69668e8eb05ca0bc5ca30cddb1f3dd89d5822c6e75510b72bda907ce023",
+  ".agents/skills/creative-frontend-architect/SKILL.v1.1-validated.md": "5ec2d310c59342b23072983bfc24120c96b15ed260e87b366390146a7be317b7",
+  ".agents/skills/creative-frontend-architect/SKILL.v1.2-frozen.md": "215025e55404471160e65ed330eb3ad6ea859e530e07fa0a318483a1b0a51c9b",
+  ".agents/skills/creative-frontend-architect/integrations.lock.json": "a319d9a4a23c193286a42bd93877ddd3ee6ebd825c211837e2266ad345ab2268",
+  ".agents/skills/creative-frontend-architect/references/architecture.md": "012aabe7dcc34cead0f6caaeb42320666ec08c7e097723798d6bbce5d22504ce",
+  ".agents/skills/creative-frontend-architect/references/design-contract.md": "feb07483fa3a178279ecd50cf503887601f37c6799cca560eb48f67d5b9551ae",
+  ".agents/skills/creative-frontend-architect/references/directors/anthropic.md": "750881b938bf2abc1bbb7893db504147aab2692987fa0333d3905b76fb646b7a",
+  ".agents/skills/creative-frontend-architect/references/licenses/anthropic-frontend-design-LICENSE.txt": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+  ".agents/skills/creative-frontend-architect/references/rendered-review.md": "463b94a54dec590a412dc9dc98deb7b2f3ecac6ce20639c1940c8113ec9b1194",
+  ".sources/frontend-design/SKILL.md": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3",
+  "AGENTS.md": "326f7d0fa1729b101b89dc8c7322b747988bbcdfbb66e3fa23d46ee4a0404108",
+  "app.js": "c4fa913fe4d63939d2bc93dec6c58133839412a7c71b78c410e6741d4436cc2e",
+  "browser.cjs": "3845cb39eba89a07a719c72d7714b7b3283eee4ac68a922b0729fc8b7ac48ae2",
+  "index.html": "20c01f760b2348417f3ae87eb29acf236403dd798eb724e430f1fa740e624383",
+  "package.json": "eaaca554dd79cb1207d98ff2f69b01f725916256379bc0d5824f345c9e7ede3e",
+  "studio-service.js": "511cf81f3c05d7030bec7e6f52873e5f8bc3525f4863bb4bee0efb9dc2fad2ac",
+  "styles.css": "605543cb701a52306a7e5a186f06232216f7164c1f02241ba1b5e04ccc79d798"
+}

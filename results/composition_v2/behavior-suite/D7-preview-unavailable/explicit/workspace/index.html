@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>North Works · Equipment checkout</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">North Works / Member desk</p>
+    <h1>Equipment checkout</h1>
+    <p class="help">Choose the tool you need, and let us know when it will be back.</p>
+    <section class="panel" aria-label="Checkout details">
+      <form id="checkout-form" novalidate>
+        <p class="help">Both fields are required. This is a local preview; no reservation will be sent.</p>
+        <div class="field">
+          <label for="equipment">Equipment (required)</label>
+          <select id="equipment" name="equipment" aria-describedby="equipment-error" required>
+            <option value="">Choose equipment</option>
+            <option value="sander">Orbital sander</option>
+            <option value="drill">Cordless drill</option>
+            <option value="clamps">Clamp set</option>
+          </select>
+          <p id="equipment-error" class="error" hidden></p>
+        </div>
+        <div class="field">
+          <label for="return-date">Return date (required)</label>
+          <input id="return-date" type="date" name="returnDate" aria-describedby="return-date-hint return-date-error" required>
+          <p id="return-date-hint" class="help">Choose today or a later date.</p>
+          <p id="return-date-error" class="error" hidden></p>
+        </div>
+        <button type="submit">Confirm checkout</button>
+        <p id="checkout-status" class="error" role="status" aria-live="polite" aria-atomic="true"></p>
+      </form>
+      <section id="confirmation" aria-labelledby="confirmation-heading" hidden>
+        <h2 id="confirmation-heading" tabindex="-1">Checkout summary</h2>
+        <p>Confirmed in this preview. No reservation has been sent.</p>
+        <dl class="summary">
+          <div><dt>Equipment</dt><dd id="summary-equipment"></dd></div>
+          <div><dt>Return date</dt><dd><time id="summary-date"></time></dd></div>
+        </dl>
+        <button id="edit-checkout" type="button">Edit checkout</button>
+      </section>
+      <noscript><p class="error">Enable JavaScript to confirm your checkout in this local preview.</p></noscript>
+    </section>
+  </main>
+</body>
+</html>

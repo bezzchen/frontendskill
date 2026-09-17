@@ -1,0 +1,1 @@
+Finish the workspace settings panel for our ceramics studio: display name, kiln-alert preferences, validation and save feedback. Preserve the studio brand and squared controls. Keep it calm and usable on a phone; you can proceed with sensible details.

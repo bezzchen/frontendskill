@@ -1,0 +1,40 @@
+{
+  "assertions": [
+    {
+      "assertion": "Explicitly consider S register and a central authored interactive system instead of only decorative sections.",
+      "status": "pass",
+      "evidence": [
+        "workspace/.design/contract.md",
+        "workspace/scene.js",
+        "assessment-initial/desktop-arrival.png",
+        "assessment-initial/desktop-departure.png"
+      ],
+      "finding": "Contract explicitly selects S immersive realtime, Canvas procedural sphere/projected trajectory. Passage and viewpoint change central moon position/scale/lighting/guide alignment; actual paused-canvas comparisons establish input causality."
+    },
+    {
+      "assertion": "Record renderer ownership, mobile/reduced-motion design and meaningful input causality.",
+      "status": "pass",
+      "evidence": [
+        "workspace/.design/contract.md",
+        "workspace/app.js",
+        "workspace/scene.js",
+        "assessment-initial/observations.json",
+        "assessment-mobile-notes/observations.json"
+      ],
+      "finding": "ObservatoryScene owns single Canvas renderer/finite interpolation/optional playback RAF; app.js owns native control/content connections. Final mobile sticky300px scene remains visible with controls and all3 notes. Real hidden event, playback cancellation, reduced idle, and actual scroll-out cancellation verified."
+    }
+  ],
+  "visual_review": {
+    "inspected": [
+      "assessment-initial/desktop-initial.png",
+      "assessment-initial/desktop-alignment.png",
+      "assessment-initial/desktop-departure.png",
+      "assessment-initial/mobile-reduced-alignment.png",
+      "assessment-initial/mobile-controls-keyboard.png",
+      "assessment-mobile-notes/mobile-note-arrival.png",
+      "assessment-mobile-notes/mobile-note-alignment.png",
+      "assessment-mobile-notes/mobile-note-departure.png"
+    ],
+    "finding": "Authored central moon noticeably changes position and scale. Initial mobile full-page screenshot put sticky canvas over notes at captured scroll position; targeted actual viewport check confirmed all3 full note rectangles below canvas and in viewport, elementFromPoint resolves to note, and screenshots show readable text/controls. No defect found and no artifact change made."
+  }
+}

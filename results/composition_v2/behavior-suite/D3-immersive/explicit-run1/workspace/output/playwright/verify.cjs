@@ -1,0 +1,85 @@
+const { chromium } = require('/Users/bezzchen/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+(async () => {
+  const browser = await chromium.launch({headless:false,executablePath:'/Users/bezzchen/Library/Caches/ms-playwright/chromium-1243/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing'});
+  const context=await browser.newContext({viewport:{width:1440,height:900}});
+  const page=await context.newPage();
+  const errors=[];const results={};
+  page.on('pageerror',e=>errors.push(e.message));
+  await page.goto('http://127.0.0.1:8313');
+  await page.waitForFunction(()=>window.moonwardDiagnostics?.().frames>2);
+  await page.getByRole('button',{name:'02 Alignment'}).click();
+  await page.getByRole('button',{name:'Center telescope bearing'}).click();
+  await page.waitForTimeout(1200);
+  assert.equal(await page.locator('#tracking-status').textContent(),'Reference locked');
+  await page.screenshot({path:'output/playwright/alignment-desktop.png'});
+  await page.locator('#bearing').focus();await page.keyboard.press('ArrowRight');await page.keyboard.press('ArrowRight');
+  assert.equal(await page.locator('#bearing').inputValue(),'2');
+  assert.equal(await page.locator('#tracking-status').textContent(),'Seeking alignment');
+  await page.getByRole('button',{name:'03 Departure'}).click();
+  assert.equal(await page.locator('#act-title').textContent(),'Departure');
+  await page.waitForTimeout(1200);await page.screenshot({path:'output/playwright/departure-desktop.png'});
+  await page.getByRole('button',{name:'Witness it again'}).click();
+  assert.equal(await page.locator('#passage').inputValue(),'0');
+  await page.getByRole('button',{name:'How to observe'}).click();
+  assert.equal(await page.locator('dialog').evaluate(el=>el.open),true);
+  await page.keyboard.press('Escape');
+  assert.equal(await page.locator('dialog').evaluate(el=>el.open),false);
+  assert.equal(await page.evaluate(()=>document.activeElement.id),'help-open');
+  results.primaryFlow='Arrival, alignment, reference lock, unlock, departure, replay, modal Escape and focus return passed.';
+
+  await page.locator('#bearing').focus();await page.keyboard.press('Home');
+  assert.equal(await page.locator('#bearing').inputValue(),'-30');
+  await page.keyboard.press('End');assert.equal(await page.locator('#bearing').inputValue(),'30');
+  await page.locator('#passage').focus();await page.keyboard.press('End');
+  assert.equal(await page.locator('#act-title').textContent(),'Departure');
+  await page.keyboard.press('Home');assert.equal(await page.locator('#act-title').textContent(),'Arrival');
+  results.keyboard='Native range Home/End/arrows, focus return and Escape passed.';
+
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.waitForTimeout(100);
+  const stillA=await page.evaluate(()=>window.moonwardDiagnostics());await page.waitForTimeout(350);
+  const stillB=await page.evaluate(()=>window.moonwardDiagnostics());
+  assert.equal(stillA.frames,stillB.frames);assert.equal(stillB.running,false);
+  await page.getByRole('button',{name:'02 Alignment'}).click();await page.getByRole('button',{name:'Center telescope bearing'}).click();
+  assert.equal(await page.locator('#tracking-status').textContent(),'Reference locked');
+  results.reducedMotion={before:stillA,after:stillB,functionality:'All stage and bearing controls remain available; aligned without animation.'};
+  await page.emulateMedia({reducedMotion:'no-preference'});await page.waitForTimeout(150);
+
+  const beforeBackground=await page.evaluate(()=>window.moonwardDiagnostics());
+  const other=await context.newPage();await other.goto('about:blank');await other.bringToFront();
+  await page.waitForTimeout(250);
+  const hiddenA=await page.evaluate(()=>({visibility:document.visibilityState,...window.moonwardDiagnostics()}));
+  await page.waitForTimeout(350);
+  const hiddenB=await page.evaluate(()=>({visibility:document.visibilityState,...window.moonwardDiagnostics()}));
+  if(hiddenB.visibility==='hidden') {assert.equal(hiddenB.running,false);assert.equal(hiddenA.frames,hiddenB.frames);}
+  results.actualTabBackground={beforeBackground,hiddenA,hiddenB,verified:hiddenB.visibility==='hidden'};
+  await page.bringToFront();await page.waitForTimeout(200);
+  const restored=await page.evaluate(()=>window.moonwardDiagnostics());assert.equal(restored.running,true);results.tabResume=restored;
+  await other.close();
+
+  await page.setViewportSize({width:375,height:812});
+  await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
+  await page.locator('.observe-link').click();await page.waitForTimeout(900);
+  await page.screenshot({path:'output/playwright/mobile-telescope.png'});
+  const geometry=await page.evaluate(()=>Object.fromEntries(['scene','passage','bearing'].map(id=>{const r=document.getElementById(id).getBoundingClientRect();return[id,{top:r.top,bottom:r.bottom}]})));
+  assert.ok(geometry.bearing.bottom<=812);results.mobileTelescope=geometry;
+  await page.getByRole('button',{name:'02 Alignment'}).click();await page.getByRole('button',{name:'Center telescope bearing'}).click();await page.waitForTimeout(900);
+  await page.screenshot({path:'output/playwright/mobile-alignment.png'});
+  await page.evaluate(()=>window.scrollTo({top:document.body.scrollHeight,behavior:'instant'}));await page.waitForTimeout(150);
+  const offA=await page.evaluate(()=>window.moonwardDiagnostics());await page.waitForTimeout(350);const offB=await page.evaluate(()=>window.moonwardDiagnostics());
+  assert.equal(offB.visible,false);assert.equal(offB.running,false);assert.equal(offA.frames,offB.frames);results.actualScrollOffscreen={offA,offB};
+  await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));await page.waitForTimeout(200);
+  const resume=await page.evaluate(()=>window.moonwardDiagnostics());assert.equal(resume.running,true);results.scrollResume=resume;
+
+  await page.evaluate(()=>window.addEventListener('pagehide',()=>localStorage.setItem('moonward-teardown-evidence',JSON.stringify(window.moonwardDiagnostics()))));
+  await page.goto('about:blank');await page.goBack();
+  results.navigationTeardown=await page.evaluate(()=>JSON.parse(localStorage.getItem('moonward-teardown-evidence')));
+  assert.equal(results.navigationTeardown.destroyed,true);assert.equal(results.navigationTeardown.running,false);
+  await page.evaluate(()=>localStorage.removeItem('moonward-teardown-evidence'));
+  results.consoleErrors=errors;assert.equal(errors.length,0);
+  fs.writeFileSync('output/playwright/verification.json',JSON.stringify(results,null,2));
+  console.log(JSON.stringify(results,null,2));
+  await browser.close();
+})().catch(e=>{console.error(e);process.exit(1)});

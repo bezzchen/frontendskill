@@ -1,0 +1,13 @@
+2026-09-17T19:13:15.088594Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:13:15.090866Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:13:15.092033Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:13:15.092973Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:13:15.118685Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:13:55.655418Z  WARN codex_sandboxing::violation: recorded sandbox violation: resource=filesystem backend=seatbelt reason=operation_not_permitted path=unknown
+2026-09-17T19:15:11.500836Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T19:15:17.199918Z  WARN codex_sandboxing::violation: recorded sandbox violation: resource=filesystem backend=seatbelt reason=permission_denied path=unknown
+2026-09-17T19:15:32.477948Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T19:21:39.190110Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (1/5 in 207ms)... turn_id=01a0b0c9-9192-7e11-8866-6acd20f09e62 retries=1 max_retries=5 sampling_error=stream disconnected before completion: idle timeout waiting for websocket
+2026-09-17T19:22:40.114718Z ERROR codex_core::tools::router: error=apply_patch verification failed: invalid patch: multiple operations target /Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D1-supplied-design/natural-selection/workspace/src/App.jsx
+2026-09-17T19:23:36.227955Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (1/1 in 216ms)... turn_id=01a0b0d3-0b7c-7d33-b6a5-278eaee749aa retries=1 max_retries=1 sampling_error=stream disconnected before completion: IO error: Connection reset by peer (os error 54)
+2026-09-17T19:23:42.056220Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.

@@ -1,0 +1,49 @@
+{
+  "url": "http://127.0.0.1:8861",
+  "width": 375,
+  "height": 812,
+  "screenshot": "review/mobile-keyboard.png",
+  "actions": [
+    {
+      "type": "press",
+      "value": "Tab"
+    },
+    {
+      "type": "press",
+      "value": "Tab"
+    },
+    {
+      "type": "press",
+      "value": "Space"
+    },
+    {
+      "type": "press",
+      "value": "Tab"
+    },
+    {
+      "type": "press",
+      "value": "Shift+Tab"
+    },
+    {
+      "type": "press",
+      "value": "Space"
+    },
+    {
+      "type": "press",
+      "value": "Shift+Tab"
+    },
+    {
+      "type": "fill",
+      "selector": "#display-name",
+      "value": "  Keyboard Studio  "
+    },
+    {
+      "type": "press",
+      "value": "Enter"
+    },
+    {
+      "type": "wait",
+      "ms": 800
+    }
+  ]
+}

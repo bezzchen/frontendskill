@@ -1,0 +1,75 @@
+{
+  "url": "http://127.0.0.1:8872/",
+  "viewport": {
+    "width": 390,
+    "height": 900
+  },
+  "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved.",
+  "controls": [
+    {
+      "id": "display-name",
+      "tag": "INPUT",
+      "type": "text",
+      "text": "",
+      "value": "Juniper Pointer Studio",
+      "checked": false
+    },
+    {
+      "id": "kiln-alerts",
+      "tag": "INPUT",
+      "type": "checkbox",
+      "text": "",
+      "value": "on",
+      "checked": false
+    },
+    {
+      "id": "save-settings",
+      "tag": "BUTTON",
+      "type": "submit",
+      "text": "Save settings",
+      "value": ""
+    }
+  ],
+  "focus": {
+    "tag": "BUTTON",
+    "id": "save-settings"
+  },
+  "events": [
+    {
+      "type": "action",
+      "action": {
+        "type": "fill",
+        "selector": "#display-name",
+        "value": "Juniper Pointer Studio"
+      }
+    },
+    {
+      "type": "action",
+      "action": {
+        "type": "click",
+        "selector": "label[for=kiln-alerts]"
+      }
+    },
+    {
+      "type": "action",
+      "action": {
+        "type": "click",
+        "selector": "#save-settings"
+      }
+    },
+    {
+      "type": "action",
+      "action": {
+        "type": "screenshot",
+        "path": "output/correction-1/after-390-saving.png"
+      }
+    },
+    {
+      "type": "action",
+      "action": {
+        "type": "wait",
+        "ms": 750
+      }
+    }
+  ]
+}

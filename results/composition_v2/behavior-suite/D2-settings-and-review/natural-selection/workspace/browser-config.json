@@ -1,0 +1,10 @@
+{
+  "url": "http://127.0.0.1:8862",
+  "width": 390,
+  "height": 844,
+  "screenshot": "/tmp/clay-house-phone.png",
+  "actions": [
+    { "type": "fill", "selector": "#display-name", "value": "   " },
+    { "type": "click", "selector": "#save-settings" }
+  ]
+}

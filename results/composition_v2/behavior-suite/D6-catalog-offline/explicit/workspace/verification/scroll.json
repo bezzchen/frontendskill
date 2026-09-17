@@ -1,0 +1,23 @@
+{
+  "width": 375,
+  "height": 812,
+  "actions": [
+    {
+      "type": "press",
+      "value": "End"
+    },
+    {
+      "type": "wait",
+      "ms": 100
+    },
+    {
+      "type": "press",
+      "value": "Home"
+    },
+    {
+      "type": "screenshot",
+      "path": "verification/scroll-return.png"
+    }
+  ],
+  "url": "http://127.0.0.1:8796"
+}

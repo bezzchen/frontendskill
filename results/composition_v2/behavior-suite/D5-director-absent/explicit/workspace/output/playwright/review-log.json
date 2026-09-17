@@ -1,0 +1,95 @@
+{
+  "errors": [],
+  "requests": [
+    {
+      "url": "http://127.0.0.1:5173/",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:5173/@vite/client",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:5173/src/main.jsx",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:5173/node_modules/.vite/deps/react.js?v=cbe40d56",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=28714d8a",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:5173/src/App.jsx",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:5173/src/tokens.css",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:5173/node_modules/vite/dist/client/env.mjs",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:5173/node_modules/.vite/deps/chunk-VHW23IB5.js?v=be324b9f",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:5173/src/App.module.css",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:5173/src/components/Button.jsx",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:5173/src/components/Field.jsx",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:5173/src/shifts.js",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:5173/src/components/Shared.module.css",
+      "method": "GET"
+    }
+  ],
+  "checks": [
+    {
+      "label": "empty submit",
+      "text": "m.\nMoss Lane Garden\nNeighbors growing together\nA little time. A growing community.\n\nGROW WITH YOUR NEIGHBORS\n\nMake room for\nsomething good.\n\nA few hours in the garden can make a real difference.\nFind a shift that fits your day and lend a hand.\n\nIN THE GARDEN THIS OCTOBER\nSmall acts.\nShared roots.\nPlant, care, and grow together.\n01\nChoose your shift\n2 hours each\nAvailable volunteer shifts (required)\nMorning planting\n4 places left\nSaturday 24 October · 09:00–11:00\nHelp new plants put down roots.\n4 available / 12 total\nPath and bed care\n6 places left\nSaturday 24 October · 13:00–15:00\nGive our shared growing spaces a little care.\n6 available / 10 total\nCompost crew\nFull\nSunday 25 October · 10:00–12:00\nTurn garden leftovers into something good.\n0 available / 8 total\n\nChoose an available shift to continue.\n\nOne sign-up reserves one place. Every pair of hands helps.\n\n02\nMake it yours\n\nLet us know who’s lending a hand.\n\nContact name\n\nEnter a contact name to continue.\n\nYOUR CHOSEN SHIFT\n\nChoose an available shift to see\nyour details here.\n\nConfirm shift\n↗\n\nDemo only. No real booking will be made.\nYour details stay on this page.\n\nMoss Lane Garden\nA shared patch. A shared purpose.",
+      "focus": {
+        "tag": "INPUT",
+        "text": "",
+        "id": "shift-morning",
+        "value": "morning"
+      },
+      "overflow": false
+    },
+    {
+      "label": "whitespace submit",
+      "text": "m.\nMoss Lane Garden\nNeighbors growing together\nA little time. A growing community.\n\nGROW WITH YOUR NEIGHBORS\n\nMake room for\nsomething good.\n\nA few hours in the garden can make a real difference.\nFind a shift that fits your day and lend a hand.\n\nIN THE GARDEN THIS OCTOBER\nSmall acts.\nShared roots.\nPlant, care, and grow together.\n01\nChoose your shift\n2 hours each\nAvailable volunteer shifts (required)\nMorning planting\n4 places left\nSaturday 24 October · 09:00–11:00\nHelp new plants put down roots.\n4 available / 12 total\nPath and bed care\n6 places left\nSaturday 24 October · 13:00–15:00\nGive our shared growing spaces a little care.\n6 available / 10 total\nCompost crew\nFull\nSunday 25 October · 10:00–12:00\nTurn garden leftovers into something good.\n0 available / 8 total\n\nOne sign-up reserves one place. Every pair of hands helps.\n\n02\nMake it yours\n\nLet us know who’s lending a hand.\n\nContact name\n\nEnter a contact name to continue.\n\nYOUR CHOSEN SHIFT\n\nMorning planting\nSaturday 24 October\n09:00–11:00 · 1 place\nConfirm shift\n↗\n\nDemo only. No real booking will be made.\nYour details stay on this page.\n\nMoss Lane Garden\nA shared patch. A shared purpose.",
+      "focus": {
+        "tag": "INPUT",
+        "text": "",
+        "id": "contact-name",
+        "value": "   "
+      },
+      "overflow": false
+    },
+    {
+      "label": "desktop confirmation",
+      "text": "m.\nMoss Lane Garden\nNeighbors growing together\nA little time. A growing community.\n\nGROW WITH YOUR NEIGHBORS\n\nMake room for\nsomething good.\n\nA few hours in the garden can make a real difference.\nFind a shift that fits your day and lend a hand.\n\nIN THE GARDEN THIS OCTOBER\nSmall acts.\nShared roots.\nPlant, care, and grow together.\n✓\n\nTHANK YOU FOR LENDING A HAND\n\nShift confirmed.\n\nHere are your sign-up details, Taylor Sample.\n\nShift\nMorning planting\nWhen\nSaturday 24 October\n09:00–11:00\nContact name\nTaylor Sample\n\nThis is a local demo confirmation. No real reservation has been made.\n\nBegin another sign-up ↗\nMoss Lane Garden\nA shared patch. A shared purpose.",
+      "focus": {
+        "tag": "H2",
+        "text": "Shift confirmed.",
+        "id": "confirmation-heading"
+      },
+      "overflow": false
+    }
+  ]
+}

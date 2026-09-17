@@ -1,0 +1,37 @@
+{
+  "recorded_at": "2026-09-17T19:41:11.238021+00:00",
+  "action": "Launch fresh D2 explicit staged-review Codex CLI through run_probe.py",
+  "first_attempt_executed": false,
+  "automatic_review_rejection": "The bounded browser review is authorized, but it invokes a model service that may receive local fixture/project contents; the transcript does not specifically authorize exporting that potentially sensitive payload to that destination.",
+  "remediation": "Read and inspect all six review inputs, confirm generated fictional fixture/public skill provenance and no private project/customer/credential payload; retry the same action with evidence, without bypassing approval.",
+  "review_inputs": [
+    {
+      "path": "work/v2-behavior/D2-settings-and-review/reviewer-fixtures/explicit/AGENTS.md",
+      "sha256": "3f872597eeb2619992e4e3f2281f5de58cd13890e360030a17dbc27a97adb20b"
+    },
+    {
+      "path": "work/v2-behavior/D2-settings-and-review/reviewer-fixtures/explicit/brief.txt",
+      "sha256": "bfeb213ee01b7d259605bb0403b69532debbac6696a21c97b159cf6e44784691"
+    },
+    {
+      "path": "work/v2-behavior/D2-settings-and-review/reviewer-fixtures/explicit/browser.cjs",
+      "sha256": "3845cb39eba89a07a719c72d7714b7b3283eee4ac68a922b0729fc8b7ac48ae2"
+    },
+    {
+      "path": "work/v2-behavior/D2-settings-and-review/reviewer-fixtures/explicit/design-contract.md",
+      "sha256": "d2f0abf28883b5cd6321c74bb7af6058084decf5cc2e1e8491533e9ba011c206"
+    },
+    {
+      "path": "work/v2-behavior/D2-settings-and-review/reviewer-fixtures/explicit/rendered-review.md",
+      "sha256": "463b94a54dec590a412dc9dc98deb7b2f3ecac6ce20639c1940c8113ec9b1194"
+    },
+    {
+      "path": "work/v2-behavior/D2-settings-and-review/reviewer-fixtures/explicit/task.json",
+      "sha256": "f1e01947ab52e9205b19e0bff4a137648e7f25bbf68cd54385429dddd264ff37"
+    }
+  ],
+  "retry": "approved and running",
+  "exec_session": 83722,
+  "user_permission_question_required": false,
+  "reason": "Existing user authorization plus inspected low-risk payload satisfied automatic review on retry."
+}

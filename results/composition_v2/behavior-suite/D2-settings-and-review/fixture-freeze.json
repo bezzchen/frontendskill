@@ -1,0 +1,16 @@
+{
+  "case_id": "D2-settings-and-review",
+  "fixture_status": "frozen-before-runs",
+  "files": {
+    "AGENTS.md": "96e99d1e8de60633e3d0ce8880eba1e5f5156a659572b761912784fb47e0e9a0",
+    "app.js": "c4fa913fe4d63939d2bc93dec6c58133839412a7c71b78c410e6741d4436cc2e",
+    "browser.cjs": "3845cb39eba89a07a719c72d7714b7b3283eee4ac68a922b0729fc8b7ac48ae2",
+    "index.html": "20c01f760b2348417f3ae87eb29acf236403dd798eb724e430f1fa740e624383",
+    "package.json": "eaaca554dd79cb1207d98ff2f69b01f725916256379bc0d5824f345c9e7ede3e",
+    "studio-service.js": "511cf81f3c05d7030bec7e6f52873e5f8bc3525f4863bb4bee0efb9dc2fad2ac",
+    "styles.css": "605543cb701a52306a7e5a186f06232216f7164c1f02241ba1b5e04ccc79d798"
+  },
+  "aggregate_sha256": "17e8bf19aa2bbe720d2b66fcd5727ff581c94ea0c560b8e2e6edd9ddb96d55b0",
+  "scope": "original application fixture with neutral supported-tool commands before candidate installation",
+  "deviation": "D2 defects will be introduced via assessor-owned checkpoint stylesheet after implementation; not fed as assertions to builder"
+}

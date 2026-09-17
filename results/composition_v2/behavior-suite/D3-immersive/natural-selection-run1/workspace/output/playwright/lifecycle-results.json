@@ -1,0 +1,85 @@
+{
+  "errors": [],
+  "playing": {
+    "playing": true,
+    "frameScheduled": true,
+    "active": true,
+    "phase": 0.1310091820186694,
+    "view": 0,
+    "reducedMotion": false
+  },
+  "scrolledAway": {
+    "state": {
+      "playing": false,
+      "frameScheduled": false,
+      "active": false,
+      "phase": 0.13179583055525756,
+      "view": 0,
+      "reducedMotion": false
+    },
+    "scrollY": 818,
+    "rect": 82
+  },
+  "background": {
+    "visibility": "visible",
+    "state": {
+      "playing": true,
+      "frameScheduled": true,
+      "active": true,
+      "phase": 0.1508402834191134,
+      "view": 0,
+      "reducedMotion": false
+    }
+  },
+  "returned": {
+    "playing": true,
+    "frameScheduled": true,
+    "active": true,
+    "phase": 0.15598867302965044,
+    "view": 0,
+    "reducedMotion": false
+  },
+  "mobileControls": {
+    "state": {
+      "playing": false,
+      "frameScheduled": true,
+      "active": true,
+      "phase": 0.9991595472344122,
+      "view": 0,
+      "reducedMotion": false
+    },
+    "moonRect": {
+      "x": 0,
+      "y": 4.5,
+      "width": 375,
+      "height": 300,
+      "top": 4.5,
+      "right": 375,
+      "bottom": 304.5,
+      "left": 0
+    },
+    "controlRect": {
+      "x": 22.5,
+      "y": 582,
+      "width": 330,
+      "height": 44,
+      "top": 582,
+      "right": 352.5,
+      "bottom": 626,
+      "left": 22.5
+    },
+    "overflow": false
+  },
+  "reducedMotion": {
+    "state": {
+      "playing": false,
+      "frameScheduled": false,
+      "active": true,
+      "phase": 0.5,
+      "view": 0,
+      "reducedMotion": true
+    },
+    "label": "Next chapter",
+    "phase": "The alignment."
+  }
+}

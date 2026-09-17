@@ -1,0 +1,1 @@
+export const shifts=[{id:'morning',name:'Morning planting',date:'Saturday 24 October',time:'09:00–11:00',capacity:12,remaining:4},{id:'afternoon',name:'Path and bed care',date:'Saturday 24 October',time:'13:00–15:00',capacity:10,remaining:6},{id:'compost',name:'Compost crew',date:'Sunday 25 October',time:'10:00–12:00',capacity:8,remaining:0}];

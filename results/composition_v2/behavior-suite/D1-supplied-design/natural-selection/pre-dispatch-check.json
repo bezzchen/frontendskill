@@ -1,0 +1,20 @@
+{
+  "candidate_match": true,
+  "candidate_files": {
+    "integrations.lock.json": "a319d9a4a23c193286a42bd93877ddd3ee6ebd825c211837e2266ad345ab2268",
+    "SKILL.v1.1-validated.md": "5ec2d310c59342b23072983bfc24120c96b15ed260e87b366390146a7be317b7",
+    "CHANGELOG_v1.2.md": "e3990e36813aefc93fc1cf77f60882cdaf29058bcd3cc8b377b6bf00ebc66a34",
+    "SKILL.v1-frozen.md": "3d80d69668e8eb05ca0bc5ca30cddb1f3dd89d5822c6e75510b72bda907ce023",
+    "SKILL.v1.2-frozen.md": "215025e55404471160e65ed330eb3ad6ea859e530e07fa0a318483a1b0a51c9b",
+    "README.md": "aa8df2f701ecb5d8a21c0fdd00f2d0a38a2f4d04bde8cd2dd9b07d6053322801",
+    "SKILL.md": "abeb51e1c1a769366ea7ea134b85b0d2acfa00aeaa16d3ac565adc5dd72883e5",
+    "CHANGELOG_v1.1.md": "ef8566aec2d6c57a92179184ff7041fcf40a853e3564c4a6abc6f1bd275da7cd",
+    "references/architecture.md": "012aabe7dcc34cead0f6caaeb42320666ec08c7e097723798d6bbce5d22504ce",
+    "references/design-contract.md": "feb07483fa3a178279ecd50cf503887601f37c6799cca560eb48f67d5b9551ae",
+    "references/rendered-review.md": "463b94a54dec590a412dc9dc98deb7b2f3ecac6ce20639c1940c8113ec9b1194",
+    "references/licenses/anthropic-frontend-design-LICENSE.txt": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+    "references/directors/anthropic.md": "750881b938bf2abc1bbb7893db504147aab2692987fa0333d3905b76fb646b7a"
+  },
+  "source_absent": false,
+  "node_modules_prepared": true
+}

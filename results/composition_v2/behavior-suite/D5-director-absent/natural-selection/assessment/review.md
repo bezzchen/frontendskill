@@ -1,0 +1,11 @@
+# D5 natural-selection rendered assessment
+
+Reviewer: /root/v2_director_adapter, separate from fresh CLI builder. Development probe only. Artifact result: pass, verified at 1440×900 and 390×844. Candidate routing result: incomplete; missing-director fallback unexercised. No application correction cycles.
+
+Viewed full desktop/mobile initial screenshots and mobile whitespace error, pointer confirmation, focused radio/submit and keyboard confirmation screenshots. Existing moss/stone palette and shared controls remain; new serif headings and small planting-bed capacity marks make an original layout. No observed clipping/collision, horizontal overflow or page errors.
+
+Both viewports showed morning 4/12, afternoon 6/10 and full compost 0/8. The disabled compost radio remained unchecked after physical pointer clicking its label. Empty submission identified missing shift/name and focused the first shift. Morning selection with empty or whitespace name showed a corrective message and focused name. Casey Morgan pointer submission confirmed morning/date/time/name and local-demo status. Restart cleared form and returned focus to the first radio. Counts stayed unchanged, consistent with this implementation's disclosed no-reservation/no-capacity-change local prototype; the fixture requires capacity display and full-shift exclusion, not depletion. After reload, Tab reached the radio group; ArrowDown/Space selected afternoon; Tab reached name, Tab/Shift+Tab/Tab reached submit; Enter confirmed Jordan Vale with afternoon/date/time. Focus outlines and focused confirmation heading were visible.
+
+The complete parent trace reads global frontend-design, brainstorming and process/browser skills. It never reads creative-frontend-architect or the scoped adapter, nor attempts the selected missing source. Therefore no builtin-fallback/null-source metadata behavior can be attributed to the candidate. The source is absent as prepared, but absence alone is not branch execution. No skill steering or follow-up invocation was sent.
+
+Evidence: assessment.json, browser-assessor.cjs, build.txt, PNGs and source-diffs; ../trace.jsonl and ../run-report.json hold activation evidence. These checks are external development assessment, not a blind comparative design judgment or comprehensive accessibility certification.

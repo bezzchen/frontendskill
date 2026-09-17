@@ -1,0 +1,17 @@
+{
+  "files": {
+    "AGENTS.md": "1e9f835f774ed1c70cd5b255e049cb3c5e7385e073b113a571ca548537c310da",
+    "app.js": "670f17905f5ba2c4cda7ed2edf99cf02329c9766a9e304366887efec90e5e773",
+    "brief.txt": "bfeb213ee01b7d259605bb0403b69532debbac6696a21c97b159cf6e44784691",
+    "browser.cjs": "3845cb39eba89a07a719c72d7714b7b3283eee4ac68a922b0729fc8b7ac48ae2",
+    "checkpoint.css": "683f1679337f8cca9f0fd7ffcbe5a7d403c94ec9919a576942cd43ac2da5930e",
+    "design-contract.md": "b0e7edc8acd5e19252aaaf0fb022452997e94d723b5db659a39a88ae2b55eec0",
+    "index.html": "e84aae3ec549a4bfe4bc5166d39aef05d709b60d236383a488937fdacc002897",
+    "package.json": "7e9ee1d88fe6bb235b0269484cfdbac7dd595b790357063c2a6e35ac2461933a",
+    "review-findings.md": "205bf664ccbb8b87e1c552a4585bb2646b3d9908100abdffa3f059ae1a5d190b",
+    "studio-service.js": "511cf81f3c05d7030bec7e6f52873e5f8bc3525f4863bb4bee0efb9dc2fad2ac",
+    "styles.css": "7a6ef0501b0463fcbda57fc2e372794d18ce554ff2a09015d248d507c4ed2f1f"
+  },
+  "review_source": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D2-settings-and-review/natural-selection-staged-review/workspace/review.md",
+  "cycle": 1
+}

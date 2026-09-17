@@ -1,0 +1,68 @@
+.shell{max-width:1160px;margin:auto;padding:0 40px}
+.header{display:flex;align-items:center;justify-content:space-between;gap:24px;border-bottom:1px solid var(--line);padding:26px 0}
+.brand{display:flex;align-items:center;gap:13px;font-size:18px;font-weight:700;line-height:1.35}
+.brand div>span{display:block;font-size:12px;font-weight:400;margin-top:3px;letter-spacing:.02em}
+.mark{display:grid;place-items:center;width:43px;height:43px;border:1px solid var(--brand);border-radius:50%;font-size:29px;letter-spacing:-3px;padding-right:4px;color:var(--brand)}
+.headerNote{font-size:12px;color:var(--brand)}
+.intro{display:flex;justify-content:space-between;gap:44px;align-items:center;padding:45px 0 38px}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:.16em;margin-bottom:16px;color:var(--brand)}
+.intro h1{font-size:clamp(38px,4.3vw,58px);line-height:1.06;letter-spacing:-.055em;font-weight:500;margin-bottom:20px}
+.lead{font-size:15px;line-height:1.7;margin:0;color:var(--brand)}
+.season{border-left:1px solid var(--line);padding:10px 0 10px 35px;flex:0 0 295px;display:grid;gap:18px;color:var(--brand)}
+.seasonLabel{font-size:9px;letter-spacing:.13em;font-weight:700}
+.season strong{font-size:32px;font-weight:400;line-height:1.15;letter-spacing:-.035em}
+.season>span:last-child{font-size:12px}
+.signup{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:40px;border-top:1px solid var(--line);padding:30px 0 36px;align-items:start}
+.sectionHeading{display:flex;align-items:center;gap:12px;margin-bottom:21px}
+.sectionHeading h2{font-size:19px;letter-spacing:-.025em;margin:0;font-weight:500}
+.step{font-size:11px;color:var(--brand);border:1px solid var(--line);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex-shrink:0}
+.duration{margin-left:auto;font-size:11px;color:var(--brand)}
+.shifts{display:grid;gap:12px;padding:0;margin:0;border:0;min-width:0}
+.shift{display:flex;align-items:flex-start;gap:13px;padding:18px;border:1px solid var(--line);border-radius:var(--radius);cursor:pointer;background:rgba(255,255,255,.3)}
+.shift:hover:not(.full){border-color:var(--brand)}
+.shift.selected{border-color:var(--brand);box-shadow:inset 0 0 0 1px var(--brand);background:#e4e9db}
+.shift input{accent-color:var(--brand);width:18px;height:18px;margin:3px 0 0;flex-shrink:0;cursor:inherit}
+.shiftContent{display:block;min-width:0;flex:1}
+.shiftTop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:5px}
+.shiftTop strong{font-size:16px;font-weight:600;letter-spacing:-.02em}
+.badge{font-size:10px;line-height:1.7;padding:2px 8px;background:var(--highlight);color:var(--ink);border-radius:20px;white-space:nowrap}
+.shiftDate{display:block;font-size:12px;color:var(--brand)}
+.description{display:block;font-size:12px;margin-top:6px;color:var(--brand)}
+.capacityRow{display:flex;align-items:center;gap:10px;font-size:10px;margin-top:13px;color:var(--brand)}
+.capacityBar{height:4px;background:var(--line);width:70px;overflow:hidden;border-radius:2px;flex-shrink:0}
+.capacityBar>span{height:100%;display:block;background:var(--brand)}
+.full{cursor:not-allowed;background:transparent}
+.full .badge{background:var(--line)}
+.full .capacityBar>span{background:var(--muted)}
+.shiftNote{font-size:11px;color:var(--brand);margin:16px 0 0}
+.details{padding:25px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+.details .sectionHeading{margin-bottom:12px}
+.detailsIntro{font-size:13px;color:var(--brand);margin-bottom:25px}
+.details label{font-size:13px}
+.details input{font-size:15px}
+.details input::placeholder{color:#62695e}
+.summary{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:20px 0;margin:24px 0;min-height:130px;font-size:13px}
+.summaryLabel{font-size:9px;font-weight:700;letter-spacing:.12em;color:var(--brand);margin-bottom:11px}
+.summary strong,.summary>span{display:block}
+.summary strong{font-size:15px;margin-bottom:4px}
+.summary>span{color:var(--brand);font-size:12px}
+.emptySummary{margin:0;color:var(--brand);font-size:13px;line-height:1.7}
+.submit button{display:flex;width:100%;justify-content:space-between;align-items:center;font-size:14px}
+.submit button:hover{background:var(--ink)}
+.demoNote{font-size:11px;line-height:1.7;color:var(--brand);margin:14px 0 0}
+.error{color:#9A321D;font-size:14px;margin:12px 0 0}
+.footer{border-top:1px solid var(--line);padding:23px 0 28px;display:flex;justify-content:space-between;gap:15px;font-size:11px;color:var(--brand)}
+.footer>span:first-child{font-weight:700}
+.confirmation{background:var(--surface);border:1px solid var(--line);padding:38px;max-width:680px;margin:0 auto 40px;border-radius:var(--radius)}
+.check{display:grid;place-items:center;border-radius:50%;width:45px;height:45px;background:var(--highlight);margin-bottom:24px}
+.confirmation h2{font-size:36px;letter-spacing:-.04em;line-height:1.15;margin-bottom:14px}
+.confirmation>p:not(.eyebrow):not(.demoNote){font-size:15px;overflow-wrap:anywhere}
+.confirmDetails{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:20px 0;display:grid;gap:15px;font-size:14px}
+.confirmDetails div{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px}
+.confirmDetails dt{color:var(--brand);font-size:12px}
+.confirmDetails dd{margin:0;overflow-wrap:anywhere;font-weight:600}
+.confirmation button{margin-top:22px;font-size:14px}
+.srOnly{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:850px){.shell{padding:0 25px}.signup{gap:24px;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}.season{flex-basis:235px;padding-left:25px}.shift{padding:15px}.shiftTop{align-items:flex-start;flex-wrap:wrap}.details{padding:20px}}
+@media(max-width:650px){.shell{padding:0 20px}.header{padding:20px 0}.headerNote,.season{display:none}.brand{font-size:16px}.intro{padding:32px 0}.intro h1{font-size:43px}.lead{font-size:14px}.desktopBreak{display:none}.signup{grid-template-columns:1fr;gap:28px;padding-top:25px}.shiftTop{flex-wrap:nowrap}.sectionHeading{margin-bottom:17px}.details{padding:24px 20px}.footer{font-size:10px}.confirmation{padding:25px 20px}.confirmation h2{font-size:32px}.confirmDetails div{grid-template-columns:85px minmax(0,1fr)}}
+@media(forced-colors:active){.shift.selected{outline:2px solid Highlight}.capacityBar{border:1px solid CanvasText}}

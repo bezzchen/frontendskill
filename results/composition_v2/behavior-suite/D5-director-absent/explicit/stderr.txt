@@ -1,0 +1,18 @@
+2026-09-17T19:48:52.851828Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:48:52.854400Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:48:52.881624Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:48:52.882831Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:48:52.883930Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:51:46.150978Z ERROR codex_core::tools::router: error=apply_patch verification failed: invalid patch: multiple operations target /Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D5-director-absent/explicit/workspace/src/App.jsx
+2026-09-17T19:54:51.800158Z  WARN codex_sandboxing::violation: recorded sandbox violation: resource=filesystem backend=seatbelt reason=permission_denied path=unknown
+2026-09-17T19:55:06.958900Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T19:55:17.987282Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T19:55:20.330269Z  WARN codex_sandboxing::violation: recorded sandbox violation: resource=filesystem backend=seatbelt reason=permission_denied path=unknown
+2026-09-17T19:55:29.700319Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T19:55:32.120861Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T19:55:58.908516Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T19:56:31.939225Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T19:56:40.011651Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T19:57:12.421365Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T19:57:53.284058Z  WARN codex_core::hook_runtime: failed to resolve parent transcript path for subagent hook parent_thread_id=01a0b0ea-2fed-7832-b5b8-0c034b83f07d error=invalid thread-store request: no rollout found for thread id 01a0b0ea-2fed-7832-b5b8-0c034b83f07d
+2026-09-17T19:58:03.220590Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf("/Users/bezzchen/.codex/shell_snapshots/01a0b0ea-2fed-7832-b5b8-0c034b83f07d.1789674532845679000.sh"): Os { code: 2, kind: NotFound, message: "No such file or directory" }

@@ -1,0 +1,13 @@
+{
+  "url": "http://127.0.0.1:8872/",
+  "width": 390,
+  "height": 900,
+  "actions": [
+    {"type": "fill", "selector": "#display-name", "value": "Juniper Pointer Studio"},
+    {"type": "click", "selector": "label[for=kiln-alerts]"},
+    {"type": "click", "selector": "#save-settings"},
+    {"type": "screenshot", "path": "output/correction-1/after-390-saving.png"},
+    {"type": "wait", "ms": 750}
+  ],
+  "screenshot": "output/correction-1/after-390-success.png"
+}

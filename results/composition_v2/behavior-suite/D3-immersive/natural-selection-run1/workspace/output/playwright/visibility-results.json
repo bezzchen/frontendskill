@@ -1,0 +1,43 @@
+{
+  "firstWindow": {
+    "windowId": 1099291027,
+    "bounds": {
+      "left": 215,
+      "top": 56,
+      "width": 1442,
+      "height": 1026,
+      "windowState": "normal"
+    }
+  },
+  "background": {
+    "visibility": "visible",
+    "state": {
+      "playing": true,
+      "frameScheduled": true,
+      "active": true,
+      "phase": 0.1351273155846385,
+      "view": 0,
+      "reducedMotion": false
+    }
+  },
+  "tabs": [
+    {
+      "targetId": "F709053A2ECB3AFFD9FA17A620279210",
+      "type": "page",
+      "title": "about:blank",
+      "url": "about:blank",
+      "attached": true,
+      "canAccessOpener": false,
+      "browserContextId": "31E69F781F617943A429A9E492DCA6A5"
+    },
+    {
+      "targetId": "C54E19355B5368551465FBDA340F66C3",
+      "type": "page",
+      "title": "Iona — The Moonward Observatory",
+      "url": "http://127.0.0.1:8313/",
+      "attached": true,
+      "canAccessOpener": false,
+      "browserContextId": "31E69F781F617943A429A9E492DCA6A5"
+    }
+  ]
+}

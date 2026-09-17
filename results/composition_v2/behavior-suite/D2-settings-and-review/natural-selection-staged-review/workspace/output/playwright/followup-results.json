@@ -1,0 +1,752 @@
+[
+  {
+    "name": "rendered-styles",
+    "width": 1440,
+    "data": {
+      "elements": [
+        {
+          "tag": "P",
+          "id": "",
+          "class": "eyebrow",
+          "text": "CLAY HOUSE / MEMBER STUDIO",
+          "rect": {
+            "x": 294,
+            "y": 44,
+            "width": 852,
+            "height": 19.5,
+            "top": 44,
+            "right": 1146,
+            "bottom": 63.5,
+            "left": 294
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "0px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "H1",
+          "id": "settings-title",
+          "class": "",
+          "text": "Workspace settings",
+          "rect": {
+            "x": 294,
+            "y": 75.5,
+            "width": 852,
+            "height": 48.390625,
+            "top": 75.5,
+            "right": 1146,
+            "bottom": 123.890625,
+            "left": 294
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "12px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "P",
+          "id": "settings-help",
+          "class": "help",
+          "text": "Make this space feel like yours. Choose how we keep you in the loop.",
+          "rect": {
+            "x": 294,
+            "y": 143.890625,
+            "width": 852,
+            "height": 24,
+            "top": 143.890625,
+            "right": 1146,
+            "bottom": 167.890625,
+            "left": 294
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "0px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "P",
+          "id": "name-help",
+          "class": "help field-help",
+          "text": "The name you use around the studio. Required, up to 60 characters.",
+          "rect": {
+            "x": 328,
+            "y": 261.890625,
+            "width": 784,
+            "height": 21,
+            "top": 261.890625,
+            "right": 1112,
+            "bottom": 282.890625,
+            "left": 328
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "8px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "P",
+          "id": "name-error",
+          "class": "error field-error",
+          "text": "",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "8px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "P",
+          "id": "",
+          "class": "help field-help",
+          "text": "You can change this whenever you like.",
+          "rect": {
+            "x": 328,
+            "y": 530.6875,
+            "width": 784,
+            "height": 21,
+            "top": 530.6875,
+            "right": 1112,
+            "bottom": 551.6875,
+            "left": 328
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "8px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "actions",
+          "text": "Save settings",
+          "rect": {
+            "x": 328,
+            "y": 579.6875,
+            "width": 784,
+            "height": 109,
+            "top": 579.6875,
+            "right": 1112,
+            "bottom": 688.6875,
+            "left": 328
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "28px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "save-settings",
+          "class": "",
+          "text": "Save settings",
+          "rect": {
+            "x": 328,
+            "y": 604.6875,
+            "width": 147.296875,
+            "height": 48,
+            "top": 604.6875,
+            "right": 475.296875,
+            "bottom": 652.6875,
+            "left": 328
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "0px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "P",
+          "id": "save-status",
+          "class": "",
+          "text": "",
+          "rect": {
+            "x": 328,
+            "y": 664.6875,
+            "width": 784,
+            "height": 0,
+            "top": 664.6875,
+            "right": 1112,
+            "bottom": 664.6875,
+            "left": 328
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "0px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "P",
+          "id": "save-error",
+          "class": "error",
+          "text": "",
+          "rect": {
+            "x": 328,
+            "y": 664.6875,
+            "width": 784,
+            "height": 0,
+            "top": 664.6875,
+            "right": 1112,
+            "bottom": 664.6875,
+            "left": 328
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "0px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        }
+      ],
+      "overflow": false
+    }
+  },
+  {
+    "name": "rendered-styles",
+    "width": 768,
+    "data": {
+      "elements": [
+        {
+          "tag": "P",
+          "id": "",
+          "class": "eyebrow",
+          "text": "CLAY HOUSE / MEMBER STUDIO",
+          "rect": {
+            "x": 24,
+            "y": 44,
+            "width": 720,
+            "height": 19.5,
+            "top": 44,
+            "right": 744,
+            "bottom": 63.5,
+            "left": 24
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "0px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "H1",
+          "id": "settings-title",
+          "class": "",
+          "text": "Workspace settings",
+          "rect": {
+            "x": 24,
+            "y": 75.5,
+            "width": 720,
+            "height": 48.390625,
+            "top": 75.5,
+            "right": 744,
+            "bottom": 123.890625,
+            "left": 24
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "12px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "P",
+          "id": "settings-help",
+          "class": "help",
+          "text": "Make this space feel like yours. Choose how we keep you in the loop.",
+          "rect": {
+            "x": 24,
+            "y": 143.890625,
+            "width": 720,
+            "height": 24,
+            "top": 143.890625,
+            "right": 744,
+            "bottom": 167.890625,
+            "left": 24
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "0px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "P",
+          "id": "name-help",
+          "class": "help field-help",
+          "text": "The name you use around the studio. Required, up to 60 characters.",
+          "rect": {
+            "x": 58,
+            "y": 261.890625,
+            "width": 652,
+            "height": 21,
+            "top": 261.890625,
+            "right": 710,
+            "bottom": 282.890625,
+            "left": 58
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "8px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "P",
+          "id": "name-error",
+          "class": "error field-error",
+          "text": "",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "8px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "P",
+          "id": "",
+          "class": "help field-help",
+          "text": "You can change this whenever you like.",
+          "rect": {
+            "x": 58,
+            "y": 530.6875,
+            "width": 652,
+            "height": 21,
+            "top": 530.6875,
+            "right": 710,
+            "bottom": 551.6875,
+            "left": 58
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "8px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "actions",
+          "text": "Save settings",
+          "rect": {
+            "x": 58,
+            "y": 579.6875,
+            "width": 652,
+            "height": 109,
+            "top": 579.6875,
+            "right": 710,
+            "bottom": 688.6875,
+            "left": 58
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "28px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "save-settings",
+          "class": "",
+          "text": "Save settings",
+          "rect": {
+            "x": 58,
+            "y": 604.6875,
+            "width": 147.296875,
+            "height": 48,
+            "top": 604.6875,
+            "right": 205.296875,
+            "bottom": 652.6875,
+            "left": 58
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "0px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "P",
+          "id": "save-status",
+          "class": "",
+          "text": "",
+          "rect": {
+            "x": 58,
+            "y": 664.6875,
+            "width": 652,
+            "height": 0,
+            "top": 664.6875,
+            "right": 710,
+            "bottom": 664.6875,
+            "left": 58
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "0px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "P",
+          "id": "save-error",
+          "class": "error",
+          "text": "",
+          "rect": {
+            "x": 58,
+            "y": 664.6875,
+            "width": 652,
+            "height": 0,
+            "top": 664.6875,
+            "right": 710,
+            "bottom": 664.6875,
+            "left": 58
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "0px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        }
+      ],
+      "overflow": false
+    }
+  },
+  {
+    "name": "rendered-styles",
+    "width": 390,
+    "data": {
+      "elements": [
+        {
+          "tag": "P",
+          "id": "",
+          "class": "eyebrow",
+          "text": "CLAY HOUSE / MEMBER STUDIO",
+          "rect": {
+            "x": 20,
+            "y": 28,
+            "width": 350,
+            "height": 19.5,
+            "top": 28,
+            "right": 370,
+            "bottom": 47.5,
+            "left": 20
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "0px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "H1",
+          "id": "settings-title",
+          "class": "",
+          "text": "Workspace settings",
+          "rect": {
+            "x": 20,
+            "y": 59.5,
+            "width": 350,
+            "height": 37.390625,
+            "top": 59.5,
+            "right": 370,
+            "bottom": 96.890625,
+            "left": 20
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "12px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "P",
+          "id": "settings-help",
+          "class": "help",
+          "text": "Make this space feel like yours. Choose how we keep you in the loop.",
+          "rect": {
+            "x": 20,
+            "y": 78.890625,
+            "width": 350,
+            "height": 48,
+            "top": 78.890625,
+            "right": 370,
+            "bottom": 126.890625,
+            "left": 20
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "0px",
+            "position": "relative",
+            "top": "0px",
+            "transform": "matrix(1, 0, 0, 1, 0, -38)"
+          }
+        },
+        {
+          "tag": "P",
+          "id": "name-help",
+          "class": "help field-help",
+          "text": "The name you use around the studio. Required, up to 60 characters.",
+          "rect": {
+            "x": 42,
+            "y": 246.890625,
+            "width": 306,
+            "height": 42,
+            "top": 246.890625,
+            "right": 348,
+            "bottom": 288.890625,
+            "left": 42
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "8px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "P",
+          "id": "name-error",
+          "class": "error field-error",
+          "text": "",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "8px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "P",
+          "id": "",
+          "class": "help field-help",
+          "text": "You can change this whenever you like.",
+          "rect": {
+            "x": 42,
+            "y": 577.6875,
+            "width": 306,
+            "height": 21,
+            "top": 577.6875,
+            "right": 348,
+            "bottom": 598.6875,
+            "left": 42
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "8px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "actions",
+          "text": "Save settings",
+          "rect": {
+            "x": 42,
+            "y": 626.6875,
+            "width": 306,
+            "height": 109,
+            "top": 626.6875,
+            "right": 348,
+            "bottom": 735.6875,
+            "left": 42
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "28px",
+            "position": "relative",
+            "top": "0px",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "save-settings",
+          "class": "",
+          "text": "Save settings",
+          "rect": {
+            "x": 42,
+            "y": 651.6875,
+            "width": 306,
+            "height": 48,
+            "top": 651.6875,
+            "right": 348,
+            "bottom": 699.6875,
+            "left": 42
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "0px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "P",
+          "id": "save-status",
+          "class": "",
+          "text": "",
+          "rect": {
+            "x": 42,
+            "y": 711.6875,
+            "width": 306,
+            "height": 0,
+            "top": 711.6875,
+            "right": 348,
+            "bottom": 711.6875,
+            "left": 42
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "0px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        },
+        {
+          "tag": "P",
+          "id": "save-error",
+          "class": "error",
+          "text": "",
+          "rect": {
+            "x": 42,
+            "y": 711.6875,
+            "width": 306,
+            "height": 0,
+            "top": 711.6875,
+            "right": 348,
+            "bottom": 711.6875,
+            "left": 42
+          },
+          "style": {
+            "pointerEvents": "auto",
+            "marginTop": "0px",
+            "position": "static",
+            "top": "auto",
+            "transform": "none"
+          }
+        }
+      ],
+      "overflow": false
+    }
+  },
+  {
+    "name": "390-pointer-retry-after-keyboard-error",
+    "data": {
+      "button": "Save settings",
+      "error": "We couldn’t save your settings. Your changes are still here. Try saving again.",
+      "name": "Pointer Retry Studio",
+      "checked": false
+    }
+  },
+  {
+    "name": "short-viewport-scroll",
+    "data": {
+      "y": 186,
+      "height": 786,
+      "button": {
+        "x": 42,
+        "y": 465.6875,
+        "width": 306,
+        "height": 48,
+        "top": 465.6875,
+        "right": 348,
+        "bottom": 513.6875,
+        "left": 42
+      }
+    }
+  },
+  {
+    "name": "390-emulated-touch-save",
+    "data": {
+      "button": "Save settings",
+      "status": "You have unsaved changes."
+    }
+  }
+]

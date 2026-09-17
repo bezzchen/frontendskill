@@ -1,0 +1,18 @@
+{
+  "status": "not-accepted-unresolved-development-gates",
+  "runtime_changed_during_suite": false,
+  "candidate_commit": "12f509e61d8aa15de2bfcc54195a7def07bda0a8",
+  "reasons": [
+    "D5 ordinary-prompt run did not read the candidate; it used global frontend-design, so the missing-director candidate fallback was not exercised naturally.",
+    "D2 and D7 remain misses against pre-execution positive-selection expectations, qualified by their supplied fixtures largely settling style/architecture. Do not retrospectively count them as passes.",
+    "D6 explicit fails the assessor's strict two-command interpretation (three command attempts, two sources, one approval retry). The original route/alternate wording leaves retry-count semantics unresolved; this is not a demonstrated breach of a predeclared two-command runtime rule.",
+    "Natural D7 formal review-mode metadata is partial without candidate exposure; actual verification reporting was truthful."
+  ],
+  "efficacy_promotion": "not-evaluated",
+  "next_steps": [
+    "Clarify routing with overlapping installed design skills; preserve exact-design and focused-fix exclusions and retest changed positive fixtures explicitly.",
+    "Define catalog budget units and approval/transport retry treatment before targeted retests.",
+    "Freeze a matched environment, sources, model limitation, held-out fixtures and enforceable total budgets before comparative A/B/C runs."
+  ],
+  "scope": "Development behavior and selection only. Successful unexposed artifacts do not validate candidate causality; no superiority, statistical activation, cost or cross-host claims."
+}

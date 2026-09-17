@@ -1,0 +1,13 @@
+{
+  "observed_at": "2026-09-17T20:37:17.019982+00:00",
+  "fixture_mismatches": [],
+  "modes": {
+    "explicit": {
+      "candidate_mismatches": []
+    },
+    "natural-selection": {
+      "candidate_mismatches": []
+    }
+  },
+  "note": "All six fresh builds completed before this final integrity observation."
+}

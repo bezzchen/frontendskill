@@ -81,8 +81,11 @@ upstream workflow certification or later text revisions.
 
 ## Remaining gates
 
-Run the complete development suite, including actual shared-ticker/offscreen/document-hidden
-cases. Freeze source/host/model, fixtures, comparison wrappers and enforceable budgets before
-the matched pilot and fresh confirmation. Test other hosts and more activation cases. Keep
-Impeccable and optional specialists as separate gated additions. Historical verdicts and
-frozen evaluation records have not been changed or counted as v2 successes.
+The subsequent [complete development behavior suite](behavior-suite/README.md) records
+shared-scheduler, actual offscreen/native document-hidden, activation, fallback and seeded
+review cases. Its remaining selection and catalog-budget gates are explicit; this earlier
+smoke record remains historical. Freeze source/host/model, held-out fixtures, comparison
+wrappers and enforceable budgets before the matched pilot and fresh confirmation. Test
+other hosts and more activation cases. Keep Impeccable and optional specialists as separate
+gated additions. Historical verdicts and frozen evaluation records have not been changed
+or counted as v2 successes.

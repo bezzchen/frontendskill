@@ -1,0 +1,16 @@
+{
+  "case_id": "D7-preview-unavailable",
+  "fixture_status": "frozen-before-runs",
+  "files": {
+    "AGENTS.md": "e968889904e8a1492a1f5fa326a2e813f73c1e527e90f3107b7337ed4255907c",
+    "app.js": "c6a8e1a806d25f35ba6bb9ec3a5c091f97f190e2296283d6560c1b4ec8f5e680",
+    "browser.cjs": "e7f657e61a964cdcb3b5a7ba30a58129930deef3e208935f1013630338055795",
+    "equipment.json": "845d3312b5397467a70cc30a7332590bcf812d50bcfd7738bfa21c79e1e4ee98",
+    "index.html": "0bd165aeaab1c98e853258c299c29c9cb2187ba61aa7e15a954344795b1a62dd",
+    "package.json": "115d48d558bb8ee1252632ebb10a7811d7a53a22ae055d7387e618c57cf0e849",
+    "styles.css": "558f4d5b1b427ba72e3b830a6447ec498a164c3ce5e8e5ab373c5f73c596f0bb"
+  },
+  "aggregate_sha256": "caf9b406fab2450540e3b6a9671cf86954b31b75533f0ad22dcd595e8e0c2b22",
+  "scope": "original application fixture with neutral supported-tool commands before candidate installation",
+  "deviation": null
+}

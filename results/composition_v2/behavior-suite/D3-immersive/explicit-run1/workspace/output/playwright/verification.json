@@ -1,0 +1,129 @@
+{
+  "primaryFlow": "Arrival, alignment, reference lock, unlock, departure, replay, modal Escape and focus return passed.",
+  "keyboard": "Native range Home/End/arrows, focus return and Escape passed.",
+  "reducedMotion": {
+    "before": {
+      "frames": 183,
+      "running": false,
+      "visible": true,
+      "hidden": false,
+      "reducedMotion": true,
+      "passage": 0,
+      "bearing": 30,
+      "destroyed": false
+    },
+    "after": {
+      "frames": 183,
+      "running": false,
+      "visible": true,
+      "hidden": false,
+      "reducedMotion": true,
+      "passage": 0,
+      "bearing": 30,
+      "destroyed": false
+    },
+    "functionality": "All stage and bearing controls remain available; aligned without animation."
+  },
+  "actualTabBackground": {
+    "beforeBackground": {
+      "frames": 194,
+      "running": true,
+      "visible": true,
+      "hidden": false,
+      "reducedMotion": false,
+      "passage": 50,
+      "bearing": 0,
+      "destroyed": false
+    },
+    "hiddenA": {
+      "visibility": "visible",
+      "frames": 211,
+      "running": true,
+      "visible": true,
+      "hidden": false,
+      "reducedMotion": false,
+      "passage": 50,
+      "bearing": 0,
+      "destroyed": false
+    },
+    "hiddenB": {
+      "visibility": "visible",
+      "frames": 232,
+      "running": true,
+      "visible": true,
+      "hidden": false,
+      "reducedMotion": false,
+      "passage": 50,
+      "bearing": 0,
+      "destroyed": false
+    },
+    "verified": false
+  },
+  "tabResume": {
+    "frames": 246,
+    "running": true,
+    "visible": true,
+    "hidden": false,
+    "reducedMotion": false,
+    "passage": 50,
+    "bearing": 0,
+    "destroyed": false
+  },
+  "mobileTelescope": {
+    "scene": {
+      "top": -280,
+      "bottom": 530
+    },
+    "passage": {
+      "top": 575.796875,
+      "bottom": 619.796875
+    },
+    "bearing": {
+      "top": 727.59375,
+      "bottom": 771.59375
+    }
+  },
+  "actualScrollOffscreen": {
+    "offA": {
+      "frames": 376,
+      "running": false,
+      "visible": false,
+      "hidden": false,
+      "reducedMotion": false,
+      "passage": 50,
+      "bearing": 0,
+      "destroyed": false
+    },
+    "offB": {
+      "frames": 376,
+      "running": false,
+      "visible": false,
+      "hidden": false,
+      "reducedMotion": false,
+      "passage": 50,
+      "bearing": 0,
+      "destroyed": false
+    }
+  },
+  "scrollResume": {
+    "frames": 388,
+    "running": true,
+    "visible": true,
+    "hidden": false,
+    "reducedMotion": false,
+    "passage": 50,
+    "bearing": 0,
+    "destroyed": false
+  },
+  "navigationTeardown": {
+    "frames": 388,
+    "running": false,
+    "visible": true,
+    "hidden": false,
+    "reducedMotion": false,
+    "passage": 50,
+    "bearing": 0,
+    "destroyed": true
+  },
+  "consoleErrors": []
+}

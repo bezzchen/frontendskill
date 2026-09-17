@@ -1,0 +1,1 @@
+Build the volunteer shift sign-up page using our existing accessible components and moss/stone brand palette. Show shift capacity, validate a contact name and confirm the chosen shift. Decide remaining details and proceed.

@@ -1,0 +1,162 @@
+[
+  {
+    "tab": 1,
+    "active": {
+      "tag": "A",
+      "id": "",
+      "text": "Skip to telescope controls"
+    }
+  },
+  {
+    "tab": 2,
+    "active": {
+      "tag": "A",
+      "id": "",
+      "text": "\n      \n      MoonwardAn observatory for passing worlds\n    "
+    }
+  },
+  {
+    "tab": 3,
+    "active": {
+      "tag": "A",
+      "id": "",
+      "text": "Observatory"
+    }
+  },
+  {
+    "tab": 4,
+    "active": {
+      "tag": "A",
+      "id": "",
+      "text": "Field notes ↗"
+    }
+  },
+  {
+    "tab": 5,
+    "active": {
+      "tag": "BUTTON",
+      "id": "help-open",
+      "text": "?How to observe"
+    }
+  },
+  {
+    "tab": 6,
+    "active": {
+      "tag": "A",
+      "id": "",
+      "text": "Take the telescope ↘"
+    }
+  },
+  {
+    "tab": 7,
+    "active": {
+      "tag": "BUTTON",
+      "id": "next-act",
+      "text": "Find alignment ↗"
+    }
+  },
+  {
+    "tab": 8,
+    "active": {
+      "tag": "BUTTON",
+      "id": "motion-toggle",
+      "text": "◫ Motion on"
+    }
+  },
+  {
+    "tab": 9,
+    "active": {
+      "tag": "INPUT",
+      "id": "passage",
+      "text": ""
+    }
+  },
+  {
+    "tab": 10,
+    "active": {
+      "tag": "BUTTON",
+      "id": "",
+      "text": "01 Arrival"
+    }
+  },
+  {
+    "tab": 11,
+    "active": {
+      "tag": "BUTTON",
+      "id": "",
+      "text": "02 Alignment"
+    }
+  },
+  {
+    "tab": 12,
+    "active": {
+      "tag": "BUTTON",
+      "id": "",
+      "text": "03 Departure"
+    }
+  },
+  {
+    "tab": 13,
+    "active": {
+      "tag": "INPUT",
+      "id": "bearing",
+      "text": ""
+    }
+  },
+  {
+    "tab": 14,
+    "active": {
+      "tag": "BUTTON",
+      "id": "center-view",
+      "text": "⊕ Center"
+    }
+  },
+  {
+    "keyboardLock": "Reference locked"
+  },
+  {
+    "modalTab": 0,
+    "inside": true,
+    "tag": "BUTTON",
+    "id": "help-start"
+  },
+  {
+    "modalTab": 1,
+    "inside": false,
+    "tag": "BODY",
+    "id": ""
+  },
+  {
+    "modalTab": 2,
+    "inside": true,
+    "tag": "BUTTON",
+    "id": "help-close"
+  },
+  {
+    "modalTab": 3,
+    "inside": true,
+    "tag": "BUTTON",
+    "id": "help-start"
+  },
+  {
+    "modalTab": 4,
+    "inside": false,
+    "tag": "BODY",
+    "id": ""
+  },
+  {
+    "dragBearing": "-6"
+  },
+  {
+    "normalMotionPixelChange": true
+  },
+  {
+    "reduceChanged": "◫\nMotion off"
+  },
+  {
+    "noPreferenceChanged": "◫\nMotion on"
+  },
+  {
+    "mobileHelpSnapshot": "- button \"How to observe\""
+  }
+]

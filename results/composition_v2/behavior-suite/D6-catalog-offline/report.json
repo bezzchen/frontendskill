@@ -1,0 +1,270 @@
+{
+  "case_id": "D6-catalog-offline",
+  "development_only": true,
+  "overall_status": "completed-with-unresolved-catalog-budget-semantics",
+  "runs": [
+    {
+      "run_id": "explicit",
+      "invocation_mode": "explicit",
+      "activation": {
+        "candidate_read": true,
+        "expected_selection": "creative-frontend-architect",
+        "actual_reads": [
+          "/Users/bezzchen/.codex/skills/using-superpowers/SKILL.md",
+          "/Users/bezzchen/.codex/skills/brainstorming/SKILL.md",
+          ".agents/skills/creative-frontend-architect/SKILL.md",
+          ".agents/skills/creative-frontend-architect/references/design-contract.md",
+          ".agents/skills/creative-frontend-architect/references/directors/anthropic.md",
+          ".agents/skills/creative-frontend-architect/references/architecture.md",
+          ".agents/skills/creative-frontend-architect/references/rendered-review.md",
+          ".agents/skills/creative-frontend-architect/integrations.lock.json",
+          ".sources/frontend-design/SKILL.md",
+          "/Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md"
+        ],
+        "contamination": [
+          "/Users/bezzchen/.codex/skills/using-superpowers/SKILL.md",
+          "/Users/bezzchen/.codex/skills/brainstorming/SKILL.md",
+          "/Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md"
+        ],
+        "read_scope": "parent CLI trace; delegated contexts not fully captured"
+      },
+      "assertions": [
+        {
+          "assertion": "Stop catalog checks after first unavailable route plus at most one alternate within3min.",
+          "status": "fail",
+          "evidence": [
+            "explicit/catalog-attempts.json",
+            "explicit/execution.json"
+          ],
+          "note": "Observed 3 actual command attempts against 2 distinct catalog sources: two sandbox transport failures and one approved retry receiving HTTP 503. The strict assessor counts transport/approval retries and retains its fail. The pre-execution specification says first unavailable route plus one alternate, not a literal two-command maximum; whether recovery on the same route consumes another attempt is unresolved. This is not an established predeclared/runtime violation. Conservative whole-run-start-to-last-catalog-response bound: 35.411613 seconds.",
+          "scoring_interpretation": "Strict assessor command-count interpretation; unresolved against route-based wording.",
+          "predeclared_violation_established": false,
+          "interpretation_status": "unresolved"
+        },
+        {
+          "assertion": "Record unavailable evidence and custom/reference fallback honestly; no invented adoption.",
+          "status": "pass",
+          "evidence": [
+            "explicit/catalog-attempts.json",
+            "explicit/workspace/work-log.md"
+          ],
+          "note": "Actual fetch failures preserved. Local gateway503 reached in explicit; natural initial transport failures are a separate environment condition."
+        },
+        {
+          "assertion": "Preserve identity and readable booking flow in reduced-motion/touch states.",
+          "status": "pass",
+          "evidence": [
+            "assessor/explicit/observations.json",
+            "explicit/workspace/work-log.md"
+          ],
+          "note": "Assessor desktop1440 and touch-emulated390, with and without reduced motion. Physical hardware not tested."
+        }
+      ],
+      "initial_outcome": "Full build with custom native folding-paper effect; catalog access unavailable. Starting fixture contained malformed first date option.",
+      "final_outcome": "Native CSS paper reveal preserved the original illustration, readable semantic text, and both selectable workshop dates. Assessor observed required-field validation and successful booking/focus at1440px and touch-emulated390px, including reduced motion with zero running reveal animations.",
+      "correction_cycles": 1,
+      "execution": {
+        "mode": "explicit",
+        "model_alias": "gpt-6-astra",
+        "model_snapshot": null,
+        "effort": "high",
+        "candidate_commit": "12f509e61d8aa15de2bfcc54195a7def07bda0a8",
+        "harness_sha256": "b608d331a2ebaf2d1ff245ce42049d515f8a47efb554b2be567e39a8de389781",
+        "command": [
+          "codex",
+          "exec",
+          "--ignore-user-config",
+          "--ephemeral",
+          "--skip-git-repo-check",
+          "--approve-for-me",
+          "-m",
+          "gpt-6-astra",
+          "-c",
+          "model_reasoning_effort=\"high\"",
+          "-C",
+          "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D6-catalog-offline/explicit/workspace",
+          "--json",
+          "-o",
+          "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D6-catalog-offline/explicit/final.md",
+          "-"
+        ],
+        "wall_cap_seconds": 1200,
+        "token_cap": null,
+        "source_path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D6-catalog-offline/explicit/workspace/.sources/frontend-design/SKILL.md",
+        "source_sha256": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3",
+        "host_config_ignored": true,
+        "global_skills_and_hooks_still_present": true,
+        "isolation": "fresh CLI context; project-only task instruction, not an OS read barrier",
+        "whole_workflow_tokens": null,
+        "started_at": "2026-09-17T19:11:20.592387+00:00",
+        "terminal_status": "completed",
+        "exit_code": 0,
+        "elapsed_seconds": 835.77,
+        "finished_at": "2026-09-17T19:26:06.457225+00:00",
+        "parent_usage_events": [
+          {
+            "input_tokens": 1783243,
+            "cached_input_tokens": 1731328,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 11045,
+            "reasoning_output_tokens": 1598
+          }
+        ],
+        "whole_workflow_tokens_reason": "Parent usage may exclude delegated agents; do not infer total without accounting audit."
+      },
+      "limitations": [
+        "Development only; no efficacy comparison.",
+        "Global skills visible/read; parent trace is not a full delegated read audit.",
+        "Model alias and no token cap; whole-workflow token totals unavailable.",
+        "Original fixture malformed first date option disclosed and frozen.",
+        "Package/docs availability separately preflighted200; catalog failure does not imply whole-network offline.",
+        "Nested rendered-review independence is builder-reported/unverified; exposed spawn/context evidence is insufficient. Separate assessor flow evidence is retained.",
+        "Three commands/two sources are factual; the retained strict-assessor fail depends on unresolved command-versus-route and approval-retry semantics."
+      ],
+      "catalog_response_count": 1,
+      "fixture_input": "original (port8796); unused mode-fixtures/explicit (port8863) was not dispatched",
+      "review_independence": {
+        "claimed_reviewer_identity": "/root/rendered_review",
+        "status": "builder-reported/unverified",
+        "reason": "Exposed parent trace does not corroborate a separate spawn/context; wait calls have empty agent ID lists. Written reviewer artifacts and builder claims alone do not prove fresh independence.",
+        "evidence": [
+          "explicit/trace.jsonl",
+          "explicit/workspace/work-log.md"
+        ]
+      }
+    },
+    {
+      "run_id": "natural-selection",
+      "invocation_mode": "natural-selection",
+      "activation": {
+        "candidate_read": true,
+        "expected_selection": "creative-frontend-architect",
+        "actual_reads": [
+          "/Users/bezzchen/.codex/skills/using-superpowers/SKILL.md",
+          "/Users/bezzchen/.codex/skills/brainstorming/SKILL.md",
+          ".agents/skills/creative-frontend-architect/SKILL.md",
+          ".agents/skills/creative-frontend-architect/references/design-contract.md",
+          ".agents/skills/creative-frontend-architect/references/directors/anthropic.md",
+          ".agents/skills/creative-frontend-architect/references/architecture.md",
+          ".agents/skills/creative-frontend-architect/references/rendered-review.md",
+          "/Users/bezzchen/.codex/skills/writing-plans/SKILL.md",
+          "/Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md",
+          ".sources/frontend-design/SKILL.md"
+        ],
+        "contamination": [
+          "/Users/bezzchen/.codex/skills/using-superpowers/SKILL.md",
+          "/Users/bezzchen/.codex/skills/brainstorming/SKILL.md",
+          "/Users/bezzchen/.codex/skills/writing-plans/SKILL.md",
+          "/Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md"
+        ],
+        "read_scope": "parent CLI trace; delegated contexts not fully captured"
+      },
+      "assertions": [
+        {
+          "assertion": "Stop catalog checks after first unavailable route plus at most one alternate within3min.",
+          "status": "pass",
+          "evidence": [
+            "natural-selection/catalog-attempts.json",
+            "natural-selection/execution.json",
+            "natural-selection/catalog-timing-bound.json"
+          ],
+          "note": "2 actual command attempts against 2 distinct sources. Both failed at the sandbox transport boundary. A conservative 93.6304-second bound runs from whole-run start to subsequent work-log creation; trace order establishes both calls completed earlier. This passes both command-count and route-count interpretations. Individual preconnection error timestamps are unavailable."
+        },
+        {
+          "assertion": "Record unavailable evidence and custom/reference fallback honestly; no invented adoption.",
+          "status": "pass",
+          "evidence": [
+            "natural-selection/catalog-attempts.json",
+            "natural-selection/workspace/work-log.md"
+          ],
+          "note": "Actual fetch failures preserved. Local gateway503 reached in explicit; natural initial transport failures are a separate environment condition."
+        },
+        {
+          "assertion": "Preserve identity and readable booking flow in reduced-motion/touch states.",
+          "status": "pass",
+          "evidence": [
+            "assessor/natural-selection/observations.json",
+            "natural-selection/workspace/work-log.md"
+          ],
+          "note": "Assessor desktop1440 and touch-emulated390, with and without reduced motion. Physical hardware not tested."
+        }
+      ],
+      "initial_outcome": "Full build with custom native folding-paper effect; catalog access unavailable. Starting fixture contained malformed first date option.",
+      "final_outcome": "Native CSS paper reveal preserved the original illustration, readable semantic text, and both selectable workshop dates. Assessor observed required-field validation and successful booking/focus at1440px and touch-emulated390px, including reduced motion with zero running reveal animations.",
+      "correction_cycles": 1,
+      "execution": {
+        "mode": "natural-selection",
+        "model_alias": "gpt-6-astra",
+        "model_snapshot": null,
+        "effort": "high",
+        "candidate_commit": "12f509e61d8aa15de2bfcc54195a7def07bda0a8",
+        "harness_sha256": "b608d331a2ebaf2d1ff245ce42049d515f8a47efb554b2be567e39a8de389781",
+        "command": [
+          "codex",
+          "exec",
+          "--ignore-user-config",
+          "--ephemeral",
+          "--skip-git-repo-check",
+          "--approve-for-me",
+          "-m",
+          "gpt-6-astra",
+          "-c",
+          "model_reasoning_effort=\"high\"",
+          "-C",
+          "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D6-catalog-offline/natural-selection/workspace",
+          "--json",
+          "-o",
+          "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D6-catalog-offline/natural-selection/final.md",
+          "-"
+        ],
+        "wall_cap_seconds": 1200,
+        "token_cap": null,
+        "source_path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D6-catalog-offline/natural-selection/workspace/.sources/frontend-design/SKILL.md",
+        "source_sha256": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3",
+        "host_config_ignored": true,
+        "global_skills_and_hooks_still_present": true,
+        "isolation": "fresh CLI context; project-only task instruction, not an OS read barrier",
+        "whole_workflow_tokens": null,
+        "started_at": "2026-09-17T19:26:07.448859+00:00",
+        "terminal_status": "completed",
+        "exit_code": 0,
+        "elapsed_seconds": 327.87,
+        "finished_at": "2026-09-17T19:31:35.321980+00:00",
+        "parent_usage_events": [
+          {
+            "input_tokens": 1066191,
+            "cached_input_tokens": 1005824,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 6628,
+            "reasoning_output_tokens": 1232
+          }
+        ],
+        "whole_workflow_tokens_reason": "Parent usage may exclude delegated agents; do not infer total without accounting audit."
+      },
+      "limitations": [
+        "Development only; no efficacy comparison.",
+        "Global skills visible/read; parent trace is not a full delegated read audit.",
+        "Model alias and no token cap; whole-workflow token totals unavailable.",
+        "Original fixture malformed first date option disclosed and frozen.",
+        "Package/docs availability separately preflighted200; catalog failure does not imply whole-network offline.",
+        "Nested rendered-review independence is builder-reported/unverified; exposed spawn/context evidence is insufficient. Separate assessor flow evidence is retained."
+      ],
+      "catalog_response_count": 0,
+      "fixture_input": "mode-fixtures/natural-selection (port8864), app bytes match frozen original; AGENTS port differs",
+      "review_independence": {
+        "claimed_reviewer_identity": "/root/rendered_review",
+        "status": "builder-reported/unverified",
+        "reason": "Exposed parent trace does not corroborate a separate spawn/context; wait calls have empty agent ID lists. Written reviewer artifacts and builder claims alone do not prove fresh independence.",
+        "evidence": [
+          "natural-selection/trace.jsonl",
+          "natural-selection/workspace/work-log.md"
+        ]
+      }
+    }
+  ],
+  "fixture_freeze": "fixture-freeze.json",
+  "network_preflight": "network-preflight.json",
+  "gateway_access": "catalog-access.jsonl",
+  "efficacy_claim": null,
+  "scheduling_deviation": "D6 explicit briefly overlapped D7 natural due duplicate dispatcher. Existing runs preserved; duplicates stopped and subsequent runs sequential."
+}

@@ -1,0 +1,996 @@
+{
+  "captured_at": "2026-09-17T19:04:55.566805+00:00",
+  "scope": "Filesystem inventory of local skill roots; exact injected roster per CLI is not observable in JSONL. Inventory may include versions not advertised. Actual read events are recorded per run.",
+  "skills": [
+    {
+      "path": "/Users/bezzchen/.codex/skills/.system/imagegen/SKILL.md",
+      "sha256": "681ddb4ad6d06a2acc78a3535b583f8d0c1ea800ecda3d56370d3310fd2cd4ba",
+      "name": "\"imagegen\"",
+      "description": "\"Generate or edit raster images when the task benefits from AI-created bitmap visuals such as photos, illustrations, textures, sprites, mockups, or transparent-background cutouts. Use when Codex should create a brand-new image, transform an existing image, or derive visual variants from references, and the output should be a bitmap asset rather than repo-native code or vector. Do not use when the task is better handled by editing existing SVG/vector/code-native assets, extending an established icon or logo system, or building the visual directly in HTML/CSS/canvas.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/.system/openai-docs/SKILL.md",
+      "sha256": "7cb8fa1b2a0c635b5c61ffe1da7b8594a7ea0fce5b71e8d523e2025d88b2a05e",
+      "name": "\"openai-docs\"",
+      "description": "\"Use for Codex models/pricing, scheduled tasks, skills, settings, setup, troubleshooting, customization, automations, and self-knowledge\u2014including 'you,' 'your,' 'this app,' or 'this coding agent' when they refer to Codex\u2014and for OpenAI APIs/products and ChatGPT Work. Also use for model choice/migration, prompting, SDKs, Responses, Realtime, agents, evals, and Chat/Work/Codex comparisons. Do not use for generic app/software tasks that merely mention Codex.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/.system/plugin-creator/SKILL.md",
+      "sha256": "71b95b8219644f95d633721e7f7cd3c469edfc8fe50f8415d400dfb2d74bc7b9",
+      "name": "plugin-creator",
+      "description": "Create and scaffold plugin directories for Codex with a required `.codex-plugin/plugin.json`, optional plugin folders/files, valid manifest defaults, and personal-marketplace entries by default. Use when Codex needs to create a new personal plugin, add optional plugin structure, generate or update marketplace entries for plugin ordering and availability metadata, or update an existing local plugin during development with the CLI-driven cachebuster and reinstall flow."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/.system/review-agent/SKILL.md",
+      "sha256": "07079efd0dc76f05fade424e5dfb048dce1de2df7626e1a4f56292a4f3f92228",
+      "name": "review-agent",
+      "description": "Perform a read-only, defect-first review of a specified code change and return every actionable finding. Use when another agent delegates review of uncommitted changes, a base-branch diff, a commit, or custom review instructions."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/.system/skill-creator/SKILL.md",
+      "sha256": "6656e54755638e8efcf275a472b9672eaa8a9a1b9e59dc210e275b03b59e1e66",
+      "name": "skill-creator",
+      "description": "Create or update a Codex skill with appropriately scoped instructions and any needed supporting resources."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/.system/skill-installer/SKILL.md",
+      "sha256": "d68b77e5bbb34dedab89d134da52855f140fc4b4299b80104f534e3b9e98f8ee",
+      "name": "skill-installer",
+      "description": "Install Codex skills into $CODEX_HOME/skills from a curated list or a GitHub repo path. Use when a user asks to list installable skills, install a curated skill, or install a skill from another repo (including private repos)."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/21st-registry/SKILL.md",
+      "sha256": "816815266f64f0df3e42eba5a27e225a618c7177c35dfd4443ac2864a46d94b3",
+      "name": "21st-registry",
+      "description": "Publish a React component to the user's team library on 21st.dev so teammates can install it with a single command, or install an existing one. Triggers when the user says things like \"publish/share/upload this to 21st\", \"\u0437\u0430\u043b\u0435\u0439 \u0432 \u043d\u0430\u0448 \u0440\u0435\u0433\u0438\u0441\u0442\u0440\", \"\u043e\u043f\u0443\u0431\u043b\u0438\u043a\u0443\u0439 \u043a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\", \"share with team\", \"make this reusable\", \"install our Button\", \"use the team button\"."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/agent-elements/SKILL.md",
+      "sha256": "e293a02b3c4c1f859abb47e62d43b3b2e241eef318eb5234950f4683d64a3b2c",
+      "name": "agent-elements",
+      "description": "|"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/agent-introspection-debugging/SKILL.md",
+      "sha256": "1c2125c955ddc950ee9faafa198568031c07beaf08a97412b90dccc23405615d",
+      "name": "agent-introspection-debugging",
+      "description": "Structured self-debugging workflow for AI agent failures using capture, diagnosis, contained recovery, and introspection reports."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/agent-sort/SKILL.md",
+      "sha256": "07a787b554e707971459b7047bea32d3f8e5b6ec82fed3ed66cd1074da2628fa",
+      "name": "agent-sort",
+      "description": "Build an evidence-backed ECC install plan for a specific repo by sorting skills, commands, rules, hooks, and extras into DAILY vs LIBRARY buckets using parallel repo-aware review passes. Use when ECC should be trimmed to what a project actually needs instead of loading the full bundle."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/api-design/SKILL.md",
+      "sha256": "7a0ca9c3cec89b2e86cca698c9b947fe136345b5117001b85c4a665515381c94",
+      "name": "api-design",
+      "description": "REST API design patterns including resource naming, status codes, pagination, filtering, error responses, versioning, and rate limiting for production APIs."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/article-writing/SKILL.md",
+      "sha256": "fc1d006cfa9bb7ba2f2e4ab179a35fcc3130cc0160b3e2998a7ab9aaf0c6ca0d",
+      "name": "article-writing",
+      "description": "Write articles, guides, blog posts, tutorials, newsletter issues, and other long-form content in a distinctive voice derived from supplied examples or brand guidance. Use when the user wants polished written content longer than a paragraph, especially when voice consistency, structure, and credibility matter."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/backend-patterns/SKILL.md",
+      "sha256": "f1bc0f30e6566600b5afd97f08408c4addb31e8c8ea1cd9474795ef5ada76aed",
+      "name": "backend-patterns",
+      "description": "Backend architecture patterns, API design, database optimization, and server-side best practices for Node.js, Express, and Next.js API routes."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/brainstorming/SKILL.md",
+      "sha256": "e14914605f640e0841758e45d0ab2a53243b59b921f929e47921c99668f2e61d",
+      "name": "brainstorming",
+      "description": "\"You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/brand-voice/SKILL.md",
+      "sha256": "1507b4251d07fdc0aa1aac99af7283b2200dfeb3531855355b05afda13d47dcd",
+      "name": "brand-voice",
+      "description": "Build a source-derived writing style profile from real posts, essays, launch notes, docs, or site copy, then reuse that profile across content, outreach, and social workflows. Use when the user wants voice consistency without generic AI writing tropes."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/bun-runtime/SKILL.md",
+      "sha256": "7b66f97f5057a28347af21cd6afadb9afb54c38a663e4c059bb8d63c89b2f035",
+      "name": "bun-runtime",
+      "description": "Bun as runtime, package manager, bundler, and test runner. When to choose Bun vs Node, migration notes, and Vercel support."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/coding-standards/SKILL.md",
+      "sha256": "924693e7254789462dd4a459ae44e9842f34a422fd09be0c53c739287ed815fd",
+      "name": "coding-standards",
+      "description": "Baseline cross-project coding conventions for naming, readability, immutability, and code-quality review. Use detailed frontend or backend skills for framework-specific patterns."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/content-engine/SKILL.md",
+      "sha256": "7a54347077af380152c62e40b2c0e7549c388acd9cfc9704d13e44506f51b8fb",
+      "name": "content-engine",
+      "description": "Create platform-native content systems for X, LinkedIn, TikTok, YouTube, newsletters, and repurposed multi-platform campaigns. Use when the user wants social posts, threads, scripts, content calendars, or one source asset adapted cleanly across platforms."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/crosspost/SKILL.md",
+      "sha256": "ef25ac009f3486e4f4ffd741c68b56a895cbd0b43960e975975345787cf2159f",
+      "name": "crosspost",
+      "description": "Multi-platform content distribution across X, LinkedIn, Threads, and Bluesky. Adapts content per platform using content-engine patterns. Never posts identical content cross-platform. Use when the user wants to distribute content across social platforms."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/deep-research/SKILL.md",
+      "sha256": "5692b149b1b82748880dacde47f5ebe9e72d4d14fc50930063b4716b00944e03",
+      "name": "deep-research",
+      "description": "Multi-source deep research using firecrawl and exa MCPs. Searches the web, synthesizes findings, and delivers cited reports with source attribution. Use when the user wants thorough research on any topic with evidence and citations."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/defuddle/SKILL.md",
+      "sha256": "10673a4dc70a0a057612d443243ab7a5aa4abdd4a0fadc3f6eec5fd71ad5a971",
+      "name": "defuddle",
+      "description": "Extract clean markdown content from web pages using Defuddle CLI, removing clutter and navigation to save tokens. Use instead of WebFetch when the user provides a URL to read or analyze, for online documentation, articles, blog posts, or any standard web page. Do NOT use for URLs ending in .md \u2014 those are already markdown, use WebFetch directly."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/dispatching-parallel-agents/SKILL.md",
+      "sha256": "f0df13f584049059cc5619f90061405b89dcc6e28ab3f2a8517d27d99c7a46a6",
+      "name": "dispatching-parallel-agents",
+      "description": "Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/dmux-workflows/SKILL.md",
+      "sha256": "09d10da399fb1888bdf8f302db71894d43a37fe135d7846b17614703b1de5eec",
+      "name": "dmux-workflows",
+      "description": "Multi-agent orchestration using dmux (tmux pane manager for AI agents). Patterns for parallel agent workflows across Claude Code, Codex, OpenCode, and other harnesses. Use when running multiple agent sessions in parallel or coordinating multi-agent development workflows."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/documentation-lookup/SKILL.md",
+      "sha256": "142fbfdffbcb6eb80c47afa5705a2a8130387bab2500bb0930f557de08640b9a",
+      "name": "documentation-lookup",
+      "description": "Use up-to-date library and framework docs via Context7 MCP instead of training data. Activates for setup questions, API references, code examples, or when the user names a framework (e.g. React, Next.js, Prisma)."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/e2e-testing/SKILL.md",
+      "sha256": "7e8fe72760f9274656f2b3d5a501b9535b4fe3acd8d83a79cd15f207c21bd937",
+      "name": "e2e-testing",
+      "description": "Playwright E2E testing patterns, Page Object Model, configuration, CI/CD integration, artifact management, and flaky test strategies."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/eval-harness/SKILL.md",
+      "sha256": "ff7bd8d0d07637581a795c1241cd6246ddf12f96a76ec951e9514b733e6794cf",
+      "name": "eval-harness",
+      "description": "Formal evaluation framework for Claude Code sessions implementing eval-driven development (EDD) principles"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/everything-claude-code/SKILL.md",
+      "sha256": "de9cfb1457802667bf8e1f206ab62de7f465b1cc6fc0b7fc2fa842dc98914da3",
+      "name": "everything-claude-code",
+      "description": "Development conventions and patterns for everything-claude-code. JavaScript project with conventional commits."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/exa-search/SKILL.md",
+      "sha256": "6802dcc7442da5f8e53a7a9b91f2e093317441a5a7bd4ad907b3a01e33af269e",
+      "name": "exa-search",
+      "description": "Neural search via Exa MCP for web, code, and company research. Use when the user needs web search, code examples, company intel, people lookup, or AI-powered deep research with Exa's neural search engine."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/executing-plans/SKILL.md",
+      "sha256": "bbd8d28bb655a52817cc129ce49f9e46fa7c6303f72ed5de95bfe914ef8e0ce8",
+      "name": "executing-plans",
+      "description": "Use when you have a written implementation plan to execute in a separate session with review checkpoints"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/fal-ai-media/SKILL.md",
+      "sha256": "2420f083fdf4eec3bb97b9b5db8b68e667640b51eca051c7d537596e6be2049c",
+      "name": "fal-ai-media",
+      "description": "Unified media generation via fal.ai MCP \u2014 image, video, and audio. Covers text-to-image (Nano Banana), text/image-to-video (Seedance, Kling, Veo 3), text-to-speech (CSM-1B), and video-to-audio (ThinkSound). Use when the user wants to generate images, videos, or audio with AI."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/finishing-a-development-branch/SKILL.md",
+      "sha256": "e6d4a812de900d33c6eacfb40747f99427f25c304a7b7099120f9373b115a47f",
+      "name": "finishing-a-development-branch",
+      "description": "Use when implementation is complete, all tests pass, and you need to decide how to integrate the work - guides completion of development work by presenting structured options for merge, PR, or cleanup"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/frontend-design/SKILL.md",
+      "sha256": "1608ea77fbb6fc30d13a97d12cfa8ebf31358d40f0dd97beed24829d6b3f45dd",
+      "name": "frontend-design",
+      "description": "Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Helps with aesthetic direction, typography, and making choices that don't read as templated defaults."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/frontend-patterns/SKILL.md",
+      "sha256": "fbaea313237c8031d8db5fa1064fac16257394cd9419547329b54dcdadc9454e",
+      "name": "frontend-patterns",
+      "description": "Frontend development patterns for React, Next.js, state management, performance optimization, and UI best practices."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/frontend-slides/SKILL.md",
+      "sha256": "9f4476426e60105f4e3241b4a66705934b1a618b52c6009560e5034d731f4578",
+      "name": "frontend-slides",
+      "description": "Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files. Use when the user wants to build a presentation, convert a PPT/PPTX to web, or create slides for a talk/pitch. Helps non-designers discover their aesthetic through visual exploration rather than abstract choices."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-add-tests/SKILL.md",
+      "sha256": "fbbc12e465559e051513e26ac6ca2d011eff27fc975c47d0db65a90047947e4a",
+      "name": "\"gsd-add-tests\"",
+      "description": "\"Generate tests for a completed phase based on UAT criteria and implementation\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-ai-integration-phase/SKILL.md",
+      "sha256": "9be8de8e69d488294f9d9a61a5369f2677f37433aa42f3062c56b25671e126de",
+      "name": "\"gsd-ai-integration-phase\"",
+      "description": "\"Generate an AI-SPEC.md design contract for phases that involve building AI systems.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-audit-fix/SKILL.md",
+      "sha256": "1cbd6f2c107df9493fde5e16a4e51182de4df7d33b14f9ee2fee6b4b2924173d",
+      "name": "\"gsd-audit-fix\"",
+      "description": "\"Autonomous audit-to-fix pipeline \u2014 find issues, classify, fix, test, commit\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-audit-milestone/SKILL.md",
+      "sha256": "a22dfaa8939060e4c9153304e655868db7aad2d8b66cc85ac7cf36e89983c4fb",
+      "name": "\"gsd-audit-milestone\"",
+      "description": "\"Audit milestone completion against original intent before archiving\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-audit-uat/SKILL.md",
+      "sha256": "539d8ca646a8ea6a2e6a77d8edc50c69caf81ec03648cabc532c54c529487cdc",
+      "name": "\"gsd-audit-uat\"",
+      "description": "\"Cross-phase audit of all outstanding UAT and verification items\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-autonomous/SKILL.md",
+      "sha256": "85ae596f7585b6c17d8469885f6e87fbe5f84a7528f9669e7e5707f43181c2d4",
+      "name": "\"gsd-autonomous\"",
+      "description": "\"Run all remaining phases autonomously \u2014 discuss\u2192plan\u2192execute per phase\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-capture/SKILL.md",
+      "sha256": "eae464ea0c2dec0212c6a29c828d4cbfd5cf4aa889a43069b12fbf52a4e6a8eb",
+      "name": "\"gsd-capture\"",
+      "description": "\"Capture ideas, tasks, notes, and seeds to their destination\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-cleanup/SKILL.md",
+      "sha256": "0ca74c7d236b0d337866af9591257cadef472bd4a3a4cc2e171e16027dc34b9a",
+      "name": "\"gsd-cleanup\"",
+      "description": "\"Archive accumulated phase directories from completed milestones\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-code-review/SKILL.md",
+      "sha256": "c215c279dda8e8a11bbdc97d367ce49d9073d7e7a0290b53124d08e5e97e8c08",
+      "name": "\"gsd-code-review\"",
+      "description": "\"Review source files changed during a phase for bugs, security issues, and code quality problems\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-complete-milestone/SKILL.md",
+      "sha256": "bf7502cb796f0c997c790b8521a1a998d0819f636525b7ff261f66e4323544fb",
+      "name": "\"gsd-complete-milestone\"",
+      "description": "\"Archive completed milestone and prepare for next version\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-config/SKILL.md",
+      "sha256": "47c6a77642b7d2a212138e63335ad4b3252a18b2dcc0f4daee3d3e4c51d9ed5d",
+      "name": "\"gsd-config\"",
+      "description": "\"Configure GSD settings \u2014 workflow toggles, advanced knobs, integrations, and model profile\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-debug/SKILL.md",
+      "sha256": "08dcc58c93fcc7575109a81563b226f54381084b81cd0427e3bc24c75e0812e6",
+      "name": "\"gsd-debug\"",
+      "description": "\"Systematic debugging with persistent state across context resets\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-discuss-phase/SKILL.md",
+      "sha256": "39f21e36ee1fd07e7f615506e10b4f5b8a48d77f7847b204f56a60189d030678",
+      "name": "\"gsd-discuss-phase\"",
+      "description": "\"Gather phase context through adaptive questioning before planning.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-docs-update/SKILL.md",
+      "sha256": "45beb16776eb7642dd574e49ed2dfafc7efb9e0f8f01207d779f98ac93130e86",
+      "name": "\"gsd-docs-update\"",
+      "description": "\"Generate or update project documentation verified against the codebase\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-eval-review/SKILL.md",
+      "sha256": "9d7cb68367cb2099102899cd973dd855740b98a1661292575f7f82617069a041",
+      "name": "\"gsd-eval-review\"",
+      "description": "\"Audit an executed AI phase's evaluation coverage and produce an EVAL-REVIEW.md remediation plan.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-execute-phase/SKILL.md",
+      "sha256": "9730913c197061b40e59754066a010e77a7cc6a850c80686da787d6b5437eaed",
+      "name": "\"gsd-execute-phase\"",
+      "description": "\"Execute all plans in a phase with wave-based parallelization\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-explore/SKILL.md",
+      "sha256": "9330d4aca4e0d9a550db06e7f1037d12954ec6db2fc2bf132717876ea207bd80",
+      "name": "\"gsd-explore\"",
+      "description": "\"Socratic ideation and idea routing \u2014 think through ideas before committing to plans\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-extract-learnings/SKILL.md",
+      "sha256": "d7162214d13703a05a3b10222954c7bcd5ee5e65bd44670868c111bb18b37b7e",
+      "name": "\"gsd-extract-learnings\"",
+      "description": "\"Extract decisions, lessons, patterns, and surprises from completed phase artifacts\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-fast/SKILL.md",
+      "sha256": "97d5f70d4f4153ac2c1387e9a8e3352bdecd9e0f40303f247302c5045cfa4ffc",
+      "name": "\"gsd-fast\"",
+      "description": "\"Execute a trivial task inline \u2014 no subagents, no planning overhead\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-forensics/SKILL.md",
+      "sha256": "89f1b816c70f3113b3858755abb9e3adc929cb7a61930c1f2f70e1a93fb0e7bd",
+      "name": "\"gsd-forensics\"",
+      "description": "\"Post-mortem investigation for failed GSD workflows \u2014 diagnoses what went wrong.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-graphify/SKILL.md",
+      "sha256": "fba0d528e86293febe0e3575478954a4f6876fd0c10bab00ef3c1c8c49deccb5",
+      "name": "\"gsd-graphify\"",
+      "description": "\"Build, query, and inspect the project knowledge graph in .planning/graphs/\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-health/SKILL.md",
+      "sha256": "d9ad315098412f86b23a758c86970cb2c526de164012f0cca78beeaa78f252b9",
+      "name": "\"gsd-health\"",
+      "description": "\"Diagnose planning directory health and optionally repair issues\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-help/SKILL.md",
+      "sha256": "4767ed28c7d02d3a1bc6952cea162f2dd2211cdc6ab83d0b778a63e51c0c2c7b",
+      "name": "\"gsd-help\"",
+      "description": "\"Show available GSD commands and usage guide\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-import/SKILL.md",
+      "sha256": "4e0891c1fe73fb83a3b09de9cceadbaa3a9fcdaad85ce40c5112793b15f29a91",
+      "name": "\"gsd-import\"",
+      "description": "\"Ingest external plans with conflict detection against project decisions before writing anything.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-inbox/SKILL.md",
+      "sha256": "7780f0086858782584cc826974730d15808a661c6352f9993a7a02a171bc6927",
+      "name": "\"gsd-inbox\"",
+      "description": "\"Triage and review open GitHub issues and PRs against project templates and contribution guidelines.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-ingest-docs/SKILL.md",
+      "sha256": "4fb237cec068f189fb5c5222aa508248efcc67b515461d2ab3dc8fdcd9750d23",
+      "name": "\"gsd-ingest-docs\"",
+      "description": "\"Bootstrap or merge a .planning/ setup from existing ADRs, PRDs, SPECs, and docs in a repo.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-manager/SKILL.md",
+      "sha256": "dad8d7c200fdc51526a6c53d6460927118fb1c255d5f017c3c42cfc33615bec1",
+      "name": "\"gsd-manager\"",
+      "description": "\"Interactive command center for managing multiple phases from one terminal\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-map-codebase/SKILL.md",
+      "sha256": "3a57ec57566c763fd500198c16360c0b684434da0741e8cec72917b4511ab543",
+      "name": "\"gsd-map-codebase\"",
+      "description": "\"Analyze codebase with parallel mapper agents to produce .planning/codebase/ documents\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-milestone-summary/SKILL.md",
+      "sha256": "56e82664baf05a835a36695c4eaa9d7c25f1c57e1c08bea7eda3fd2b34e9d264",
+      "name": "\"gsd-milestone-summary\"",
+      "description": "\"Generate a comprehensive project summary from milestone artifacts for team onboarding and review\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-mvp-phase/SKILL.md",
+      "sha256": "1433d8750dbb01329a3c37952bc6e73ed9c87387d2f217c2884a073208b10cf5",
+      "name": "\"gsd-mvp-phase\"",
+      "description": "\"Plan a phase as a vertical MVP slice \u2014 user story, SPIDR splitting, then plan-phase\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-new-milestone/SKILL.md",
+      "sha256": "70654204c66654751431dac3a1cfd9a2f834d5bbae4d376002eaf8cf8e563d99",
+      "name": "\"gsd-new-milestone\"",
+      "description": "\"Start a new milestone cycle \u2014 update PROJECT.md and route to requirements\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-new-project/SKILL.md",
+      "sha256": "eea84794ab78d83280b2231456149de518e2b5ef0f1d11524eff466ab887dab2",
+      "name": "\"gsd-new-project\"",
+      "description": "\"Initialize a new project with deep context gathering and PROJECT.md\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-ns-context/SKILL.md",
+      "sha256": "0fa055f69bd00dd1826d84a40f29319051c6f58fb7f82900c1cc79f703efa437",
+      "name": "\"gsd-ns-context\"",
+      "description": "\"codebase intelligence | map graphify docs learnings\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-ns-ideate/SKILL.md",
+      "sha256": "e4b557af4220a5d6143607ce24daa96a6aa163261eafb69348583abce5908979",
+      "name": "\"gsd-ns-ideate\"",
+      "description": "\"exploration capture | explore sketch spike spec capture\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-ns-manage/SKILL.md",
+      "sha256": "855453ae0ef0072ddc99189f6189817b3442a2ae3baae18fb9999c6936f0bb46",
+      "name": "\"gsd-ns-manage\"",
+      "description": "\"config workspace | workstreams thread update ship inbox\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-ns-project/SKILL.md",
+      "sha256": "cbfcf2797659fe56ba429cbd8d8f5facbb53ba0f6e90eadfe0e8c03e10e0b83a",
+      "name": "\"gsd-ns-project\"",
+      "description": "\"project lifecycle | milestones audits summary\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-ns-review/SKILL.md",
+      "sha256": "bc0d4d42bbb2e33655619182a74453ce16f268ee2e5aacb528777876b4502ade",
+      "name": "\"gsd-ns-review\"",
+      "description": "\"quality gates | code review debug audit security eval ui\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-ns-workflow/SKILL.md",
+      "sha256": "d7f0fb901c2bee199b50a542a2ee33587c67962656f683ee3c3f25f2f1737f94",
+      "name": "\"gsd-ns-workflow\"",
+      "description": "\"workflow | discuss plan execute verify phase progress\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-pause-work/SKILL.md",
+      "sha256": "731fe3ceb2fbff5f196ac36dbdf5a7a6b2738bf7a13ebfe4a020469d1fe66493",
+      "name": "\"gsd-pause-work\"",
+      "description": "\"Create context handoff when pausing work mid-phase\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-phase/SKILL.md",
+      "sha256": "5d57dbc0703b6fb7a39be8e8d24ffc6bf9029a3e658ac1f12202b4f7939e1598",
+      "name": "\"gsd-phase\"",
+      "description": "\"CRUD for phases in ROADMAP.md \u2014 add, insert, remove, or edit phases\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-plan-phase/SKILL.md",
+      "sha256": "44215a05eea02881e89ef8381a9c36781cc9b1b3a2c5ea2eb9a25aff9beb5476",
+      "name": "\"gsd-plan-phase\"",
+      "description": "\"Create detailed phase plan (PLAN.md) with verification loop\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-plan-review-convergence/SKILL.md",
+      "sha256": "7bfab7da2dbbc091f399bc1a79238d23c49d539cf829f0b4a3c78bb96b7182f2",
+      "name": "\"gsd-plan-review-convergence\"",
+      "description": "\"Cross-AI plan convergence loop \u2014 replan with review feedback until no HIGH concerns remain.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-pr-branch/SKILL.md",
+      "sha256": "e9163c1dada7442d854c4a23d7decb0b1c6f3672aa72bc8eb83c9ca60eb8a36e",
+      "name": "\"gsd-pr-branch\"",
+      "description": "\"Create a clean PR branch by filtering out .planning/ commits \u2014 ready for code review\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-profile-user/SKILL.md",
+      "sha256": "83a433ef3e6d7a702eb524b491c01dade8611fdcae42c6e4ffa90fa2913b16e5",
+      "name": "\"gsd-profile-user\"",
+      "description": "\"Generate developer behavioral profile and create Claude-discoverable artifacts\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-progress/SKILL.md",
+      "sha256": "1545fddb42f95ec5493d8e0b4f88d2a14bc7aef0963b16ed91474e83011e0d3e",
+      "name": "\"gsd-progress\"",
+      "description": "\"Check progress, advance workflow, or dispatch freeform intent \u2014 the unified GSD situational command\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-quick/SKILL.md",
+      "sha256": "b434e5f7abe612fc25f5673ed65be51ba8d1d68e646968b204d9372e74af4ddd",
+      "name": "\"gsd-quick\"",
+      "description": "\"Execute a quick task with GSD guarantees (atomic commits, state tracking) but skip optional agents\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-resume-work/SKILL.md",
+      "sha256": "13026f44e361f6736507a6d9483d3e78c49690b13ced1538105c1088a16a849a",
+      "name": "\"gsd-resume-work\"",
+      "description": "\"Resume work from previous session with full context restoration\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-review/SKILL.md",
+      "sha256": "ae00c181b0475e4b4ec83a56e72d5b34a94c7ba605ca18171d8dbb3e2b827efc",
+      "name": "\"gsd-review\"",
+      "description": "\"Request cross-AI peer review of phase plans from external AI CLIs\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-review-backlog/SKILL.md",
+      "sha256": "0617dbed5144c66f97e0e7bad1ca228acfe568c38a31d091e5af0e0a33f31fa1",
+      "name": "\"gsd-review-backlog\"",
+      "description": "\"Review and promote backlog items to active milestone\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-secure-phase/SKILL.md",
+      "sha256": "51ebdc4dc72875c8089a7f0054bd8e0523f9a77d0359786a6e32ee0c3ad3e6ec",
+      "name": "\"gsd-secure-phase\"",
+      "description": "\"Retroactively verify threat mitigations for a completed phase\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-settings/SKILL.md",
+      "sha256": "6963185302b5465dc4e3e96bac320340a8d71ec4585fdb7f546b4f08b4accd50",
+      "name": "\"gsd-settings\"",
+      "description": "\"Configure GSD workflow toggles and model profile\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-ship/SKILL.md",
+      "sha256": "e5e23d3b1d18a2ad21d4b7f1f6f7da00c11787395fdc345f829147cf8542aa26",
+      "name": "\"gsd-ship\"",
+      "description": "\"Create PR, run review, and prepare for merge after verification passes\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-sketch/SKILL.md",
+      "sha256": "babe13ab68e781b1ee0abc4e568fc722b6596665b551021ad13686b880daf0cd",
+      "name": "\"gsd-sketch\"",
+      "description": "\"Sketch UI/design ideas with throwaway HTML mockups, or propose what to sketch next (frontier mode)\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-spec-phase/SKILL.md",
+      "sha256": "a14bfcd8b62d4676a1c39c0a5dbc3797e70a97bca493e80b59a82eb48bedc861",
+      "name": "\"gsd-spec-phase\"",
+      "description": "\"Clarify WHAT a phase delivers with ambiguity scoring; produces a SPEC.md before discuss-phase.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-spike/SKILL.md",
+      "sha256": "5df782de7795382d69195af4167a415f79ed666272455efec3c4032d64296848",
+      "name": "\"gsd-spike\"",
+      "description": "\"Spike an idea through experiential exploration, or propose what to spike next (frontier mode)\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-stats/SKILL.md",
+      "sha256": "1b56d567e16d75bec1e4f7aad5e7225cec144cdd795def6533f8d16a97312bf6",
+      "name": "\"gsd-stats\"",
+      "description": "\"Display project statistics \u2014 phases, plans, requirements, git metrics, and timeline\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-surface/SKILL.md",
+      "sha256": "4ee9beae0b76b71fd1e8d482d3d27f5dbbaeae08cf0bf25c11f9c7ba0a341c11",
+      "name": "\"gsd-surface\"",
+      "description": "\"Toggle which skills are surfaced \u2014 apply a profile, list, or disable a cluster without reinstall\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-thread/SKILL.md",
+      "sha256": "6ae455b6a10bcf65c1adcf36d57b53fecb0cd9ed9a32eb35cd158976cf4956c4",
+      "name": "\"gsd-thread\"",
+      "description": "\"Manage persistent context threads for cross-session work\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-ui-phase/SKILL.md",
+      "sha256": "52f0d565341fb052f3cb195b6873cb3638e7d9fa928d303f086d197c34a04c88",
+      "name": "\"gsd-ui-phase\"",
+      "description": "\"Generate UI design contract (UI-SPEC.md) for frontend phases\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-ui-review/SKILL.md",
+      "sha256": "8a9806c600e8d2e42c8fb801697ca79cd3e7fefb7796f895b0cf89f52ed8329c",
+      "name": "\"gsd-ui-review\"",
+      "description": "\"Retroactive 6-pillar visual audit of implemented frontend code\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-ultraplan-phase/SKILL.md",
+      "sha256": "3e24c50a99c20ba534abe9ca4141f7230edc7f102eadee46e4a3f5c3f6a554e8",
+      "name": "\"gsd-ultraplan-phase\"",
+      "description": "\"[BETA] Offload plan phase to Claude Code's ultraplan cloud; review in browser and import back.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-undo/SKILL.md",
+      "sha256": "cd186ae954548252ea576b7558fa3b79797585bfcabbaa3dc8fe9c8369bec150",
+      "name": "\"gsd-undo\"",
+      "description": "\"Safe git revert. Roll back phase or plan commits using the phase manifest with dependency checks.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-update/SKILL.md",
+      "sha256": "e5b8f1faee8367425d6275ce6286d221eb4291ceb5f0e6b3a204ecd372f7a486",
+      "name": "\"gsd-update\"",
+      "description": "\"Update GSD to latest version with changelog display\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-validate-phase/SKILL.md",
+      "sha256": "6b3d267f3a099702125bc79bcc6439fe536823567411be6238c6a0f5f2741d88",
+      "name": "\"gsd-validate-phase\"",
+      "description": "\"Retroactively audit and fill Nyquist validation gaps for a completed phase\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-verify-work/SKILL.md",
+      "sha256": "e27ac79fb0a0a81b09a979e4baae58d08c6a6f7c05cf64c0d471ce25d38ed73c",
+      "name": "\"gsd-verify-work\"",
+      "description": "\"Validate built features through conversational UAT\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-workspace/SKILL.md",
+      "sha256": "017a6fa0bf46d63136541e8fae8d950206a380aae82d1089f7c6fa028b1fe1ac",
+      "name": "\"gsd-workspace\"",
+      "description": "\"Manage GSD workspaces \u2014 create, list, or remove isolated workspace environments\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/gsd-workstreams/SKILL.md",
+      "sha256": "2d11c93228e481fca517ec18fca5954530fcc1e6d3a24325d3b1efbdd9996f62",
+      "name": "\"gsd-workstreams\"",
+      "description": "\"Manage parallel workstreams \u2014 list, create, switch, status, progress, complete, and resume\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/investor-materials/SKILL.md",
+      "sha256": "6e199d1e34ef9adfaed023fdb8f81635bf07fc92c2f1b4afd6efec1d2454862e",
+      "name": "investor-materials",
+      "description": "Create and update pitch decks, one-pagers, investor memos, accelerator applications, financial models, and fundraising materials. Use when the user needs investor-facing documents, projections, use-of-funds tables, milestone plans, or materials that must stay internally consistent across multiple fundraising assets."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/investor-outreach/SKILL.md",
+      "sha256": "ffc43db2a6d878b4d407c277eaf7e0f154a420d14a30929e55bf36f707182a75",
+      "name": "investor-outreach",
+      "description": "Draft cold emails, warm intro blurbs, follow-ups, update emails, and investor communications for fundraising. Use when the user wants outreach to angels, VCs, strategic investors, or accelerators and needs concise, personalized, investor-facing messaging."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/json-canvas/SKILL.md",
+      "sha256": "97d1ae0728955c4203922753d5656890e5e4dd371b8306ea11884f9b510f1b85",
+      "name": "json-canvas",
+      "description": "Create and edit JSON Canvas files (.canvas) with nodes, edges, groups, and connections. Use when working with .canvas files, creating visual canvases, mind maps, flowcharts, or when the user mentions Canvas files in Obsidian."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/market-research/SKILL.md",
+      "sha256": "a2683b5984cc6ad2e023610d72ad5896ac3741d0b455f4e8a1fcb21746a8759f",
+      "name": "market-research",
+      "description": "Conduct market research, competitive analysis, investor due diligence, and industry intelligence with source attribution and decision-oriented summaries. Use when the user wants market sizing, competitor comparisons, fund research, technology scans, or research that informs business decisions."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/mcp-server-patterns/SKILL.md",
+      "sha256": "6f95756b3de73cdee17d1368e7abacffbe9995b91acd19ef49f51786ae675e34",
+      "name": "mcp-server-patterns",
+      "description": "Build MCP servers with Node/TypeScript SDK \u2014 tools, resources, prompts, Zod validation, stdio vs Streamable HTTP. Use Context7 or official MCP docs for latest API."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/memory-systems/SKILL.md",
+      "sha256": "9e2b38ffe9474ba19c93b3d75c80e683705d82e8a4b59af16d603d133bab8d2f",
+      "name": "memory-systems",
+      "description": "\"This skill should be used for persistent semantic memory in agent systems: cross-session knowledge retention, entity tracking, temporal validity, graph or vector retrieval, memory consolidation, and memory benchmark selection. Route file-backed scratchpads to filesystem-context, handoff summaries to context-compression, and token-efficiency tactics to context-optimization.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/nextjs-turbopack/SKILL.md",
+      "sha256": "e35a6a04301792f4cb290cb5f21bc6d64fe9272790d1822431dbfb1747ae9d04",
+      "name": "nextjs-turbopack",
+      "description": "Next.js 16+ and Turbopack \u2014 incremental bundling, FS caching, dev speed, and when to use Turbopack vs webpack."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/obsidian-bases/SKILL.md",
+      "sha256": "c0037f20926c7d8591cdd040365e4c0e4c0c4146386a506f28f241faee9a27d9",
+      "name": "obsidian-bases",
+      "description": "Create and edit Obsidian Bases (.base files) with views, filters, formulas, and summaries. Use when working with .base files, creating database-like views of notes, or when the user mentions Bases, table views, card views, filters, or formulas in Obsidian."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/obsidian-cli/SKILL.md",
+      "sha256": "b54257cdc0e5d04488b35b0c797bfe427b24359f0848d3c73924dcacf8da6358",
+      "name": "obsidian-cli",
+      "description": "Interact with Obsidian vaults using the Obsidian CLI to read, create, search, and manage notes, tasks, properties, and more. Also supports plugin and theme development with commands to reload plugins, run JavaScript, capture errors, take screenshots, and inspect the DOM. Use when the user asks to interact with their Obsidian vault, manage notes, search vault content, perform vault operations from the command line, or develop and debug Obsidian plugins and themes."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/obsidian-markdown/SKILL.md",
+      "sha256": "7ad72e1f0a9081ed325e76b6402ad5de50a00e63e2341fd403a92f147234a007",
+      "name": "obsidian-markdown",
+      "description": "Create and edit Obsidian Flavored Markdown with wikilinks, embeds, callouts, properties, and other Obsidian-specific syntax. Use when working with .md files in Obsidian, or when the user mentions wikilinks, callouts, frontmatter, tags, embeds, or Obsidian notes."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/playwright/SKILL.md",
+      "sha256": "0ffaabcc8e0990627c4725f18bf1c7955534a796c1c199e872909de2013ce6a8",
+      "name": "\"playwright\"",
+      "description": "\"Use when the task requires automating a real browser from the terminal (navigation, form filling, snapshots, screenshots, data extraction, UI-flow debugging) via `playwright-cli` or the bundled wrapper script.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/product-capability/SKILL.md",
+      "sha256": "ae6e95205fcdcb2fa6d231d6665cdb11776796cfacb9891244522887f279c103",
+      "name": "product-capability",
+      "description": "Translate PRD intent, roadmap asks, or product discussions into an implementation-ready capability plan that exposes constraints, invariants, interfaces, and unresolved decisions before multi-service work starts. Use when the user needs an ECC-native PRD-to-SRS lane instead of vague planning prose."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/receiving-code-review/SKILL.md",
+      "sha256": "647036bbdab7bf2317e14e079595e984c9030f64295e2b4c0fb57dbeb48f25dd",
+      "name": "receiving-code-review",
+      "description": "Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/requesting-code-review/SKILL.md",
+      "sha256": "1017ccdd5bc61fab67c654cf118cbdb520464b313073a0a6b9a6b9aa647a3ad6",
+      "name": "requesting-code-review",
+      "description": "Use when completing tasks, implementing major features, or before merging to verify work meets requirements"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/scroll-world/SKILL.md",
+      "sha256": "224af93242eeb5f124fe521d1c805fe3d416769a4d36de9e1526e1ada29ea0b7",
+      "name": "scroll-world",
+      "description": ">"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/security-review/SKILL.md",
+      "sha256": "e60a179eac26386cfc72d4bdebbe280f94a2d94ed889d6e221edbf1939f944d4",
+      "name": "security-review",
+      "description": "Use this skill when adding authentication, handling user input, working with secrets, creating API endpoints, or implementing payment/sensitive features. Provides comprehensive security checklist and patterns."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/strategic-compact/SKILL.md",
+      "sha256": "2402f32f096097cbded66ca2bbb040bf4df4d0aa03726b5c854074272bc5b740",
+      "name": "strategic-compact",
+      "description": "Suggests manual context compaction at logical intervals to preserve context through task phases rather than arbitrary auto-compaction."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/subagent-driven-development/SKILL.md",
+      "sha256": "41ab239a6ad1c487cd839fdac972a8c9cf0f5e90efa59a63f963767864f0df4c",
+      "name": "subagent-driven-development",
+      "description": "Use when executing implementation plans with independent tasks in the current session"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/systematic-debugging/SKILL.md",
+      "sha256": "3b20719eca4f0461cb51a195221320d775dcf03b6859271066a03a5132a6ce7a",
+      "name": "systematic-debugging",
+      "description": "Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/tdd-workflow/SKILL.md",
+      "sha256": "5a88684181704575d8958fbcd6f506ea39d56d921d22edb40a6bbccb408336e6",
+      "name": "tdd-workflow",
+      "description": "Use this skill when writing new features, fixing bugs, or refactoring code. Enforces test-driven development with 80%+ coverage including unit, integration, and E2E tests."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/test-driven-development/SKILL.md",
+      "sha256": "b5b4717b8b761cce15a6cfe9022e33fd959e0894c0c39d72c9cb49c23486c10e",
+      "name": "test-driven-development",
+      "description": "Use when implementing any feature or bugfix, before writing implementation code"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/ui-ux-pro-max/SKILL.md",
+      "sha256": "305a7527fcb2f5b6e4129ab22cd839b5172d26df7f14d3324bfdec8fc1763560",
+      "name": "ui-ux-pro-max",
+      "description": "\"UI/UX design intelligence for web and mobile. Searchable local database with 84 styles, 192 color palettes, 74 font pairings, 192 product types, 98 UX guidelines, 104 icon entries, 16 GSAP motion presets, and 25 chart types across 22 stacks (React, Next.js, Vue, Nuxt, Svelte, Astro, SwiftUI, React Native, Flutter, Tailwind, shadcn/ui, Jetpack Compose, Angular, Laravel, JavaFX, WPF, WinUI, Avalonia, Uno Platform, UWP, Three.js, and HTML/CSS). Use when designing, building, or reviewing UI: pages, components, color schemes, typography, layout, accessibility, animation, or data visualization.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/using-git-worktrees/SKILL.md",
+      "sha256": "e2c3ec142e52868a51af246c620cd76ab648dcf27d6900d47e6ffd07159a9794",
+      "name": "using-git-worktrees",
+      "description": "Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists via native tools or git worktree fallback"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/using-superpowers/SKILL.md",
+      "sha256": "55379fe7c1c473a02c61961c822996bff30e1320d6921d9062509bc508482c05",
+      "name": "using-superpowers",
+      "description": "Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md",
+      "sha256": "ea52d15aabaf72bc6b558efe2c126f161b53961090ddcd712000273bfe8c7b6c",
+      "name": "verification-before-completion",
+      "description": "Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/verification-loop/SKILL.md",
+      "sha256": "abe40a95fc1fe7d5ff47ed2bab27600f160871e487fb1698546b0c80e45b1fbb",
+      "name": "verification-loop",
+      "description": "\"A comprehensive verification system for Claude Code sessions.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/video-editing/SKILL.md",
+      "sha256": "1523f52a80063308d8d45805ce9b01f27a5ea77b59f1d16bd87e96130d504057",
+      "name": "video-editing",
+      "description": "AI-assisted video editing workflows for cutting, structuring, and augmenting real footage. Covers the full pipeline from raw capture through FFmpeg, Remotion, ElevenLabs, fal.ai, and final polish in Descript or CapCut. Use when the user wants to edit video, cut footage, create vlogs, or build video content."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/writing-plans/SKILL.md",
+      "sha256": "272e1af349f5062c28dc282b3e21b220d58d683a7314a10c455b7432ec91d845",
+      "name": "writing-plans",
+      "description": "Use when you have a spec or requirements for a multi-step task, before touching code"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/writing-skills/SKILL.md",
+      "sha256": "6b8d08fe863318be8480ae8428e169640309fa9208df84bb0510012764454146",
+      "name": "writing-skills",
+      "description": "Use when creating new skills, editing existing skills, or verifying skills work before deployment"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/x-api/SKILL.md",
+      "sha256": "dfa8ab9d533c7930ac2836bda618349a304ab1676d5c66a0b8d806f5acedef0c",
+      "name": "x-api",
+      "description": "X/Twitter API integration for posting tweets, threads, reading timelines, search, and analytics. Covers OAuth auth patterns, rate limits, and platform-native content posting. Use when the user wants to interact with X programmatically."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-bundled/browser/26.903.61454/skills/control-in-app-browser/SKILL.md",
+      "sha256": "7601b890ec7640edf9b20658bb16ee11db2e3194e8aab3d9c622a77e214e58e4",
+      "name": "control-in-app-browser",
+      "description": "\"Control the in-app Browser for opening, navigating, inspecting visible or interactive page state, clicking, typing, screenshots, and local web testing. It can have existing signed-in sessions. For semantic operations on linked resources, prefer a purpose-built connector, API, or CLI when available.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-bundled/chrome/26.903.61454/skills/control-chrome/SKILL.md",
+      "sha256": "1feea4e66626fbe423f8ecabfa49639c803c5a2613052d5ded8ae2166010184b",
+      "name": "control-chrome",
+      "description": "\"Control the user's Chrome browser for tasks that depend on existing Chrome state: tabs, logged-in sessions, or extensions. Prefer purpose-built connectors, APIs, or CLIs when available.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-bundled/computer-use/1.0.1000968/skills/computer-use/SKILL.md",
+      "sha256": "aa25ae60e43b3b9af40aff50004ee35944733e4955068d3c8e3924cbd6d8bef6",
+      "name": "computer-use",
+      "description": "Control local Mac apps through Computer Use for tasks that require reading or operating app UI. Prefer purpose-built connectors, APIs, or CLIs when available."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-bundled/visualize/1.0.32/skills/visualize/SKILL.md",
+      "sha256": "f1509260a68ecf31aa7f21059236f37c4e85f22b9582c6b8e94c1caa57ad7d47",
+      "name": "visualize",
+      "description": "\"Create visualizations and interactive tools directly in conversation. Proactively use to show how something works; explore 'what happens when', 'what changes', or 'help me understand'; compare or inspect; create simulations, maps, charts, graphs, and mockups. Use standard tools for static scientific figures.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-primary-runtime/documents/26.905.11957/skills/documents/SKILL.md",
+      "sha256": "c6ad99c5c601186f63e4849e89d59e800f32500fe7bdad012b5309c6958f94ac",
+      "name": "documents",
+      "description": "Create, edit, redline, and comment on `.docx`, Word, and Google Docs-targeted document artifacts inside the container, with a strict render-and-verify workflow. Use `render_docx.py` to generate page PNGs (and optional PDF) for visual QA, then iterate until layout is flawless before delivering the final document."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-primary-runtime/pdf/26.905.11957/skills/pdf/SKILL.md",
+      "sha256": "afc4472ec4d625f703e9f414fe6814ce3cfa0ec51c7a07887fe587264c8b561e",
+      "name": "\"pdf\"",
+      "description": "\"Read, create, inspect, render, and verify PDF files where visual layout matters, including fillable AcroForms. Use Poppler rendering plus Python tools such as reportlab, pdfplumber, and pypdf for generation and extraction.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-primary-runtime/presentations/26.905.11957/skills/presentations/SKILL.md",
+      "sha256": "4b40a55cd7747ed101498889b1dbb63f05aae478d44af96423657888e33b48ae",
+      "name": "Presentations",
+      "description": "Read, create or edit PowerPoint or Google Slides decks. Use for presentation, slide deck, PowerPoint, PPT, PPTX, or Google Slides requests."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-primary-runtime/spreadsheets/26.905.11957/skills/excel-live-control/SKILL.md",
+      "sha256": "cdc929cabe81c31e87a2df032ee5bb2ab1857eb78bcb6eb9e51ced4b1b65a863",
+      "name": "\"excel-live-control\"",
+      "description": "\"Control an open or active Microsoft Excel workbook through the ChatGPT add-in or connected session. Use when the user tags the Microsoft Excel app in Codex or follows up on an established live Excel task. Do not use for standalone spreadsheet files or Google Sheets.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-primary-runtime/spreadsheets/26.905.11957/skills/spreadsheets/SKILL.md",
+      "sha256": "d5d9e4b1863527e2577106e324815cc5c498bd9d8af304ad2f210c2ede985b39",
+      "name": "\"Spreadsheets\"",
+      "description": "\"Use skill when user requests to create, modify, analyze, visualize, or work with spreadsheet files (`.xlsx`, `.xls`, `.csv`, `.tsv`) or Google Sheets with formulas, formatting, charts, tables, and recalculation. Do not use for live controlling Microsoft Excel app or a live Excel session.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-primary-runtime/template-creator/26.905.11957/skills/template-creator/SKILL.md",
+      "sha256": "f1d14fd2847a2e879611a8b8f872f5dc4676a0607958d015274d2dc61e812deb",
+      "name": "template-creator",
+      "description": "Create or update a reusable personal Codex artifact-template skill. Use when the user invokes $template-creator or asks in natural language to create a reusable template from a reference document, presentation, spreadsheet, Google Docs, Slides, or Sheets link, ImageGen or Product Design image, email, Slack message, or Site project, or explicitly asks to edit or update a passed artifact-template skill. Do not use for one-off creation from an existing template."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-analytics-dashboard/SKILL.md",
+      "sha256": "cf5360fd8b197673bb237c52c603c97fa319c875c3dfa2cd8efff52d4422f513",
+      "name": "artifact-template-analytics-dashboard",
+      "description": "\"Create a spreadsheet using the Analytics Dashboard template and its retained reference file. Use when the user selects or names Analytics Dashboard. Monitor acquisition, engagement, retention, revenue, and conversion funnel KPIs with charts.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-business-review/SKILL.md",
+      "sha256": "27721fc1d67d1b41949caa75ac8f94f81952ff124406878af6524047929e60d2",
+      "name": "artifact-template-business-review",
+      "description": "\"Create a presentation using the Business Review template and its retained reference file. Use when the user selects or names Business Review. Review business performance, KPIs, segment results, strategic priorities, decisions, and outlook.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-design-report/SKILL.md",
+      "sha256": "563722f53854e606f8a9f87e37e72d7ef70a22d46d5836b8e4d6abfb1b79e9e0",
+      "name": "artifact-template-design-report",
+      "description": "\"Create a document using the Design Report template and its retained reference file. Use when the user selects or names Design Report. Produce design reports with an executive summary, key findings, implications, recommendations, and appendix.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-experiment-analysis/SKILL.md",
+      "sha256": "0b05effc47df0a14f8e0c3e3597e6722224747435546385d38a2cae279bd20b9",
+      "name": "artifact-template-experiment-analysis",
+      "description": "\"Create a document using the Experiment Analysis template and its retained reference file. Use when the user selects or names Experiment Analysis. Analyze experiments with hypotheses, methodology, results, interpretation, limitations, and next steps.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-financial-budget/SKILL.md",
+      "sha256": "c0b6b7a62a15597aaf2b1ec679e21da48f533b756127f0aef957cdfe9f3da738",
+      "name": "artifact-template-financial-budget",
+      "description": "\"Create a spreadsheet using the Financial Budget template and its retained reference file. Use when the user selects or names Financial Budget. Model actuals, budget and scenario forecasts, variances, cash runway, and departmental plans.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-investment-committee-memo/SKILL.md",
+      "sha256": "68abd08cfe5e073e3c446a3f675f44c5bf98f57434dba679e8acd8a763379a8b",
+      "name": "artifact-template-investment-committee-memo",
+      "description": "\"Create a document using the Investment Committee Memo template and its retained reference file. Use when the user selects or names Investment Committee Memo. Prepare investment committee memos with the thesis, transaction details, financial analysis, risks, and recommendation.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-legal-memorandum/SKILL.md",
+      "sha256": "51fb9d21baf6119c4ccb1903638a6bac0e859210de63460fffa7025d52e997e0",
+      "name": "artifact-template-legal-memorandum",
+      "description": "\"Create a document using the Legal Memorandum template and its retained reference file. Use when the user selects or names Legal Memorandum. Draft legal memoranda with the issue, brief answer, relevant facts, analysis, and conclusion.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-market-trends-report/SKILL.md",
+      "sha256": "d58d019b89cb6f292ac3ab991d561489eef477ff53ce05fb024a0c936f5af26a",
+      "name": "artifact-template-market-trends-report",
+      "description": "\"Create a presentation using the Market Trends Report template and its retained reference file. Use when the user selects or names Market Trends Report. Communicate market or industry trends, supporting evidence, implications, and recommended responses.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-minimal-letterhead/SKILL.md",
+      "sha256": "880ef094d4d0c89a7bde5ce9bbe4086625c186651e9e6efc8ba8bdd7cc77f9d5",
+      "name": "artifact-template-minimal-letterhead",
+      "description": "\"Create a document using the Minimal Letterhead template and its retained reference file. Use when the user selects or names Minimal Letterhead. Write professional business letters with sender, recipient, message, and signature fields in a minimal letterhead layout.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-operating-calendar/SKILL.md",
+      "sha256": "33bb660791a0b9a21628a42c34934932220203b6aabd84e98cb1b45327d0384c",
+      "name": "artifact-template-operating-calendar",
+      "description": "\"Create a spreadsheet using the Operating Calendar template and its retained reference file. Use when the user selects or names Operating Calendar. Plan annual and monthly operating milestones, campaigns, launches, deadlines, and recurring events.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-operating-review/SKILL.md",
+      "sha256": "6d63c5cd025ffe936e7bab5db3023672bbaec26af55c2bb8b057d38c202c9c32",
+      "name": "artifact-template-operating-review",
+      "description": "\"Create a presentation using the Operating Review template and its retained reference file. Use when the user selects or names Operating Review. Run weekly operating reviews with scorecards, functional updates, risks, decisions, and action items.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-project-kickoff/SKILL.md",
+      "sha256": "aa893ebd89e7c8d1db4261d01cc2b1add35d78d00785871ccaaa5fc8db783ec9",
+      "name": "artifact-template-project-kickoff",
+      "description": "\"Create a presentation using the Project Kickoff template and its retained reference file. Use when the user selects or names Project Kickoff. Align teams on project goals, scope, roles, milestones, risks, and the working model.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-project-tracker/SKILL.md",
+      "sha256": "d97d5be20189b7f53dd269b6e1c5f694eaf53e5a72f6559fcb1578911b7cda82",
+      "name": "artifact-template-project-tracker",
+      "description": "\"Create a spreadsheet using the Project Tracker template and its retained reference file. Use when the user selects or names Project Tracker. Manage workstreams, tasks, owners, status, priority, dates, launch pulse, and a Gantt schedule.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-sales-pipeline/SKILL.md",
+      "sha256": "15cfeeedf440021f16ed3f3ad8c7c1ef6d48898b9447741e223d2fb41cfc9800",
+      "name": "artifact-template-sales-pipeline",
+      "description": "\"Create a spreadsheet using the Sales Pipeline template and its retained reference file. Use when the user selects or names Sales Pipeline. Track opportunities, stages, owners, deal sizes, probabilities, forecasts, next steps, and risks.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-simple-dark-mode/SKILL.md",
+      "sha256": "b7c8d0c05f75878b9bc21e56a57c41ec1aa29700aca0a24822be0f9f1bd53207",
+      "name": "artifact-template-simple-dark-mode",
+      "description": "\"Create a presentation using the Simple Dark Mode template and its retained reference file. Use when the user selects or names Simple Dark Mode. Create clean dark-mode presentations with bold typography, simple sections, charts, and imagery.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-simple-light-mode/SKILL.md",
+      "sha256": "7c68430c6cf57b55b457d4735dbd1a46b889bef135a32222902dd0848b6e1752",
+      "name": "artifact-template-simple-light-mode",
+      "description": "\"Create a presentation using the Simple Light Mode template and its retained reference file. Use when the user selects or names Simple Light Mode. Create clean light-mode presentations with spacious typography, simple sections, charts, and imagery.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-strategy-memorandum/SKILL.md",
+      "sha256": "51d7882ac94e8e57b323394825728c33925af878806e37277217c2dc12a912e5",
+      "name": "artifact-template-strategy-memorandum",
+      "description": "\"Create a document using the Strategy Memorandum template and its retained reference file. Use when the user selects or names Strategy Memorandum. Present strategic context, choices, rationale, risks, milestones, and a clear recommendation.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-system-design/SKILL.md",
+      "sha256": "87f7b7ed1b0d8410f5e5971cd7f7db9a4165e2f37069e97e52dbfb469b75a57c",
+      "name": "artifact-template-system-design",
+      "description": "\"Create a document using the System Design template and its retained reference file. Use when the user selects or names System Design. Document system architecture, requirements, components, data flows, APIs, tradeoffs, and operational considerations.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-team-alignment/SKILL.md",
+      "sha256": "26d7cafdcd1899a937b325c5d02ac57c162d45002153be33a934d35f81eb6110",
+      "name": "artifact-template-team-alignment",
+      "description": "\"Create a presentation using the Team Alignment template and its retained reference file. Use when the user selects or names Team Alignment. Facilitate team offsites and planning with context, goals, priorities, decisions, and action items.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-three-statement-forecast/SKILL.md",
+      "sha256": "74f4a5cccec0107b861548b157e04c51d9b58ec13a990c86394b4c529b8ecf41",
+      "name": "artifact-template-three-statement-forecast",
+      "description": "\"Create a spreadsheet using the Three-Statement Forecast template and its retained reference file. Use when the user selects or names Three-Statement Forecast. Build an integrated income statement, balance sheet, and cash flow forecast with assumptions, checks, and an executive summary.\""
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/plugin-management/0.1.0/skills/plugin-management/SKILL.md",
+      "sha256": "653841cc21205269f08b0ce135891e1518dac616a766bcfb0b57d788d3f68b10",
+      "name": "plugin-management",
+      "description": "Discover and suggest relevant plugins, inspect app permissions and dependencies, and manage plugin connections or removal. Use when the user asks about plugins or when a task would materially benefit from an external app, account, service, or data source that available tools cannot access."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/sites/0.1.65/skills/sites-building/SKILL.md",
+      "sha256": "524e159a007b6bddb79683bbee994383a500862b23e83c4c735e9f9c286f56d6",
+      "name": "sites-building",
+      "description": "Use Sites when the user wants a complete website built for them, such as a landing page, portfolio, dashboard, portal, tracker, hub, or internal tool, or wants to modify a website built with Sites. Do not use for development work in other web projects unless the user explicitly requests Sites."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/sites/0.1.65/skills/sites-hosting/SKILL.md",
+      "sha256": "0e96467c8426ad13be9affc8e761f0cdd82151381c8dc668b1c8f05340a1fb58",
+      "name": "sites-hosting",
+      "description": "Host websites with Sites. Use after `sites-building` to publish new sites and edits, for requested website publishing or deployment, or for hosting management. A project containing `.openai/hosting.json` uses Sites hosting only when the current request concerns that Site. Publishing an npm package or standalone asset is not website publishing. Honor an explicit request to use another hosting provider."
+    },
+    {
+      "path": "/Users/bezzchen/.codex/plugins/cache/openai-curated-remote/sites/0.1.65/skills/sites-preview-troubleshooting/SKILL.md",
+      "sha256": "2244a9ac6059101480ef150b8e057b7183015a8d4fa0f11e20fddfb8865ec309",
+      "name": "sites-preview-troubleshooting",
+      "description": "Diagnose and recover failed supervised sites-preview sessions after sites-building. Applies only to the managed-linux execution profile, not portable previews."
+    }
+  ]
+}

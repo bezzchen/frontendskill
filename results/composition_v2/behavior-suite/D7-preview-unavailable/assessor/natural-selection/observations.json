@@ -1,0 +1,48 @@
+{
+  "actor": "posthoc-assessor",
+  "not_tested_agent_verification": true,
+  "mode": "natural-selection",
+  "at": "2026-09-17T19:15:42.084Z",
+  "checks": [
+    {
+      "width": 1440,
+      "invalid": {
+        "focus": "equipment",
+        "invalid": [
+          "equipment",
+          "return-date"
+        ]
+      },
+      "missingDate": {
+        "focus": "return-date",
+        "dateInvalid": "true"
+      },
+      "success": {
+        "text": "NORTH WORKS / MEMBER DESK\n\nEquipment checkout\n\nChoose the tool you need, and let us know when it will be back.\n\nBoth fields are required. This is a local demo; no real reservation is sent.\n\nEquipment (required)\nChoose equipment\nOrbital sander\nCordless drill\nClamp set\nReturn date (required)\n\nChoose today or a later date.\n\nConfirm checkout\nLocal checkout confirmed\nEquipment\nCordless drill\nReturn date\nOctober 1, 2026\n\nNo real reservation was sent. To change these details, update the form and confirm again.",
+        "focus": "confirmation-heading",
+        "overflow": false
+      },
+      "events": []
+    },
+    {
+      "width": 390,
+      "invalid": {
+        "focus": "equipment",
+        "invalid": [
+          "equipment",
+          "return-date"
+        ]
+      },
+      "missingDate": {
+        "focus": "return-date",
+        "dateInvalid": "true"
+      },
+      "success": {
+        "text": "NORTH WORKS / MEMBER DESK\n\nEquipment checkout\n\nChoose the tool you need, and let us know when it will be back.\n\nBoth fields are required. This is a local demo; no real reservation is sent.\n\nEquipment (required)\nChoose equipment\nOrbital sander\nCordless drill\nClamp set\nReturn date (required)\n\nChoose today or a later date.\n\nConfirm checkout\nLocal checkout confirmed\nEquipment\nCordless drill\nReturn date\nOctober 1, 2026\n\nNo real reservation was sent. To change these details, update the form and confirm again.",
+        "focus": "confirmation-heading",
+        "overflow": false
+      },
+      "events": []
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+Add a folding-paper reveal to the opening of our local bookbinding workshop page, consistent with its ink-and-paper identity. Keep dates, booking controls and text semantic and usable on touch and reduced motion. Choose a fitting implementation and proceed.

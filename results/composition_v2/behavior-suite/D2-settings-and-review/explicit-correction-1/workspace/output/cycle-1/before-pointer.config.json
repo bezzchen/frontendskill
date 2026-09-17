@@ -1,0 +1,1 @@
+{"url":"http://127.0.0.1:8871","width":390,"height":900,"actions":[{"type":"fill","selector":"#display-name","value":"  River Clay Studio  "},{"type":"click","selector":".checkbox-label"},{"type":"click","selector":"#save-settings"}]}

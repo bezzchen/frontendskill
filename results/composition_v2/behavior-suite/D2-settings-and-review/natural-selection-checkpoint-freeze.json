@@ -1,0 +1,11 @@
+{
+  "files": {
+    "app.js": "670f17905f5ba2c4cda7ed2edf99cf02329c9766a9e304366887efec90e5e773",
+    "checkpoint.css": "683f1679337f8cca9f0fd7ffcbe5a7d403c94ec9919a576942cd43ac2da5930e",
+    "index.html": "e84aae3ec549a4bfe4bc5166d39aef05d709b60d236383a488937fdacc002897",
+    "studio-service.js": "511cf81f3c05d7030bec7e6f52873e5f8bc3525f4863bb4bee0efb9dc2fad2ac",
+    "styles.css": "7a6ef0501b0463fcbda57fc2e372794d18ce554ff2a09015d248d507c4ed2f1f"
+  },
+  "method": "assessor-owned checkpoint stylesheet applied after original full builder run; supplemental staged reviewer probe, not natural builder discovery",
+  "review_inputs": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D2-settings-and-review/reviewer-fixtures/natural-selection"
+}

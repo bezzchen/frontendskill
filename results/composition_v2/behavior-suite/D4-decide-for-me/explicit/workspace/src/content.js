@@ -1,0 +1,2 @@
+export const membership={name:'Round Again repair co-op',price:'£8 per month',benefits:['A monthly repair evening with shared tools','Skill swaps led by fellow members','A say in which tools and projects we support'],promise:'Mend what you have. Learn what you can. Share what you know.'};
+export const initialPreferences={displayName:'Avery',repairEvenings:true,skillSwaps:true,monthlyDigest:false};

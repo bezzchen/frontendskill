@@ -1,0 +1,7 @@
+[
+  {
+    "item_id": "item_15",
+    "command": "/bin/zsh -lc 'node browser.cjs browser-config.json'",
+    "error": "browserType.launch: Failed to launch chromium because executable doesn't exist at /Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D7-preview-unavailable/explicit/workspace/.preview-runtime/chromium-not-provisioned\n    at /Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D7-preview-unavailable/explicit/workspace/browser.cjs:3:101\n    at Object.<anonymous> (/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D7-preview-unavailable/explicit/workspace/browser.cjs:3:1673)\n"
+  }
+]

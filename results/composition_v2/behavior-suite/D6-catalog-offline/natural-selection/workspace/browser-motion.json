@@ -1,0 +1,27 @@
+{
+  "url": "http://127.0.0.1:8864",
+  "width": 1440,
+  "height": 900,
+  "actions": [
+    {
+      "type": "screenshot",
+      "path": "/tmp/fold-start.png"
+    },
+    {
+      "type": "wait",
+      "ms": 300
+    },
+    {
+      "type": "screenshot",
+      "path": "/tmp/fold-mid.png"
+    },
+    {
+      "type": "wait",
+      "ms": 1400
+    },
+    {
+      "type": "screenshot",
+      "path": "/tmp/fold-end.png"
+    }
+  ]
+}

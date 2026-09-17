@@ -1,0 +1,672 @@
+{
+  "case_id": "D8-shared-animation-ownership",
+  "candidate_commit": "12f509e61d8aa15de2bfcc54195a7def07bda0a8",
+  "fixture_freeze": "fixture-freeze.json",
+  "baseline_evidence": "original-assessment-run2/observations.json",
+  "launch_failures": [
+    "natural-selection/stderr.txt"
+  ],
+  "assessment_deviations": [
+    "Original baseline first assessment page.goto(load) timed out; preserved original-assessment/observations.json. Retry uses domcontentloaded and succeeds."
+  ],
+  "runs": [
+    {
+      "run_id": "natural-selection-run1",
+      "invocation_mode": "natural-selection",
+      "activation": {
+        "candidate_read": false,
+        "expected_selection": false,
+        "selection_status": "pass",
+        "interpretation": "Animation bug fixes are outside automatic trigger scope; natural nonselection is intended. Explicit invocation must preserve settled design.",
+        "actual_reads": [
+          {
+            "path": "/Users/bezzchen/.codex/skills/systematic-debugging/SKILL.md",
+            "sha256": "3b20719eca4f0461cb51a195221320d775dcf03b6859271066a03a5132a6ce7a",
+            "trace_event_id": "item_3",
+            "command": "/bin/zsh -lc 'cat /Users/bezzchen/.codex/skills/systematic-debugging/SKILL.md /Users/bezzchen/.codex/skills/using-superpowers/SKILL.md'"
+          },
+          {
+            "path": "/Users/bezzchen/.codex/skills/using-superpowers/SKILL.md",
+            "sha256": "55379fe7c1c473a02c61961c822996bff30e1320d6921d9062509bc508482c05",
+            "trace_event_id": "item_3",
+            "command": "/bin/zsh -lc 'cat /Users/bezzchen/.codex/skills/systematic-debugging/SKILL.md /Users/bezzchen/.codex/skills/using-superpowers/SKILL.md'"
+          },
+          {
+            "path": "/Users/bezzchen/.codex/skills/test-driven-development/SKILL.md",
+            "sha256": "b5b4717b8b761cce15a6cfe9022e33fd959e0894c0c39d72c9cb49c23486c10e",
+            "trace_event_id": "item_6",
+            "command": "/bin/zsh -lc 'cat /Users/bezzchen/.codex/skills/test-driven-development/SKILL.md /Users/bezzchen/.codex/skills/playwright/SKILL.md /Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md'"
+          },
+          {
+            "path": "/Users/bezzchen/.codex/skills/playwright/SKILL.md",
+            "sha256": "0ffaabcc8e0990627c4725f18bf1c7955534a796c1c199e872909de2013ce6a8",
+            "trace_event_id": "item_6",
+            "command": "/bin/zsh -lc 'cat /Users/bezzchen/.codex/skills/test-driven-development/SKILL.md /Users/bezzchen/.codex/skills/playwright/SKILL.md /Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md'"
+          },
+          {
+            "path": "/Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md",
+            "sha256": "ea52d15aabaf72bc6b558efe2c126f161b53961090ddcd712000273bfe8c7b6c",
+            "trace_event_id": "item_6",
+            "command": "/bin/zsh -lc 'cat /Users/bezzchen/.codex/skills/test-driven-development/SKILL.md /Users/bezzchen/.codex/skills/playwright/SKILL.md /Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md'"
+          }
+        ],
+        "command_evidence": "natural-selection-run1/actual-read-commands.json",
+        "contamination": [
+          "/bin/zsh -lc 'cat /Users/bezzchen/.codex/skills/systematic-debugging/SKILL.md /Users/bezzchen/.codex/skills/using-superpowers/SKILL.md'",
+          "/bin/zsh -lc 'cat /Users/bezzchen/.codex/skills/test-driven-development/SKILL.md /Users/bezzchen/.codex/skills/playwright/SKILL.md /Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md'"
+        ]
+      },
+      "assertions": [
+        {
+          "assertion": "Hiding metronome stops its owned animation updates while waveform continues.",
+          "status": "pass",
+          "evidence": "natural-selection-run1/assessment-initial/observations.json",
+          "supporting_checks": [
+            {
+              "assertion": "hiding metronome stops owned updates while visible waveform continues",
+              "status": "pass",
+              "detail": {
+                "metronome": 0,
+                "waveform": 40
+              }
+            },
+            {
+              "assertion": "real scroll pauses metronome while waveform remains visible",
+              "status": "pass",
+              "detail": {
+                "rects": {
+                  "metronome": {
+                    "top": -339,
+                    "bottom": -39,
+                    "height": 300,
+                    "hidden": false
+                  },
+                  "waveform": {
+                    "top": -15,
+                    "bottom": 285,
+                    "height": 300,
+                    "hidden": false
+                  }
+                },
+                "metronome": 0,
+                "waveform": 39
+              }
+            }
+          ],
+          "supplemental_evidence": "natural-selection-run1/assessment-combined-state/observations.json"
+        },
+        {
+          "assertion": "Hiding document pauses both; resuming restarts only active work without duplicate subscribers.",
+          "status": "pass",
+          "evidence": "natural-selection-run1/assessment-initial/observations.json",
+          "supporting_checks": [
+            {
+              "assertion": "native document-hidden pauses all owned continuous work",
+              "status": "pass",
+              "detail": {
+                "documentHidden": true,
+                "events": [
+                  {
+                    "time": 8195.40000000596,
+                    "hidden": true,
+                    "state": "hidden",
+                    "trusted": true
+                  }
+                ],
+                "raf": {
+                  "requested": 211,
+                  "executed": 210,
+                  "cancelled": 1,
+                  "pending": []
+                },
+                "metronome": 0,
+                "waveform": 0
+              }
+            },
+            {
+              "assertion": "restoring real visibility resumes without duplicate subscriptions",
+              "status": "pass",
+              "detail": {
+                "before": [
+                  "waveform:1",
+                  "metronome:4"
+                ],
+                "after": [
+                  "metronome:5",
+                  "waveform:6"
+                ],
+                "metronome": 39,
+                "waveform": 39
+              }
+            },
+            {
+              "assertion": "native background cancels work with metronome already hidden",
+              "status": "pass",
+              "detail": {
+                "hidden": true,
+                "events": [
+                  {
+                    "time": 1279,
+                    "hidden": true,
+                    "state": "hidden",
+                    "trusted": true
+                  }
+                ],
+                "raf": {
+                  "requested": 74,
+                  "executed": 73,
+                  "cancelled": 1,
+                  "pending": []
+                },
+                "metronome": 0,
+                "waveform": 0
+              }
+            },
+            {
+              "assertion": "native restore resumes only eligible waveform",
+              "status": "pass",
+              "detail": {
+                "metronome": 0,
+                "waveform": 39,
+                "subscribers": [
+                  "waveform:3"
+                ],
+                "raf": {
+                  "requested": 124,
+                  "executed": 122,
+                  "cancelled": 1,
+                  "pending": [
+                    "tick"
+                  ]
+                },
+                "events": [
+                  {
+                    "time": 1279,
+                    "hidden": true,
+                    "state": "hidden",
+                    "trusted": true
+                  },
+                  {
+                    "time": 2317.5,
+                    "hidden": false,
+                    "state": "visible",
+                    "trusted": true
+                  }
+                ]
+              }
+            }
+          ],
+          "supplemental_evidence": "natural-selection-run1/assessment-combined-state/observations.json"
+        },
+        {
+          "assertion": "Unmounting one surface releases only its resources; shared scheduler survives for its sibling.",
+          "status": "pass",
+          "evidence": "natural-selection-run1/assessment-initial/observations.json",
+          "supporting_checks": [
+            {
+              "assertion": "unmount releases only metronome while waveform continues",
+              "status": "pass",
+              "detail": {
+                "subscribers": [
+                  "waveform:6"
+                ],
+                "metronome": 0,
+                "waveform": 39
+              }
+            },
+            {
+              "assertion": "remount does not accumulate subscribers",
+              "status": "pass",
+              "detail": {
+                "before": [
+                  "waveform:1",
+                  "metronome:4"
+                ],
+                "after": [
+                  "waveform:6",
+                  "metronome:7"
+                ]
+              }
+            }
+          ],
+          "supplemental_evidence": "natural-selection-run1/assessment-combined-state/observations.json"
+        },
+        {
+          "assertion": "Reduced motion preserves controls/content and avoids unnecessary continuous work.",
+          "status": "pass",
+          "evidence": "natural-selection-run1/assessment-initial/observations.json",
+          "supporting_checks": [
+            {
+              "assertion": "reduced motion stops unnecessary continuous work",
+              "status": "pass",
+              "detail": {
+                "raf": {
+                  "requested": 361,
+                  "executed": 359,
+                  "cancelled": 2,
+                  "pending": []
+                },
+                "metronome": 0,
+                "waveform": 0
+              }
+            },
+            {
+              "assertion": "reduced-motion controls remain keyboard operable",
+              "status": "pass",
+              "detail": {
+                "before": {
+                  "metronome": 84,
+                  "waveform": 36
+                },
+                "after": {
+                  "metronome": 85,
+                  "waveform": 37
+                }
+              }
+            }
+          ],
+          "supplemental_evidence": "natural-selection-run1/assessment-combined-state/observations.json"
+        }
+      ],
+      "initial_outcome": "pass",
+      "final_outcome": "pass",
+      "correction_cycles": 0,
+      "execution": {
+        "mode": "natural-selection",
+        "model_alias": "gpt-6-astra",
+        "model_snapshot": null,
+        "effort": "high",
+        "candidate_commit": "12f509e61d8aa15de2bfcc54195a7def07bda0a8",
+        "command": [
+          "codex",
+          "exec",
+          "--ignore-user-config",
+          "--ephemeral",
+          "--skip-git-repo-check",
+          "--approve-for-me",
+          "-m",
+          "gpt-6-astra",
+          "-c",
+          "model_reasoning_effort=\"high\"",
+          "-C",
+          "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D8-shared-animation-ownership/natural-selection-run1/workspace",
+          "--json",
+          "-o",
+          "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D8-shared-animation-ownership/natural-selection-run1/final.md",
+          "-"
+        ],
+        "wall_cap_seconds": 1200,
+        "token_cap": null,
+        "source_path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D8-shared-animation-ownership/natural-selection-run1/workspace/.sources/frontend-design/SKILL.md",
+        "source_sha256": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3",
+        "host_config_ignored": true,
+        "global_skills_and_hooks_still_present": true,
+        "isolation": "fresh CLI context; project-only task instruction, not an OS read barrier",
+        "whole_workflow_tokens": null,
+        "started_at": "2026-09-17T19:05:49.117771+00:00",
+        "terminal_status": "completed",
+        "exit_code": 0,
+        "elapsed_seconds": 258.72,
+        "finished_at": "2026-09-17T19:10:07.831817+00:00",
+        "parent_usage_events": [
+          {
+            "input_tokens": 494564,
+            "cached_input_tokens": 455168,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 6665,
+            "reasoning_output_tokens": 976
+          }
+        ],
+        "whole_workflow_tokens_reason": "Parent usage may exclude delegated agents; do not infer total without accounting audit."
+      },
+      "candidate_files_unchanged": true,
+      "assessment_method": "Native Chromium default context via CDP noDefaults:true, actual tab backgrounding with trusted events; actual mouse-wheel scrolling; per-subscriber counters and global pending-rAF instrumentation. Reduced motion uses browser media preference emulation.",
+      "limitations": [
+        "Unscored development; no efficacy comparison.",
+        "Assessment author prepared the fixture and knew its original defects; not a blinded independent review.",
+        "Whole-workflow token/cost totals unavailable; execution record contains known parent CLI usage only.",
+        "Concurrent development builds may be present; no performance/frame-rate superiority inference."
+      ]
+    },
+    {
+      "run_id": "explicit-run1",
+      "invocation_mode": "explicit",
+      "activation": {
+        "candidate_read": true,
+        "expected_selection": true,
+        "selection_status": "pass",
+        "interpretation": "Animation bug fixes are outside automatic trigger scope; natural nonselection is intended. Explicit invocation must preserve settled design.",
+        "actual_reads": [
+          {
+            "path": "/Users/bezzchen/.codex/skills/using-superpowers/SKILL.md",
+            "sha256": "55379fe7c1c473a02c61961c822996bff30e1320d6921d9062509bc508482c05",
+            "trace_event_id": "item_2",
+            "command": "/bin/zsh -lc 'cat /Users/bezzchen/.codex/skills/using-superpowers/SKILL.md'"
+          },
+          {
+            "path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D8-shared-animation-ownership/explicit-run1/workspace/.agents/skills/creative-frontend-architect/SKILL.md",
+            "sha256": "abeb51e1c1a769366ea7ea134b85b0d2acfa00aeaa16d3ac565adc5dd72883e5",
+            "trace_event_id": "item_3",
+            "command": "/bin/zsh -lc 'cat .agents/skills/creative-frontend-architect/SKILL.md'"
+          },
+          {
+            "path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D8-shared-animation-ownership/explicit-run1/workspace/.agents/skills/creative-frontend-architect/references/architecture.md",
+            "sha256": "012aabe7dcc34cead0f6caaeb42320666ec08c7e097723798d6bbce5d22504ce",
+            "trace_event_id": "item_6",
+            "command": "/bin/zsh -lc 'cat .agents/skills/creative-frontend-architect/references/architecture.md /Users/bezzchen/.codex/skills/systematic-debugging/SKILL.md /Users/bezzchen/.codex/skills/playwright/SKILL.md /Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md /Users/bezzchen/.codex/skills/using-superpowers/references/codex-tools.md'"
+          },
+          {
+            "path": "/Users/bezzchen/.codex/skills/systematic-debugging/SKILL.md",
+            "sha256": "3b20719eca4f0461cb51a195221320d775dcf03b6859271066a03a5132a6ce7a",
+            "trace_event_id": "item_6",
+            "command": "/bin/zsh -lc 'cat .agents/skills/creative-frontend-architect/references/architecture.md /Users/bezzchen/.codex/skills/systematic-debugging/SKILL.md /Users/bezzchen/.codex/skills/playwright/SKILL.md /Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md /Users/bezzchen/.codex/skills/using-superpowers/references/codex-tools.md'"
+          },
+          {
+            "path": "/Users/bezzchen/.codex/skills/playwright/SKILL.md",
+            "sha256": "0ffaabcc8e0990627c4725f18bf1c7955534a796c1c199e872909de2013ce6a8",
+            "trace_event_id": "item_6",
+            "command": "/bin/zsh -lc 'cat .agents/skills/creative-frontend-architect/references/architecture.md /Users/bezzchen/.codex/skills/systematic-debugging/SKILL.md /Users/bezzchen/.codex/skills/playwright/SKILL.md /Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md /Users/bezzchen/.codex/skills/using-superpowers/references/codex-tools.md'"
+          },
+          {
+            "path": "/Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md",
+            "sha256": "ea52d15aabaf72bc6b558efe2c126f161b53961090ddcd712000273bfe8c7b6c",
+            "trace_event_id": "item_6",
+            "command": "/bin/zsh -lc 'cat .agents/skills/creative-frontend-architect/references/architecture.md /Users/bezzchen/.codex/skills/systematic-debugging/SKILL.md /Users/bezzchen/.codex/skills/playwright/SKILL.md /Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md /Users/bezzchen/.codex/skills/using-superpowers/references/codex-tools.md'"
+          },
+          {
+            "path": "/Users/bezzchen/.codex/skills/using-superpowers/references/codex-tools.md",
+            "sha256": "9310bb2315eed2c1cebea02cd1c9e8fe121cb788fc6b41e8b8f8b5ff46f85f37",
+            "trace_event_id": "item_6",
+            "command": "/bin/zsh -lc 'cat .agents/skills/creative-frontend-architect/references/architecture.md /Users/bezzchen/.codex/skills/systematic-debugging/SKILL.md /Users/bezzchen/.codex/skills/playwright/SKILL.md /Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md /Users/bezzchen/.codex/skills/using-superpowers/references/codex-tools.md'"
+          },
+          {
+            "path": "/Users/bezzchen/.codex/skills/test-driven-development/SKILL.md",
+            "sha256": "b5b4717b8b761cce15a6cfe9022e33fd959e0894c0c39d72c9cb49c23486c10e",
+            "trace_event_id": "item_9",
+            "command": "/bin/zsh -lc 'cat /Users/bezzchen/.codex/skills/test-driven-development/SKILL.md AGENTS.md'"
+          }
+        ],
+        "command_evidence": "explicit-run1/actual-read-commands.json",
+        "contamination": [
+          "/bin/zsh -lc 'cat /Users/bezzchen/.codex/skills/using-superpowers/SKILL.md'",
+          "/bin/zsh -lc 'cat .agents/skills/creative-frontend-architect/references/architecture.md /Users/bezzchen/.codex/skills/systematic-debugging/SKILL.md /Users/bezzchen/.codex/skills/playwright/SKILL.md /Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md /Users/bezzchen/.codex/skills/using-superpowers/references/codex-tools.md'",
+          "/bin/zsh -lc 'cat /Users/bezzchen/.codex/skills/test-driven-development/SKILL.md AGENTS.md'",
+          "/bin/zsh -lc 'shasum -a 256 .agents/skills/creative-frontend-architect/SKILL.md .agents/skills/creative-frontend-architect/references/architecture.md /Users/bezzchen/.codex/skills/using-superpowers/SKILL.md /Users/bezzchen/.codex/skills/using-superpowers/references/codex-tools.md /Users/bezzchen/.codex/skills/systematic-debugging/SKILL.md /Users/bezzchen/.codex/skills/test-driven-development/SKILL.md /Users/bezzchen/.codex/skills/playwright/SKILL.md /Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md'"
+        ]
+      },
+      "assertions": [
+        {
+          "assertion": "Hiding metronome stops its owned animation updates while waveform continues.",
+          "status": "pass",
+          "evidence": "explicit-run1/assessment-initial/observations.json",
+          "supporting_checks": [
+            {
+              "assertion": "hiding metronome stops owned updates while visible waveform continues",
+              "status": "pass",
+              "detail": {
+                "metronome": 0,
+                "waveform": 39
+              }
+            },
+            {
+              "assertion": "real scroll pauses metronome while waveform remains visible",
+              "status": "pass",
+              "detail": {
+                "rects": {
+                  "metronome": {
+                    "top": -339,
+                    "bottom": -39,
+                    "height": 300,
+                    "hidden": false
+                  },
+                  "waveform": {
+                    "top": -15,
+                    "bottom": 285,
+                    "height": 300,
+                    "hidden": false
+                  }
+                },
+                "metronome": 0,
+                "waveform": 39
+              }
+            }
+          ],
+          "supplemental_evidence": "explicit-run1/assessment-combined-state/observations.json"
+        },
+        {
+          "assertion": "Hiding document pauses both; resuming restarts only active work without duplicate subscribers.",
+          "status": "pass",
+          "evidence": "explicit-run1/assessment-initial/observations.json",
+          "supporting_checks": [
+            {
+              "assertion": "native document-hidden pauses all owned continuous work",
+              "status": "pass",
+              "detail": {
+                "documentHidden": true,
+                "events": [
+                  {
+                    "time": 3556.7999999821186,
+                    "hidden": true,
+                    "state": "hidden",
+                    "trusted": true
+                  }
+                ],
+                "raf": {
+                  "requested": 207,
+                  "executed": 206,
+                  "cancelled": 1,
+                  "pending": []
+                },
+                "metronome": 0,
+                "waveform": 0
+              }
+            },
+            {
+              "assertion": "restoring real visibility resumes without duplicate subscriptions",
+              "status": "pass",
+              "detail": {
+                "before": [
+                  "waveform:2",
+                  "metronome:4"
+                ],
+                "after": [
+                  "metronome:5",
+                  "waveform:6"
+                ],
+                "metronome": 39,
+                "waveform": 39
+              }
+            },
+            {
+              "assertion": "native background cancels work with metronome already hidden",
+              "status": "pass",
+              "detail": {
+                "hidden": true,
+                "events": [
+                  {
+                    "time": 1254,
+                    "hidden": true,
+                    "state": "hidden",
+                    "trusted": true
+                  }
+                ],
+                "raf": {
+                  "requested": 74,
+                  "executed": 73,
+                  "cancelled": 1,
+                  "pending": []
+                },
+                "metronome": 0,
+                "waveform": 0
+              }
+            },
+            {
+              "assertion": "native restore resumes only eligible waveform",
+              "status": "pass",
+              "detail": {
+                "metronome": 0,
+                "waveform": 39,
+                "subscribers": [
+                  "waveform:3"
+                ],
+                "raf": {
+                  "requested": 124,
+                  "executed": 122,
+                  "cancelled": 1,
+                  "pending": [
+                    "tick"
+                  ]
+                },
+                "events": [
+                  {
+                    "time": 1254,
+                    "hidden": true,
+                    "state": "hidden",
+                    "trusted": true
+                  },
+                  {
+                    "time": 2212.5,
+                    "hidden": false,
+                    "state": "visible",
+                    "trusted": true
+                  }
+                ]
+              }
+            }
+          ],
+          "supplemental_evidence": "explicit-run1/assessment-combined-state/observations.json"
+        },
+        {
+          "assertion": "Unmounting one surface releases only its resources; shared scheduler survives for its sibling.",
+          "status": "pass",
+          "evidence": "explicit-run1/assessment-initial/observations.json",
+          "supporting_checks": [
+            {
+              "assertion": "unmount releases only metronome while waveform continues",
+              "status": "pass",
+              "detail": {
+                "subscribers": [
+                  "waveform:6"
+                ],
+                "metronome": 0,
+                "waveform": 39
+              }
+            },
+            {
+              "assertion": "remount does not accumulate subscribers",
+              "status": "pass",
+              "detail": {
+                "before": [
+                  "waveform:2",
+                  "metronome:4"
+                ],
+                "after": [
+                  "waveform:6",
+                  "metronome:7"
+                ]
+              }
+            }
+          ],
+          "supplemental_evidence": "explicit-run1/assessment-combined-state/observations.json"
+        },
+        {
+          "assertion": "Reduced motion preserves controls/content and avoids unnecessary continuous work.",
+          "status": "pass",
+          "evidence": "explicit-run1/assessment-initial/observations.json",
+          "supporting_checks": [
+            {
+              "assertion": "reduced motion stops unnecessary continuous work",
+              "status": "pass",
+              "detail": {
+                "raf": {
+                  "requested": 358,
+                  "executed": 356,
+                  "cancelled": 2,
+                  "pending": []
+                },
+                "metronome": 0,
+                "waveform": 0
+              }
+            },
+            {
+              "assertion": "reduced-motion controls remain keyboard operable",
+              "status": "pass",
+              "detail": {
+                "before": {
+                  "metronome": 84,
+                  "waveform": 36
+                },
+                "after": {
+                  "metronome": 85,
+                  "waveform": 37
+                }
+              }
+            }
+          ],
+          "supplemental_evidence": "explicit-run1/assessment-combined-state/observations.json"
+        }
+      ],
+      "initial_outcome": "pass",
+      "final_outcome": "pass",
+      "correction_cycles": 0,
+      "execution": {
+        "mode": "explicit",
+        "model_alias": "gpt-6-astra",
+        "model_snapshot": null,
+        "effort": "high",
+        "candidate_commit": "12f509e61d8aa15de2bfcc54195a7def07bda0a8",
+        "harness_sha256": "b608d331a2ebaf2d1ff245ce42049d515f8a47efb554b2be567e39a8de389781",
+        "command": [
+          "codex",
+          "exec",
+          "--ignore-user-config",
+          "--ephemeral",
+          "--skip-git-repo-check",
+          "--approve-for-me",
+          "-m",
+          "gpt-6-astra",
+          "-c",
+          "model_reasoning_effort=\"high\"",
+          "-C",
+          "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D8-shared-animation-ownership/explicit-run1/workspace",
+          "--json",
+          "-o",
+          "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D8-shared-animation-ownership/explicit-run1/final.md",
+          "-"
+        ],
+        "wall_cap_seconds": 1200,
+        "token_cap": null,
+        "source_path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D8-shared-animation-ownership/explicit-run1/workspace/.sources/frontend-design/SKILL.md",
+        "source_sha256": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3",
+        "host_config_ignored": true,
+        "global_skills_and_hooks_still_present": true,
+        "isolation": "fresh CLI context; project-only task instruction, not an OS read barrier",
+        "whole_workflow_tokens": null,
+        "started_at": "2026-09-17T19:10:34.491769+00:00",
+        "terminal_status": "completed",
+        "exit_code": 0,
+        "elapsed_seconds": 792.44,
+        "finished_at": "2026-09-17T19:24:37.028833+00:00",
+        "parent_usage_events": [
+          {
+            "input_tokens": 1037479,
+            "cached_input_tokens": 983552,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 11484,
+            "reasoning_output_tokens": 2274
+          }
+        ],
+        "whole_workflow_tokens_reason": "Parent usage may exclude delegated agents; do not infer total without accounting audit."
+      },
+      "candidate_files_unchanged": true,
+      "assessment_method": "Native Chromium default context via CDP noDefaults:true, actual tab backgrounding with trusted events; actual mouse-wheel scrolling; per-subscriber counters and global pending-rAF instrumentation. Reduced motion uses browser media preference emulation.",
+      "limitations": [
+        "Unscored development; no efficacy comparison.",
+        "Assessment author prepared the fixture and knew its original defects; not a blinded independent review.",
+        "Whole-workflow token/cost totals unavailable; execution record contains known parent CLI usage only.",
+        "Concurrent development builds may be present; no performance/frame-rate superiority inference."
+      ]
+    }
+  ],
+  "overall_status": "pass"
+}

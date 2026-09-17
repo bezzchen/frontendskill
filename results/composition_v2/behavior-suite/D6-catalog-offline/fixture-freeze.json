@@ -1,0 +1,17 @@
+{
+  "case_id": "D6-catalog-offline",
+  "fixture_status": "frozen-before-runs",
+  "files": {
+    "AGENTS.md": "098e8666da424f2df628cdf4a2f90e223380c065e35b4d1f199a834ef9ee1124",
+    "app.js": "a4f19202db0151edf47f5fb80f59ce2bf8a45cf047d51e65f92cfbed96d9abc3",
+    "assets/book.svg": "7fb3984d8e1786acf85c91ee61bbad261b00d15bf9bac4805f07fbd36d60ecaf",
+    "browser.cjs": "3845cb39eba89a07a719c72d7714b7b3283eee4ac68a922b0729fc8b7ac48ae2",
+    "catalog-fetch.cjs": "6ee02661b5e321bef84ba5125a4454b48ee2ea384dee7f3b7e48c0f7822b02d8",
+    "index.html": "ca7f02913af19ae226e14320625caaf5c7f965df8d5e97848ba689e5afd665a3",
+    "package.json": "34463ce4948381b5d2698ed5aed3fe9baa6ea07b5bf3ea6dfc1cf648e17da29b",
+    "styles.css": "85e662419b1289cbc3b670cf2ad751fab8315cfed6f7b512740f86dad2454136"
+  },
+  "aggregate_sha256": "e957ce3ffbe5b27025978e723c66524ff76a041800bb5d4d799d13d5540e0505",
+  "scope": "original application fixture with neutral supported-tool commands before candidate installation",
+  "deviation": null
+}

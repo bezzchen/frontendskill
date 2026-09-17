@@ -1,0 +1,18 @@
+2026-09-17T19:10:34.586096Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:10:34.588961Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:10:34.590059Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:10:34.591297Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:10:34.592294Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:11:01.833612Z  WARN codex_sandboxing::violation: recorded sandbox violation: resource=filesystem backend=seatbelt reason=operation_not_permitted path=unknown
+2026-09-17T19:11:10.777871Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T19:12:30.134842Z  WARN codex_sandboxing::violation: recorded sandbox violation: resource=filesystem backend=seatbelt reason=permission_denied path=unknown
+2026-09-17T19:12:40.675261Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T19:13:38.814656Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T19:14:16.106950Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T19:14:46.002359Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T19:15:28.582358Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T19:21:39.225715Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (1/5 in 184ms)... turn_id=01a0b0c7-1e9e-7ab1-a5b9-0204b8637ce9 retries=1 max_retries=5 sampling_error=stream disconnected before completion: idle timeout waiting for websocket
+2026-09-17T19:22:19.153808Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (1/1 in 198ms)... turn_id=01a0b0d1-8aea-7700-9ef4-57a429f5c852 retries=1 max_retries=1 sampling_error=stream disconnected before completion: IO error: Operation timed out (os error 60)
+2026-09-17T19:22:23.533931Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T19:23:08.096460Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T19:24:35.915286Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf("/Users/bezzchen/.codex/shell_snapshots/01a0b0c7-1e50-7982-9780-9c454f4db0ff.1789672234577139000.sh"): Os { code: 2, kind: NotFound, message: "No such file or directory" }

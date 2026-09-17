@@ -1,0 +1,32 @@
+{
+  "url": "http://127.0.0.1:8796",
+  "width": 375,
+  "height": 812,
+  "reducedMotion": "reduce",
+  "actions": [
+    {
+      "type": "fill",
+      "selector": "#guest-name",
+      "value": "Alex Binder"
+    },
+    {
+      "type": "fill",
+      "selector": "#guest-email",
+      "value": "alex@example.com"
+    },
+    {
+      "type": "select",
+      "selector": "#session",
+      "value": "18 October \u00b7 14:00"
+    },
+    {
+      "type": "press",
+      "value": "Tab"
+    },
+    {
+      "type": "press",
+      "value": "Enter"
+    }
+  ],
+  "screenshot": "verification/mobile-confirmation.png"
+}

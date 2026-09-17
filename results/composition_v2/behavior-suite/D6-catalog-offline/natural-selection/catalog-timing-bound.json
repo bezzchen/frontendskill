@@ -1,0 +1,9 @@
+{
+  "source": "filesystem birth time of subsequently-created work-log.md, whose addition item_13 follows both completed fetch attempts item_9/item_10 in rawtrace",
+  "started_at": "2026-09-17T19:26:07.448859+00:00",
+  "work_log_birth_at": "2026-09-17T19:27:41.079259+00:00",
+  "max_elapsed_seconds": 93.6304,
+  "trace_sha256": "31fd7ea7d6792906ccc5eafd99735f526066b4596a7a47dca5f2d66f872c674a",
+  "assessment_at": "2026-09-17T19:32:42.945246+00:00",
+  "qualification": "Conservative bound for both attempts, not invented individual request timestamps. Original fixture has no work-log.md."
+}

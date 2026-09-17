@@ -1,0 +1,1870 @@
+{
+  "status": "observed",
+  "mode": "d4",
+  "route": "http://127.0.0.1:8844",
+  "log": [
+    {
+      "name": "desktop-initial",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\n\nA co-op for the things worth keeping\n\nGood things\ndeserve another\nchapter.\n\nA favourite jumper. A wobbly chair. A kettle with a story.\nKeep them going, with a little help from your neighbours.\n\nBecome a member\n£8 per month\nA little each month. A lot, together.\nStill plenty of life in it.\n\nMore mending. Less ending.\n\n✳\n\nMend what you have. Learn what you can. Share what you know.\n\n✳\nGood for your things.\nEven better, together.\n\nYour membership keeps shared tools, shared skills\nand patient repair within reach.\n\nMake room for repair.\n\nA monthly repair evening with shared tools.\n\nBring something that needs a little attention. Find the tools, space and company to give it another go.\n\nPass a good skill on.\n\nSkill swaps led by fellow members.\n\nA stitch, a fix, a trick you didn’t know. Learn from your neighbours and share what comes naturally.\n\nBuild it together.\n\nA say in which tools and projects we support.\n\nThis is your co-op, too. Help decide what we add to the toolbox and what we take on next.\n\nThere’s a place for you at the workbench.\n\nLet’s give things\nanother go.\n\nYou don’t need to be handy. Just curious.\nJoin the Round Again member list.\n\n£8 per month\nFor shared tools, shared skills and a say.\n\nYour name\nEmail address\nJoin the demo member list\n\nJust a little trial run. This is a prototype: your details stay in this browser. No payment, email or external submission.\n\nAlready making yourself at home?\n\nSet your notification preferences\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Become a member",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "member-name",
+          "name": "name",
+          "label": "Your name",
+          "text": "",
+          "value": "",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "email",
+          "id": "member-email",
+          "name": "email",
+          "label": "Email address",
+          "text": "",
+          "value": "",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Join the demo member list",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "BODY",
+        "id": "",
+        "text": null
+      },
+      "geometry": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "buttons": [
+          {
+            "text": "Become a member",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "Join the demo member list",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "desktop-membership-empty-error",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\n\nA co-op for the things worth keeping\n\nGood things\ndeserve another\nchapter.\n\nA favourite jumper. A wobbly chair. A kettle with a story.\nKeep them going, with a little help from your neighbours.\n\nBecome a member\n£8 per month\nA little each month. A lot, together.\nStill plenty of life in it.\n\nMore mending. Less ending.\n\n✳\n\nMend what you have. Learn what you can. Share what you know.\n\n✳\nGood for your things.\nEven better, together.\n\nYour membership keeps shared tools, shared skills\nand patient repair within reach.\n\nMake room for repair.\n\nA monthly repair evening with shared tools.\n\nBring something that needs a little attention. Find the tools, space and company to give it another go.\n\nPass a good skill on.\n\nSkill swaps led by fellow members.\n\nA stitch, a fix, a trick you didn’t know. Learn from your neighbours and share what comes naturally.\n\nBuild it together.\n\nA say in which tools and projects we support.\n\nThis is your co-op, too. Help decide what we add to the toolbox and what we take on next.\n\nThere’s a place for you at the workbench.\n\nLet’s give things\nanother go.\n\nYou don’t need to be handy. Just curious.\nJoin the Round Again member list.\n\n£8 per month\nFor shared tools, shared skills and a say.\n\nYour name\n\nEnter your name so we know what to call you.\n\nEmail address\n\nEnter a valid email address, like you@example.com.\n\nJoin the demo member list\n\nJust a little trial run. This is a prototype: your details stay in this browser. No payment, email or external submission.\n\nAlready making yourself at home?\n\nSet your notification preferences\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Become a member",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "member-name",
+          "name": "name",
+          "label": "Your name",
+          "text": "",
+          "value": "",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "email",
+          "id": "member-email",
+          "name": "email",
+          "label": "Email address",
+          "text": "",
+          "value": "",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Join the demo member list",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "INPUT",
+        "id": "member-name",
+        "text": ""
+      },
+      "geometry": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "buttons": [
+          {
+            "text": "Become a member",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "Join the demo member list",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "desktop-membership-email-error",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\n\nA co-op for the things worth keeping\n\nGood things\ndeserve another\nchapter.\n\nA favourite jumper. A wobbly chair. A kettle with a story.\nKeep them going, with a little help from your neighbours.\n\nBecome a member\n£8 per month\nA little each month. A lot, together.\nStill plenty of life in it.\n\nMore mending. Less ending.\n\n✳\n\nMend what you have. Learn what you can. Share what you know.\n\n✳\nGood for your things.\nEven better, together.\n\nYour membership keeps shared tools, shared skills\nand patient repair within reach.\n\nMake room for repair.\n\nA monthly repair evening with shared tools.\n\nBring something that needs a little attention. Find the tools, space and company to give it another go.\n\nPass a good skill on.\n\nSkill swaps led by fellow members.\n\nA stitch, a fix, a trick you didn’t know. Learn from your neighbours and share what comes naturally.\n\nBuild it together.\n\nA say in which tools and projects we support.\n\nThis is your co-op, too. Help decide what we add to the toolbox and what we take on next.\n\nThere’s a place for you at the workbench.\n\nLet’s give things\nanother go.\n\nYou don’t need to be handy. Just curious.\nJoin the Round Again member list.\n\n£8 per month\nFor shared tools, shared skills and a say.\n\nYour name\nEmail address\n\nEnter a valid email address, like you@example.com.\n\nJoin the demo member list\n\nJust a little trial run. This is a prototype: your details stay in this browser. No payment, email or external submission.\n\nAlready making yourself at home?\n\nSet your notification preferences\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Become a member",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "member-name",
+          "name": "name",
+          "label": "Your name",
+          "text": "",
+          "value": "Casey Morgan",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "email",
+          "id": "member-email",
+          "name": "email",
+          "label": "Email address",
+          "text": "",
+          "value": "not-an-email",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Join the demo member list",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "INPUT",
+        "id": "member-email",
+        "text": ""
+      },
+      "geometry": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "buttons": [
+          {
+            "text": "Become a member",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "Join the demo member list",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "desktop-membership-pointer-success",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\n\nA co-op for the things worth keeping\n\nGood things\ndeserve another\nchapter.\n\nA favourite jumper. A wobbly chair. A kettle with a story.\nKeep them going, with a little help from your neighbours.\n\nBecome a member\n£8 per month\nA little each month. A lot, together.\nStill plenty of life in it.\n\nMore mending. Less ending.\n\n✳\n\nMend what you have. Learn what you can. Share what you know.\n\n✳\nGood for your things.\nEven better, together.\n\nYour membership keeps shared tools, shared skills\nand patient repair within reach.\n\nMake room for repair.\n\nA monthly repair evening with shared tools.\n\nBring something that needs a little attention. Find the tools, space and company to give it another go.\n\nPass a good skill on.\n\nSkill swaps led by fellow members.\n\nA stitch, a fix, a trick you didn’t know. Learn from your neighbours and share what comes naturally.\n\nBuild it together.\n\nA say in which tools and projects we support.\n\nThis is your co-op, too. Help decide what we add to the toolbox and what we take on next.\n\nThere’s a place for you at the workbench.\n\nLet’s give things\nanother go.\n\nYou don’t need to be handy. Just curious.\nJoin the Round Again member list.\n\n£8 per month\nFor shared tools, shared skills and a say.\n\n✓\nYou’re on the demo list, Casey Morgan.\n\nYour details are saved in this browser. This hasn’t created a paid membership or sent an email.\n\nChoose your notification preferences\n\nAlready making yourself at home?\n\nSet your notification preferences\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Become a member",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "BODY",
+        "id": "",
+        "text": null
+      },
+      "geometry": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "buttons": [
+          {
+            "text": "Become a member",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "desktop-preferences-error",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\nMembership\n/\nYour preferences\nNotification preferences\n\nA little news from the co-op, on your terms.\n\nKeep in the loop.\n\nChoose what you’d like to hear about. You can come back and change these any time.\n\nAbout this prototype\n\nPreferences are saved only in this browser. No emails are sent, and there’s no account to sign in to.\n\nYour details\n\nWhat should we call you?\n\nDisplay name\n\nEnter a display name before saving.\n\nNews you’d like to receive\n\nTick the updates that are useful to you.\n\nRepair evenings\n\nDates and reminders for our monthly repair evenings.\n\nSkill swaps\n\nOpportunities to learn something new or share a skill.\n\nMonthly digest\n\nA monthly round-up of news, projects and life at the co-op.\n\nPrefer a quieter inbox? Leave all three unticked.\n\nSave preferences\nCancel\n\nYou have unsaved changes.\n\nBack to membership\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "display-name",
+          "name": "displayName",
+          "label": "Display name",
+          "text": "",
+          "value": "   ",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "repairEvenings",
+          "name": "",
+          "label": "Repair evenings",
+          "text": "",
+          "value": "on",
+          "checked": true,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "skillSwaps",
+          "name": "",
+          "label": "Skill swaps",
+          "text": "",
+          "value": "on",
+          "checked": true,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "monthlyDigest",
+          "name": "",
+          "label": "Monthly digest",
+          "text": "",
+          "value": "on",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Save preferences",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Cancel",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "INPUT",
+        "id": "display-name",
+        "text": ""
+      },
+      "geometry": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "buttons": [
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Save preferences",
+            "radius": "4px"
+          },
+          {
+            "text": "Cancel",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "desktop-preferences-pointer-success",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\nMembership\n/\nYour preferences\nNotification preferences\n\nA little news from the co-op, on your terms.\n\nKeep in the loop.\n\nChoose what you’d like to hear about. You can come back and change these any time.\n\nAbout this prototype\n\nPreferences are saved only in this browser. No emails are sent, and there’s no account to sign in to.\n\nYour details\n\nWhat should we call you?\n\nDisplay name\nNews you’d like to receive\n\nTick the updates that are useful to you.\n\nRepair evenings\n\nDates and reminders for our monthly repair evenings.\n\nSkill swaps\n\nOpportunities to learn something new or share a skill.\n\nMonthly digest\n\nA monthly round-up of news, projects and life at the co-op.\n\nPrefer a quieter inbox? Leave all three unticked.\n\nSave preferences\nCancel\n\nPreferences saved in this browser.\n\nBack to membership\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "display-name",
+          "name": "displayName",
+          "label": "Display name",
+          "text": "",
+          "value": "Casey Reader",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "repairEvenings",
+          "name": "",
+          "label": "Repair evenings",
+          "text": "",
+          "value": "on",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "skillSwaps",
+          "name": "",
+          "label": "Skill swaps",
+          "text": "",
+          "value": "on",
+          "checked": true,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "monthlyDigest",
+          "name": "",
+          "label": "Monthly digest",
+          "text": "",
+          "value": "on",
+          "checked": true,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Save preferences",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Cancel",
+          "value": "",
+          "disabled": true
+        }
+      ],
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Save preferences"
+      },
+      "geometry": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "buttons": [
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Save preferences",
+            "radius": "4px"
+          },
+          {
+            "text": "Cancel",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "desktop-preferences-reloaded",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\nMembership\n/\nYour preferences\nNotification preferences\n\nA little news from the co-op, on your terms.\n\nKeep in the loop.\n\nChoose what you’d like to hear about. You can come back and change these any time.\n\nAbout this prototype\n\nPreferences are saved only in this browser. No emails are sent, and there’s no account to sign in to.\n\nYour details\n\nWhat should we call you?\n\nDisplay name\nNews you’d like to receive\n\nTick the updates that are useful to you.\n\nRepair evenings\n\nDates and reminders for our monthly repair evenings.\n\nSkill swaps\n\nOpportunities to learn something new or share a skill.\n\nMonthly digest\n\nA monthly round-up of news, projects and life at the co-op.\n\nPrefer a quieter inbox? Leave all three unticked.\n\nSave preferences\nCancel\n\nPreferences apply to this browser only.\n\nBack to membership\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "display-name",
+          "name": "displayName",
+          "label": "Display name",
+          "text": "",
+          "value": "Casey Reader",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "repairEvenings",
+          "name": "",
+          "label": "Repair evenings",
+          "text": "",
+          "value": "on",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "skillSwaps",
+          "name": "",
+          "label": "Skill swaps",
+          "text": "",
+          "value": "on",
+          "checked": true,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "monthlyDigest",
+          "name": "",
+          "label": "Monthly digest",
+          "text": "",
+          "value": "on",
+          "checked": true,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Save preferences",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Cancel",
+          "value": "",
+          "disabled": true
+        }
+      ],
+      "focus": {
+        "tag": "BODY",
+        "id": "",
+        "text": null
+      },
+      "geometry": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "buttons": [
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Save preferences",
+            "radius": "4px"
+          },
+          {
+            "text": "Cancel",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "desktop-preferences-keyboard-focus",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\nMembership\n/\nYour preferences\nNotification preferences\n\nA little news from the co-op, on your terms.\n\nKeep in the loop.\n\nChoose what you’d like to hear about. You can come back and change these any time.\n\nAbout this prototype\n\nPreferences are saved only in this browser. No emails are sent, and there’s no account to sign in to.\n\nYour details\n\nWhat should we call you?\n\nDisplay name\nNews you’d like to receive\n\nTick the updates that are useful to you.\n\nRepair evenings\n\nDates and reminders for our monthly repair evenings.\n\nSkill swaps\n\nOpportunities to learn something new or share a skill.\n\nMonthly digest\n\nA monthly round-up of news, projects and life at the co-op.\n\nPrefer a quieter inbox? Leave all three unticked.\n\nSave preferences\nCancel\n\nYou have unsaved changes.\n\nBack to membership\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "display-name",
+          "name": "displayName",
+          "label": "Display name",
+          "text": "",
+          "value": "Jordan Vale",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "repairEvenings",
+          "name": "",
+          "label": "Repair evenings",
+          "text": "",
+          "value": "on",
+          "checked": true,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "skillSwaps",
+          "name": "",
+          "label": "Skill swaps",
+          "text": "",
+          "value": "on",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "monthlyDigest",
+          "name": "",
+          "label": "Monthly digest",
+          "text": "",
+          "value": "on",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Save preferences",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Cancel",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Save preferences"
+      },
+      "geometry": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "buttons": [
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Save preferences",
+            "radius": "4px"
+          },
+          {
+            "text": "Cancel",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "desktop-preferences-keyboard-success",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\nMembership\n/\nYour preferences\nNotification preferences\n\nA little news from the co-op, on your terms.\n\nKeep in the loop.\n\nChoose what you’d like to hear about. You can come back and change these any time.\n\nAbout this prototype\n\nPreferences are saved only in this browser. No emails are sent, and there’s no account to sign in to.\n\nYour details\n\nWhat should we call you?\n\nDisplay name\nNews you’d like to receive\n\nTick the updates that are useful to you.\n\nRepair evenings\n\nDates and reminders for our monthly repair evenings.\n\nSkill swaps\n\nOpportunities to learn something new or share a skill.\n\nMonthly digest\n\nA monthly round-up of news, projects and life at the co-op.\n\nPrefer a quieter inbox? Leave all three unticked.\n\nSave preferences\nCancel\n\nPreferences saved in this browser.\n\nBack to membership\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "display-name",
+          "name": "displayName",
+          "label": "Display name",
+          "text": "",
+          "value": "Jordan Vale",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "repairEvenings",
+          "name": "",
+          "label": "Repair evenings",
+          "text": "",
+          "value": "on",
+          "checked": true,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "skillSwaps",
+          "name": "",
+          "label": "Skill swaps",
+          "text": "",
+          "value": "on",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "monthlyDigest",
+          "name": "",
+          "label": "Monthly digest",
+          "text": "",
+          "value": "on",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Save preferences",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Cancel",
+          "value": "",
+          "disabled": true
+        }
+      ],
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Save preferences"
+      },
+      "geometry": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "buttons": [
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Save preferences",
+            "radius": "4px"
+          },
+          {
+            "text": "Cancel",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "desktop-membership-keyboard-focus",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\n\nA co-op for the things worth keeping\n\nGood things\ndeserve another\nchapter.\n\nA favourite jumper. A wobbly chair. A kettle with a story.\nKeep them going, with a little help from your neighbours.\n\nBecome a member\n£8 per month\nA little each month. A lot, together.\nStill plenty of life in it.\n\nMore mending. Less ending.\n\n✳\n\nMend what you have. Learn what you can. Share what you know.\n\n✳\nGood for your things.\nEven better, together.\n\nYour membership keeps shared tools, shared skills\nand patient repair within reach.\n\nMake room for repair.\n\nA monthly repair evening with shared tools.\n\nBring something that needs a little attention. Find the tools, space and company to give it another go.\n\nPass a good skill on.\n\nSkill swaps led by fellow members.\n\nA stitch, a fix, a trick you didn’t know. Learn from your neighbours and share what comes naturally.\n\nBuild it together.\n\nA say in which tools and projects we support.\n\nThis is your co-op, too. Help decide what we add to the toolbox and what we take on next.\n\nThere’s a place for you at the workbench.\n\nLet’s give things\nanother go.\n\nYou don’t need to be handy. Just curious.\nJoin the Round Again member list.\n\n£8 per month\nFor shared tools, shared skills and a say.\n\nYour name\nEmail address\nJoin the demo member list\n\nJust a little trial run. This is a prototype: your details stay in this browser. No payment, email or external submission.\n\nAlready making yourself at home?\n\nSet your notification preferences\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Become a member",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "member-name",
+          "name": "name",
+          "label": "Your name",
+          "text": "",
+          "value": "Jordan Vale",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "email",
+          "id": "member-email",
+          "name": "email",
+          "label": "Email address",
+          "text": "",
+          "value": "jordan@example.com",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Join the demo member list",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Join the demo member list"
+      },
+      "geometry": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "buttons": [
+          {
+            "text": "Become a member",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "Join the demo member list",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "desktop-membership-keyboard-success",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\n\nA co-op for the things worth keeping\n\nGood things\ndeserve another\nchapter.\n\nA favourite jumper. A wobbly chair. A kettle with a story.\nKeep them going, with a little help from your neighbours.\n\nBecome a member\n£8 per month\nA little each month. A lot, together.\nStill plenty of life in it.\n\nMore mending. Less ending.\n\n✳\n\nMend what you have. Learn what you can. Share what you know.\n\n✳\nGood for your things.\nEven better, together.\n\nYour membership keeps shared tools, shared skills\nand patient repair within reach.\n\nMake room for repair.\n\nA monthly repair evening with shared tools.\n\nBring something that needs a little attention. Find the tools, space and company to give it another go.\n\nPass a good skill on.\n\nSkill swaps led by fellow members.\n\nA stitch, a fix, a trick you didn’t know. Learn from your neighbours and share what comes naturally.\n\nBuild it together.\n\nA say in which tools and projects we support.\n\nThis is your co-op, too. Help decide what we add to the toolbox and what we take on next.\n\nThere’s a place for you at the workbench.\n\nLet’s give things\nanother go.\n\nYou don’t need to be handy. Just curious.\nJoin the Round Again member list.\n\n£8 per month\nFor shared tools, shared skills and a say.\n\n✓\nYou’re on the demo list, Jordan Vale.\n\nYour details are saved in this browser. This hasn’t created a paid membership or sent an email.\n\nChoose your notification preferences\n\nAlready making yourself at home?\n\nSet your notification preferences\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Become a member",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "BODY",
+        "id": "",
+        "text": null
+      },
+      "geometry": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "buttons": [
+          {
+            "text": "Become a member",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mobile-initial",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\n\nA co-op for the things worth keeping\n\nGood things\ndeserve another\nchapter.\n\nA favourite jumper. A wobbly chair. A kettle with a story. Keep them going, with a little help from your neighbours.\n\nBecome a member\n£8 per month\nA little each month. A lot, together.\nStill plenty of life in it.\n\nMore mending. Less ending.\n\n✳\n\nMend what you have. Learn what you can. Share what you know.\n\n✳\nGood for your things.\nEven better, together.\n\nYour membership keeps shared tools, shared skills and patient repair within reach.\n\nMake room for repair.\n\nA monthly repair evening with shared tools.\n\nBring something that needs a little attention. Find the tools, space and company to give it another go.\n\nPass a good skill on.\n\nSkill swaps led by fellow members.\n\nA stitch, a fix, a trick you didn’t know. Learn from your neighbours and share what comes naturally.\n\nBuild it together.\n\nA say in which tools and projects we support.\n\nThis is your co-op, too. Help decide what we add to the toolbox and what we take on next.\n\nThere’s a place for you at the workbench.\n\nLet’s give things\nanother go.\n\nYou don’t need to be handy. Just curious.\nJoin the Round Again member list.\n\n£8 per month\nFor shared tools, shared skills and a say.\n\nYour name\nEmail address\nJoin the demo member list\n\nJust a little trial run. This is a prototype: your details stay in this browser. No payment, email or external submission.\n\nAlready making yourself at home?\n\nSet your notification preferences\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Become a member",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "member-name",
+          "name": "name",
+          "label": "Your name",
+          "text": "",
+          "value": "",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "email",
+          "id": "member-email",
+          "name": "email",
+          "label": "Email address",
+          "text": "",
+          "value": "",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Join the demo member list",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "BODY",
+        "id": "",
+        "text": null
+      },
+      "geometry": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "buttons": [
+          {
+            "text": "Become a member",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "Join the demo member list",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mobile-membership-empty-error",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\n\nA co-op for the things worth keeping\n\nGood things\ndeserve another\nchapter.\n\nA favourite jumper. A wobbly chair. A kettle with a story. Keep them going, with a little help from your neighbours.\n\nBecome a member\n£8 per month\nA little each month. A lot, together.\nStill plenty of life in it.\n\nMore mending. Less ending.\n\n✳\n\nMend what you have. Learn what you can. Share what you know.\n\n✳\nGood for your things.\nEven better, together.\n\nYour membership keeps shared tools, shared skills and patient repair within reach.\n\nMake room for repair.\n\nA monthly repair evening with shared tools.\n\nBring something that needs a little attention. Find the tools, space and company to give it another go.\n\nPass a good skill on.\n\nSkill swaps led by fellow members.\n\nA stitch, a fix, a trick you didn’t know. Learn from your neighbours and share what comes naturally.\n\nBuild it together.\n\nA say in which tools and projects we support.\n\nThis is your co-op, too. Help decide what we add to the toolbox and what we take on next.\n\nThere’s a place for you at the workbench.\n\nLet’s give things\nanother go.\n\nYou don’t need to be handy. Just curious.\nJoin the Round Again member list.\n\n£8 per month\nFor shared tools, shared skills and a say.\n\nYour name\n\nEnter your name so we know what to call you.\n\nEmail address\n\nEnter a valid email address, like you@example.com.\n\nJoin the demo member list\n\nJust a little trial run. This is a prototype: your details stay in this browser. No payment, email or external submission.\n\nAlready making yourself at home?\n\nSet your notification preferences\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Become a member",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "member-name",
+          "name": "name",
+          "label": "Your name",
+          "text": "",
+          "value": "",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "email",
+          "id": "member-email",
+          "name": "email",
+          "label": "Email address",
+          "text": "",
+          "value": "",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Join the demo member list",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "INPUT",
+        "id": "member-name",
+        "text": ""
+      },
+      "geometry": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "buttons": [
+          {
+            "text": "Become a member",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "Join the demo member list",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mobile-membership-email-error",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\n\nA co-op for the things worth keeping\n\nGood things\ndeserve another\nchapter.\n\nA favourite jumper. A wobbly chair. A kettle with a story. Keep them going, with a little help from your neighbours.\n\nBecome a member\n£8 per month\nA little each month. A lot, together.\nStill plenty of life in it.\n\nMore mending. Less ending.\n\n✳\n\nMend what you have. Learn what you can. Share what you know.\n\n✳\nGood for your things.\nEven better, together.\n\nYour membership keeps shared tools, shared skills and patient repair within reach.\n\nMake room for repair.\n\nA monthly repair evening with shared tools.\n\nBring something that needs a little attention. Find the tools, space and company to give it another go.\n\nPass a good skill on.\n\nSkill swaps led by fellow members.\n\nA stitch, a fix, a trick you didn’t know. Learn from your neighbours and share what comes naturally.\n\nBuild it together.\n\nA say in which tools and projects we support.\n\nThis is your co-op, too. Help decide what we add to the toolbox and what we take on next.\n\nThere’s a place for you at the workbench.\n\nLet’s give things\nanother go.\n\nYou don’t need to be handy. Just curious.\nJoin the Round Again member list.\n\n£8 per month\nFor shared tools, shared skills and a say.\n\nYour name\nEmail address\n\nEnter a valid email address, like you@example.com.\n\nJoin the demo member list\n\nJust a little trial run. This is a prototype: your details stay in this browser. No payment, email or external submission.\n\nAlready making yourself at home?\n\nSet your notification preferences\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Become a member",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "member-name",
+          "name": "name",
+          "label": "Your name",
+          "text": "",
+          "value": "Casey Morgan",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "email",
+          "id": "member-email",
+          "name": "email",
+          "label": "Email address",
+          "text": "",
+          "value": "not-an-email",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Join the demo member list",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "INPUT",
+        "id": "member-email",
+        "text": ""
+      },
+      "geometry": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "buttons": [
+          {
+            "text": "Become a member",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "Join the demo member list",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mobile-membership-pointer-success",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\n\nA co-op for the things worth keeping\n\nGood things\ndeserve another\nchapter.\n\nA favourite jumper. A wobbly chair. A kettle with a story. Keep them going, with a little help from your neighbours.\n\nBecome a member\n£8 per month\nA little each month. A lot, together.\nStill plenty of life in it.\n\nMore mending. Less ending.\n\n✳\n\nMend what you have. Learn what you can. Share what you know.\n\n✳\nGood for your things.\nEven better, together.\n\nYour membership keeps shared tools, shared skills and patient repair within reach.\n\nMake room for repair.\n\nA monthly repair evening with shared tools.\n\nBring something that needs a little attention. Find the tools, space and company to give it another go.\n\nPass a good skill on.\n\nSkill swaps led by fellow members.\n\nA stitch, a fix, a trick you didn’t know. Learn from your neighbours and share what comes naturally.\n\nBuild it together.\n\nA say in which tools and projects we support.\n\nThis is your co-op, too. Help decide what we add to the toolbox and what we take on next.\n\nThere’s a place for you at the workbench.\n\nLet’s give things\nanother go.\n\nYou don’t need to be handy. Just curious.\nJoin the Round Again member list.\n\n£8 per month\nFor shared tools, shared skills and a say.\n\n✓\nYou’re on the demo list, Casey Morgan.\n\nYour details are saved in this browser. This hasn’t created a paid membership or sent an email.\n\nChoose your notification preferences\n\nAlready making yourself at home?\n\nSet your notification preferences\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Become a member",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "BODY",
+        "id": "",
+        "text": null
+      },
+      "geometry": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "buttons": [
+          {
+            "text": "Become a member",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mobile-preferences-error",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\nMembership\n/\nYour preferences\nNotification preferences\n\nA little news from the co-op, on your terms.\n\nChoose what you’d like to hear about. You can come back and change these any time.\n\nAbout this prototype\n\nPreferences are saved only in this browser. No emails are sent, and there’s no account to sign in to.\n\nYour details\n\nWhat should we call you?\n\nDisplay name\n\nEnter a display name before saving.\n\nNews you’d like to receive\n\nTick the updates that are useful to you.\n\nRepair evenings\n\nDates and reminders for our monthly repair evenings.\n\nSkill swaps\n\nOpportunities to learn something new or share a skill.\n\nMonthly digest\n\nA monthly round-up of news, projects and life at the co-op.\n\nPrefer a quieter inbox? Leave all three unticked.\n\nSave preferences\nCancel\n\nYou have unsaved changes.\n\nBack to membership\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "display-name",
+          "name": "displayName",
+          "label": "Display name",
+          "text": "",
+          "value": "   ",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "repairEvenings",
+          "name": "",
+          "label": "Repair evenings",
+          "text": "",
+          "value": "on",
+          "checked": true,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "skillSwaps",
+          "name": "",
+          "label": "Skill swaps",
+          "text": "",
+          "value": "on",
+          "checked": true,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "monthlyDigest",
+          "name": "",
+          "label": "Monthly digest",
+          "text": "",
+          "value": "on",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Save preferences",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Cancel",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "INPUT",
+        "id": "display-name",
+        "text": ""
+      },
+      "geometry": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "buttons": [
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Save preferences",
+            "radius": "4px"
+          },
+          {
+            "text": "Cancel",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mobile-preferences-pointer-success",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\nMembership\n/\nYour preferences\nNotification preferences\n\nA little news from the co-op, on your terms.\n\nChoose what you’d like to hear about. You can come back and change these any time.\n\nAbout this prototype\n\nPreferences are saved only in this browser. No emails are sent, and there’s no account to sign in to.\n\nYour details\n\nWhat should we call you?\n\nDisplay name\nNews you’d like to receive\n\nTick the updates that are useful to you.\n\nRepair evenings\n\nDates and reminders for our monthly repair evenings.\n\nSkill swaps\n\nOpportunities to learn something new or share a skill.\n\nMonthly digest\n\nA monthly round-up of news, projects and life at the co-op.\n\nPrefer a quieter inbox? Leave all three unticked.\n\nSave preferences\nCancel\n\nPreferences saved in this browser.\n\nBack to membership\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "display-name",
+          "name": "displayName",
+          "label": "Display name",
+          "text": "",
+          "value": "Casey Reader",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "repairEvenings",
+          "name": "",
+          "label": "Repair evenings",
+          "text": "",
+          "value": "on",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "skillSwaps",
+          "name": "",
+          "label": "Skill swaps",
+          "text": "",
+          "value": "on",
+          "checked": true,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "monthlyDigest",
+          "name": "",
+          "label": "Monthly digest",
+          "text": "",
+          "value": "on",
+          "checked": true,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Save preferences",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Cancel",
+          "value": "",
+          "disabled": true
+        }
+      ],
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Save preferences"
+      },
+      "geometry": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "buttons": [
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Save preferences",
+            "radius": "4px"
+          },
+          {
+            "text": "Cancel",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mobile-preferences-reloaded",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\nMembership\n/\nYour preferences\nNotification preferences\n\nA little news from the co-op, on your terms.\n\nChoose what you’d like to hear about. You can come back and change these any time.\n\nAbout this prototype\n\nPreferences are saved only in this browser. No emails are sent, and there’s no account to sign in to.\n\nYour details\n\nWhat should we call you?\n\nDisplay name\nNews you’d like to receive\n\nTick the updates that are useful to you.\n\nRepair evenings\n\nDates and reminders for our monthly repair evenings.\n\nSkill swaps\n\nOpportunities to learn something new or share a skill.\n\nMonthly digest\n\nA monthly round-up of news, projects and life at the co-op.\n\nPrefer a quieter inbox? Leave all three unticked.\n\nSave preferences\nCancel\n\nPreferences apply to this browser only.\n\nBack to membership\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "display-name",
+          "name": "displayName",
+          "label": "Display name",
+          "text": "",
+          "value": "Casey Reader",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "repairEvenings",
+          "name": "",
+          "label": "Repair evenings",
+          "text": "",
+          "value": "on",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "skillSwaps",
+          "name": "",
+          "label": "Skill swaps",
+          "text": "",
+          "value": "on",
+          "checked": true,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "monthlyDigest",
+          "name": "",
+          "label": "Monthly digest",
+          "text": "",
+          "value": "on",
+          "checked": true,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Save preferences",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Cancel",
+          "value": "",
+          "disabled": true
+        }
+      ],
+      "focus": {
+        "tag": "BODY",
+        "id": "",
+        "text": null
+      },
+      "geometry": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "buttons": [
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Save preferences",
+            "radius": "4px"
+          },
+          {
+            "text": "Cancel",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mobile-preferences-keyboard-focus",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\nMembership\n/\nYour preferences\nNotification preferences\n\nA little news from the co-op, on your terms.\n\nChoose what you’d like to hear about. You can come back and change these any time.\n\nAbout this prototype\n\nPreferences are saved only in this browser. No emails are sent, and there’s no account to sign in to.\n\nYour details\n\nWhat should we call you?\n\nDisplay name\nNews you’d like to receive\n\nTick the updates that are useful to you.\n\nRepair evenings\n\nDates and reminders for our monthly repair evenings.\n\nSkill swaps\n\nOpportunities to learn something new or share a skill.\n\nMonthly digest\n\nA monthly round-up of news, projects and life at the co-op.\n\nPrefer a quieter inbox? Leave all three unticked.\n\nSave preferences\nCancel\n\nYou have unsaved changes.\n\nBack to membership\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "display-name",
+          "name": "displayName",
+          "label": "Display name",
+          "text": "",
+          "value": "Jordan Vale",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "repairEvenings",
+          "name": "",
+          "label": "Repair evenings",
+          "text": "",
+          "value": "on",
+          "checked": true,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "skillSwaps",
+          "name": "",
+          "label": "Skill swaps",
+          "text": "",
+          "value": "on",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "monthlyDigest",
+          "name": "",
+          "label": "Monthly digest",
+          "text": "",
+          "value": "on",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Save preferences",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Cancel",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Save preferences"
+      },
+      "geometry": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "buttons": [
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Save preferences",
+            "radius": "4px"
+          },
+          {
+            "text": "Cancel",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mobile-preferences-keyboard-success",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\nMembership\n/\nYour preferences\nNotification preferences\n\nA little news from the co-op, on your terms.\n\nChoose what you’d like to hear about. You can come back and change these any time.\n\nAbout this prototype\n\nPreferences are saved only in this browser. No emails are sent, and there’s no account to sign in to.\n\nYour details\n\nWhat should we call you?\n\nDisplay name\nNews you’d like to receive\n\nTick the updates that are useful to you.\n\nRepair evenings\n\nDates and reminders for our monthly repair evenings.\n\nSkill swaps\n\nOpportunities to learn something new or share a skill.\n\nMonthly digest\n\nA monthly round-up of news, projects and life at the co-op.\n\nPrefer a quieter inbox? Leave all three unticked.\n\nSave preferences\nCancel\n\nPreferences saved in this browser.\n\nBack to membership\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "display-name",
+          "name": "displayName",
+          "label": "Display name",
+          "text": "",
+          "value": "Jordan Vale",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "repairEvenings",
+          "name": "",
+          "label": "Repair evenings",
+          "text": "",
+          "value": "on",
+          "checked": true,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "skillSwaps",
+          "name": "",
+          "label": "Skill swaps",
+          "text": "",
+          "value": "on",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "id": "monthlyDigest",
+          "name": "",
+          "label": "Monthly digest",
+          "text": "",
+          "value": "on",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Save preferences",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Cancel",
+          "value": "",
+          "disabled": true
+        }
+      ],
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Save preferences"
+      },
+      "geometry": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "buttons": [
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Save preferences",
+            "radius": "4px"
+          },
+          {
+            "text": "Cancel",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mobile-membership-keyboard-focus",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\n\nA co-op for the things worth keeping\n\nGood things\ndeserve another\nchapter.\n\nA favourite jumper. A wobbly chair. A kettle with a story. Keep them going, with a little help from your neighbours.\n\nBecome a member\n£8 per month\nA little each month. A lot, together.\nStill plenty of life in it.\n\nMore mending. Less ending.\n\n✳\n\nMend what you have. Learn what you can. Share what you know.\n\n✳\nGood for your things.\nEven better, together.\n\nYour membership keeps shared tools, shared skills and patient repair within reach.\n\nMake room for repair.\n\nA monthly repair evening with shared tools.\n\nBring something that needs a little attention. Find the tools, space and company to give it another go.\n\nPass a good skill on.\n\nSkill swaps led by fellow members.\n\nA stitch, a fix, a trick you didn’t know. Learn from your neighbours and share what comes naturally.\n\nBuild it together.\n\nA say in which tools and projects we support.\n\nThis is your co-op, too. Help decide what we add to the toolbox and what we take on next.\n\nThere’s a place for you at the workbench.\n\nLet’s give things\nanother go.\n\nYou don’t need to be handy. Just curious.\nJoin the Round Again member list.\n\n£8 per month\nFor shared tools, shared skills and a say.\n\nYour name\nEmail address\nJoin the demo member list\n\nJust a little trial run. This is a prototype: your details stay in this browser. No payment, email or external submission.\n\nAlready making yourself at home?\n\nSet your notification preferences\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Become a member",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "member-name",
+          "name": "name",
+          "label": "Your name",
+          "text": "",
+          "value": "Jordan Vale",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "email",
+          "id": "member-email",
+          "name": "email",
+          "label": "Email address",
+          "text": "",
+          "value": "jordan@example.com",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Join the demo member list",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Join the demo member list"
+      },
+      "geometry": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "buttons": [
+          {
+            "text": "Become a member",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "Join the demo member list",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mobile-membership-keyboard-success",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "body": "Skip to content\nRound Again\nRepair co-op\nMembership\nNotification preferences\n\nA co-op for the things worth keeping\n\nGood things\ndeserve another\nchapter.\n\nA favourite jumper. A wobbly chair. A kettle with a story. Keep them going, with a little help from your neighbours.\n\nBecome a member\n£8 per month\nA little each month. A lot, together.\nStill plenty of life in it.\n\nMore mending. Less ending.\n\n✳\n\nMend what you have. Learn what you can. Share what you know.\n\n✳\nGood for your things.\nEven better, together.\n\nYour membership keeps shared tools, shared skills and patient repair within reach.\n\nMake room for repair.\n\nA monthly repair evening with shared tools.\n\nBring something that needs a little attention. Find the tools, space and company to give it another go.\n\nPass a good skill on.\n\nSkill swaps led by fellow members.\n\nA stitch, a fix, a trick you didn’t know. Learn from your neighbours and share what comes naturally.\n\nBuild it together.\n\nA say in which tools and projects we support.\n\nThis is your co-op, too. Help decide what we add to the toolbox and what we take on next.\n\nThere’s a place for you at the workbench.\n\nLet’s give things\nanother go.\n\nYou don’t need to be handy. Just curious.\nJoin the Round Again member list.\n\n£8 per month\nFor shared tools, shared skills and a say.\n\n✓\nYou’re on the demo list, Jordan Vale.\n\nYour details are saved in this browser. This hasn’t created a paid membership or sent an email.\n\nChoose your notification preferences\n\nAlready making yourself at home?\n\nSet your notification preferences\nRound Again Repair co-op\n\nA little care. A lot more life.\n\nA local prototype, made for trying out.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Become a member",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "BODY",
+        "id": "",
+        "text": null
+      },
+      "geometry": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "buttons": [
+          {
+            "text": "Become a member",
+            "radius": "4px"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": []
+}

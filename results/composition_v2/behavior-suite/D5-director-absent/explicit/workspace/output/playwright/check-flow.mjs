@@ -1,0 +1,76 @@
+import { chromium } from '/Users/bezzchen/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+const browser = await chromium.launch({executablePath:'/Users/bezzchen/Library/Caches/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-mac-arm64/chrome-headless-shell'});
+const page = await browser.newPage({viewport:{width:1440,height:900}});
+const issues = [];
+const external = [];
+page.on('pageerror', e => issues.push(e.message));
+page.on('request', request => {if (!request.url().startsWith('http://127.0.0.1:5173')) external.push(request.url());});
+const checks = [];
+try {
+  await page.goto('http://127.0.0.1:5173');
+  assert.equal(await page.locator('input[type=radio]').count(),3);
+  assert(await page.locator('#shift-compost').isDisabled());
+  for (const text of ['4 available / 12 total','6 available / 10 total','0 available / 8 total']) assert(await page.getByText(text,{exact:true}).isVisible());
+  checks.push('Initial capacities and full shift disabled');
+  await page.getByRole('button',{name:'Confirm shift'}).click();
+  assert(await page.getByText('Choose an available shift to continue.').isVisible());
+  assert(await page.getByText('Enter a contact name to continue.').isVisible());
+  assert.equal(await page.locator(':focus').getAttribute('id'),'shift-morning');
+  await page.keyboard.press('Space');
+  await page.getByLabel('Contact name').fill('   ');
+  await page.getByRole('button',{name:'Confirm shift'}).click();
+  assert.equal(await page.locator(':focus').getAttribute('id'),'contact-name');
+  assert.equal(await page.getByLabel('Contact name').getAttribute('aria-invalid'),'true');
+  await page.screenshot({path:'output/playwright/validation.png',fullPage:true});
+  checks.push('Missing shift, empty name and whitespace name validation; first invalid control focused');
+  await page.getByLabel('Contact name').fill('  Alex Rivera  ');
+  await page.getByRole('button',{name:'Confirm shift'}).click();
+  assert(await page.getByRole('heading',{name:'Shift confirmed.'}).isVisible());
+  assert.equal(await page.locator(':focus').getAttribute('id'),'confirmation-heading');
+  for (const text of ['Morning planting','Alex Rivera']) assert(await page.locator('dd').getByText(text,{exact:true}).isVisible());
+  assert.match(await page.locator('dl').innerText(),/Saturday 24 October\n09:00–11:00/);
+  checks.push('Confirmation includes selected shift/date/time and trimmed name; heading focused');
+  await page.screenshot({path:'output/playwright/confirmation.png',fullPage:true});
+  await page.getByRole('button',{name:'Begin another sign-up'}).click();
+  assert.equal(await page.getByLabel('Contact name').inputValue(),'');
+  assert.equal(await page.locator('input[type=radio]:checked').count(),0);
+  assert.equal(await page.locator(':focus').getAttribute('id'),'choose-heading');
+  assert(await page.getByText('3 available / 12 total',{exact:true}).isVisible());
+  for(let i=0;i<3;i++) {
+    await page.locator('#shift-morning').check();
+    await page.getByLabel('Contact name').fill(`Demo volunteer ${i}`);
+    await page.getByRole('button',{name:'Confirm shift'}).click();
+    await page.getByRole('button',{name:'Begin another sign-up'}).click();
+  }
+  assert(await page.locator('#shift-morning').isDisabled());
+  assert(await page.getByText('0 available / 12 total',{exact:true}).isVisible());
+  checks.push('Restart clears selection/name; local capacity decreases and exhausted shift disables');
+  await page.reload();
+  await page.locator('#shift-morning').waitFor();
+  await page.keyboard.press('Tab');
+  assert.equal(await page.locator(':focus').getAttribute('id'),'shift-morning');
+  await page.keyboard.press('ArrowDown');
+  assert(await page.locator('#shift-afternoon').isChecked());
+  await page.keyboard.press('Tab');
+  assert.equal(await page.locator(':focus').getAttribute('id'),'contact-name');
+  await page.keyboard.type('Sam Taylor');
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Enter');
+  assert(await page.getByRole('heading',{name:'Shift confirmed.'}).isVisible());
+  assert(await page.locator('dd').getByText('Path and bed care',{exact:true}).isVisible());
+  checks.push('Keyboard-only arrow/Tab/Enter flow confirms alternate shift');
+  for(const width of [1440,768,375,320]) {
+    await page.setViewportSize({width,height:900});
+    await page.reload();
+    assert(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),`overflow at ${width}`);
+    await page.screenshot({path:`output/playwright/layout-${width}.png`,fullPage:true});
+  }
+  checks.push('No horizontal overflow at 1440, 768, 375 and 320 pixels');
+  assert.deepEqual(issues,[]);
+  assert.deepEqual(external,[]);
+  checks.push('No browser page errors or external requests');
+  fs.writeFileSync('output/playwright/check-results.json',JSON.stringify({result:'pass',checks,issues,external},null,2));
+  console.log(JSON.stringify({result:'pass',checks},null,2));
+} finally {await browser.close();}

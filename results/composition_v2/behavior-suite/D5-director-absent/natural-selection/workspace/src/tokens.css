@@ -1,0 +1,1 @@
+:root{--brand:#455C3C;--paper:#EDECE5;--ink:#263323;--muted:#777F70;--surface:#FFFFFF;--line:#C8CEBF;--highlight:#B6CC97;--radius:4px;--font:Arial,sans-serif}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.5 var(--font)}button,input{font:inherit}:focus-visible{outline:3px solid var(--brand);outline-offset:4px}h1,h2,p{margin-top:0}

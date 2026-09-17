@@ -1,0 +1,304 @@
+{
+  "case_id": "D2-settings-and-review",
+  "development_only": true,
+  "runs": [
+    {
+      "run_id": "explicit",
+      "invocation_mode": "explicit",
+      "activation": {
+        "candidate_read": true,
+        "expected_selection": "creative-frontend-architect",
+        "actual_reads": [
+          ".agents/skills/creative-frontend-architect/SKILL.md",
+          "/Users/bezzchen/.codex/skills/using-superpowers/SKILL.md",
+          "/Users/bezzchen/.codex/skills/brainstorming/SKILL.md",
+          ".agents/skills/creative-frontend-architect/references/design-contract.md",
+          ".agents/skills/creative-frontend-architect/references/directors/anthropic.md",
+          ".agents/skills/creative-frontend-architect/references/architecture.md",
+          ".agents/skills/creative-frontend-architect/references/rendered-review.md",
+          "/Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md",
+          "/Users/bezzchen/.codex/skills/using-superpowers/references/codex-tools.md"
+        ],
+        "contamination": [
+          "/Users/bezzchen/.codex/skills/using-superpowers/SKILL.md",
+          "/Users/bezzchen/.codex/skills/brainstorming/SKILL.md",
+          "/Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md",
+          "/Users/bezzchen/.codex/skills/using-superpowers/references/codex-tools.md"
+        ],
+        "interpretation": null,
+        "read_scope": "parent command trace, not full delegated read audit"
+      },
+      "assertions": [
+        {
+          "assertion": "Use ordinary UI/CSS unless a specific capability need justifies otherwise.",
+          "status": "pass",
+          "evidence": [
+            "explicit/workspace/app.js",
+            "explicit/workspace/styles.css",
+            "explicit/workspace/work-log.md"
+          ]
+        },
+        {
+          "assertion": "Fresh reviewer reproduces both text overlap and blocked Save at390 before correction.",
+          "status": "pass",
+          "evidence": [
+            "explicit-staged-review/workspace/review.md",
+            "explicit-staged-review/trace.jsonl",
+            "explicit-staged-review/execution.json",
+            "assessor/explicit/before/observations.json",
+            "assessor/explicit/before/390-initial.png"
+          ],
+          "note": "Supplemental staged reviewer probe. Assessor-added checkpoint.css follows initial full implementation; this is not natural builder discovery."
+        },
+        {
+          "assertion": "Within2correction/recheck cycles, Save works and overlap absent; primary flow and keyboard rechecked.",
+          "status": "pass",
+          "evidence": [
+            "explicit-correction-1/application.diff",
+            "explicit-correction-1/workspace/work-log.md",
+            "explicit-correction-1/trace.jsonl",
+            "assessor/explicit/after/observations.json",
+            "assessor/explicit/after/390-initial.png",
+            "assessor/explicit/after/390-success.png"
+          ]
+        },
+        {
+          "assertion": "Approved square controls not classified as defects solely from module preference.",
+          "status": "pass",
+          "evidence": [
+            "explicit-staged-review/workspace/review.md",
+            "explicit-staged-review/trace.jsonl",
+            "explicit-staged-review/execution.json",
+            "assessor/explicit/before/observations.json",
+            "assessor/explicit/before/390-initial.png"
+          ]
+        }
+      ],
+      "initial_outcome": "Completed native settings implementation; initial builder artifact remains in explicit/workspace. Controlled defects then added to separate checkpoint.",
+      "final_outcome": "Both staged defects repaired in one correction/recheck cycle. Assessor observed clean heading/help geometry, working pointer save, preserved square controls, correct validation/pending/success/error/retry and keyboard focus at1440/390; no page errors. Original checkpoint remains unchanged.",
+      "correction_cycles": 1,
+      "initial_builder_corrections": 1,
+      "execution": {
+        "mode": "explicit",
+        "model_alias": "gpt-6-astra",
+        "model_snapshot": null,
+        "effort": "high",
+        "candidate_commit": "12f509e61d8aa15de2bfcc54195a7def07bda0a8",
+        "harness_sha256": "b608d331a2ebaf2d1ff245ce42049d515f8a47efb554b2be567e39a8de389781",
+        "command": [
+          "codex",
+          "exec",
+          "--ignore-user-config",
+          "--ephemeral",
+          "--skip-git-repo-check",
+          "--approve-for-me",
+          "-m",
+          "gpt-6-astra",
+          "-c",
+          "model_reasoning_effort=\"high\"",
+          "-C",
+          "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D2-settings-and-review/explicit/workspace",
+          "--json",
+          "-o",
+          "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D2-settings-and-review/explicit/final.md",
+          "-"
+        ],
+        "wall_cap_seconds": 1200,
+        "token_cap": null,
+        "source_path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D2-settings-and-review/explicit/workspace/.sources/frontend-design/SKILL.md",
+        "source_sha256": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3",
+        "host_config_ignored": true,
+        "global_skills_and_hooks_still_present": true,
+        "isolation": "fresh CLI context; project-only task instruction, not an OS read barrier",
+        "whole_workflow_tokens": null,
+        "started_at": "2026-09-17T19:31:35.494583+00:00",
+        "terminal_status": "completed",
+        "exit_code": 0,
+        "elapsed_seconds": 405.07,
+        "finished_at": "2026-09-17T19:38:20.571590+00:00",
+        "parent_usage_events": [
+          {
+            "input_tokens": 1029013,
+            "cached_input_tokens": 988672,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 10218,
+            "reasoning_output_tokens": 756
+          }
+        ],
+        "whole_workflow_tokens_reason": "Parent usage may exclude delegated agents; do not infer total without accounting audit."
+      },
+      "staged_review": {
+        "path": "explicit-staged-review",
+        "fresh_cli_thread_id": "01a0b0e2-8510-7461-865c-a5e5640b3353",
+        "mode": "independent",
+        "initial_review_cycle": 0,
+        "result": "incomplete",
+        "verification_status": "verified",
+        "scope": "actual bounded review verified findings; application did not pass"
+      },
+      "correction_run": "explicit-correction-1",
+      "internal_correction_review_limitation": "A delegated correction reviewer recorded cross-capture pending-color ambiguity. Assessor opened the named PNGs and observed terracotta, not blue; original reviewer limitation retained without classifying an application defect.",
+      "limitations": [
+        "Development only; staged reviewer probe is supplemental to full build, not unchanged original seeded-fixture protocol.",
+        "Staged review protocol and candidate correction were explicitly invoked; these do not demonstrate automatic discovery or erase initial natural-selection results.",
+        "Global host skills remained visible and were read; whole-workflow token totals unavailable.",
+        "CLI fresh context and project-only instructions do not constitute an OS read barrier.",
+        "Exact model snapshot unknown;20min wall cap and no token cap.",
+        "Touch behavior emulated where stated; physical device/screen reader not audited."
+      ]
+    },
+    {
+      "run_id": "natural-selection",
+      "invocation_mode": "natural-selection",
+      "activation": {
+        "candidate_read": false,
+        "expected_selection": "creative-frontend-architect",
+        "actual_reads": [
+          "/Users/bezzchen/.codex/skills/using-superpowers/SKILL.md",
+          "/Users/bezzchen/.codex/skills/brainstorming/SKILL.md",
+          "/Users/bezzchen/.codex/skills/frontend-design/SKILL.md",
+          "/Users/bezzchen/.codex/skills/writing-plans/SKILL.md",
+          "/Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md",
+          "/Users/bezzchen/.codex/skills/using-superpowers/references/codex-tools.md",
+          "/Users/bezzchen/.codex/skills/test-driven-development/SKILL.md",
+          "/Users/bezzchen/.codex/skills/systematic-debugging/SKILL.md"
+        ],
+        "contamination": [
+          "/Users/bezzchen/.codex/skills/using-superpowers/SKILL.md",
+          "/Users/bezzchen/.codex/skills/brainstorming/SKILL.md",
+          "/Users/bezzchen/.codex/skills/frontend-design/SKILL.md",
+          "/Users/bezzchen/.codex/skills/writing-plans/SKILL.md",
+          "/Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md",
+          "/Users/bezzchen/.codex/skills/using-superpowers/references/codex-tools.md",
+          "/Users/bezzchen/.codex/skills/test-driven-development/SKILL.md",
+          "/Users/bezzchen/.codex/skills/systematic-debugging/SKILL.md"
+        ],
+        "interpretation": "Miss against predeclared positive expectation. Styled native settings panel and settled design fit execution-only exclusion; fixture/description scope ambiguity, not a demonstrated candidate routing bug.",
+        "read_scope": "parent command trace, not full delegated read audit"
+      },
+      "assertions": [
+        {
+          "assertion": "Use ordinary UI/CSS unless a specific capability need justifies otherwise.",
+          "status": "pass",
+          "evidence": [
+            "natural-selection/workspace/app.js",
+            "natural-selection/workspace/styles.css",
+            "natural-selection/workspace/work-log.md"
+          ]
+        },
+        {
+          "assertion": "Fresh reviewer reproduces both text overlap and blocked Save at390 before correction.",
+          "status": "pass",
+          "evidence": [
+            "natural-selection-staged-review/workspace/review.md",
+            "natural-selection-staged-review/trace.jsonl",
+            "natural-selection-staged-review/execution.json",
+            "assessor/natural-selection/before/observations.json",
+            "assessor/natural-selection/before/390-initial.png"
+          ],
+          "note": "Supplemental staged reviewer probe. Assessor-added checkpoint.css follows initial full implementation; this is not natural builder discovery."
+        },
+        {
+          "assertion": "Within2correction/recheck cycles, Save works and overlap absent; primary flow and keyboard rechecked.",
+          "status": "pass",
+          "evidence": [
+            "natural-selection-correction-1/application.diff",
+            "natural-selection-correction-1/workspace/work-log.md",
+            "natural-selection-correction-1/trace.jsonl",
+            "assessor/natural-selection/after/observations.json",
+            "assessor/natural-selection/after/390-initial.png",
+            "assessor/natural-selection/after/390-success.png"
+          ]
+        },
+        {
+          "assertion": "Approved square controls not classified as defects solely from module preference.",
+          "status": "pass",
+          "evidence": [
+            "natural-selection-staged-review/workspace/review.md",
+            "natural-selection-staged-review/trace.jsonl",
+            "natural-selection-staged-review/execution.json",
+            "assessor/natural-selection/before/observations.json",
+            "assessor/natural-selection/before/390-initial.png"
+          ]
+        }
+      ],
+      "initial_outcome": "Completed native settings implementation; initial builder artifact remains in natural-selection/workspace. Controlled defects then added to separate checkpoint.",
+      "final_outcome": "Both staged defects repaired in one correction/recheck cycle. Assessor observed clean heading/help geometry, working pointer save, preserved square controls, correct validation/pending/success/error/retry and keyboard focus at 1440/390; no page errors. Original checkpoint remains unchanged.",
+      "correction_cycles": 1,
+      "initial_builder_corrections": 1,
+      "execution": {
+        "mode": "natural-selection",
+        "model_alias": "gpt-6-astra",
+        "model_snapshot": null,
+        "effort": "high",
+        "candidate_commit": "12f509e61d8aa15de2bfcc54195a7def07bda0a8",
+        "harness_sha256": "b608d331a2ebaf2d1ff245ce42049d515f8a47efb554b2be567e39a8de389781",
+        "command": [
+          "codex",
+          "exec",
+          "--ignore-user-config",
+          "--ephemeral",
+          "--skip-git-repo-check",
+          "--approve-for-me",
+          "-m",
+          "gpt-6-astra",
+          "-c",
+          "model_reasoning_effort=\"high\"",
+          "-C",
+          "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D2-settings-and-review/natural-selection/workspace",
+          "--json",
+          "-o",
+          "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D2-settings-and-review/natural-selection/final.md",
+          "-"
+        ],
+        "wall_cap_seconds": 1200,
+        "token_cap": null,
+        "source_path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D2-settings-and-review/natural-selection/workspace/.sources/frontend-design/SKILL.md",
+        "source_sha256": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3",
+        "host_config_ignored": true,
+        "global_skills_and_hooks_still_present": true,
+        "isolation": "fresh CLI context; project-only task instruction, not an OS read barrier",
+        "whole_workflow_tokens": null,
+        "started_at": "2026-09-17T19:38:20.702453+00:00",
+        "terminal_status": "completed",
+        "exit_code": 0,
+        "elapsed_seconds": 387.51,
+        "finished_at": "2026-09-17T19:44:48.218513+00:00",
+        "parent_usage_events": [
+          {
+            "input_tokens": 565456,
+            "cached_input_tokens": 519936,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 10672,
+            "reasoning_output_tokens": 705
+          }
+        ],
+        "whole_workflow_tokens_reason": "Parent usage may exclude delegated agents; do not infer total without accounting audit."
+      },
+      "staged_review": {
+        "path": "natural-selection-staged-review",
+        "fresh_cli_thread_id": "01a0b0ea-a4bf-7341-b194-6befd592bca3",
+        "mode": "independent",
+        "initial_review_cycle": 0,
+        "result": "incomplete",
+        "verification_status": "verified",
+        "scope": "actual bounded review verified findings; application did not pass"
+      },
+      "correction_run": "natural-selection-correction-1",
+      "internal_correction_review_limitation": null,
+      "limitations": [
+        "Development only; staged reviewer probe is supplemental to full build, not unchanged original seeded-fixture protocol.",
+        "Staged review protocol and candidate correction were explicitly invoked; these do not demonstrate automatic discovery or erase initial natural-selection results.",
+        "Global host skills remained visible and were read; whole-workflow token totals unavailable.",
+        "CLI fresh context and project-only instructions do not constitute an OS read barrier.",
+        "Exact model snapshot unknown;20min wall cap and no token cap.",
+        "Touch behavior emulated where stated; physical device/screen reader not audited."
+      ]
+    }
+  ],
+  "overall_status": "completed-with-staging-deviation-and-natural-selection-qualification",
+  "fixture_freeze": "fixture-freeze.json",
+  "seed_plan": "assessor-seed-plan.json",
+  "fresh_reviewer_identity_provenance": "../harness/staged-review-identities.json",
+  "efficacy_claim": null
+}

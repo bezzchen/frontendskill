@@ -1,0 +1,125 @@
+{
+  "note": "Post-run aggregate over preserved original fixture files; original per-case freezes and per-run dispatch manifests remain separate evidence of pre-run state. Aggregate algorithm: SHA256 of sorted compact JSON path-to-SHA256 map.",
+  "fixtures": {
+    "D1-supplied-design": {
+      "path": "D1-supplied-design/fixture-original",
+      "file_sha256": {
+        ".gitignore": "790e3169bc19b046fe55ba1da6d13b976c28363c8c00462a2195fe5faf260910",
+        "AGENTS.md": "c867d38a142e0bd7ddcdcbe3d7267c62ba31de219f1bbff3f2ee97f1a503c504",
+        "design/accepted-contract.md": "1241d16e764c8c262913aaa112c12ac377f180e5107f382853bc2cf936416e19",
+        "design/approved-desktop.png": "fd821bf25006bbc1bdd89c313cf706b73673fc4a80adcb46dc89a41399ce4c12",
+        "design/approved-mobile.png": "ea1ac54c99734ba9316df2db4b0d723b584f595b391aa3d6f15348bc6c31b919",
+        "index.html": "3af85fb7754e15825605611d3ccbf786a198d7994ba7db02a6e725ad178d3827",
+        "package-lock.json": "747659e8605ab80a6209481a147675b2b3ea476cb93a321bfbf526abe3696792",
+        "package.json": "05aefe928e43abf83e8038d65b41f869a5931f03230bb68690ce4c908c8ac733",
+        "src/App.jsx": "8d47ef947f57e79760b6556a33040d488879ec3a8a440fe7c8abb6065fe42317",
+        "src/App.module.css": "e432c323d933e48c232b0aac6040c7056b1b30c4f13da8e75d8e8dd24aab0c8c",
+        "src/main.jsx": "45e1519223b4a9e2d865ec289879b995a7a3cd843d1636a56fa3113731685fe9",
+        "src/slots.js": "9e596c4b488860c7e4903176831cc6fed3a47308a9f27a1e0df26c55c783d861",
+        "src/tokens.css": "b226df0269bf95cf230da17ab8c79a499a07f9cf167bfce6aef506e979935f90"
+      },
+      "content_manifest_sha256": "7e40fae37ca745d66d713322256de9f07b770db2d16d51b820e440027f368e14"
+    },
+    "D2-settings-and-review": {
+      "path": "D2-settings-and-review/original",
+      "file_sha256": {
+        "AGENTS.md": "96e99d1e8de60633e3d0ce8880eba1e5f5156a659572b761912784fb47e0e9a0",
+        "app.js": "c4fa913fe4d63939d2bc93dec6c58133839412a7c71b78c410e6741d4436cc2e",
+        "browser.cjs": "3845cb39eba89a07a719c72d7714b7b3283eee4ac68a922b0729fc8b7ac48ae2",
+        "index.html": "20c01f760b2348417f3ae87eb29acf236403dd798eb724e430f1fa740e624383",
+        "package.json": "eaaca554dd79cb1207d98ff2f69b01f725916256379bc0d5824f345c9e7ede3e",
+        "studio-service.js": "511cf81f3c05d7030bec7e6f52873e5f8bc3525f4863bb4bee0efb9dc2fad2ac",
+        "styles.css": "605543cb701a52306a7e5a186f06232216f7164c1f02241ba1b5e04ccc79d798"
+      },
+      "content_manifest_sha256": "256f07796091a715d9f37af9d90094916e98a9ebd6c9b2b4038a60b188da2688"
+    },
+    "D3-immersive": {
+      "path": "D3-immersive/original",
+      "file_sha256": {
+        "AGENTS.md": "60a44f4b838a0f4f6447befa30da9b31bd3be38d5d6398ab2cd63fa75205359a",
+        "assets/moon.svg": "b7e41855b71c667d5a61c583b32e18528bd1c70b89bf5e6520eca42eec808f00",
+        "assets/star-map.svg": "901bac00df7a258fb3ae49cfdc99e52c2eb76747658166bfbf582f4518e6744d",
+        "content.json": "44999505a4b5c43b8b395090befd70967d05b65cb4cd25b6d2fd121d5480d7dc",
+        "index.html": "1e55aa7a504225ceef22c9ceda6a313da0f7da261332cbb263962e2008274445"
+      },
+      "content_manifest_sha256": "af36d4901afcf4f10f9a6839794947563c375c6e4a1a8f81e39f0a198c8ea92d"
+    },
+    "D4-decide-for-me": {
+      "path": "D4-decide-for-me/fixture-original",
+      "file_sha256": {
+        ".gitignore": "790e3169bc19b046fe55ba1da6d13b976c28363c8c00462a2195fe5faf260910",
+        "AGENTS.md": "c867d38a142e0bd7ddcdcbe3d7267c62ba31de219f1bbff3f2ee97f1a503c504",
+        "design/project-decisions.md": "fbf6bf07cda40edcf1ec779c6c6f5c634000e921565a22534695b1c672c0ef3a",
+        "index.html": "3af85fb7754e15825605611d3ccbf786a198d7994ba7db02a6e725ad178d3827",
+        "package-lock.json": "747659e8605ab80a6209481a147675b2b3ea476cb93a321bfbf526abe3696792",
+        "package.json": "05aefe928e43abf83e8038d65b41f869a5931f03230bb68690ce4c908c8ac733",
+        "src/App.jsx": "f5e9e033614e5c5e177eff9a4bcfd2f76f20adba382311e8ac7e72e119515ee1",
+        "src/App.module.css": "3b5416f11ee90bdf8c4114655be6add3b4db601a704404e64b2ba5d30f8127d8",
+        "src/components/Button.jsx": "36257724285a4e6615c05b783ca1c5fe93d12736e2fe193b946e875a1f7405e9",
+        "src/components/Field.jsx": "9ad590c9625d14b63114c1e98cc56baf790b08c1571196b98b5f05a974481465",
+        "src/components/Shared.module.css": "4cf7a5b56a6e147628194f169755e1047c646880bfa759d7cc224c0932bdc1d9",
+        "src/content.js": "a3cb49bd0978f0cb465e141174a345f8aa7dc1a5e7d5c108de722cab1cbf2ad0",
+        "src/main.jsx": "45e1519223b4a9e2d865ec289879b995a7a3cd843d1636a56fa3113731685fe9",
+        "src/tokens.css": "ab01fd251a9e21cefaf194738a8f7c4e5da7f18eb41488a5f7c8fa6c2c3a2250"
+      },
+      "content_manifest_sha256": "ced8e42a63c1d4ac2d6e9f25bd499fce12b70a50523eea583d7c7953fd094576"
+    },
+    "D5-director-absent": {
+      "path": "D5-director-absent/fixture-original",
+      "file_sha256": {
+        ".gitignore": "790e3169bc19b046fe55ba1da6d13b976c28363c8c00462a2195fe5faf260910",
+        "AGENTS.md": "c867d38a142e0bd7ddcdcbe3d7267c62ba31de219f1bbff3f2ee97f1a503c504",
+        "design/project-context.md": "43557e2477bffefb85b116795774bb3696c23ba1fb7da422a445553c1b0afaa3",
+        "index.html": "3af85fb7754e15825605611d3ccbf786a198d7994ba7db02a6e725ad178d3827",
+        "package-lock.json": "747659e8605ab80a6209481a147675b2b3ea476cb93a321bfbf526abe3696792",
+        "package.json": "05aefe928e43abf83e8038d65b41f869a5931f03230bb68690ce4c908c8ac733",
+        "src/App.jsx": "bcd0f164c13e7f41831cbfa0f4e99de0348278f19ddfac51dbfc88dad6e51fa5",
+        "src/App.module.css": "10e6eda377f9b4c50f45b47b9c98efdc9e162cd4e973e04282f43d66f17137d6",
+        "src/components/Button.jsx": "36257724285a4e6615c05b783ca1c5fe93d12736e2fe193b946e875a1f7405e9",
+        "src/components/Field.jsx": "9ad590c9625d14b63114c1e98cc56baf790b08c1571196b98b5f05a974481465",
+        "src/components/Shared.module.css": "4cf7a5b56a6e147628194f169755e1047c646880bfa759d7cc224c0932bdc1d9",
+        "src/main.jsx": "45e1519223b4a9e2d865ec289879b995a7a3cd843d1636a56fa3113731685fe9",
+        "src/shifts.js": "5791b458236a5d24f5ce8fc41469cdf195c2502b7c4c23ebc81e9da3c07246db",
+        "src/tokens.css": "a8cf5dbd48119db560d78b112f2bca5132c9cc7acf22715793adcc5b4fa713f2"
+      },
+      "content_manifest_sha256": "b34620eb51d30c52f25d3ce9f46adfd69710f5a58a2873899b6054f554f094a0"
+    },
+    "D6-catalog-offline": {
+      "path": "D6-catalog-offline/original",
+      "file_sha256": {
+        "AGENTS.md": "098e8666da424f2df628cdf4a2f90e223380c065e35b4d1f199a834ef9ee1124",
+        "app.js": "a4f19202db0151edf47f5fb80f59ce2bf8a45cf047d51e65f92cfbed96d9abc3",
+        "assets/book.svg": "7fb3984d8e1786acf85c91ee61bbad261b00d15bf9bac4805f07fbd36d60ecaf",
+        "browser.cjs": "3845cb39eba89a07a719c72d7714b7b3283eee4ac68a922b0729fc8b7ac48ae2",
+        "catalog-fetch.cjs": "6ee02661b5e321bef84ba5125a4454b48ee2ea384dee7f3b7e48c0f7822b02d8",
+        "index.html": "ca7f02913af19ae226e14320625caaf5c7f965df8d5e97848ba689e5afd665a3",
+        "package.json": "34463ce4948381b5d2698ed5aed3fe9baa6ea07b5bf3ea6dfc1cf648e17da29b",
+        "styles.css": "85e662419b1289cbc3b670cf2ad751fab8315cfed6f7b512740f86dad2454136"
+      },
+      "content_manifest_sha256": "b630c6d8ce387b95ea336a1585635ce1a5772bdbdbc5bf65aed8521adfcfc1b4"
+    },
+    "D7-preview-unavailable": {
+      "path": "D7-preview-unavailable/original",
+      "file_sha256": {
+        "AGENTS.md": "e968889904e8a1492a1f5fa326a2e813f73c1e527e90f3107b7337ed4255907c",
+        "app.js": "c6a8e1a806d25f35ba6bb9ec3a5c091f97f190e2296283d6560c1b4ec8f5e680",
+        "browser.cjs": "e7f657e61a964cdcb3b5a7ba30a58129930deef3e208935f1013630338055795",
+        "equipment.json": "845d3312b5397467a70cc30a7332590bcf812d50bcfd7738bfa21c79e1e4ee98",
+        "index.html": "0bd165aeaab1c98e853258c299c29c9cb2187ba61aa7e15a954344795b1a62dd",
+        "package.json": "115d48d558bb8ee1252632ebb10a7811d7a53a22ae055d7387e618c57cf0e849",
+        "styles.css": "558f4d5b1b427ba72e3b830a6447ec498a164c3ce5e8e5ab373c5f73c596f0bb"
+      },
+      "content_manifest_sha256": "c4266be448d559d2e4d0d0c6709441f9b828916596022123671535fe07779a8d"
+    },
+    "D8-shared-animation-ownership": {
+      "path": "D8-shared-animation-ownership/original",
+      "file_sha256": {
+        "AGENTS.md": "ff5df0f9d6032ce227876c573c59023f8d84aa3635203863698574f05bcd1cd0",
+        "app.js": "1f11996a1a5d68095b1555988c6dd9a97576f4079a51f8cd981c9d7605577eb4",
+        "index.html": "5d09689a92d92e317fab2ee4c6631c18b418bc6ec16b0acc1a8097c2da1457ec",
+        "styles.css": "8211e50af3f732784bbe9b9e2fb2d12cc28c017e8104f8c688c5c22ba5773eba"
+      },
+      "content_manifest_sha256": "db19b8f7bf1c02f848c0acc822dac7b55323b7f838d9183254ce645580365a78"
+    }
+  }
+}

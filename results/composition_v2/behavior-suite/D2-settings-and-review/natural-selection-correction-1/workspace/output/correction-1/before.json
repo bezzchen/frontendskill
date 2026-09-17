@@ -1,0 +1,10 @@
+{
+  "url": "http://127.0.0.1:8872/",
+  "width": 390,
+  "height": 900,
+  "actions": [
+    {"type": "fill", "selector": "#display-name", "value": "Juniper Pointer Studio"},
+    {"type": "screenshot", "path": "output/correction-1/before-390.png"},
+    {"type": "click", "selector": "#save-settings"}
+  ]
+}

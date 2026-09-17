@@ -1,0 +1,133 @@
+{
+  "actor": "assessor",
+  "mode": "natural-selection",
+  "at": "2026-09-17T19:31:56.022Z",
+  "checks": [
+    {
+      "width": 1440,
+      "reducedMotion": "no-preference",
+      "opening": {
+        "animations": [
+          {
+            "state": "running",
+            "duration": 1250
+          },
+          {
+            "state": "running",
+            "duration": 1250
+          }
+        ],
+        "text": "FOLD & THREAD / BOOKBINDING BY HAND\n\nGive an idea\na place to live.\n\nFold a sheet. Stitch a spine. Make a notebook that is entirely your own.\n\nA few good hours at the workbench.\n\n18 Paper Lane · Materials included · Step-free studio\n\nSaturday 10 October, 10:00–13:00 · Sunday 18 October, 14:00–17:00\n\nYour name\nEmail address\nWorkshop date\nChoose a session\n10 October · 10:00\n18 October · 14:00\nReserve a place",
+        "overflow": false,
+        "options": [
+          {
+            "value": "",
+            "text": "Choose a session"
+          },
+          {
+            "value": "10 October · 10:00",
+            "text": "10 October · 10:00"
+          },
+          {
+            "value": "18 October · 14:00",
+            "text": "18 October · 14:00"
+          }
+        ]
+      },
+      "invalid": {
+        "focus": "guest-name",
+        "valid": false,
+        "confirmed": false
+      },
+      "confirmation": {
+        "text": "Thanks, Avery Reed. Your place is reserved for 18 October · 14:00.",
+        "hidden": false,
+        "focus": "confirmation",
+        "animations": 0,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "width": 390,
+      "reducedMotion": "no-preference",
+      "opening": {
+        "animations": [
+          {
+            "state": "running",
+            "duration": 1250
+          },
+          {
+            "state": "running",
+            "duration": 1250
+          }
+        ],
+        "text": "FOLD & THREAD / BOOKBINDING BY HAND\n\nGive an idea\na place to live.\n\nFold a sheet. Stitch a spine. Make a notebook that is entirely your own.\n\nA few good hours at the workbench.\n\n18 Paper Lane · Materials included · Step-free studio\n\nSaturday 10 October, 10:00–13:00 · Sunday 18 October, 14:00–17:00\n\nYour name\nEmail address\nWorkshop date\nChoose a session\n10 October · 10:00\n18 October · 14:00\nReserve a place",
+        "overflow": false,
+        "options": [
+          {
+            "value": "",
+            "text": "Choose a session"
+          },
+          {
+            "value": "10 October · 10:00",
+            "text": "10 October · 10:00"
+          },
+          {
+            "value": "18 October · 14:00",
+            "text": "18 October · 14:00"
+          }
+        ]
+      },
+      "invalid": {
+        "focus": "guest-name",
+        "valid": false,
+        "confirmed": false
+      },
+      "confirmation": {
+        "text": "Thanks, Avery Reed. Your place is reserved for 18 October · 14:00.",
+        "hidden": false,
+        "focus": "confirmation",
+        "animations": 0,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "width": 390,
+      "reducedMotion": "reduce",
+      "opening": {
+        "animations": [],
+        "text": "FOLD & THREAD / BOOKBINDING BY HAND\n\nGive an idea\na place to live.\n\nFold a sheet. Stitch a spine. Make a notebook that is entirely your own.\n\nA few good hours at the workbench.\n\n18 Paper Lane · Materials included · Step-free studio\n\nSaturday 10 October, 10:00–13:00 · Sunday 18 October, 14:00–17:00\n\nYour name\nEmail address\nWorkshop date\nChoose a session\n10 October · 10:00\n18 October · 14:00\nReserve a place",
+        "overflow": false,
+        "options": [
+          {
+            "value": "",
+            "text": "Choose a session"
+          },
+          {
+            "value": "10 October · 10:00",
+            "text": "10 October · 10:00"
+          },
+          {
+            "value": "18 October · 14:00",
+            "text": "18 October · 14:00"
+          }
+        ]
+      },
+      "invalid": {
+        "focus": "guest-name",
+        "valid": false,
+        "confirmed": false
+      },
+      "confirmation": {
+        "text": "Thanks, Avery Reed. Your place is reserved for 18 October · 14:00.",
+        "hidden": false,
+        "focus": "confirmation",
+        "animations": 0,
+        "overflow": false
+      },
+      "errors": []
+    }
+  ]
+}

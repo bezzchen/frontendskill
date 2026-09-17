@@ -1,0 +1,27 @@
+{
+  "width": 1440,
+  "height": 900,
+  "actions": [
+    {
+      "type": "fill",
+      "selector": "#guest-name",
+      "value": "Sam Paper"
+    },
+    {
+      "type": "fill",
+      "selector": "#guest-email",
+      "value": "sam@example.com"
+    },
+    {
+      "type": "select",
+      "selector": "#session",
+      "value": "10 October \u00b7 10:00"
+    },
+    {
+      "type": "click",
+      "selector": "button[type=submit]"
+    }
+  ],
+  "screenshot": "verification/booking-desktop.png",
+  "url": "http://127.0.0.1:8796"
+}

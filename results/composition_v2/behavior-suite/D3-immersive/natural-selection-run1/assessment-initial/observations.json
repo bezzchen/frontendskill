@@ -1,0 +1,1284 @@
+{
+  "workspace": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D3-immersive/natural-selection-run1/workspace",
+  "method": "Native headed Chromium; Playwright connectOverCDP noDefaults:true; actual foreground tab switches; no synthetic visibility property or event.",
+  "observations": [
+    {
+      "label": "desktop-arrival",
+      "diagnostics": {
+        "playing": false,
+        "frameScheduled": false,
+        "active": true,
+        "phase": 0.12,
+        "view": 0,
+        "reducedMotion": false
+      },
+      "title": "The arrival.",
+      "text": "Iona appears above the eastern ridge. The faint trail marks where this wandering moon has crossed our field of view.",
+      "tracking": "You are here. Iona is passing.",
+      "passage": "12",
+      "bearing": "0",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Let it wander",
+      "hidden": false,
+      "visibilityEvents": [],
+      "raf": {
+        "requested": 3,
+        "executed": 3,
+        "cancelled": 0,
+        "pending": []
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "canvasRect": {
+        "top": 0,
+        "bottom": 900,
+        "height": 900
+      },
+      "canvas_sha256": "503ba1ef150f4920441dae073881abbe9b98b00ad2ca2ab6f2d33ddc46943873"
+    },
+    {
+      "label": "desktop-arrival",
+      "diagnostics": {
+        "playing": false,
+        "frameScheduled": false,
+        "active": true,
+        "phase": 0.12,
+        "view": 0,
+        "reducedMotion": false
+      },
+      "title": "The arrival.",
+      "text": "Iona appears above the eastern ridge. The faint trail marks where this wandering moon has crossed our field of view.",
+      "tracking": "You are here. Iona is passing.",
+      "passage": "12",
+      "bearing": "0",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Let it wander",
+      "hidden": false,
+      "visibilityEvents": [],
+      "raf": {
+        "requested": 4,
+        "executed": 4,
+        "cancelled": 0,
+        "pending": []
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "canvasRect": {
+        "top": 0,
+        "bottom": 900,
+        "height": 900
+      },
+      "canvas_sha256": "503ba1ef150f4920441dae073881abbe9b98b00ad2ca2ab6f2d33ddc46943873"
+    },
+    {
+      "label": "desktop-alignment",
+      "diagnostics": {
+        "playing": false,
+        "frameScheduled": true,
+        "active": true,
+        "phase": 0.4917915007825044,
+        "view": 0,
+        "reducedMotion": false
+      },
+      "title": "The alignment.",
+      "text": "At the center of its passage, Iona meets the station's reference line. Shift your view to compare the moon and the fixed guide stars.",
+      "tracking": "In alignment. A moment shared.",
+      "passage": "50",
+      "bearing": "0",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Let it wander",
+      "hidden": false,
+      "visibilityEvents": [],
+      "raf": {
+        "requested": 35,
+        "executed": 34,
+        "cancelled": 0,
+        "pending": [
+          "t=>this.tick(t)"
+        ]
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "canvasRect": {
+        "top": 0,
+        "bottom": 900,
+        "height": 900
+      },
+      "canvas_sha256": "5a066d02ee4f9a5bb134d67efced95d6cbed83cd2542aadeb566639cc6293f00"
+    },
+    {
+      "label": "desktop-departure",
+      "diagnostics": {
+        "playing": false,
+        "frameScheduled": true,
+        "active": true,
+        "phase": 0.8913392931979627,
+        "view": 0,
+        "reducedMotion": false
+      },
+      "title": "The departure.",
+      "text": "The moon leaves a fading arc toward the western dark. Its passage is brief, but the reference stars remain for the next observer.",
+      "tracking": "Every departure leaves a little wonder.",
+      "passage": "90",
+      "bearing": "0",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Let it wander",
+      "hidden": false,
+      "visibilityEvents": [],
+      "raf": {
+        "requested": 83,
+        "executed": 81,
+        "cancelled": 1,
+        "pending": [
+          "t=>this.tick(t)"
+        ]
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "canvasRect": {
+        "top": 0,
+        "bottom": 900,
+        "height": 900
+      },
+      "canvas_sha256": "0e93be09d1e74c90df6ddae15daf6aee332a4e3d9f9c810b18fab4beadd44937"
+    },
+    {
+      "label": "centered-static",
+      "diagnostics": {
+        "playing": false,
+        "frameScheduled": false,
+        "active": true,
+        "phase": 0.5,
+        "view": 0,
+        "reducedMotion": true
+      },
+      "title": "The alignment.",
+      "text": "At the center of its passage, Iona meets the station's reference line. Shift your view to compare the moon and the fixed guide stars.",
+      "tracking": "In alignment. A moment shared.",
+      "passage": "50",
+      "bearing": "0",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Next chapter",
+      "hidden": false,
+      "visibilityEvents": [],
+      "raf": {
+        "requested": 106,
+        "executed": 103,
+        "cancelled": 3,
+        "pending": []
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "canvasRect": {
+        "top": 0,
+        "bottom": 900,
+        "height": 900
+      },
+      "canvas_sha256": "c2ac7da16edea0dc4df6c95ab98832d39ee39ab5bfa890401ca27a1ff189a243"
+    },
+    {
+      "label": "centered-static-repeat",
+      "diagnostics": {
+        "playing": false,
+        "frameScheduled": false,
+        "active": true,
+        "phase": 0.5,
+        "view": 0,
+        "reducedMotion": true
+      },
+      "title": "The alignment.",
+      "text": "At the center of its passage, Iona meets the station's reference line. Shift your view to compare the moon and the fixed guide stars.",
+      "tracking": "In alignment. A moment shared.",
+      "passage": "50",
+      "bearing": "0",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Next chapter",
+      "hidden": false,
+      "visibilityEvents": [],
+      "raf": {
+        "requested": 106,
+        "executed": 103,
+        "cancelled": 3,
+        "pending": []
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "canvasRect": {
+        "top": 0,
+        "bottom": 900,
+        "height": 900
+      },
+      "canvas_sha256": "c2ac7da16edea0dc4df6c95ab98832d39ee39ab5bfa890401ca27a1ff189a243"
+    },
+    {
+      "label": "bearing-shift-static",
+      "diagnostics": {
+        "playing": false,
+        "frameScheduled": false,
+        "active": true,
+        "phase": 0.5,
+        "view": 1,
+        "reducedMotion": true
+      },
+      "title": "The alignment.",
+      "text": "At the center of its passage, Iona meets the station's reference line. Shift your view to compare the moon and the fixed guide stars.",
+      "tracking": "You are here. Iona is passing.",
+      "passage": "50",
+      "bearing": "30",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Next chapter",
+      "hidden": false,
+      "visibilityEvents": [],
+      "raf": {
+        "requested": 107,
+        "executed": 104,
+        "cancelled": 3,
+        "pending": []
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "canvasRect": {
+        "top": 0,
+        "bottom": 900,
+        "height": 900
+      },
+      "canvas_sha256": "8c2413b3ef7c873f56295f43abdab809afc02ca30c664b3d8b1e037ceea05823"
+    },
+    {
+      "label": "arrival-static",
+      "diagnostics": {
+        "playing": false,
+        "frameScheduled": false,
+        "active": true,
+        "phase": 0.12,
+        "view": 0,
+        "reducedMotion": true
+      },
+      "title": "The arrival.",
+      "text": "Iona appears above the eastern ridge. The faint trail marks where this wandering moon has crossed our field of view.",
+      "tracking": "You are here. Iona is passing.",
+      "passage": "12",
+      "bearing": "0",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Next chapter",
+      "hidden": false,
+      "visibilityEvents": [],
+      "raf": {
+        "requested": 111,
+        "executed": 108,
+        "cancelled": 3,
+        "pending": []
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "canvasRect": {
+        "top": 0,
+        "bottom": 900,
+        "height": 900
+      },
+      "canvas_sha256": "503ba1ef150f4920441dae073881abbe9b98b00ad2ca2ab6f2d33ddc46943873"
+    },
+    {
+      "label": "departure-static",
+      "diagnostics": {
+        "playing": false,
+        "frameScheduled": false,
+        "active": true,
+        "phase": 0.9,
+        "view": 0,
+        "reducedMotion": true
+      },
+      "title": "The departure.",
+      "text": "The moon leaves a fading arc toward the western dark. Its passage is brief, but the reference stars remain for the next observer.",
+      "tracking": "Every departure leaves a little wonder.",
+      "passage": "90",
+      "bearing": "0",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Next chapter",
+      "hidden": false,
+      "visibilityEvents": [],
+      "raf": {
+        "requested": 112,
+        "executed": 109,
+        "cancelled": 3,
+        "pending": []
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "canvasRect": {
+        "top": 0,
+        "bottom": 900,
+        "height": 900
+      },
+      "canvas_sha256": "2a9df227e68dfa7f69bdf752d558e6cf126bc56b1138bc3c460548542873d43e"
+    },
+    {
+      "label": "before-native-background",
+      "diagnostics": {
+        "playing": true,
+        "frameScheduled": true,
+        "active": true,
+        "phase": 0.5431900588720902,
+        "view": 0,
+        "reducedMotion": false
+      },
+      "title": "The alignment.",
+      "text": "At the center of its passage, Iona meets the station's reference line. Shift your view to compare the moon and the fixed guide stars.",
+      "tracking": "In alignment. A moment shared.",
+      "passage": "51",
+      "bearing": "0",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Pause the passage",
+      "hidden": false,
+      "visibilityEvents": [],
+      "raf": {
+        "requested": 132,
+        "executed": 128,
+        "cancelled": 3,
+        "pending": [
+          "t=>this.tick(t)"
+        ]
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "canvasRect": {
+        "top": 0,
+        "bottom": 900,
+        "height": 900
+      },
+      "canvas_sha256": "6db2d6098cf2af6351f775543b86b837a81076223936efa527dd6826357a3d90"
+    },
+    {
+      "label": "native-hidden-before",
+      "diagnostics": {
+        "playing": false,
+        "frameScheduled": false,
+        "active": true,
+        "phase": 0.5261788482354559,
+        "view": 0,
+        "reducedMotion": false
+      },
+      "title": "The alignment.",
+      "text": "At the center of its passage, Iona meets the station's reference line. Shift your view to compare the moon and the fixed guide stars.",
+      "tracking": "In alignment. A moment shared.",
+      "passage": "51",
+      "bearing": "0",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Let it wander",
+      "hidden": true,
+      "visibilityEvents": [
+        {
+          "time": 6850.700000017881,
+          "hidden": true,
+          "state": "hidden",
+          "trusted": true
+        }
+      ],
+      "raf": {
+        "requested": 137,
+        "executed": 133,
+        "cancelled": 4,
+        "pending": []
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "canvasRect": {
+        "top": 0,
+        "bottom": 900,
+        "height": 900
+      },
+      "canvas_sha256": "3984084ed4aa3de2f0aead564c72f08de6ec0ac3d984fd779f5b4ff4bbda47ad"
+    },
+    {
+      "label": "native-hidden-after",
+      "diagnostics": {
+        "playing": false,
+        "frameScheduled": false,
+        "active": true,
+        "phase": 0.5261788482354559,
+        "view": 0,
+        "reducedMotion": false
+      },
+      "title": "The alignment.",
+      "text": "At the center of its passage, Iona meets the station's reference line. Shift your view to compare the moon and the fixed guide stars.",
+      "tracking": "In alignment. A moment shared.",
+      "passage": "51",
+      "bearing": "0",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Let it wander",
+      "hidden": true,
+      "visibilityEvents": [
+        {
+          "time": 6850.700000017881,
+          "hidden": true,
+          "state": "hidden",
+          "trusted": true
+        }
+      ],
+      "raf": {
+        "requested": 137,
+        "executed": 133,
+        "cancelled": 4,
+        "pending": []
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "canvasRect": {
+        "top": 0,
+        "bottom": 900,
+        "height": 900
+      },
+      "canvas_sha256": "3984084ed4aa3de2f0aead564c72f08de6ec0ac3d984fd779f5b4ff4bbda47ad"
+    },
+    {
+      "label": "native-restored",
+      "diagnostics": {
+        "playing": false,
+        "frameScheduled": true,
+        "active": true,
+        "phase": 0.5105986988578217,
+        "view": 0,
+        "reducedMotion": false
+      },
+      "title": "The alignment.",
+      "text": "At the center of its passage, Iona meets the station's reference line. Shift your view to compare the moon and the fixed guide stars.",
+      "tracking": "In alignment. A moment shared.",
+      "passage": "51",
+      "bearing": "0",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Let it wander",
+      "hidden": false,
+      "visibilityEvents": [
+        {
+          "time": 6850.700000017881,
+          "hidden": true,
+          "state": "hidden",
+          "trusted": true
+        },
+        {
+          "time": 8012.5,
+          "hidden": false,
+          "state": "visible",
+          "trusted": true
+        }
+      ],
+      "raf": {
+        "requested": 153,
+        "executed": 148,
+        "cancelled": 4,
+        "pending": [
+          "t=>this.tick(t)"
+        ]
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "canvasRect": {
+        "top": 0,
+        "bottom": 900,
+        "height": 900
+      },
+      "canvas_sha256": "7c21b9bc9bd6c3614d6c891f6878cff057385b116fe7b0cad3ad996bfb84d451"
+    },
+    {
+      "label": "mobile-reduced-arrival",
+      "diagnostics": {
+        "playing": false,
+        "frameScheduled": false,
+        "active": true,
+        "phase": 0.12,
+        "view": 1,
+        "reducedMotion": true
+      },
+      "title": "The arrival.",
+      "text": "Iona appears above the eastern ridge. The faint trail marks where this wandering moon has crossed our field of view.",
+      "tracking": "You are here. Iona is passing.",
+      "passage": "12",
+      "bearing": "30",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Next chapter",
+      "hidden": false,
+      "visibilityEvents": [
+        {
+          "time": 6850.700000017881,
+          "hidden": true,
+          "state": "hidden",
+          "trusted": true
+        },
+        {
+          "time": 8012.5,
+          "hidden": false,
+          "state": "visible",
+          "trusted": true
+        }
+      ],
+      "raf": {
+        "requested": 161,
+        "executed": 156,
+        "cancelled": 5,
+        "pending": []
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "canvasRect": {
+        "top": 0,
+        "bottom": 300,
+        "height": 300
+      },
+      "canvas_sha256": "dc0951a86589e155a35d6ee917993cebd6f286d1263253bb6578a7f1341babf9"
+    },
+    {
+      "label": "mobile-reduced-alignment",
+      "diagnostics": {
+        "playing": false,
+        "frameScheduled": false,
+        "active": true,
+        "phase": 0.5,
+        "view": 1,
+        "reducedMotion": true
+      },
+      "title": "The alignment.",
+      "text": "At the center of its passage, Iona meets the station's reference line. Shift your view to compare the moon and the fixed guide stars.",
+      "tracking": "You are here. Iona is passing.",
+      "passage": "50",
+      "bearing": "30",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Next chapter",
+      "hidden": false,
+      "visibilityEvents": [
+        {
+          "time": 6850.700000017881,
+          "hidden": true,
+          "state": "hidden",
+          "trusted": true
+        },
+        {
+          "time": 8012.5,
+          "hidden": false,
+          "state": "visible",
+          "trusted": true
+        }
+      ],
+      "raf": {
+        "requested": 162,
+        "executed": 157,
+        "cancelled": 5,
+        "pending": []
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "canvasRect": {
+        "top": 0,
+        "bottom": 300,
+        "height": 300
+      },
+      "canvas_sha256": "ad54b75c14c9c15ebcda526b02939e1c32b56d3b27cc312a1d99fff73bca105c"
+    },
+    {
+      "label": "mobile-reduced-departure",
+      "diagnostics": {
+        "playing": false,
+        "frameScheduled": false,
+        "active": true,
+        "phase": 0.9,
+        "view": 1,
+        "reducedMotion": true
+      },
+      "title": "The departure.",
+      "text": "The moon leaves a fading arc toward the western dark. Its passage is brief, but the reference stars remain for the next observer.",
+      "tracking": "Every departure leaves a little wonder.",
+      "passage": "90",
+      "bearing": "30",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Next chapter",
+      "hidden": false,
+      "visibilityEvents": [
+        {
+          "time": 6850.700000017881,
+          "hidden": true,
+          "state": "hidden",
+          "trusted": true
+        },
+        {
+          "time": 8012.5,
+          "hidden": false,
+          "state": "visible",
+          "trusted": true
+        }
+      ],
+      "raf": {
+        "requested": 164,
+        "executed": 159,
+        "cancelled": 5,
+        "pending": []
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "canvasRect": {
+        "top": 0,
+        "bottom": 300,
+        "height": 300
+      },
+      "canvas_sha256": "3ecb14bbdf19c490894a4f11a461252c99951298d8080c3707c44ad21c9608ff"
+    },
+    {
+      "label": "mobile-reduced-bearing-min",
+      "diagnostics": {
+        "playing": false,
+        "frameScheduled": false,
+        "active": true,
+        "phase": 0.9,
+        "view": -1,
+        "reducedMotion": true
+      },
+      "title": "The departure.",
+      "text": "The moon leaves a fading arc toward the western dark. Its passage is brief, but the reference stars remain for the next observer.",
+      "tracking": "Every departure leaves a little wonder.",
+      "passage": "90",
+      "bearing": "-30",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Next chapter",
+      "hidden": false,
+      "visibilityEvents": [
+        {
+          "time": 6850.700000017881,
+          "hidden": true,
+          "state": "hidden",
+          "trusted": true
+        },
+        {
+          "time": 8012.5,
+          "hidden": false,
+          "state": "visible",
+          "trusted": true
+        }
+      ],
+      "raf": {
+        "requested": 165,
+        "executed": 160,
+        "cancelled": 5,
+        "pending": []
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "canvasRect": {
+        "top": 0,
+        "bottom": 300,
+        "height": 300
+      },
+      "canvas_sha256": "072bd8a4b3e0a3d75d84b35bc4dbc15b34182879bb9e3b720ef785cdb104da51"
+    },
+    {
+      "label": "mobile-reduced-bearing-max",
+      "diagnostics": {
+        "playing": false,
+        "frameScheduled": false,
+        "active": true,
+        "phase": 0.9,
+        "view": 1,
+        "reducedMotion": true
+      },
+      "title": "The departure.",
+      "text": "The moon leaves a fading arc toward the western dark. Its passage is brief, but the reference stars remain for the next observer.",
+      "tracking": "Every departure leaves a little wonder.",
+      "passage": "90",
+      "bearing": "30",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Next chapter",
+      "hidden": false,
+      "visibilityEvents": [
+        {
+          "time": 6850.700000017881,
+          "hidden": true,
+          "state": "hidden",
+          "trusted": true
+        },
+        {
+          "time": 8012.5,
+          "hidden": false,
+          "state": "visible",
+          "trusted": true
+        }
+      ],
+      "raf": {
+        "requested": 166,
+        "executed": 161,
+        "cancelled": 5,
+        "pending": []
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "canvasRect": {
+        "top": 0,
+        "bottom": 300,
+        "height": 300
+      },
+      "canvas_sha256": "3ecb14bbdf19c490894a4f11a461252c99951298d8080c3707c44ad21c9608ff"
+    },
+    {
+      "label": "reduced-idle-before",
+      "diagnostics": {
+        "playing": false,
+        "frameScheduled": false,
+        "active": true,
+        "phase": 0.9,
+        "view": 1,
+        "reducedMotion": true
+      },
+      "title": "The departure.",
+      "text": "The moon leaves a fading arc toward the western dark. Its passage is brief, but the reference stars remain for the next observer.",
+      "tracking": "Every departure leaves a little wonder.",
+      "passage": "90",
+      "bearing": "30",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Next chapter",
+      "hidden": false,
+      "visibilityEvents": [
+        {
+          "time": 6850.700000017881,
+          "hidden": true,
+          "state": "hidden",
+          "trusted": true
+        },
+        {
+          "time": 8012.5,
+          "hidden": false,
+          "state": "visible",
+          "trusted": true
+        }
+      ],
+      "raf": {
+        "requested": 166,
+        "executed": 161,
+        "cancelled": 5,
+        "pending": []
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "canvasRect": {
+        "top": 0,
+        "bottom": 300,
+        "height": 300
+      },
+      "canvas_sha256": "3ecb14bbdf19c490894a4f11a461252c99951298d8080c3707c44ad21c9608ff"
+    },
+    {
+      "label": "reduced-idle-after",
+      "diagnostics": {
+        "playing": false,
+        "frameScheduled": false,
+        "active": true,
+        "phase": 0.9,
+        "view": 1,
+        "reducedMotion": true
+      },
+      "title": "The departure.",
+      "text": "The moon leaves a fading arc toward the western dark. Its passage is brief, but the reference stars remain for the next observer.",
+      "tracking": "Every departure leaves a little wonder.",
+      "passage": "90",
+      "bearing": "30",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Next chapter",
+      "hidden": false,
+      "visibilityEvents": [
+        {
+          "time": 6850.700000017881,
+          "hidden": true,
+          "state": "hidden",
+          "trusted": true
+        },
+        {
+          "time": 8012.5,
+          "hidden": false,
+          "state": "visible",
+          "trusted": true
+        }
+      ],
+      "raf": {
+        "requested": 166,
+        "executed": 161,
+        "cancelled": 5,
+        "pending": []
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "canvasRect": {
+        "top": 0,
+        "bottom": 300,
+        "height": 300
+      },
+      "canvas_sha256": "3ecb14bbdf19c490894a4f11a461252c99951298d8080c3707c44ad21c9608ff"
+    },
+    {
+      "label": "playing-before-scroll",
+      "diagnostics": {
+        "playing": true,
+        "frameScheduled": true,
+        "active": true,
+        "phase": 0.5390671257596258,
+        "view": 1,
+        "reducedMotion": false
+      },
+      "title": "The alignment.",
+      "text": "At the center of its passage, Iona meets the station's reference line. Shift your view to compare the moon and the fixed guide stars.",
+      "tracking": "You are here. Iona is passing.",
+      "passage": "51",
+      "bearing": "30",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Pause the passage",
+      "hidden": false,
+      "visibilityEvents": [
+        {
+          "time": 6850.700000017881,
+          "hidden": true,
+          "state": "hidden",
+          "trusted": true
+        },
+        {
+          "time": 8012.5,
+          "hidden": false,
+          "state": "visible",
+          "trusted": true
+        }
+      ],
+      "raf": {
+        "requested": 187,
+        "executed": 181,
+        "cancelled": 5,
+        "pending": [
+          "t=>this.tick(t)"
+        ]
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 390,
+        "height": 600
+      },
+      "canvasRect": {
+        "top": 0,
+        "bottom": 300,
+        "height": 300
+      },
+      "canvas_sha256": "a06380c2666d80020033395794b3568e70702a9b17e0a760e6ad423d16e0b3db"
+    },
+    {
+      "label": "actual-scroll-before",
+      "diagnostics": {
+        "playing": false,
+        "frameScheduled": false,
+        "active": false,
+        "phase": 0.5263923426682985,
+        "view": 1,
+        "reducedMotion": false
+      },
+      "title": "The alignment.",
+      "text": "At the center of its passage, Iona meets the station's reference line. Shift your view to compare the moon and the fixed guide stars.",
+      "tracking": "You are here. Iona is passing.",
+      "passage": "51",
+      "bearing": "30",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Let it wander",
+      "hidden": false,
+      "visibilityEvents": [
+        {
+          "time": 6850.700000017881,
+          "hidden": true,
+          "state": "hidden",
+          "trusted": true
+        },
+        {
+          "time": 8012.5,
+          "hidden": false,
+          "state": "visible",
+          "trusted": true
+        }
+      ],
+      "raf": {
+        "requested": 191,
+        "executed": 185,
+        "cancelled": 6,
+        "pending": []
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 390,
+        "height": 600
+      },
+      "canvasRect": {
+        "top": -539.5,
+        "bottom": -239.5,
+        "height": 300
+      },
+      "canvas_sha256": "75d8f0d9ee85271a041386271a027243fbcfd5c666cad3bb11003ba9f307b10b"
+    },
+    {
+      "label": "actual-scroll-after",
+      "diagnostics": {
+        "playing": false,
+        "frameScheduled": false,
+        "active": false,
+        "phase": 0.5263923426682985,
+        "view": 1,
+        "reducedMotion": false
+      },
+      "title": "The alignment.",
+      "text": "At the center of its passage, Iona meets the station's reference line. Shift your view to compare the moon and the fixed guide stars.",
+      "tracking": "You are here. Iona is passing.",
+      "passage": "51",
+      "bearing": "30",
+      "canvasLabel": "Iona in a star field, following a tilted orbit",
+      "motion": "Let it wander",
+      "hidden": false,
+      "visibilityEvents": [
+        {
+          "time": 6850.700000017881,
+          "hidden": true,
+          "state": "hidden",
+          "trusted": true
+        },
+        {
+          "time": 8012.5,
+          "hidden": false,
+          "state": "visible",
+          "trusted": true
+        }
+      ],
+      "raf": {
+        "requested": 191,
+        "executed": 185,
+        "cancelled": 6,
+        "pending": []
+      },
+      "overflow": false,
+      "viewport": {
+        "width": 390,
+        "height": 600
+      },
+      "canvasRect": {
+        "top": -539.5,
+        "bottom": -239.5,
+        "height": 300
+      },
+      "canvas_sha256": "75d8f0d9ee85271a041386271a027243fbcfd5c666cad3bb11003ba9f307b10b"
+    }
+  ],
+  "assertions": [
+    {
+      "assertion": "desktop arrival shows corresponding explanation",
+      "status": "pass",
+      "detail": {
+        "title": "The arrival.",
+        "text": "Iona appears above the eastern ridge. The faint trail marks where this wandering moon has crossed our field of view."
+      }
+    },
+    {
+      "assertion": "desktop alignment shows corresponding explanation",
+      "status": "pass",
+      "detail": {
+        "title": "The alignment.",
+        "text": "At the center of its passage, Iona meets the station's reference line. Shift your view to compare the moon and the fixed guide stars."
+      }
+    },
+    {
+      "assertion": "desktop departure shows corresponding explanation",
+      "status": "pass",
+      "detail": {
+        "title": "The departure.",
+        "text": "The moon leaves a fading arc toward the western dark. Its passage is brief, but the reference stars remain for the next observer."
+      }
+    },
+    {
+      "assertion": "alignment chapter is reached through native controls",
+      "status": "pass",
+      "detail": {
+        "tracking": "In alignment. A moment shared.",
+        "bearing": "0",
+        "passage": "50"
+      }
+    },
+    {
+      "assertion": "causal comparison has stable nonambient baseline",
+      "status": "pass",
+      "detail": {
+        "first": "c2ac7da16edea0dc4df6c95ab98832d39ee39ab5bfa890401ca27a1ff189a243",
+        "repeat": "c2ac7da16edea0dc4df6c95ab98832d39ee39ab5bfa890401ca27a1ff189a243",
+        "raf": {
+          "requested": 106,
+          "executed": 103,
+          "cancelled": 3,
+          "pending": []
+        }
+      }
+    },
+    {
+      "assertion": "bearing input materially changes central rendered scene",
+      "status": "pass",
+      "detail": {
+        "before": {
+          "diagnostics": {
+            "playing": false,
+            "frameScheduled": false,
+            "active": true,
+            "phase": 0.5,
+            "view": 0,
+            "reducedMotion": true
+          },
+          "title": "The alignment.",
+          "text": "At the center of its passage, Iona meets the station's reference line. Shift your view to compare the moon and the fixed guide stars.",
+          "tracking": "In alignment. A moment shared.",
+          "passage": "50",
+          "bearing": "0",
+          "canvasLabel": "Iona in a star field, following a tilted orbit",
+          "motion": "Next chapter",
+          "hidden": false,
+          "visibilityEvents": [],
+          "raf": {
+            "requested": 106,
+            "executed": 103,
+            "cancelled": 3,
+            "pending": []
+          },
+          "overflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "canvasRect": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900
+          },
+          "canvas_sha256": "c2ac7da16edea0dc4df6c95ab98832d39ee39ab5bfa890401ca27a1ff189a243"
+        },
+        "after": {
+          "diagnostics": {
+            "playing": false,
+            "frameScheduled": false,
+            "active": true,
+            "phase": 0.5,
+            "view": 1,
+            "reducedMotion": true
+          },
+          "title": "The alignment.",
+          "text": "At the center of its passage, Iona meets the station's reference line. Shift your view to compare the moon and the fixed guide stars.",
+          "tracking": "You are here. Iona is passing.",
+          "passage": "50",
+          "bearing": "30",
+          "canvasLabel": "Iona in a star field, following a tilted orbit",
+          "motion": "Next chapter",
+          "hidden": false,
+          "visibilityEvents": [],
+          "raf": {
+            "requested": 107,
+            "executed": 104,
+            "cancelled": 3,
+            "pending": []
+          },
+          "overflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "canvasRect": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900
+          },
+          "canvas_sha256": "8c2413b3ef7c873f56295f43abdab809afc02ca30c664b3d8b1e037ceea05823"
+        }
+      }
+    },
+    {
+      "assertion": "passage input materially changes central rendered scene",
+      "status": "pass",
+      "detail": {
+        "arrival": "503ba1ef150f4920441dae073881abbe9b98b00ad2ca2ab6f2d33ddc46943873",
+        "departure": "2a9df227e68dfa7f69bdf752d558e6cf126bc56b1138bc3c460548542873d43e"
+      }
+    },
+    {
+      "assertion": "native hidden condition stops owned continuous scene work",
+      "status": "pass",
+      "detail": {
+        "before": {
+          "requested": 137,
+          "executed": 133,
+          "cancelled": 4,
+          "pending": []
+        },
+        "after": {
+          "requested": 137,
+          "executed": 133,
+          "cancelled": 4,
+          "pending": []
+        },
+        "events": [
+          {
+            "time": 6850.700000017881,
+            "hidden": true,
+            "state": "hidden",
+            "trusted": true
+          }
+        ]
+      }
+    },
+    {
+      "assertion": "scene restores after actual backgrounding",
+      "status": "pass",
+      "detail": {
+        "before": {
+          "requested": 132,
+          "executed": 128,
+          "cancelled": 3,
+          "pending": [
+            "t=>this.tick(t)"
+          ]
+        },
+        "restored": {
+          "requested": 153,
+          "executed": 148,
+          "cancelled": 4,
+          "pending": [
+            "t=>this.tick(t)"
+          ]
+        }
+      }
+    },
+    {
+      "assertion": "mobile reduced-motion arrival remains complete",
+      "status": "pass",
+      "detail": {
+        "title": "The arrival.",
+        "text": "Iona appears above the eastern ridge. The faint trail marks where this wandering moon has crossed our field of view.",
+        "overflow": false
+      }
+    },
+    {
+      "assertion": "mobile reduced-motion alignment remains complete",
+      "status": "pass",
+      "detail": {
+        "title": "The alignment.",
+        "text": "At the center of its passage, Iona meets the station's reference line. Shift your view to compare the moon and the fixed guide stars.",
+        "overflow": false
+      }
+    },
+    {
+      "assertion": "mobile reduced-motion departure remains complete",
+      "status": "pass",
+      "detail": {
+        "title": "The departure.",
+        "text": "The moon leaves a fading arc toward the western dark. Its passage is brief, but the reference stars remain for the next observer.",
+        "overflow": false
+      }
+    },
+    {
+      "assertion": "mobile reduced-motion keyboard bearing changes scene",
+      "status": "pass",
+      "detail": {
+        "before": "-30",
+        "after": "30"
+      }
+    },
+    {
+      "assertion": "reduced-motion does not retain unnecessary continuous work",
+      "status": "pass",
+      "detail": {
+        "before": {
+          "requested": 166,
+          "executed": 161,
+          "cancelled": 5,
+          "pending": []
+        },
+        "after": {
+          "requested": 166,
+          "executed": 161,
+          "cancelled": 5,
+          "pending": []
+        }
+      }
+    },
+    {
+      "assertion": "actual scroll-out stops owned scene work",
+      "status": "pass",
+      "detail": {
+        "rect": {
+          "top": -539.5,
+          "bottom": -239.5,
+          "height": 300
+        },
+        "before": {
+          "requested": 191,
+          "executed": 185,
+          "cancelled": 6,
+          "pending": []
+        },
+        "after": {
+          "requested": 191,
+          "executed": 185,
+          "cancelled": 6,
+          "pending": []
+        }
+      }
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,46 @@
+{
+  "worker": "/root/v2_director_adapter",
+  "owned_cases": [
+    "D1-supplied-design",
+    "D4-decide-for-me",
+    "D5-director-absent"
+  ],
+  "candidate": "12f509e61d8aa15de2bfcc54195a7def07bda0a8",
+  "queue_exec_session": null,
+  "queue_script": "D1-supplied-design/run-remaining.py",
+  "queue_sequence": [
+    "D1/natural-selection",
+    "D4/explicit",
+    "D4/natural-selection",
+    "D5/explicit",
+    "D5/natural-selection"
+  ],
+  "completed_assessed_cases": [
+    "D1-supplied-design",
+    "D4-decide-for-me",
+    "D5-director-absent"
+  ],
+  "current_run": null,
+  "fixture_status": "all original fixtures frozen and archived before all dispatches; six prepared workspaces have installed React19.1.1/Vite7.1.5 dependencies",
+  "assessor_script": "D1-supplied-design/assess.cjs",
+  "trace_archive_script": "D1-supplied-design/summarize-trace.py",
+  "ports": {
+    "D1/explicit": 8841,
+    "D1/natural-selection": 8842,
+    "D4/explicit": 8843,
+    "D4/natural-selection": 8844,
+    "D5/explicit": 8845,
+    "D5/natural-selection": 8846
+  },
+  "next": "None. Final reports saved; natural D5 routing miss preserved, all six artifacts functional-pass.",
+  "completed_assessed_runs": [
+    "D1-supplied-design/explicit",
+    "D1-supplied-design/natural-selection",
+    "D4-decide-for-me/explicit",
+    "D4-decide-for-me/natural-selection",
+    "D5-director-absent/explicit",
+    "D5-director-absent/natural-selection"
+  ],
+  "d4_flow_assessor": "D4-decide-for-me/assess-flows.cjs",
+  "status": "complete"
+}

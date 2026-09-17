@@ -1,0 +1,42 @@
+[
+  {
+    "run_id": "explicit-staged-review",
+    "fresh_cli_thread_id": "01a0b0e2-8510-7461-865c-a5e5640b3353",
+    "reviewer_display_label": "Codex /root inside fresh CLI (not the coordinator thread)",
+    "context_isolation": "New codex exec --ephemeral, no resume/fork or parent history. Six input files from minimal reviewer fixture; first live page before source diagnosis.",
+    "input_manifest": "explicit-staged-review/fixture-manifest.json",
+    "prompt_sha256": "e76152cb17e42497976d6cd5b09dbb6aabf0811a536d8ec5f168ffcce509fe42",
+    "trace_sha256": "ef8fdca2385c138a4e6bb3cdad51e6c86394b4bbedd857936c210f931b66e168",
+    "parent_usage": [
+      {
+        "input_tokens": 923460,
+        "cached_input_tokens": 856192,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 11333,
+        "reasoning_output_tokens": 736
+      }
+    ],
+    "result": "incomplete (two observed defects; no corrections by reviewer)",
+    "verification_status": "verified for bounded checks; not app approval"
+  },
+  {
+    "run_id": "natural-selection-staged-review",
+    "fresh_cli_thread_id": "01a0b0ea-a4bf-7341-b194-6befd592bca3",
+    "reviewer_display_label": "Codex /root inside fresh CLI (not the coordinator thread)",
+    "context_isolation": "New codex exec --ephemeral, no resume/fork or parent history. Six input files from minimal reviewer fixture; first live page before source diagnosis.",
+    "input_manifest": "natural-selection-staged-review/fixture-manifest.json",
+    "prompt_sha256": "e76152cb17e42497976d6cd5b09dbb6aabf0811a536d8ec5f168ffcce509fe42",
+    "trace_sha256": "df3d6b5cf6363da60f36943960a67b35bfc4e99d1f28afe0092ac97e3573733a",
+    "parent_usage": [
+      {
+        "input_tokens": 765895,
+        "cached_input_tokens": 662272,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 10828,
+        "reasoning_output_tokens": 1069
+      }
+    ],
+    "result": "incomplete (two observed defects; no corrections by reviewer)",
+    "verification_status": "verified for bounded checks; not app approval"
+  }
+]

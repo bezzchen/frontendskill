@@ -1,0 +1,9 @@
+{
+  "url": "http://127.0.0.1:8796",
+  "width": 1440,
+  "height": 900,
+  "screenshot": "preview-desktop.png",
+  "actions": [
+    { "type": "wait", "ms": 1700 }
+  ]
+}

@@ -7,6 +7,11 @@ implementation and review of the running result.
 visual-quality improvement. [Development evidence](results/composition_v2/README.md)
 distinguishes checks performed from the comparative experiments still required.
 
+The [eight-case behavioral suite](results/composition_v2/behavior-suite/README.md) records
+explicit and natural-selection builds, browser observations, seeded reviews and repairs.
+It exposes remaining selection and catalog-budget gates; it does not establish superiority
+over the incumbent or another director. The runtime remains v2.0.0-alpha.1.
+
 ## What it does
 
 1. Reuses the brief and project identity in a compact surface-level design contract.

@@ -1,0 +1,62 @@
+{
+  "results": [
+    {
+      "name": "Each hidden instrument pauses independently; last consumer stops scheduler",
+      "status": "PASS"
+    },
+    {
+      "name": "Real scroll pauses offscreen owners and resumes on return",
+      "status": "PASS"
+    },
+    {
+      "name": "Unmount releases callbacks; repeated and hidden remounts preserve settings",
+      "status": "PASS"
+    },
+    {
+      "name": "Reduced motion renders static instruments and keeps controls usable",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic visibility event exercises cancellation and eligible-only resume",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual backgrounding cancels shared work and resumes only eligible owners",
+      "status": "UNVERIFIED",
+      "evidence": {
+        "unverified": "Actual tab switching and window minimization did not produce document.hidden on this host.",
+        "state": {
+          "documentHidden": false,
+          "visibilityState": "visible",
+          "reducedMotion": false,
+          "schedulerPending": true,
+          "schedulerTicks": 210,
+          "subscribers": [
+            "waveform:1"
+          ],
+          "counters": {
+            "metronome": 3,
+            "waveform": 210
+          },
+          "settings": {
+            "metronome": 84,
+            "waveform": 36
+          },
+          "hidden": {
+            "metronome": true,
+            "waveform": false
+          },
+          "mounted": [
+            "metronome",
+            "waveform"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Narrow layout retains instruments and controls",
+      "status": "PASS"
+    }
+  ],
+  "errors": []
+}

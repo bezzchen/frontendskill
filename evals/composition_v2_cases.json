@@ -3,7 +3,7 @@
   "status": "draft",
   "protocol": "evals/composition_v2_protocol.md",
   "development_excluded_from_efficacy": true,
-  "fixture_preparation_status": "specifications-only",
+  "fixture_preparation_status": "development-built-and-executed; held-out-comparative-fixtures-specifications-only",
   "development_probes": [
     {
       "id": "D1-supplied-design",
@@ -25,9 +25,15 @@
         "Read trace and contract diff",
         "Desktop/mobile booking-state captures and interaction trace"
       ],
-      "execution_status": "not-run",
-      "fixture_path": null,
-      "fixture_sha256": null
+      "execution_status": "completed",
+      "fixture_path": "results/composition_v2/behavior-suite/D1-supplied-design/fixture-original",
+      "fixture_sha256": "7e40fae37ca745d66d713322256de9f07b770db2d16d51b820e440027f368e14",
+      "assessment_status": "pass-with-disclosed-host-limitations",
+      "fixture_sha256_method": "SHA256 of sorted compact JSON relative-path-to-file-SHA256 map; post-run aggregate over preserved original fixture. Pre-run freezes retained separately.",
+      "fixture_manifest_path": "results/composition_v2/behavior-suite/harness/fixture-content-manifests.json",
+      "report_path": "results/composition_v2/behavior-suite/D1-supplied-design/report.json",
+      "report_sha256": "5596e04164fee681c97d8d14e3bc86cdbd346727dcf7cbcea6834adf8293dae8",
+      "natural_selection_expectation": "excluded"
     },
     {
       "id": "D2-settings-and-review",
@@ -52,9 +58,17 @@
         "Reviewer identity/context trace and findings",
         "Fix diff and mobile primary-flow recheck"
       ],
-      "execution_status": "not-run",
-      "fixture_path": null,
-      "fixture_sha256": null
+      "execution_status": "completed",
+      "fixture_path": "results/composition_v2/behavior-suite/D2-settings-and-review/original",
+      "fixture_sha256": "256f07796091a715d9f37af9d90094916e98a9ebd6c9b2b4038a60b188da2688",
+      "assessment_status": "completed-with-staging-deviation-and-natural-selection-qualification",
+      "fixture_sha256_method": "SHA256 of sorted compact JSON relative-path-to-file-SHA256 map; post-run aggregate over preserved original fixture. Pre-run freezes retained separately.",
+      "fixture_manifest_path": "results/composition_v2/behavior-suite/harness/fixture-content-manifests.json",
+      "report_path": "results/composition_v2/behavior-suite/D2-settings-and-review/report.json",
+      "report_sha256": "57adae567732ccd41834773b5b12ed9ba580a1cb026694020ab914e0e87edb50",
+      "natural_selection_expectation": "positive",
+      "selection_interpretation": "Observed positive-selection miss; actual settled-design fixture overlaps description exclusion. Original expectation preserved; not retroactively passed.",
+      "setup_deviation": "Faults injected into separate post-build checkpoints, not starting fixture. Supplemental staged review/correction; original initial builds retained."
     },
     {
       "id": "D3-immersive",
@@ -77,9 +91,15 @@
         "Desktop/mobile and reduced-motion flow evidence",
         "Motion and visibility-state trace"
       ],
-      "execution_status": "not-run",
-      "fixture_path": null,
-      "fixture_sha256": null
+      "execution_status": "completed",
+      "fixture_path": "results/composition_v2/behavior-suite/D3-immersive/original",
+      "fixture_sha256": "af36d4901afcf4f10f9a6839794947563c375c6e4a1a8f81e39f0a198c8ea92d",
+      "assessment_status": "pass",
+      "fixture_sha256_method": "SHA256 of sorted compact JSON relative-path-to-file-SHA256 map; post-run aggregate over preserved original fixture. Pre-run freezes retained separately.",
+      "fixture_manifest_path": "results/composition_v2/behavior-suite/harness/fixture-content-manifests.json",
+      "report_path": "results/composition_v2/behavior-suite/D3-immersive/report.json",
+      "report_sha256": "e7db4bd3cf70af209bbb45217edd81fcbbfcf2c08de8ea01fef657db3747674b",
+      "natural_selection_expectation": "positive"
     },
     {
       "id": "D4-decide-for-me",
@@ -102,9 +122,15 @@
         "Decision/read trace and shared component diff",
         "Both route captures and interaction checks"
       ],
-      "execution_status": "not-run",
-      "fixture_path": null,
-      "fixture_sha256": null
+      "execution_status": "completed",
+      "fixture_path": "results/composition_v2/behavior-suite/D4-decide-for-me/fixture-original",
+      "fixture_sha256": "ced8e42a63c1d4ac2d6e9f25bd499fce12b70a50523eea583d7c7953fd094576",
+      "assessment_status": "pass",
+      "fixture_sha256_method": "SHA256 of sorted compact JSON relative-path-to-file-SHA256 map; post-run aggregate over preserved original fixture. Pre-run freezes retained separately.",
+      "fixture_manifest_path": "results/composition_v2/behavior-suite/harness/fixture-content-manifests.json",
+      "report_path": "results/composition_v2/behavior-suite/D4-decide-for-me/report.json",
+      "report_sha256": "5d5252bd43f186eaddce61355779d565330a278fb222facc24e21c1dec0f092d",
+      "natural_selection_expectation": "positive"
     },
     {
       "id": "D5-director-absent",
@@ -127,9 +153,16 @@
         "Fallback metadata",
         "Primary-flow capture"
       ],
-      "execution_status": "not-run",
-      "fixture_path": null,
-      "fixture_sha256": null
+      "execution_status": "completed",
+      "fixture_path": "results/composition_v2/behavior-suite/D5-director-absent/fixture-original",
+      "fixture_sha256": "b34620eb51d30c52f25d3ce9f46adfd69710f5a58a2873899b6054f554f094a0",
+      "assessment_status": "incomplete-natural-routing",
+      "fixture_sha256_method": "SHA256 of sorted compact JSON relative-path-to-file-SHA256 map; post-run aggregate over preserved original fixture. Pre-run freezes retained separately.",
+      "fixture_manifest_path": "results/composition_v2/behavior-suite/harness/fixture-content-manifests.json",
+      "report_path": "results/composition_v2/behavior-suite/D5-director-absent/report.json",
+      "report_sha256": "7d8dd594eedff81a505767fad677cb9f267c24d75450a1e36a6432cc3e9a7af7",
+      "natural_selection_expectation": "positive",
+      "selection_interpretation": "Observed positive-selection miss: global frontend-design read, candidate not read, candidate fallback unexercised."
     },
     {
       "id": "D6-catalog-offline",
@@ -152,9 +185,16 @@
         "Implementation/ownership decision",
         "Booking and reduced-motion evidence"
       ],
-      "execution_status": "not-run",
-      "fixture_path": null,
-      "fixture_sha256": null
+      "execution_status": "completed",
+      "fixture_path": "results/composition_v2/behavior-suite/D6-catalog-offline/original",
+      "fixture_sha256": "b630c6d8ce387b95ea336a1585635ce1a5772bdbdbc5bf65aed8521adfcfc1b4",
+      "assessment_status": "completed-with-unresolved-catalog-budget-semantics",
+      "fixture_sha256_method": "SHA256 of sorted compact JSON relative-path-to-file-SHA256 map; post-run aggregate over preserved original fixture. Pre-run freezes retained separately.",
+      "fixture_manifest_path": "results/composition_v2/behavior-suite/harness/fixture-content-manifests.json",
+      "report_path": "results/composition_v2/behavior-suite/D6-catalog-offline/report.json",
+      "report_sha256": "9c172563fcb328af8052353c1764fc3fa2e205cb846e73b21ab3e49740d5081e",
+      "natural_selection_expectation": "positive",
+      "assessment_qualification": "Strict-assessor failure for3commands/2sources/1approvalretry. Original route/alternate wording does not predeclare two-command retry-count semantics; interpretation unresolved. Accidental missing option opening tag in fixture repaired by both builders."
     },
     {
       "id": "D7-preview-unavailable",
@@ -177,9 +217,16 @@
         "Build/source-check output",
         "Metadata with verification_status unverified"
       ],
-      "execution_status": "not-run",
-      "fixture_path": null,
-      "fixture_sha256": null
+      "execution_status": "completed",
+      "fixture_path": "results/composition_v2/behavior-suite/D7-preview-unavailable/original",
+      "fixture_sha256": "c4266be448d559d2e4d0d0c6709441f9b828916596022123671535fe07779a8d",
+      "assessment_status": "behavior-pass-with-natural-selection-miss-and-partial-metadata",
+      "fixture_sha256_method": "SHA256 of sorted compact JSON relative-path-to-file-SHA256 map; post-run aggregate over preserved original fixture. Pre-run freezes retained separately.",
+      "fixture_manifest_path": "results/composition_v2/behavior-suite/harness/fixture-content-manifests.json",
+      "report_path": "results/composition_v2/behavior-suite/D7-preview-unavailable/report.json",
+      "report_sha256": "acfcde56991a39c572bab82ef3325c4bf674f63f394f9ff20d85fd5493ba762c",
+      "natural_selection_expectation": "positive",
+      "selection_interpretation": "Observed positive-selection miss; actual settled-design fixture overlaps description exclusion. Original expectation preserved; not retroactively passed."
     },
     {
       "id": "D8-shared-animation-ownership",
@@ -203,9 +250,15 @@
         "Live interaction trace and cleanup evidence",
         "Ownership record and source diff"
       ],
-      "execution_status": "not-run",
-      "fixture_path": null,
-      "fixture_sha256": null
+      "execution_status": "completed",
+      "fixture_path": "results/composition_v2/behavior-suite/D8-shared-animation-ownership/original",
+      "fixture_sha256": "db19b8f7bf1c02f848c0acc822dac7b55323b7f838d9183254ce645580365a78",
+      "assessment_status": "pass",
+      "fixture_sha256_method": "SHA256 of sorted compact JSON relative-path-to-file-SHA256 map; post-run aggregate over preserved original fixture. Pre-run freezes retained separately.",
+      "fixture_manifest_path": "results/composition_v2/behavior-suite/harness/fixture-content-manifests.json",
+      "report_path": "results/composition_v2/behavior-suite/D8-shared-animation-ownership/report.json",
+      "report_sha256": "9fecbcdb6aeba5d66c962231888a6eab27944938f34355becfd71959ca667c5d",
+      "natural_selection_expectation": "excluded"
     }
   ],
   "pilot_held_out_cases": [
@@ -341,5 +394,8 @@
     ],
     "initial_build_count": 12,
     "rule": "Author and freeze distinct briefs and fixture snapshots after candidate revision, without reusing development/pilot tasks or artifacts."
-  }
+  },
+  "development_execution_status": "complete-with-unresolved-gates",
+  "development_evidence": "results/composition_v2/behavior-suite/README.md",
+  "comparative_execution_status": "draft-unfrozen-not-run"
 }

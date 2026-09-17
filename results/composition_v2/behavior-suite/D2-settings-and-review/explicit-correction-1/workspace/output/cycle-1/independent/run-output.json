@@ -1,0 +1,1059 @@
+[
+  {
+    "name": "desktop-focus-name",
+    "focus": "display-name",
+    "overflow": false,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings",
+    "controls": [
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "Display name",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 792,
+          "height": 24
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "display-name",
+        "tag": "INPUT",
+        "text": "",
+        "value": "River Studio",
+        "checked": false,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 792,
+          "height": 46
+        },
+        "outline": "rgb(184, 85, 0) solid 3px"
+      },
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "\n                \n                Email me when my kiln firing is ready\n              ",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 792,
+          "height": 44
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "tag": "INPUT",
+        "text": "",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(134, 85, 65)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 22,
+          "height": 22
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "tag": "BUTTON",
+        "text": "Save settings",
+        "value": "",
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(134, 85, 65)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 141.203125,
+          "height": 48
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ]
+  },
+  {
+    "name": "desktop-focus-checkbox",
+    "focus": "kiln-alerts",
+    "overflow": false,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings",
+    "controls": [
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "Display name",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 792,
+          "height": 24
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "display-name",
+        "tag": "INPUT",
+        "text": "",
+        "value": "River Studio",
+        "checked": false,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 792,
+          "height": 46
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "\n                \n                Email me when my kiln firing is ready\n              ",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 792,
+          "height": 44
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "tag": "INPUT",
+        "text": "",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(134, 85, 65)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 22,
+          "height": 22
+        },
+        "outline": "rgb(184, 85, 0) solid 3px"
+      },
+      {
+        "id": "save-settings",
+        "tag": "BUTTON",
+        "text": "Save settings",
+        "value": "",
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(134, 85, 65)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 141.203125,
+          "height": 48
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ]
+  },
+  {
+    "name": "desktop-focus-save",
+    "focus": "save-settings",
+    "overflow": false,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nYou have unsaved changes.",
+    "controls": [
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "Display name",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 792,
+          "height": 24
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "display-name",
+        "tag": "INPUT",
+        "text": "",
+        "value": "River Studio",
+        "checked": false,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 792,
+          "height": 46
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "\n                \n                Email me when my kiln firing is ready\n              ",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 792,
+          "height": 44
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "tag": "INPUT",
+        "text": "",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 22,
+          "height": 22
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "tag": "BUTTON",
+        "text": "Save settings",
+        "value": "",
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(134, 85, 65)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 141.203125,
+          "height": 48
+        },
+        "outline": "rgb(184, 85, 0) solid 3px"
+      }
+    ]
+  },
+  {
+    "name": "desktop-shift-tab",
+    "focus": "kiln-alerts"
+  },
+  {
+    "name": "mobile-normal",
+    "focus": "",
+    "overflow": false,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings",
+    "controls": [
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "Display name",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 24
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "display-name",
+        "tag": "INPUT",
+        "text": "",
+        "value": "River Studio",
+        "checked": false,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 46
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "\n                \n                Email me when my kiln firing is ready\n              ",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 68
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "tag": "INPUT",
+        "text": "",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(134, 85, 65)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 22,
+          "height": 22
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "tag": "BUTTON",
+        "text": "Save settings",
+        "value": "",
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(134, 85, 65)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 306,
+          "height": 48
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ]
+  },
+  {
+    "name": "mobile-invalid",
+    "focus": "display-name",
+    "overflow": false,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEnter a display name for your workspace.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nCheck your display name before saving.",
+    "controls": [
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "Display name",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 24
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "display-name",
+        "tag": "INPUT",
+        "text": "",
+        "value": "   ",
+        "checked": false,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 46
+        },
+        "outline": "rgb(184, 85, 0) solid 3px"
+      },
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "\n                \n                Email me when my kiln firing is ready\n              ",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 68
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "tag": "INPUT",
+        "text": "",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(134, 85, 65)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 22,
+          "height": 22
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "tag": "BUTTON",
+        "text": "Save settings",
+        "value": "",
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(134, 85, 65)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 306,
+          "height": 48
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ]
+  },
+  {
+    "name": "mobile-pending-pointer",
+    "focus": "",
+    "overflow": false,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSaving…\n\nSaving your settings…",
+    "controls": [
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "Display name",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 24
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "display-name",
+        "tag": "INPUT",
+        "text": "",
+        "value": "  Clay & Co  ",
+        "checked": false,
+        "disabled": false,
+        "effectiveDisabled": true,
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 46
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "\n                \n                Email me when my kiln firing is ready\n              ",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 68
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "tag": "INPUT",
+        "text": "",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "effectiveDisabled": true,
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 22,
+          "height": 22
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "tag": "BUTTON",
+        "text": "Saving…",
+        "value": "",
+        "disabled": false,
+        "effectiveDisabled": true,
+        "background": "rgb(134, 85, 65)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 306,
+          "height": 48
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ]
+  },
+  {
+    "name": "mobile-success-pointer",
+    "focus": "save-settings",
+    "overflow": false,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nSettings saved. Your workspace is up to date.",
+    "controls": [
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "Display name",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 24
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "display-name",
+        "tag": "INPUT",
+        "text": "",
+        "value": "Clay & Co",
+        "checked": false,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 46
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "\n                \n                Email me when my kiln firing is ready\n              ",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 68
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "tag": "INPUT",
+        "text": "",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 22,
+          "height": 22
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "tag": "BUTTON",
+        "text": "Save settings",
+        "value": "",
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(56, 45, 40)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 306,
+          "height": 48
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ]
+  },
+  {
+    "name": "mobile-error",
+    "focus": "save-settings",
+    "overflow": false,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Please try again.",
+    "controls": [
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "Display name",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 24
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "display-name",
+        "tag": "INPUT",
+        "text": "",
+        "value": "River retry",
+        "checked": false,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 46
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "\n                \n                Email me when my kiln firing is ready\n              ",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 68
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "tag": "INPUT",
+        "text": "",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(134, 85, 65)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 22,
+          "height": 22
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "tag": "BUTTON",
+        "text": "Save settings",
+        "value": "",
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(56, 45, 40)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 306,
+          "height": 48
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ]
+  },
+  {
+    "name": "mobile-retry-success",
+    "focus": "save-settings",
+    "overflow": false,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nSettings saved. Your workspace is up to date.",
+    "controls": [
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "Display name",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 24
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "display-name",
+        "tag": "INPUT",
+        "text": "",
+        "value": "River retry",
+        "checked": false,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 46
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "\n                \n                Email me when my kiln firing is ready\n              ",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 68
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "tag": "INPUT",
+        "text": "",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(134, 85, 65)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 22,
+          "height": 22
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "tag": "BUTTON",
+        "text": "Save settings",
+        "value": "",
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(56, 45, 40)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 306,
+          "height": 48
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ]
+  },
+  {
+    "name": "mobile-pending-touch",
+    "focus": "",
+    "overflow": false,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSaving…\n\nSaving your settings…",
+    "controls": [
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "Display name",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 24
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "display-name",
+        "tag": "INPUT",
+        "text": "",
+        "value": "Touch studio",
+        "checked": false,
+        "disabled": false,
+        "effectiveDisabled": true,
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 46
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "\n                \n                Email me when my kiln firing is ready\n              ",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 68
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "tag": "INPUT",
+        "text": "",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "effectiveDisabled": true,
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 22,
+          "height": 22
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "tag": "BUTTON",
+        "text": "Saving…",
+        "value": "",
+        "disabled": false,
+        "effectiveDisabled": true,
+        "background": "rgb(134, 85, 65)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 306,
+          "height": 48
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ]
+  },
+  {
+    "name": "mobile-success-touch",
+    "focus": "save-settings",
+    "overflow": false,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nSettings saved. Your workspace is up to date.",
+    "controls": [
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "Display name",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 24
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "display-name",
+        "tag": "INPUT",
+        "text": "",
+        "value": "Touch studio",
+        "checked": false,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 46
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "\n                \n                Email me when my kiln firing is ready\n              ",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 306,
+          "height": 68
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "tag": "INPUT",
+        "text": "",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 22,
+          "height": 22
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "tag": "BUTTON",
+        "text": "Save settings",
+        "value": "",
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(56, 45, 40)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 306,
+          "height": 48
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ]
+  },
+  {
+    "name": "mobile-375",
+    "focus": "",
+    "overflow": false,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings",
+    "controls": [
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "Display name",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 291,
+          "height": 24
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "display-name",
+        "tag": "INPUT",
+        "text": "",
+        "value": "River Studio",
+        "checked": false,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 291,
+          "height": 46
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "\n                \n                Email me when my kiln firing is ready\n              ",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 291,
+          "height": 68
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "tag": "INPUT",
+        "text": "",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(134, 85, 65)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 22,
+          "height": 22
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "tag": "BUTTON",
+        "text": "Save settings",
+        "value": "",
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(134, 85, 65)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 291,
+          "height": 48
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ]
+  },
+  {
+    "name": "mobile-320",
+    "focus": "",
+    "overflow": false,
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings",
+    "controls": [
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "Display name",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 236,
+          "height": 24
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "display-name",
+        "tag": "INPUT",
+        "text": "",
+        "value": "River Studio",
+        "checked": false,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 236,
+          "height": 46
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "",
+        "tag": "LABEL",
+        "text": "\n                \n                Email me when my kiln firing is ready\n              ",
+        "effectiveDisabled": false,
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 45, 40)",
+        "box": {
+          "width": 236,
+          "height": 68
+        },
+        "outline": "rgb(56, 45, 40) none 3px"
+      },
+      {
+        "id": "kiln-alerts",
+        "tag": "INPUT",
+        "text": "",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(134, 85, 65)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 22,
+          "height": 22
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      },
+      {
+        "id": "save-settings",
+        "tag": "BUTTON",
+        "text": "Save settings",
+        "value": "",
+        "disabled": false,
+        "effectiveDisabled": false,
+        "background": "rgb(134, 85, 65)",
+        "color": "rgb(255, 255, 255)",
+        "box": {
+          "width": 236,
+          "height": 48
+        },
+        "outline": "rgb(255, 255, 255) none 3px"
+      }
+    ]
+  }
+]

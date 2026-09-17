@@ -1,0 +1,25 @@
+const {chromium}=require('/Users/bezzchen/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const fs=require('fs');
+(async()=>{
+const browser=await chromium.launch({headless:false,executablePath:'/Users/bezzchen/Library/Caches/ms-playwright/chromium-1243/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing'});
+const context=await browser.newContext({viewport:{width:1440,height:900}});
+const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
+await page.goto('http://127.0.0.1:8313');await page.waitForTimeout(500);
+const results={errors};
+await page.locator('#play').click();await page.waitForTimeout(600);
+results.playing=await page.evaluate(()=>window.observatoryState);
+await page.mouse.wheel(0,1400);await page.waitForTimeout(600);
+results.scrolledAway=await page.evaluate(()=>({state:window.observatoryState,scrollY,rect:document.querySelector('#sky').getBoundingClientRect().bottom}));
+await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));await page.waitForTimeout(100);
+await page.locator('#play').click();await page.waitForTimeout(300);
+const cdp=await context.newCDPSession(page);const {windowId}=await cdp.send('Browser.getWindowForTarget');await cdp.send('Browser.setWindowBounds',{windowId,bounds:{windowState:'minimized'}});await page.waitForTimeout(500);
+results.background=await page.evaluate(()=>({visibility:document.visibilityState,state:window.observatoryState}));
+await cdp.send('Browser.setWindowBounds',{windowId,bounds:{windowState:'normal'}});await page.bringToFront();await page.waitForTimeout(200);results.returned=await page.evaluate(()=>window.observatoryState);
+await page.setViewportSize({width:375,height:812});await page.waitForTimeout(200);await page.screenshot({path:'output/playwright/mobile-updated-top.png'});
+await page.locator('#passage').scrollIntoViewIfNeeded();await page.locator('#passage').focus();await page.keyboard.press('End');await page.waitForTimeout(900);
+results.mobileControls=await page.evaluate(()=>({state:window.observatoryState,moonRect:document.querySelector('#sky').getBoundingClientRect().toJSON(),controlRect:document.querySelector('#passage').getBoundingClientRect().toJSON(),overflow:document.documentElement.scrollWidth>innerWidth}));
+await page.screenshot({path:'output/playwright/mobile-controls.png'});
+await page.emulateMedia({reducedMotion:'reduce'});await page.locator('#reset').click();await page.locator('#play').click();await page.waitForTimeout(200);
+results.reducedMotion=await page.evaluate(()=>({state:window.observatoryState,label:document.querySelector('#play-label').textContent,phase:document.querySelector('#act-title').textContent}));
+fs.writeFileSync('output/playwright/lifecycle-results.json',JSON.stringify(results,null,2));console.log(JSON.stringify(results,null,2));await browser.close();
+})().catch(e=>{console.error(e);process.exit(1)});

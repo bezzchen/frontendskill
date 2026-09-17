@@ -1,0 +1,45 @@
+{
+  "url": "http://127.0.0.1:8796/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "text": "FOLD & THREAD / BOOKBINDING BY HAND\n\nGive an idea\na place to live.\n\nFold a sheet. Stitch a spine. Make a notebook that is entirely your own.\n\nA few good hours at the workbench.\n\n18 Paper Lane · Materials included · Step-free studio\n\nSaturday 10 October, 10:00–13:00 · Sunday 18 October, 14:00–17:00\n\nYour name\nEmail address\nWorkshop date\nChoose a session\n18 October · 14:00\nReserve a place",
+  "controls": [
+    {
+      "id": "guest-name",
+      "tag": "INPUT",
+      "type": "text",
+      "text": "",
+      "value": "",
+      "checked": false
+    },
+    {
+      "id": "guest-email",
+      "tag": "INPUT",
+      "type": "email",
+      "text": "",
+      "value": "",
+      "checked": false
+    },
+    {
+      "id": "session",
+      "tag": "SELECT",
+      "type": "select-one",
+      "text": "Choose a session10 October · 10:0018 October · 14:00",
+      "value": ""
+    },
+    {
+      "id": "",
+      "tag": "BUTTON",
+      "type": "submit",
+      "text": "Reserve a place",
+      "value": ""
+    }
+  ],
+  "focus": {
+    "tag": "BODY",
+    "id": ""
+  },
+  "events": []
+}

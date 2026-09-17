@@ -1,0 +1,22 @@
+{
+  "at": "2026-09-17T20:37:57.810926+00:00",
+  "frozen_inputs_match": true,
+  "checks": {
+    "original": {
+      "AGENTS.md": true,
+      "app.js": true,
+      "browser.cjs": true,
+      "equipment.json": true,
+      "index.html": true,
+      "package.json": true,
+      "styles.css": true
+    }
+  },
+  "node_modules_paths": [],
+  "executions": {
+    "explicit": "completed",
+    "natural-selection": "completed"
+  },
+  "report_overall_status": "behavior-pass-with-natural-selection-miss-and-partial-metadata",
+  "missing_assertion_evidence": []
+}

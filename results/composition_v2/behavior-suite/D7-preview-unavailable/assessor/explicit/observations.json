@@ -1,0 +1,48 @@
+{
+  "actor": "posthoc-assessor",
+  "not_tested_agent_verification": true,
+  "mode": "explicit",
+  "at": "2026-09-17T19:13:29.729Z",
+  "checks": [
+    {
+      "width": 1440,
+      "invalid": {
+        "focus": "equipment",
+        "invalid": [
+          "equipment",
+          "return-date"
+        ]
+      },
+      "missingDate": {
+        "focus": "return-date",
+        "dateInvalid": "true"
+      },
+      "success": {
+        "text": "NORTH WORKS / MEMBER DESK\n\nEquipment checkout\n\nChoose the tool you need, and let us know when it will be back.\n\nCheckout summary\n\nConfirmed in this preview. No reservation has been sent.\n\nEquipment\nCordless drill\nReturn date\nOctober 1, 2026\nEdit checkout",
+        "focus": "confirmation-heading",
+        "overflow": false
+      },
+      "events": []
+    },
+    {
+      "width": 390,
+      "invalid": {
+        "focus": "equipment",
+        "invalid": [
+          "equipment",
+          "return-date"
+        ]
+      },
+      "missingDate": {
+        "focus": "return-date",
+        "dateInvalid": "true"
+      },
+      "success": {
+        "text": "NORTH WORKS / MEMBER DESK\n\nEquipment checkout\n\nChoose the tool you need, and let us know when it will be back.\n\nCheckout summary\n\nConfirmed in this preview. No reservation has been sent.\n\nEquipment\nCordless drill\nReturn date\nOctober 1, 2026\nEdit checkout",
+        "focus": "confirmation-heading",
+        "overflow": false
+      },
+      "events": []
+    }
+  ]
+}

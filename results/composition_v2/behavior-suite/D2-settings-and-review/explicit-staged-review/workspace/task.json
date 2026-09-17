@@ -1,0 +1,21 @@
+{
+  "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/explicit/",
+  "viewports": [
+    {
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "width": 390,
+      "height": 900
+    }
+  ],
+  "states": [
+    "default",
+    "invalid",
+    "saving",
+    "success",
+    "service error"
+  ],
+  "service_error_query": "?save=error"
+}

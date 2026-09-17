@@ -1,0 +1,82 @@
+[
+  {
+    "state": "alignment-before-center",
+    "text": "Skip to telescope controls\nMoonward\nAn observatory for passing worlds\nObservatory\nField notes ↗\n?\nHow to observe\nN   + 38° 42′\nE   09h 41m\n\nField station 01\nA sky in transit\n\nSome moons\nnever stay.\n\nTonight, Iona crosses our sky.\nA wandering world. A passing encounter.\nThe telescope is yours.\n\nTake the telescope\n↘\n+\nIona\nMigrating moon / No fixed orbit\n◌\nTwo paths. One point of reference.\n02\n03\nAlignment\n\nAt the center of its passage, Iona meets the station's reference line. Shift your view to compare the moon and the fixed guide stars.\n\nFollow the departure\n↗\n Seeking alignment\n↔   Drag the sky to shift your view\n◫\nMotion on\nThe passage\n02 / Alignment\n01 Arrival\n02 Alignment\n03 Departure\n\nMove through the moon’s passage with the arrow keys, or choose one of the three stages.\n\nTelescope bearing\n+12°\nChoose Center at mid-passage to align.\n⊕ Center\n\nAlignment. At the center of its passage, Iona meets the station's reference line. Shift your view to compare the moon and the fixed guide stars.\n\nFrom the field notebook\n\nNot every world\nbelongs to an orbit.\n\nIona is an imagined moon with somewhere else to be. This station exists for the brief moment our paths cross.\n\nStay a little. Look a little closer.\nI.\nA world in motion\n\nFollow the passage from the first sighting to the last trace. Iona grows closer, meets the reference line, then recedes into the western dark.\n\nOne moon. Three moments.\nII.\nYour point of view\n\nDrag the sky or change the telescope bearing. At alignment, center your view to bring Iona and the guide stars into a shared reference.\n\nA small shift changes the sky.\nMoonward\n\nAn imaginary world. A moment of real attention.\n\nReturn to the sky ↑"
+  },
+  {
+    "state": "locked",
+    "text": "Skip to telescope controls\nMoonward\nAn observatory for passing worlds\nObservatory\nField notes ↗\n?\nHow to observe\nN   + 38° 42′\nE   09h 41m\n\nField station 01\nA sky in transit\n\nSome moons\nnever stay.\n\nTonight, Iona crosses our sky.\nA wandering world. A passing encounter.\nThe telescope is yours.\n\nTake the telescope\n↘\n+\nIona\nMigrating moon / No fixed orbit\n◌\nReference lock. You are here.\n02\n03\nAlignment\n\nFor a moment, everything meets. Iona rests on the station’s reference line, held between the guide stars. This is your point of alignment.\n\nFollow the departure\n↗\n Reference locked\n↔   Drag the sky to shift your view\n◫\nMotion on\nThe passage\n02 / Alignment\n01 Arrival\n02 Alignment\n03 Departure\n\nMove through the moon’s passage with the arrow keys, or choose one of the three stages.\n\nTelescope bearing\n0°\nIona and the guide stars align.\n⊕ Center\n\nAlignment. Reference locked. Iona and the guide stars align.\n\nFrom the field notebook\n\nNot every world\nbelongs to an orbit.\n\nIona is an imagined moon with somewhere else to be. This station exists for the brief moment our paths cross.\n\nStay a little. Look a little closer.\nI.\nA world in motion\n\nFollow the passage from the first sighting to the last trace. Iona grows closer, meets the reference line, then recedes into the western dark.\n\nOne moon. Three moments.\nII.\nYour point of view\n\nDrag the sky or change the telescope bearing. At alignment, center your view to bring Iona and the guide stars into a shared reference.\n\nA small shift changes the sky.\nMoonward\n\nAn imaginary world. A moment of real attention.\n\nReturn to the sky ↑"
+  },
+  {
+    "state": "keyboard-bearing",
+    "value": "-29"
+  },
+  {
+    "state": "keyboard-passage",
+    "value": "1"
+  },
+  {
+    "state": "guide-open",
+    "text": "Observer’s guide\n×\nMake a little space\nfor the sky.\nFollow the passage.\n\nMove the passage slider, or choose Arrival, Alignment, and Departure. The moon’s position, distance, and trail change with you.\n\nSteer your telescope.\n\nDrag horizontally across the sky or use Telescope bearing. At Alignment, choose Center to match the station’s reference line.\n\nSet your own pace.\n\nNothing advances without you. Turn motion off for immediate scene changes. Your device’s reduced-motion setting is respected automatically.\n\nUsing a keyboard? Tab to a slider and use the arrow keys. Every stage also has its own button.\n\nBack to the telescope\n↗",
+    "focus": "help-close"
+  },
+  {
+    "state": "guide-shifttab",
+    "focus": ""
+  },
+  {
+    "state": "guide-tab",
+    "focus": "help-start"
+  },
+  {
+    "state": "guide-escape",
+    "focus": "help-open",
+    "closed": true
+  },
+  {
+    "state": "768-geometry",
+    "width": 768,
+    "viewport": 768
+  },
+  {
+    "state": "768-departure",
+    "passage": "100",
+    "text": "Skip to telescope controls\nMoonward\nAn observatory for passing worlds\nObservatory\nField notes ↗\n?\nHow to observe\nN   + 38° 42′\nE   09h 41m\n\nField station 01\nA sky in transit\n\nSome moons\nnever stay.\n\nTonight, Iona crosses our sky.\nA wandering world. A passing encounter.\nThe telescope is yours.\n\nTake the telescope\n↘\n+\nIona\nMigrating moon / No fixed orbit\n◌\nA last trace in the western dark\n03\n03\nDeparture\n\nThe moon leaves a fading arc toward the western dark. Its passage is brief, but the reference stars remain for the next observer.\n\nWitness it again\n↺\n Until our paths cross again\n↔   Drag the sky to shift your view\n◫\nMotion on\nThe passage\n03 / Departure\n01 Arrival\n02 Alignment\n03 Departure\n\nMove through the moon’s passage with the arrow keys, or choose one of the three stages.\n\nTelescope bearing\n0°\nShift your place among the stars.\n⊕ Center\n\nDeparture. The moon leaves a fading arc toward the western dark. Its passage is brief, but the reference stars remain for the next observer.\n\nFrom the field notebook\n\nNot every world\nbelongs to an orbit.\n\nIona is an imagined moon with somewhere else to be. This station exists for the brief moment our paths cross.\n\nStay a little. Look a little closer.\nI.\nA world in motion\n\nFollow the passage from the first sighting to the last trace. Iona grows closer, meets the reference line, then recedes into the western dark.\n\nOne moon. Three moments.\nII.\nYour point of view\n\nDrag the sky or change the telescope bearing. At alignment, center your view to bring Iona and the guide stars into a shared reference.\n\nA small shift changes the sky.\nMoonward\n\nAn imaginary world. A moment of real attention.\n\nReturn to the sky ↑"
+  },
+  {
+    "state": "375-geometry",
+    "width": 375,
+    "viewport": 375
+  },
+  {
+    "state": "375-departure",
+    "passage": "100",
+    "text": "Skip to telescope controls\nMoonward\nAn observatory for passing worlds\n?\nN   + 38° 42′\nE   09h 41m\n\nField station 01\nA sky in transit\n\nSome moons\nnever stay.\n\nTonight, Iona crosses our sky.\nA wandering world. A passing encounter.\nThe telescope is yours.\n\nTake the telescope\n↘\n+\nIona\n◌\nA last trace in the western dark\n03\n03\nDeparture\n\nThe moon leaves a fading arc toward the western dark. Its passage is brief, but the reference stars remain for the next observer.\n\nWitness it again\n↺\n Until our paths cross again\n◫\nMotion on\nThe passage\n03 / Departure\n01 Arrival\n02 Alignment\n03 Departure\n\nMove through the moon’s passage with the arrow keys, or choose one of the three stages.\n\nTelescope bearing\n0°\nShift your place among the stars.\n⊕ Center\n\nDeparture. The moon leaves a fading arc toward the western dark. Its passage is brief, but the reference stars remain for the next observer.\n\nFrom the field notebook\n\nNot every world\nbelongs to an orbit.\n\nIona is an imagined moon with somewhere else to be. This station exists for the brief moment our paths cross.\n\nStay a little. Look a little closer.\nI.\nA world in motion\n\nFollow the passage from the first sighting to the last trace. Iona grows closer, meets the reference line, then recedes into the western dark.\n\nOne moon. Three moments.\nII.\nYour point of view\n\nDrag the sky or change the telescope bearing. At alignment, center your view to bring Iona and the guide stars into a shared reference.\n\nA small shift changes the sky.\nMoonward\n\nAn imaginary world. A moment of real attention.\n\nReturn to the sky ↑"
+  },
+  {
+    "state": "mobile-guide-close",
+    "focus": "passage"
+  },
+  {
+    "state": "320-geometry",
+    "width": 320,
+    "viewport": 320
+  },
+  {
+    "state": "320-departure",
+    "passage": "100",
+    "text": "Skip to telescope controls\nMoonward\nAn observatory for passing worlds\n?\nN   + 38° 42′\nE   09h 41m\n\nField station 01\nA sky in transit\n\nSome moons\nnever stay.\n\nTonight, Iona crosses our sky.\nA wandering world. A passing encounter.\nThe telescope is yours.\n\nTake the telescope\n↘\n+\nIona\n◌\nA last trace in the western dark\n03\n03\nDeparture\n\nThe moon leaves a fading arc toward the western dark. Its passage is brief, but the reference stars remain for the next observer.\n\nWitness it again\n↺\n Until our paths cross again\n◫\nMotion on\nThe passage\n03 / Departure\n01 Arrival\n02 Alignment\n03 Departure\n\nMove through the moon’s passage with the arrow keys, or choose one of the three stages.\n\nTelescope bearing\n0°\nShift your place among the stars.\n⊕ Center\n\nDeparture. The moon leaves a fading arc toward the western dark. Its passage is brief, but the reference stars remain for the next observer.\n\nFrom the field notebook\n\nNot every world\nbelongs to an orbit.\n\nIona is an imagined moon with somewhere else to be. This station exists for the brief moment our paths cross.\n\nStay a little. Look a little closer.\nI.\nA world in motion\n\nFollow the passage from the first sighting to the last trace. Iona grows closer, meets the reference line, then recedes into the western dark.\n\nOne moon. Three moments.\nII.\nYour point of view\n\nDrag the sky or change the telescope bearing. At alignment, center your view to bring Iona and the guide stars into a shared reference.\n\nA small shift changes the sky.\nMoonward\n\nAn imaginary world. A moment of real attention.\n\nReturn to the sky ↑"
+  },
+  {
+    "state": "reduce-motion-load",
+    "label": "◫\nMotion off"
+  },
+  {
+    "state": "reduced-static",
+    "identical": true
+  },
+  {
+    "state": "motion-preference-change",
+    "label": "◫\nMotion off"
+  }
+]

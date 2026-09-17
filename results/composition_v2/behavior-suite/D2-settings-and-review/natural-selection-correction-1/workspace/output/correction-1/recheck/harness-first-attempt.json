@@ -1,0 +1,88 @@
+{
+  "review_mode": "independent",
+  "reviewer": "/root/rendered_recheck",
+  "cycle": 1,
+  "events": [],
+  "checks": [
+    {
+      "name": "desktop-pointer: save resolves",
+      "passed": true,
+      "detail": {
+        "elapsedMs": 67
+      }
+    }
+  ],
+  "states": [
+    {
+      "label": "desktop-pointer-pending",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Juniper Clay Studio",
+          "checked": false,
+          "disabled": true,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": true,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Saving…"
+        }
+      ],
+      "width": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "desktop-pointer-complete",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Juniper Clay Studio",
+          "checked": false,
+          "disabled": true,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": true,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Saving…"
+        }
+      ],
+      "width": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    }
+  ],
+  "failure": "AssertionError [ERR_ASSERTION]: The input did not match the regular expression /saved/i. Input:\n\n'CLAY HOUSE / MEMBER STUDIO\\n' +\n  '\\n' +\n  'Workspace settings\\n' +\n  '\\n' +\n  'Make this space feel like yours. Choose how we keep you in the loop.\\n' +\n  '\\n' +\n  'Display name\\n' +\n  '\\n' +\n  'The name you use around the studio. Required, up to 60 characters.\\n' +\n  '\\n' +\n  'Kiln alerts\\n' +\n  'Email me when my firing is ready\\n' +\n  'One message when your work is ready to collect.\\n' +\n  '\\n' +\n  'You can change this whenever you like.\\n' +\n  '\\n' +\n  'Saving…\\n' +\n  '\\n' +\n  'Saving your settings…'\n\n    at /Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D2-settings-and-review/natural-selection-correction-1/workspace/output/correction-1/recheck/review.cjs:26:96"
+}

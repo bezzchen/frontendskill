@@ -1,0 +1,198 @@
+{
+  "status": "assessment-error",
+  "mode": "d5",
+  "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByText('Compost crew', { exact: true })\u001b[22m\n\u001b[2m    - locator resolved to <strong>Compost crew</strong>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    37 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\u001b[2m  - element was detached from the DOM, retrying\u001b[22m\n\u001b[2m    - locator resolved to <strong>Compost crew</strong>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    13 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\n    at /Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D5-director-absent/assess-flows.cjs:13:179",
+  "log": [
+    {
+      "name": "desktop-initial",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "m.\nMoss Lane Garden\nNeighbors growing together\nA little time. A growing community.\n\nGROW WITH YOUR NEIGHBORS\n\nMake room for\nsomething good.\n\nA few hours in the garden can make a real difference.\nFind a shift that fits your day and lend a hand.\n\nIN THE GARDEN THIS OCTOBER\nSmall acts.\nShared roots.\nPlant, care, and grow together.\n01\nChoose your shift\n2 hours each\nAvailable volunteer shifts (required)\nMorning planting\n4 places left\nSaturday 24 October · 09:00–11:00\nHelp new plants put down roots.\n4 available / 12 total\nPath and bed care\n6 places left\nSaturday 24 October · 13:00–15:00\nGive our shared growing spaces a little care.\n6 available / 10 total\nCompost crew\nFull\nSunday 25 October · 10:00–12:00\nTurn garden leftovers into something good.\n0 available / 8 total\n\nOne sign-up reserves one place. Every pair of hands helps.\n\n02\nMake it yours\n\nLet us know who’s lending a hand.\n\nContact name\n\nYOUR CHOSEN SHIFT\n\nChoose an available shift to see\nyour details here.\n\nConfirm shift\n↗\n\nDemo only. No real booking will be made.\nYour details stay on this page.\n\nMoss Lane Garden\nA shared patch. A shared purpose.",
+      "controls": [
+        {
+          "tag": "INPUT",
+          "type": "radio",
+          "id": "shift-morning",
+          "name": "shift",
+          "label": "Morning planting\n4 places left\nSaturday 24 October · 09:00–11:00\nHelp new plants put down roots.\n4 available / 12 total",
+          "text": "",
+          "value": "morning",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "radio",
+          "id": "shift-afternoon",
+          "name": "shift",
+          "label": "Path and bed care\n6 places left\nSaturday 24 October · 13:00–15:00\nGive our shared growing spaces a little care.\n6 available / 10 total",
+          "text": "",
+          "value": "afternoon",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "radio",
+          "id": "shift-compost",
+          "name": "shift",
+          "label": "Compost crew\nFull\nSunday 25 October · 10:00–12:00\nTurn garden leftovers into something good.\n0 available / 8 total",
+          "text": "",
+          "value": "compost",
+          "checked": false,
+          "disabled": true
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "contact-name",
+          "name": "",
+          "label": "Contact name",
+          "text": "",
+          "value": "",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Confirm shift ↗",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "BODY",
+        "id": "",
+        "text": null
+      },
+      "geometry": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "buttons": [
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "Confirm shift ↗",
+            "radius": "4px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "desktop-empty-error",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "m.\nMoss Lane Garden\nNeighbors growing together\nA little time. A growing community.\n\nGROW WITH YOUR NEIGHBORS\n\nMake room for\nsomething good.\n\nA few hours in the garden can make a real difference.\nFind a shift that fits your day and lend a hand.\n\nIN THE GARDEN THIS OCTOBER\nSmall acts.\nShared roots.\nPlant, care, and grow together.\n01\nChoose your shift\n2 hours each\nAvailable volunteer shifts (required)\nMorning planting\n4 places left\nSaturday 24 October · 09:00–11:00\nHelp new plants put down roots.\n4 available / 12 total\nPath and bed care\n6 places left\nSaturday 24 October · 13:00–15:00\nGive our shared growing spaces a little care.\n6 available / 10 total\nCompost crew\nFull\nSunday 25 October · 10:00–12:00\nTurn garden leftovers into something good.\n0 available / 8 total\n\nChoose an available shift to continue.\n\nOne sign-up reserves one place. Every pair of hands helps.\n\n02\nMake it yours\n\nLet us know who’s lending a hand.\n\nContact name\n\nEnter a contact name to continue.\n\nYOUR CHOSEN SHIFT\n\nChoose an available shift to see\nyour details here.\n\nConfirm shift\n↗\n\nDemo only. No real booking will be made.\nYour details stay on this page.\n\nMoss Lane Garden\nA shared patch. A shared purpose.",
+      "controls": [
+        {
+          "tag": "INPUT",
+          "type": "radio",
+          "id": "shift-morning",
+          "name": "shift",
+          "label": "Morning planting\n4 places left\nSaturday 24 October · 09:00–11:00\nHelp new plants put down roots.\n4 available / 12 total",
+          "text": "",
+          "value": "morning",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "radio",
+          "id": "shift-afternoon",
+          "name": "shift",
+          "label": "Path and bed care\n6 places left\nSaturday 24 October · 13:00–15:00\nGive our shared growing spaces a little care.\n6 available / 10 total",
+          "text": "",
+          "value": "afternoon",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "radio",
+          "id": "shift-compost",
+          "name": "shift",
+          "label": "Compost crew\nFull\nSunday 25 October · 10:00–12:00\nTurn garden leftovers into something good.\n0 available / 8 total",
+          "text": "",
+          "value": "compost",
+          "checked": false,
+          "disabled": true
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "contact-name",
+          "name": "",
+          "label": "Contact name",
+          "text": "",
+          "value": "",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "label": "",
+          "text": "Confirm shift ↗",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "INPUT",
+        "id": "shift-morning",
+        "text": ""
+      },
+      "geometry": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "buttons": [
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "4px"
+          },
+          {
+            "text": "Confirm shift ↗",
+            "radius": "4px"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": []
+}

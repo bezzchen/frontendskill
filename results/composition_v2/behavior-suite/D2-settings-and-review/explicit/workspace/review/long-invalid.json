@@ -1,0 +1,16 @@
+{
+  "url": "http://127.0.0.1:8861",
+  "width": 375,
+  "height": 812,
+  "actions": [
+    {
+      "type": "fill",
+      "selector": "#display-name",
+      "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    {
+      "type": "click",
+      "selector": "#save-settings"
+    }
+  ]
+}

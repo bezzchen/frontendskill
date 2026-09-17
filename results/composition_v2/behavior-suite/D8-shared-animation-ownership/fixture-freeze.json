@@ -1,0 +1,12 @@
+{
+  "case_id": "D8-shared-animation-ownership",
+  "frozen_at": "2026-09-17T19:04:20.609082+00:00",
+  "fixture_files_sha256": {
+    "AGENTS.md": "ff5df0f9d6032ce227876c573c59023f8d84aa3635203863698574f05bcd1cd0",
+    "app.js": "1f11996a1a5d68095b1555988c6dd9a97576f4079a51f8cd981c9d7605577eb4",
+    "index.html": "5d09689a92d92e317fab2ee4c6631c18b418bc6ec16b0acc1a8097c2da1457ec",
+    "styles.css": "8211e50af3f732784bbe9b9e2fb2d12cc28c017e8104f8c688c5c22ba5773eba"
+  },
+  "fixture_manifest_sha256": "f58473acf1ce35e2d589b97efdb491534af64541a79c6b1f4475d61ae874db39",
+  "scope": "Unscored development original fixture; neutral browser tool paths added before any run. Final starting files for both invocation modes."
+}

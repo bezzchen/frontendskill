@@ -1,0 +1,58 @@
+{
+  "before": {
+    "visibility": "visible",
+    "frames": 40,
+    "running": true,
+    "visible": true,
+    "hidden": false,
+    "reducedMotion": false,
+    "passage": 0,
+    "bearing": 12,
+    "destroyed": false
+  },
+  "backgroundTab": {
+    "visibility": "visible",
+    "frames": 62,
+    "running": true,
+    "visible": true,
+    "hidden": false,
+    "reducedMotion": false,
+    "passage": 0,
+    "bearing": 12,
+    "destroyed": false
+  },
+  "minimized": {
+    "visibility": "visible",
+    "frames": 82,
+    "running": true,
+    "visible": true,
+    "hidden": false,
+    "reducedMotion": false,
+    "passage": 0,
+    "bearing": 12,
+    "destroyed": false
+  },
+  "after": {
+    "visibility": "visible",
+    "frames": 106,
+    "running": true,
+    "visible": true,
+    "hidden": false,
+    "reducedMotion": false,
+    "passage": 0,
+    "bearing": 12,
+    "destroyed": false
+  },
+  "resumed": {
+    "visibility": "visible",
+    "frames": 122,
+    "running": true,
+    "visible": true,
+    "hidden": false,
+    "reducedMotion": false,
+    "passage": 0,
+    "bearing": 12,
+    "destroyed": false
+  },
+  "verified": false
+}

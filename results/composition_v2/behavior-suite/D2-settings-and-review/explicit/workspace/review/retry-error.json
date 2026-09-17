@@ -1,0 +1,32 @@
+{
+  "url": "http://127.0.0.1:8861/?save=error",
+  "width": 375,
+  "height": 812,
+  "actions": [
+    {
+      "type": "click",
+      "selector": "#save-settings"
+    },
+    {
+      "type": "wait",
+      "ms": 800
+    },
+    {
+      "type": "click",
+      "selector": "#save-settings"
+    },
+    {
+      "type": "screenshot",
+      "path": "review/retry-pending.png"
+    },
+    {
+      "type": "wait",
+      "ms": 800
+    },
+    {
+      "type": "fill",
+      "selector": "#display-name",
+      "value": "Next studio"
+    }
+  ]
+}

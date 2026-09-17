@@ -1,0 +1,22 @@
+{
+  "reducedGuideCopyVerified": true,
+  "syntheticVisibilityHandler": {
+    "before": {
+      "playing": true,
+      "frameScheduled": true,
+      "active": true,
+      "phase": 0.12060935988736,
+      "view": 0,
+      "reducedMotion": false
+    },
+    "after": {
+      "playing": false,
+      "frameScheduled": false,
+      "active": true,
+      "phase": 0.12060935988736,
+      "view": 0,
+      "reducedMotion": false
+    }
+  },
+  "realBackgroundVisibility": "UNVERIFIED: automated headed Chromium remained visible during tab and minimization attempts"
+}

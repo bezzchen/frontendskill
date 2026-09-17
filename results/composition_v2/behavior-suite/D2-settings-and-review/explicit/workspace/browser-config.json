@@ -1,0 +1,12 @@
+{
+  "url": "http://127.0.0.1:8861",
+  "width": 375,
+  "height": 812,
+  "screenshot": "settings-mobile.png",
+  "actions": [
+    { "type": "fill", "selector": "#display-name", "value": "  River & Clay  " },
+    { "type": "check", "selector": "#kiln-alerts", "value": false },
+    { "type": "click", "selector": "#save-settings" },
+    { "type": "wait", "ms": 800 }
+  ]
+}

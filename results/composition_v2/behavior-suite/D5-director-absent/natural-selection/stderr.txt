@@ -1,0 +1,12 @@
+2026-09-17T19:58:04.108175Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:58:04.110447Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:58:04.111907Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:58:04.113653Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:58:04.115776Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T20:25:56.681543Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (1/5 in 219ms)... turn_id=01a0b0f2-9987-77b1-9b02-8ee3f5839481 retries=1 max_retries=5 sampling_error=stream disconnected before completion: IO error: Connection reset by peer (os error 54)
+2026-09-17T20:28:37.859595Z ERROR codex_core::tools::router: error=apply_patch verification failed: invalid patch: multiple operations target /Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D5-director-absent/natural-selection/workspace/src/App.jsx
+2026-09-17T20:31:26.676113Z  WARN codex_sandboxing::violation: recorded sandbox violation: resource=filesystem backend=seatbelt reason=operation_not_permitted path=unknown
+2026-09-17T20:31:33.338991Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (1/1 in 203ms)... turn_id=01a0b111-41ba-7971-8cbc-25599139e881 retries=1 max_retries=1 sampling_error=stream disconnected before completion: failed to send websocket request: Connection closed normally
+2026-09-17T20:31:37.775485Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T20:32:42.719274Z  WARN codex_sandboxing::violation: recorded sandbox violation: resource=filesystem backend=seatbelt reason=permission_denied path=unknown
+2026-09-17T20:32:57.182553Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.

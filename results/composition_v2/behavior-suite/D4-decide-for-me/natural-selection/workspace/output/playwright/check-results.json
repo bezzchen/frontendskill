@@ -1,0 +1,18 @@
+{
+  "passed": [
+    "Membership CTA focuses name and empty submit shows linked errors",
+    "Invalid email retains name; valid membership writes local demo entry",
+    "Preference defaults match supplied content",
+    "Invalid display name preserves all changed notification choices",
+    "Saved preference values survive reload; cancel restores the last save",
+    "Keyboard Space changes checkbox and Enter saves; all notifications can be off",
+    "Malformed saved data falls back safely",
+    "membership fits 375px viewport without horizontal overflow",
+    "preferences fits 375px viewport without horizontal overflow",
+    "membership fits 768px viewport without horizontal overflow",
+    "preferences fits 768px viewport without horizontal overflow",
+    "Mobile membership and preference save flows complete",
+    "Blocked storage surfaces errors and retains membership and preferences inputs"
+  ],
+  "consoleErrors": []
+}

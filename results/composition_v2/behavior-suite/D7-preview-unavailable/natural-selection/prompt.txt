@@ -1,0 +1,1 @@
+Complete the makerspace equipment checkout form with item selection, required return date and a confirmation summary. Use the existing project style and make it keyboard accessible. Proceed and report what you could verify.

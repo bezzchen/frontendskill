@@ -1,0 +1,40 @@
+{
+  "at": "2026-09-17T20:37:57.797566+00:00",
+  "frozen_inputs_match": true,
+  "checks": {
+    "original": {
+      "AGENTS.md": true,
+      "app.js": true,
+      "browser.cjs": true,
+      "index.html": true,
+      "package.json": true,
+      "studio-service.js": true,
+      "styles.css": true
+    },
+    "checkpoint/explicit": {
+      "app.js": true,
+      "checkpoint.css": true,
+      "index.html": true,
+      "studio-service.js": true,
+      "styles.css": true
+    },
+    "checkpoint/natural-selection": {
+      "app.js": true,
+      "checkpoint.css": true,
+      "index.html": true,
+      "studio-service.js": true,
+      "styles.css": true
+    }
+  },
+  "node_modules_paths": [],
+  "executions": {
+    "explicit": "completed",
+    "natural-selection": "completed",
+    "natural-selection-staged-review": "completed",
+    "explicit-correction-1": "completed",
+    "natural-selection-correction-1": "completed",
+    "explicit-staged-review": "completed"
+  },
+  "report_overall_status": "completed-with-staging-deviation-and-natural-selection-qualification",
+  "missing_assertion_evidence": []
+}

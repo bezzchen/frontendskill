@@ -1,0 +1,114 @@
+{
+  "run_id": "D4-decide-for-me/natural-selection",
+  "invocation_mode": "natural-selection",
+  "activation": {
+    "candidate_read": true,
+    "expected_selection": "selected-naturally",
+    "actual_reads": [
+      {
+        "line": 9,
+        "id": "item_4",
+        "command": "/bin/zsh -lc 'cat .agents/skills/creative-frontend-architect/SKILL.md'",
+        "output_present": true,
+        "exit_code": 0
+      },
+      {
+        "line": 10,
+        "id": "item_3",
+        "command": "/bin/zsh -lc 'cat /Users/bezzchen/.codex/skills/using-superpowers/SKILL.md /Users/bezzchen/.codex/skills/brainstorming/SKILL.md'",
+        "output_present": true,
+        "exit_code": 0
+      },
+      {
+        "line": 12,
+        "id": "item_5",
+        "command": "/bin/zsh -lc 'cat .agents/skills/creative-frontend-architect/references/design-contract.md .agents/skills/creative-frontend-architect/references/directors/anthropic.md .agents/skills/creative-frontend-architect/references/architecture.md .agents/skills/creative-frontend-architect/references/rendered-review.md'",
+        "output_present": true,
+        "exit_code": 0
+      },
+      {
+        "line": 14,
+        "id": "item_6",
+        "command": "/bin/zsh -lc 'cat design/project-decisions.md src/tokens.css src/content.js src/App.jsx src/App.module.css src/components/Button.jsx src/components/Field.jsx src/components/Shared.module.css package.json'",
+        "output_present": true,
+        "exit_code": 0
+      },
+      {
+        "line": 18,
+        "id": "item_8",
+        "command": "/bin/zsh -lc 'cat /Users/bezzchen/.codex/skills/writing-plans/SKILL.md /Users/bezzchen/.codex/skills/playwright/SKILL.md /Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md'",
+        "output_present": true,
+        "exit_code": 0
+      },
+      {
+        "line": 22,
+        "id": "item_10",
+        "command": "/bin/zsh -lc \"python3 - <<'PY'\nimport pathlib,hashlib\np=pathlib.Path('.sources/frontend-design/SKILL.md')\nb=p.read_bytes()\nprint('source:',p.resolve(),'sha256:',hashlib.sha256(b).hexdigest())\nif hashlib.sha256(b).hexdigest()=='d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3': print(b.decode())\nelse: print('builtin-fallback: source content mismatch')\nPY\"",
+        "output_present": true,
+        "exit_code": 0
+      }
+    ],
+    "contamination": [
+      "Observed global using-superpowers, brainstorming, writing-plans, playwright and verification-before-completion reads",
+      "Global hooks-config parse error; continued",
+      "Exact injected skill roster unavailable"
+    ]
+  },
+  "assertions": [
+    {
+      "assertion": "Do not ask again for concept approval or settled decisions.",
+      "status": "pass",
+      "evidence": [
+        "trace-index.json agent messages",
+        "workspace/design/implementation-plan.md delegated W/Q decisions"
+      ]
+    },
+    {
+      "assertion": "Exactly one design director per surface; both surfaces preserve shared tokens and components.",
+      "status": "pass",
+      "evidence": [
+        "trace.jsonl lines9/12/22 candidate/adapter/actual matching source body",
+        "workspace/design/implementation-provenance.json",
+        "assessment/source-diffs",
+        "workspace/src/pages/Membership.jsx",
+        "workspace/src/pages/Preferences.jsx",
+        "assessment/desktop-initial.png",
+        "assessment/desktop-preferences-initial.png"
+      ]
+    },
+    {
+      "assertion": "Marketing and settings choose different expression levels without contradicting identity.",
+      "status": "pass",
+      "evidence": [
+        "workspace/design/implementation-plan.md W/Q decisions",
+        "assessment/desktop-initial.png",
+        "assessment/mobile-initial.png",
+        "assessment/desktop-preferences-initial.png",
+        "assessment/mobile-preferences-initial.png"
+      ]
+    },
+    {
+      "assertion": "Membership primary action and saving preferences work.",
+      "status": "pass",
+      "evidence": [
+        "assessment/assessment.json pointer/error/keyboard states at both viewports",
+        "assessment/mobile-membership-pointer-success.png",
+        "assessment/mobile-preferences-keyboard-success.png",
+        "assessment/build.txt"
+      ]
+    }
+  ],
+  "initial_outcome": "pass",
+  "final_outcome": "pass",
+  "correction_cycles": 0,
+  "limitations": [
+    "Ambient host skills, hooks warning and non-OS project isolation are disclosed",
+    "Only parent trace/usage available; descendant reviewer context/accounting not independently exposed",
+    "Whole-workflow usage and exact model snapshot unavailable",
+    "Chromium emulation only; external assessor did not repeat builder storage-fault/reduced-motion checks"
+  ],
+  "whole_workflow_tokens": null,
+  "reviewer_identity": "/root/v2_director_adapter",
+  "report": "assessment/review.md",
+  "assessment_context": "External assessor separate from builder; knows case requirements and observed builder status/trace while coordinating. Not a blind efficacy judge."
+}

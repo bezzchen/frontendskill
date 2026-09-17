@@ -1,0 +1,3217 @@
+[
+  {
+    "width": 1440,
+    "state": "default",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "",
+      "tag": "BODY"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "River Studio",
+        "checked": false,
+        "disabled": false,
+        "required": true,
+        "maxLength": 60,
+        "invalid": null,
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(56, 45, 40) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(0, 0, 0) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 147.296875,
+          "height": 48,
+          "top": 604.6875,
+          "right": 475.296875,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(255, 255, 255) none 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": ""
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "empty-invalid",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nEnter a display name for your studio.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "display-name",
+      "tag": "INPUT"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "",
+        "checked": false,
+        "disabled": false,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "true",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(184, 85, 0) solid 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 487.6875,
+          "width": 22,
+          "height": 22,
+          "top": 487.6875,
+          "right": 367,
+          "bottom": 509.6875,
+          "left": 345
+        },
+        "outline": "rgb(0, 0, 0) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 633.6875,
+          "width": 147.296875,
+          "height": 48,
+          "top": 633.6875,
+          "right": 475.296875,
+          "bottom": 681.6875,
+          "left": 328
+        },
+        "outline": "rgb(255, 255, 255) none 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": ""
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "whitespace-invalid",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nEnter a display name for your studio.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "display-name",
+      "tag": "INPUT"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "   ",
+        "checked": false,
+        "disabled": false,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "true",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(184, 85, 0) solid 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 487.6875,
+          "width": 22,
+          "height": 22,
+          "top": 487.6875,
+          "right": 367,
+          "bottom": 509.6875,
+          "left": 345
+        },
+        "outline": "rgb(0, 0, 0) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 633.6875,
+          "width": 147.296875,
+          "height": 48,
+          "top": 633.6875,
+          "right": 475.296875,
+          "bottom": 681.6875,
+          "left": 328
+        },
+        "outline": "rgb(255, 255, 255) none 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": ""
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "length-boundary",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nYou have unsaved changes.",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "display-name",
+      "tag": "INPUT"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "checked": false,
+        "disabled": false,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(184, 85, 0) solid 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(0, 0, 0) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 147.296875,
+          "height": 48,
+          "top": 604.6875,
+          "right": 475.296875,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(255, 255, 255) none 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": "You have unsaved changes."
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "pointer-edited",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nYou have unsaved changes.",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "kiln-alerts",
+      "tag": "INPUT"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Juniper Clay Studio",
+        "checked": false,
+        "disabled": false,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(56, 45, 40) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(0, 0, 0) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 147.296875,
+          "height": 48,
+          "top": 604.6875,
+          "right": 475.296875,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(255, 255, 255) none 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": "You have unsaved changes."
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "pointer-success-saving",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "save-settings",
+      "tag": "BUTTON"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Juniper Clay Studio",
+        "checked": false,
+        "disabled": true,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(56, 45, 40) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": true,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(84, 84, 84) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 110.234375,
+          "height": 48,
+          "top": 604.6875,
+          "right": 438.234375,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(255, 255, 255) none 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": "Saving your settings…"
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "pointer-success-settled",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved.",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "save-settings",
+      "tag": "BUTTON"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Juniper Clay Studio",
+        "checked": false,
+        "disabled": false,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(56, 45, 40) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(0, 0, 0) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 147.296875,
+          "height": 48,
+          "top": 604.6875,
+          "right": 475.296875,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(255, 255, 255) none 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": "Settings saved."
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "pointer-success-timeline",
+    "timeline": [
+      {
+        "ms": 31.200000017881393,
+        "button": "Saving…",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…"
+      },
+      {
+        "ms": 33.400000005960464,
+        "button": "Saving…",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…"
+      },
+      {
+        "ms": 58.5,
+        "button": "Saving…",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…"
+      },
+      {
+        "ms": 632.7000000178814,
+        "button": "Save settings",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved."
+      },
+      {
+        "ms": 863.2000000178814,
+        "button": "Save settings",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved."
+      },
+      {
+        "ms": 896.5,
+        "button": "Save settings",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved."
+      }
+    ]
+  },
+  {
+    "width": 1440,
+    "state": "edited-after-success",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nYou have unsaved changes.",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "display-name",
+      "tag": "INPUT"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Juniper Clay Studio II",
+        "checked": false,
+        "disabled": false,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(184, 85, 0) solid 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(0, 0, 0) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 147.296875,
+          "height": 48,
+          "top": 604.6875,
+          "right": 475.296875,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(255, 255, 255) none 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": "You have unsaved changes."
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "bottom",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nYou have unsaved changes.",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "display-name",
+      "tag": "INPUT"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Juniper Clay Studio II",
+        "checked": false,
+        "disabled": false,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(184, 85, 0) solid 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(0, 0, 0) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 147.296875,
+          "height": 48,
+          "top": 604.6875,
+          "right": 475.296875,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(255, 255, 255) none 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": "You have unsaved changes."
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "service-error-saving",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "save-settings",
+      "tag": "BUTTON"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Juniper Clay Studio",
+        "checked": false,
+        "disabled": true,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(56, 45, 40) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": true,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(84, 84, 84) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 110.234375,
+          "height": 48,
+          "top": 604.6875,
+          "right": 438.234375,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(255, 255, 255) none 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": "Saving your settings…"
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "service-error-settled",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Try saving again.",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "save-settings",
+      "tag": "BUTTON"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Juniper Clay Studio",
+        "checked": false,
+        "disabled": false,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(56, 45, 40) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(0, 0, 0) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 147.296875,
+          "height": 48,
+          "top": 604.6875,
+          "right": 475.296875,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(255, 255, 255) none 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": ""
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": "We couldn’t save your settings. Your changes are still here. Try saving again."
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "service-error-timeline",
+    "timeline": [
+      {
+        "ms": 31,
+        "button": "Saving…",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…"
+      },
+      {
+        "ms": 35.20000001788139,
+        "button": "Saving…",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…"
+      },
+      {
+        "ms": 59.599999994039536,
+        "button": "Saving…",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…"
+      },
+      {
+        "ms": 633.4000000059605,
+        "button": "Save settings",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Try saving again."
+      },
+      {
+        "ms": 869.2000000178814,
+        "button": "Save settings",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Try saving again."
+      },
+      {
+        "ms": 906.0999999940395,
+        "button": "Save settings",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Try saving again."
+      }
+    ]
+  },
+  {
+    "width": 1440,
+    "state": "service-retry-saving",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "save-settings",
+      "tag": "BUTTON"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Juniper Clay Studio",
+        "checked": false,
+        "disabled": true,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(56, 45, 40) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": true,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(84, 84, 84) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 110.234375,
+          "height": 48,
+          "top": 604.6875,
+          "right": 438.234375,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(255, 255, 255) none 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": "Saving your settings…"
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "service-retry-settled",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Try saving again.",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "save-settings",
+      "tag": "BUTTON"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Juniper Clay Studio",
+        "checked": false,
+        "disabled": false,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(56, 45, 40) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(0, 0, 0) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 147.296875,
+          "height": 48,
+          "top": 604.6875,
+          "right": 475.296875,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(255, 255, 255) none 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": ""
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": "We couldn’t save your settings. Your changes are still here. Try saving again."
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "service-retry-timeline",
+    "timeline": [
+      {
+        "ms": 22.099999994039536,
+        "button": "Saving…",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…"
+      },
+      {
+        "ms": 25,
+        "button": "Saving…",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…"
+      },
+      {
+        "ms": 53.099999994039536,
+        "button": "Saving…",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…"
+      },
+      {
+        "ms": 624,
+        "button": "Save settings",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Try saving again."
+      },
+      {
+        "ms": 862.2999999821186,
+        "button": "Save settings",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Try saving again."
+      },
+      {
+        "ms": 896.1999999880791,
+        "button": "Save settings",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Try saving again."
+      }
+    ]
+  },
+  {
+    "width": 1440,
+    "state": "keyboard-name-focus",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "display-name",
+      "tag": "INPUT"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "River Studio",
+        "checked": false,
+        "disabled": false,
+        "required": true,
+        "maxLength": 60,
+        "invalid": null,
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(184, 85, 0) solid 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(0, 0, 0) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 147.296875,
+          "height": 48,
+          "top": 604.6875,
+          "right": 475.296875,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(255, 255, 255) none 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": ""
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "keyboard-invalid",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nEnter a display name for your studio.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "display-name",
+      "tag": "INPUT"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "",
+        "checked": false,
+        "disabled": false,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "true",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(184, 85, 0) solid 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 487.6875,
+          "width": 22,
+          "height": 22,
+          "top": 487.6875,
+          "right": 367,
+          "bottom": 509.6875,
+          "left": 345
+        },
+        "outline": "rgb(0, 0, 0) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 633.6875,
+          "width": 147.296875,
+          "height": 48,
+          "top": 633.6875,
+          "right": 475.296875,
+          "bottom": 681.6875,
+          "left": 328
+        },
+        "outline": "rgb(255, 255, 255) none 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": ""
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "keyboard-checkbox-focus",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nYou have unsaved changes.",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "kiln-alerts",
+      "tag": "INPUT"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Juniper Keyboard Studio",
+        "checked": false,
+        "disabled": false,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(56, 45, 40) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(184, 85, 0) solid 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 147.296875,
+          "height": 48,
+          "top": 604.6875,
+          "right": 475.296875,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(255, 255, 255) none 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": "You have unsaved changes."
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "keyboard-save-focus",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nYou have unsaved changes.",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "save-settings",
+      "tag": "BUTTON"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Juniper Keyboard Studio",
+        "checked": false,
+        "disabled": false,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(56, 45, 40) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(0, 0, 0) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 147.296875,
+          "height": 48,
+          "top": 604.6875,
+          "right": 475.296875,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(184, 85, 0) solid 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": "You have unsaved changes."
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "keyboard-reverse-focus",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nYou have unsaved changes.",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "kiln-alerts",
+      "tag": "INPUT"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Juniper Keyboard Studio",
+        "checked": false,
+        "disabled": false,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(56, 45, 40) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(184, 85, 0) solid 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 147.296875,
+          "height": 48,
+          "top": 604.6875,
+          "right": 475.296875,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(255, 255, 255) none 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": "You have unsaved changes."
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "keyboard-success-saving",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "save-settings",
+      "tag": "BUTTON"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Juniper Keyboard Studio",
+        "checked": false,
+        "disabled": true,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(56, 45, 40) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": true,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(84, 84, 84) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 110.234375,
+          "height": 48,
+          "top": 604.6875,
+          "right": 438.234375,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(184, 85, 0) solid 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": "Saving your settings…"
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "keyboard-success-settled",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved.",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "save-settings",
+      "tag": "BUTTON"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Juniper Keyboard Studio",
+        "checked": false,
+        "disabled": false,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(56, 45, 40) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(0, 0, 0) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 147.296875,
+          "height": 48,
+          "top": 604.6875,
+          "right": 475.296875,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(184, 85, 0) solid 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": "Settings saved."
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "keyboard-success-timeline",
+    "timeline": [
+      {
+        "ms": 0.4000000059604645,
+        "button": "Saving…",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…"
+      },
+      {
+        "ms": 2.0999999940395355,
+        "button": "Saving…",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…"
+      },
+      {
+        "ms": 29.700000017881393,
+        "button": "Saving…",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…"
+      },
+      {
+        "ms": 601.8000000119209,
+        "button": "Save settings",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved."
+      },
+      {
+        "ms": 837.0999999940395,
+        "button": "Save settings",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved."
+      },
+      {
+        "ms": 876.2000000178814,
+        "button": "Save settings",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved."
+      }
+    ]
+  },
+  {
+    "width": 1440,
+    "state": "keyboard-error-saving",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "save-settings",
+      "tag": "BUTTON"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Keyboard Retry Studio",
+        "checked": false,
+        "disabled": true,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(56, 45, 40) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": true,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(84, 84, 84) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 110.234375,
+          "height": 48,
+          "top": 604.6875,
+          "right": 438.234375,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(184, 85, 0) solid 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": "Saving your settings…"
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "keyboard-error-settled",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Try saving again.",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "save-settings",
+      "tag": "BUTTON"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Keyboard Retry Studio",
+        "checked": false,
+        "disabled": false,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(56, 45, 40) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(0, 0, 0) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 147.296875,
+          "height": 48,
+          "top": 604.6875,
+          "right": 475.296875,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(184, 85, 0) solid 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": ""
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": "We couldn’t save your settings. Your changes are still here. Try saving again."
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "keyboard-error-timeline",
+    "timeline": [
+      {
+        "ms": 0.699999988079071,
+        "button": "Saving…",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…"
+      },
+      {
+        "ms": 3.2999999821186066,
+        "button": "Saving…",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…"
+      },
+      {
+        "ms": 42.69999998807907,
+        "button": "Saving…",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…"
+      },
+      {
+        "ms": 602.5999999940395,
+        "button": "Save settings",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Try saving again."
+      },
+      {
+        "ms": 849.2999999821186,
+        "button": "Save settings",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Try saving again."
+      },
+      {
+        "ms": 890.5,
+        "button": "Save settings",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Try saving again."
+      }
+    ]
+  },
+  {
+    "width": 1440,
+    "state": "keyboard-retry-saving",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "save-settings",
+      "tag": "BUTTON"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Keyboard Retry Studio",
+        "checked": false,
+        "disabled": true,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(56, 45, 40) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": true,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(84, 84, 84) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 110.234375,
+          "height": 48,
+          "top": 604.6875,
+          "right": 438.234375,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(184, 85, 0) solid 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": "Saving your settings…"
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "keyboard-retry-settled",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Try saving again.",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "save-settings",
+      "tag": "BUTTON"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "Keyboard Retry Studio",
+        "checked": false,
+        "disabled": false,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(56, 45, 40) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": false,
+        "disabled": false,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(0, 0, 0) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 147.296875,
+          "height": 48,
+          "top": 604.6875,
+          "right": 475.296875,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(184, 85, 0) solid 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": ""
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": "We couldn’t save your settings. Your changes are still here. Try saving again."
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "keyboard-retry-timeline",
+    "timeline": [
+      {
+        "ms": 0.5999999940395355,
+        "button": "Saving…",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…"
+      },
+      {
+        "ms": 3.7000000178813934,
+        "button": "Saving…",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…"
+      },
+      {
+        "ms": 36.400000005960464,
+        "button": "Saving…",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…"
+      },
+      {
+        "ms": 602.0999999940395,
+        "button": "Save settings",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Try saving again."
+      },
+      {
+        "ms": 843.5999999940395,
+        "button": "Save settings",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Try saving again."
+      },
+      {
+        "ms": 879.0999999940395,
+        "button": "Save settings",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Try saving again."
+      }
+    ]
+  },
+  {
+    "width": 1440,
+    "state": "reduced-motion-saving",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "save-settings",
+      "tag": "BUTTON"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "River Studio",
+        "checked": false,
+        "disabled": true,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(56, 45, 40) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": true,
+        "disabled": true,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(84, 84, 84) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 110.234375,
+          "height": 48,
+          "top": 604.6875,
+          "right": 438.234375,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(255, 255, 255) none 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": "Saving your settings…"
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "reduced-motion-settled",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved.",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900
+    },
+    "focus": {
+      "id": "save-settings",
+      "tag": "BUTTON"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "River Studio",
+        "checked": false,
+        "disabled": false,
+        "required": true,
+        "maxLength": 60,
+        "invalid": "false",
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 328,
+          "y": 294.890625,
+          "width": 784,
+          "height": 48,
+          "top": 294.890625,
+          "right": 1112,
+          "bottom": 342.890625,
+          "left": 328
+        },
+        "outline": "rgb(56, 45, 40) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 345,
+          "y": 458.6875,
+          "width": 22,
+          "height": 22,
+          "top": 458.6875,
+          "right": 367,
+          "bottom": 480.6875,
+          "left": 345
+        },
+        "outline": "rgb(0, 0, 0) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 328,
+          "y": 604.6875,
+          "width": 147.296875,
+          "height": 48,
+          "top": 604.6875,
+          "right": 475.296875,
+          "bottom": 652.6875,
+          "left": 328
+        },
+        "outline": "rgb(255, 255, 255) none 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": "Settings saved."
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  },
+  {
+    "width": 1440,
+    "state": "reduced-motion-timeline",
+    "timeline": [
+      {
+        "ms": 34.099999994039536,
+        "button": "Saving…",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…"
+      },
+      {
+        "ms": 37.099999994039536,
+        "button": "Saving…",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…"
+      },
+      {
+        "ms": 63.900000005960464,
+        "button": "Saving…",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…"
+      },
+      {
+        "ms": 635.7000000178814,
+        "button": "Save settings",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved."
+      },
+      {
+        "ms": 871.7000000178814,
+        "button": "Save settings",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved."
+      },
+      {
+        "ms": 908.8000000119209,
+        "button": "Save settings",
+        "disabled": false,
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved."
+      }
+    ]
+  },
+  {
+    "width": 1440,
+    "state": "browser-errors",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "state": "default",
+    "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings",
+    "viewport": {
+      "width": 390,
+      "height": 900
+    },
+    "scroll": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 900
+    },
+    "focus": {
+      "id": "",
+      "tag": "BODY"
+    },
+    "controls": [
+      {
+        "id": "display-name",
+        "value": "River Studio",
+        "checked": false,
+        "disabled": false,
+        "required": true,
+        "maxLength": 60,
+        "invalid": null,
+        "describedby": "name-help name-error",
+        "labels": [
+          "Display name"
+        ],
+        "rect": {
+          "x": 42,
+          "y": 300.890625,
+          "width": 306,
+          "height": 48,
+          "top": 300.890625,
+          "right": 348,
+          "bottom": 348.890625,
+          "left": 42
+        },
+        "outline": "rgb(56, 45, 40) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "kiln-alerts",
+        "value": "on",
+        "checked": true,
+        "disabled": false,
+        "required": false,
+        "maxLength": -1,
+        "invalid": null,
+        "describedby": "kiln-help",
+        "labels": [
+          "Email me when my firing is ready\nOne message when your work is ready to collect."
+        ],
+        "rect": {
+          "x": 55,
+          "y": 462.6875,
+          "width": 22,
+          "height": 22,
+          "top": 462.6875,
+          "right": 77,
+          "bottom": 484.6875,
+          "left": 55
+        },
+        "outline": "rgb(0, 0, 0) none 3px",
+        "boxShadow": "none"
+      },
+      {
+        "id": "save-settings",
+        "value": "",
+        "disabled": false,
+        "invalid": null,
+        "describedby": null,
+        "labels": [],
+        "rect": {
+          "x": 42,
+          "y": 651.6875,
+          "width": 306,
+          "height": 48,
+          "top": 651.6875,
+          "right": 348,
+          "bottom": 699.6875,
+          "left": 42
+        },
+        "outline": "rgb(255, 255, 255) none 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "messages": [
+      {
+        "tag": "P",
+        "id": "save-status",
+        "role": "status",
+        "live": null,
+        "text": ""
+      },
+      {
+        "tag": "P",
+        "id": "save-error",
+        "role": "alert",
+        "live": null,
+        "text": ""
+      }
+    ],
+    "animations": []
+  }
+]

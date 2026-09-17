@@ -1,0 +1,224 @@
+{
+  "review_mode": "independent",
+  "reviewer": "/root/rendered_review",
+  "checks": [
+    {
+      "name": "desktop empty membership validation",
+      "actual": {
+        "text": "Your name\n\nEnter your name so we know what to call you.\n\nEmail address\n\nEnter a valid email address, like you@example.com.\n\nJoin the demo member list\n\nJust a little trial run. This is a prototype: your details stay in this browser. No payment, email or external submission.",
+        "focused": "member-name"
+      }
+    },
+    {
+      "name": "desktop invalid email",
+      "actual": {
+        "text": "Your name\nEmail address\n\nEnter a valid email address, like you@example.com.\n\nJoin the demo member list\n\nJust a little trial run. This is a prototype: your details stay in this browser. No payment, email or external submission.",
+        "focused": "member-email",
+        "name": "Robin Test"
+      }
+    },
+    {
+      "name": "desktop membership success",
+      "actual": "A co-op for the things worth keeping\n\nGood things\ndeserve another\nchapter.\n\nA favourite jumper. A wobbly chair. A kettle with a story.\nKeep them going, with a little help from your neighbours.\n\nBecome a member\n£8 per month\nA little each month. A lot, together.\nStill plenty of life in it.\n\nMore mending. Less ending.\n\n✳\n\nMend what you have. Learn what you can. Share what you know.\n\n✳\nGood for your things.\nEven better, together.\n\nYour membership keeps shared tools, shared skills\nand patient repair within reach.\n\nMake room for repair.\n\nA monthly repair evening with shared tools.\n\nBring something that needs a little attention. Find the tools, space and company to give it another go.\n\nPass a good skill on.\n\nSkill swaps led by fellow members.\n\nA stitch, a fix, a trick you didn’t know. Learn from your neighbours and share what comes naturally.\n\nBuild it together.\n\nA say in which tools and projects we support.\n\nThis is your co-op, too. Help decide what we add to the toolbox and what we take on next.\n\nThere’s a place for you at the workbench.\n\nLet’s give things\nanother go.\n\nYou don’t need to be handy. Just curious.\nJoin the Round Again member list.\n\n£8 per month\nFor shared tools, shared skills and a say.\n\n✓\nYou’re on the demo list, Robin Test.\n\nYour details are saved in this browser. This hasn’t created a paid membership or sent an email.\n\nChoose your notification preferences\n\nAlready making yourself at home?\n\nSet your notification preferences"
+    },
+    {
+      "name": "desktop membership overflow",
+      "actual": {
+        "scroll": 1440,
+        "viewport": 1440
+      }
+    },
+    {
+      "name": "desktop preferences error retains checkbox",
+      "actual": {
+        "text": "Your details\n\nWhat should we call you?\n\nDisplay name\n\nEnter a display name before saving.\n\nNews you’d like to receive\n\nTick the updates that are useful to you.\n\nRepair evenings\n\nDates and reminders for our monthly repair evenings.\n\nSkill swaps\n\nOpportunities to learn something new or share a skill.\n\nMonthly digest\n\nA monthly round-up of news, projects and life at the co-op.\n\nPrefer a quieter inbox? Leave all three unticked.\n\nSave preferences\nCancel\n\nYou have unsaved changes.",
+        "checked": false,
+        "focused": "display-name"
+      }
+    },
+    {
+      "name": "desktop preferences success",
+      "actual": "Your details\n\nWhat should we call you?\n\nDisplay name\nNews you’d like to receive\n\nTick the updates that are useful to you.\n\nRepair evenings\n\nDates and reminders for our monthly repair evenings.\n\nSkill swaps\n\nOpportunities to learn something new or share a skill.\n\nMonthly digest\n\nA monthly round-up of news, projects and life at the co-op.\n\nPrefer a quieter inbox? Leave all three unticked.\n\nSave preferences\nCancel\n\nPreferences saved in this browser."
+    },
+    {
+      "name": "desktop preferences overflow",
+      "actual": {
+        "scroll": 1440,
+        "viewport": 1440
+      }
+    },
+    {
+      "name": "desktop cancel",
+      "actual": {
+        "name": "Robin Test",
+        "monthlyDigest": false
+      }
+    },
+    {
+      "name": "mobile empty membership validation",
+      "actual": {
+        "text": "Your name\n\nEnter your name so we know what to call you.\n\nEmail address\n\nEnter a valid email address, like you@example.com.\n\nJoin the demo member list\n\nJust a little trial run. This is a prototype: your details stay in this browser. No payment, email or external submission.",
+        "focused": "member-name"
+      }
+    },
+    {
+      "name": "mobile invalid email",
+      "actual": {
+        "text": "Your name\nEmail address\n\nEnter a valid email address, like you@example.com.\n\nJoin the demo member list\n\nJust a little trial run. This is a prototype: your details stay in this browser. No payment, email or external submission.",
+        "focused": "member-email",
+        "name": "Robin Test"
+      }
+    },
+    {
+      "name": "mobile membership success",
+      "actual": "A co-op for the things worth keeping\n\nGood things\ndeserve another\nchapter.\n\nA favourite jumper. A wobbly chair. A kettle with a story. Keep them going, with a little help from your neighbours.\n\nBecome a member\n£8 per month\nA little each month. A lot, together.\nStill plenty of life in it.\n\nMore mending. Less ending.\n\n✳\n\nMend what you have. Learn what you can. Share what you know.\n\n✳\nGood for your things.\nEven better, together.\n\nYour membership keeps shared tools, shared skills and patient repair within reach.\n\nMake room for repair.\n\nA monthly repair evening with shared tools.\n\nBring something that needs a little attention. Find the tools, space and company to give it another go.\n\nPass a good skill on.\n\nSkill swaps led by fellow members.\n\nA stitch, a fix, a trick you didn’t know. Learn from your neighbours and share what comes naturally.\n\nBuild it together.\n\nA say in which tools and projects we support.\n\nThis is your co-op, too. Help decide what we add to the toolbox and what we take on next.\n\nThere’s a place for you at the workbench.\n\nLet’s give things\nanother go.\n\nYou don’t need to be handy. Just curious.\nJoin the Round Again member list.\n\n£8 per month\nFor shared tools, shared skills and a say.\n\n✓\nYou’re on the demo list, Robin Test.\n\nYour details are saved in this browser. This hasn’t created a paid membership or sent an email.\n\nChoose your notification preferences\n\nAlready making yourself at home?\n\nSet your notification preferences"
+    },
+    {
+      "name": "mobile membership overflow",
+      "actual": {
+        "scroll": 375,
+        "viewport": 375
+      }
+    },
+    {
+      "name": "mobile preferences error retains checkbox",
+      "actual": {
+        "text": "Your details\n\nWhat should we call you?\n\nDisplay name\n\nEnter a display name before saving.\n\nNews you’d like to receive\n\nTick the updates that are useful to you.\n\nRepair evenings\n\nDates and reminders for our monthly repair evenings.\n\nSkill swaps\n\nOpportunities to learn something new or share a skill.\n\nMonthly digest\n\nA monthly round-up of news, projects and life at the co-op.\n\nPrefer a quieter inbox? Leave all three unticked.\n\nSave preferences\nCancel\n\nYou have unsaved changes.",
+        "checked": false,
+        "focused": "display-name"
+      }
+    },
+    {
+      "name": "mobile preferences success",
+      "actual": "Your details\n\nWhat should we call you?\n\nDisplay name\nNews you’d like to receive\n\nTick the updates that are useful to you.\n\nRepair evenings\n\nDates and reminders for our monthly repair evenings.\n\nSkill swaps\n\nOpportunities to learn something new or share a skill.\n\nMonthly digest\n\nA monthly round-up of news, projects and life at the co-op.\n\nPrefer a quieter inbox? Leave all three unticked.\n\nSave preferences\nCancel\n\nPreferences saved in this browser."
+    },
+    {
+      "name": "mobile preferences overflow",
+      "actual": {
+        "scroll": 375,
+        "viewport": 375
+      }
+    },
+    {
+      "name": "mobile cancel",
+      "actual": {
+        "name": "Robin Test",
+        "monthlyDigest": false
+      }
+    },
+    {
+      "name": "initial keyboard focus",
+      "actual": "Skip to content"
+    },
+    {
+      "name": "skip link target",
+      "actual": "main"
+    },
+    {
+      "name": "membership CTA keyboard focus",
+      "actual": "Become a member"
+    },
+    {
+      "name": "membership anchor keyboard focus",
+      "actual": "member-name"
+    },
+    {
+      "name": "membership form first tab focus",
+      "actual": "member-name"
+    },
+    {
+      "name": "keyboard membership completed",
+      "actual": "A co-op for the things worth keeping\n\nGood things\ndeserve another\nchapter.\n\nA favourite jumper. A wobbly chair. A kettle with a story.\nKeep them going, with a little help from your neighbours.\n\nBecome a member\n£8 per month\nA little each month. A lot, together.\nStill plenty of life in it.\n\nMore mending. Less ending.\n\n✳\n\nMend what you have. Learn what you can. Share what you know.\n\n✳\nGood for your things.\nEven better, together.\n\nYour membership keeps shared tools, shared skills\nand patient repair within reach.\n\nMake room for repair.\n\nA monthly repair evening with shared tools.\n\nBring something that needs a little attention. Find the tools, space and company to give it another go.\n\nPass a good skill on.\n\nSkill swaps led by fellow members.\n\nA stitch, a fix, a trick you didn’t know. Learn from your neighbours and share what comes naturally.\n\nBuild it together.\n\nA say in which tools and projects we support.\n\nThis is your co-op, too. Help decide what we add to the toolbox and what we take on next.\n\nThere’s a place for you at the workbench.\n\nLet’s give things\nanother go.\n\nYou don’t need to be handy. Just curious.\nJoin the Round Again member list.\n\n£8 per month\nFor shared tools, shared skills and a say.\n\n✓\nYou’re on the demo list, Robin Test.\n\nYour details are saved in this browser. This hasn’t created a paid membership or sent an email.\n\nChoose your notification preferences\n\nAlready making yourself at home?\n\nSet your notification preferences"
+    },
+    {
+      "name": "preferences keyboard order",
+      "actual": [
+        {
+          "tag": "A",
+          "id": "",
+          "text": "Skip to content",
+          "type": ""
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "text": "Round Again\nRepair co-op",
+          "type": ""
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "text": "Membership",
+          "type": ""
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "text": "Notification preferences",
+          "type": ""
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "text": "Membership",
+          "type": ""
+        },
+        {
+          "tag": "INPUT",
+          "id": "display-name",
+          "text": "",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "keyboard checkbox toggle",
+      "actual": false
+    },
+    {
+      "name": "shift tab returns monthly digest",
+      "actual": "monthlyDigest"
+    },
+    {
+      "name": "keyboard preferences completion",
+      "actual": "Your details\n\nWhat should we call you?\n\nDisplay name\nNews you’d like to receive\n\nTick the updates that are useful to you.\n\nRepair evenings\n\nDates and reminders for our monthly repair evenings.\n\nSkill swaps\n\nOpportunities to learn something new or share a skill.\n\nMonthly digest\n\nA monthly round-up of news, projects and life at the co-op.\n\nPrefer a quieter inbox? Leave all three unticked.\n\nSave preferences\nCancel\n\nPreferences saved in this browser."
+    },
+    {
+      "name": "motion no-preference",
+      "actual": {
+        "activeAnimations": 0,
+        "before": {
+          "x": 64,
+          "y": 28.34375,
+          "width": 43,
+          "height": 43
+        },
+        "after": {
+          "x": 64,
+          "y": 28.34375,
+          "width": 43,
+          "height": 43
+        }
+      }
+    },
+    {
+      "name": "motion reduce",
+      "actual": {
+        "activeAnimations": 0,
+        "before": {
+          "x": 64,
+          "y": 28.34375,
+          "width": 43,
+          "height": 43
+        },
+        "after": {
+          "x": 64,
+          "y": 28.34375,
+          "width": 43,
+          "height": 43
+        }
+      }
+    }
+  ],
+  "consoleErrors": []
+}

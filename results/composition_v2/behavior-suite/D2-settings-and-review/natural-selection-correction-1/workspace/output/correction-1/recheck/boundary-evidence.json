@@ -1,0 +1,264 @@
+{
+  "geometry": [
+    {
+      "width": 768,
+      "scrollWidth": 768,
+      "header": {
+        "x": 24,
+        "y": 75.5,
+        "width": 720,
+        "height": 48.390625,
+        "top": 75.5,
+        "right": 744,
+        "bottom": 123.890625,
+        "left": 24
+      },
+      "rects": [
+        {
+          "id": "display-name",
+          "rect": {
+            "x": 58,
+            "y": 294.890625,
+            "width": 652,
+            "height": 48,
+            "top": 294.890625,
+            "right": 710,
+            "bottom": 342.890625,
+            "left": 58
+          },
+          "radius": "0px"
+        },
+        {
+          "id": "kiln-alerts",
+          "rect": {
+            "x": 75,
+            "y": 458.6875,
+            "width": 22,
+            "height": 22,
+            "top": 458.6875,
+            "right": 97,
+            "bottom": 480.6875,
+            "left": 75
+          },
+          "radius": "0px"
+        },
+        {
+          "id": "save-settings",
+          "rect": {
+            "x": 58,
+            "y": 604.6875,
+            "width": 147.296875,
+            "height": 48,
+            "top": 604.6875,
+            "right": 205.296875,
+            "bottom": 652.6875,
+            "left": 58
+          },
+          "radius": "0px"
+        }
+      ]
+    },
+    {
+      "width": 389,
+      "scrollWidth": 389,
+      "header": {
+        "x": 20,
+        "y": 59.5,
+        "width": 349,
+        "height": 37.390625,
+        "top": 59.5,
+        "right": 369,
+        "bottom": 96.890625,
+        "left": 20
+      },
+      "rects": [
+        {
+          "id": "display-name",
+          "rect": {
+            "x": 42,
+            "y": 300.890625,
+            "width": 305,
+            "height": 48,
+            "top": 300.890625,
+            "right": 347,
+            "bottom": 348.890625,
+            "left": 42
+          },
+          "radius": "0px"
+        },
+        {
+          "id": "kiln-alerts",
+          "rect": {
+            "x": 55,
+            "y": 462.6875,
+            "width": 22,
+            "height": 22,
+            "top": 462.6875,
+            "right": 77,
+            "bottom": 484.6875,
+            "left": 55
+          },
+          "radius": "0px"
+        },
+        {
+          "id": "save-settings",
+          "rect": {
+            "x": 42,
+            "y": 651.6875,
+            "width": 305,
+            "height": 48,
+            "top": 651.6875,
+            "right": 347,
+            "bottom": 699.6875,
+            "left": 42
+          },
+          "radius": "0px"
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "scrollWidth": 390,
+      "header": {
+        "x": 20,
+        "y": 59.5,
+        "width": 350,
+        "height": 37.390625,
+        "top": 59.5,
+        "right": 370,
+        "bottom": 96.890625,
+        "left": 20
+      },
+      "rects": [
+        {
+          "id": "display-name",
+          "rect": {
+            "x": 42,
+            "y": 300.890625,
+            "width": 306,
+            "height": 48,
+            "top": 300.890625,
+            "right": 348,
+            "bottom": 348.890625,
+            "left": 42
+          },
+          "radius": "0px"
+        },
+        {
+          "id": "kiln-alerts",
+          "rect": {
+            "x": 55,
+            "y": 462.6875,
+            "width": 22,
+            "height": 22,
+            "top": 462.6875,
+            "right": 77,
+            "bottom": 484.6875,
+            "left": 55
+          },
+          "radius": "0px"
+        },
+        {
+          "id": "save-settings",
+          "rect": {
+            "x": 42,
+            "y": 651.6875,
+            "width": 306,
+            "height": 48,
+            "top": 651.6875,
+            "right": 348,
+            "bottom": 699.6875,
+            "left": 42
+          },
+          "radius": "0px"
+        }
+      ]
+    },
+    {
+      "width": 391,
+      "scrollWidth": 391,
+      "header": {
+        "x": 20,
+        "y": 59.5,
+        "width": 351,
+        "height": 37.390625,
+        "top": 59.5,
+        "right": 371,
+        "bottom": 96.890625,
+        "left": 20
+      },
+      "rects": [
+        {
+          "id": "display-name",
+          "rect": {
+            "x": 42,
+            "y": 300.890625,
+            "width": 307,
+            "height": 48,
+            "top": 300.890625,
+            "right": 349,
+            "bottom": 348.890625,
+            "left": 42
+          },
+          "radius": "0px"
+        },
+        {
+          "id": "kiln-alerts",
+          "rect": {
+            "x": 55,
+            "y": 462.6875,
+            "width": 22,
+            "height": 22,
+            "top": 462.6875,
+            "right": 77,
+            "bottom": 484.6875,
+            "left": 55
+          },
+          "radius": "0px"
+        },
+        {
+          "id": "save-settings",
+          "rect": {
+            "x": 42,
+            "y": 651.6875,
+            "width": 307,
+            "height": 48,
+            "top": 651.6875,
+            "right": 349,
+            "bottom": 699.6875,
+            "left": 42
+          },
+          "radius": "0px"
+        }
+      ]
+    }
+  ],
+  "pointer": [
+    {
+      "name": "center",
+      "x": 195,
+      "y": 675.6875,
+      "hit": "save-settings",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved."
+    },
+    {
+      "name": "near-top-left",
+      "x": 48.12,
+      "y": 655.5275,
+      "hit": "save-settings",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved."
+    },
+    {
+      "name": "near-bottom-right",
+      "x": 341.88,
+      "y": 695.8475,
+      "hit": "save-settings",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved."
+    }
+  ],
+  "events": [],
+  "reducedMotion": {
+    "saved": true,
+    "animations": 0
+  }
+}

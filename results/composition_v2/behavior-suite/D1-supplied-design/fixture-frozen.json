@@ -1,0 +1,32 @@
+{
+  "case": "D1-supplied-design",
+  "prepared_at": "2026-09-17T19:05:30.344806+00:00",
+  "fixture_sha256": "7e40fae37ca745d66d713322256de9f07b770db2d16d51b820e440027f368e14",
+  "hash_semantics": "SHA256 of canonical sorted relative-file SHA256 map, excluding node_modules/dist",
+  "files": {
+    ".gitignore": "790e3169bc19b046fe55ba1da6d13b976c28363c8c00462a2195fe5faf260910",
+    "AGENTS.md": "c867d38a142e0bd7ddcdcbe3d7267c62ba31de219f1bbff3f2ee97f1a503c504",
+    "design/accepted-contract.md": "1241d16e764c8c262913aaa112c12ac377f180e5107f382853bc2cf936416e19",
+    "design/approved-desktop.png": "fd821bf25006bbc1bdd89c313cf706b73673fc4a80adcb46dc89a41399ce4c12",
+    "design/approved-mobile.png": "ea1ac54c99734ba9316df2db4b0d723b584f595b391aa3d6f15348bc6c31b919",
+    "index.html": "3af85fb7754e15825605611d3ccbf786a198d7994ba7db02a6e725ad178d3827",
+    "package-lock.json": "747659e8605ab80a6209481a147675b2b3ea476cb93a321bfbf526abe3696792",
+    "package.json": "05aefe928e43abf83e8038d65b41f869a5931f03230bb68690ce4c908c8ac733",
+    "src/App.jsx": "8d47ef947f57e79760b6556a33040d488879ec3a8a440fe7c8abb6065fe42317",
+    "src/App.module.css": "e432c323d933e48c232b0aac6040c7056b1b30c4f13da8e75d8e8dd24aab0c8c",
+    "src/main.jsx": "45e1519223b4a9e2d865ec289879b995a7a3cd843d1636a56fa3113731685fe9",
+    "src/slots.js": "9e596c4b488860c7e4903176831cc6fed3a47308a9f27a1e0df26c55c783d861",
+    "src/tokens.css": "b226df0269bf95cf230da17ab8c79a499a07f9cf167bfce6aef506e979935f90"
+  },
+  "candidate_commit": "12f509e61d8aa15de2bfcc54195a7def07bda0a8",
+  "dependencies": {
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "vite": "7.1.5"
+  },
+  "run_modes": [
+    "explicit",
+    "natural-selection"
+  ],
+  "note": "Fixtures frozen before fresh builder dispatch; source contains presentational scaffolding and task data, no completed requested interactions."
+}

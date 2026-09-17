@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Clay House · Workspace settings</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="studio-service.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Clay House / Member studio</p>
+      <h1 id="settings-title">Workspace settings</h1>
+      <p class="help" id="settings-help">Make this space feel like yours. Choose how we keep you in the loop.</p>
+      <section class="panel" aria-labelledby="settings-title">
+        <form id="settings-form" novalidate aria-describedby="settings-help">
+          <div class="field">
+            <label for="display-name">Display name</label>
+            <p class="help field-help" id="name-help">The name you use around the studio. Required, up to 60 characters.</p>
+            <input id="display-name" name="displayName" value="River Studio" required maxlength="60" autocomplete="organization" aria-describedby="name-help name-error">
+            <p class="error field-error" id="name-error" hidden></p>
+          </div>
+          <div class="field preferences">
+            <h2>Kiln alerts</h2>
+            <label class="preference" for="kiln-alerts">
+              <input id="kiln-alerts" name="kilnAlerts" type="checkbox" checked aria-describedby="kiln-help">
+              <span>
+                <span class="preference-title">Email me when my firing is ready</span>
+                <span class="help preference-help" id="kiln-help">One message when your work is ready to collect.</span>
+              </span>
+            </label>
+            <p class="help field-help">You can change this whenever you like.</p>
+          </div>
+          <div class="actions">
+            <button type="submit" id="save-settings">Save settings</button>
+            <div class="feedback">
+              <p id="save-status" role="status" aria-atomic="true"></p>
+              <p class="error" id="save-error" role="alert" aria-atomic="true"></p>
+            </div>
+          </div>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

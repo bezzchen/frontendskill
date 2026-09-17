@@ -1,0 +1,23 @@
+2026-09-17T19:57:43.843210Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:57:43.849912Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:57:43.856754Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:57:43.858757Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:57:43.860634Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-09-17T19:58:26.270533Z  WARN codex_sandboxing::violation: recorded sandbox violation: resource=filesystem backend=seatbelt reason=operation_not_permitted path=unknown
+2026-09-17T19:58:34.842434Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T19:58:44.906555Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T19:59:23.411543Z  WARN codex_sandboxing::violation: recorded sandbox violation: resource=filesystem backend=seatbelt reason=permission_denied path=unknown
+2026-09-17T19:59:33.047112Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T20:25:56.680252Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (1/5 in 185ms)... turn_id=01a0b0f2-4a7f-7003-bf49-32c84fed31d5 retries=1 max_retries=5 sampling_error=stream disconnected before completion: IO error: Connection reset by peer (os error 54)
+2026-09-17T20:25:56.681119Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (1/5 in 211ms)... turn_id=01a0b0f3-a2a1-7450-a577-075e0fe9cef5 retries=1 max_retries=5 sampling_error=stream disconnected before completion: IO error: Connection reset by peer (os error 54)
+2026-09-17T20:26:41.053557Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (1/1 in 216ms)... turn_id=01a0b10c-cc1a-7a52-a5bc-fd4af845dc5b retries=1 max_retries=1 sampling_error=stream disconnected before completion: failed to send websocket request: Connection closed normally
+2026-09-17T20:26:44.158197Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T20:27:23.751532Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (1/1 in 208ms)... turn_id=01a0b10d-72e3-7301-873f-d61342ee9c33 retries=1 max_retries=1 sampling_error=stream disconnected before completion: failed to send websocket request: Connection closed normally
+2026-09-17T20:27:29.375551Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T20:27:42.841665Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T20:27:57.218191Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T20:28:20.746053Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T20:29:17.866995Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T20:29:58.152536Z  WARN codex_core::guardian::review_session: failed to refresh guardian trunk rollout snapshot: Session persistence is disabled; cannot guardian review fork.
+2026-09-17T20:31:12.062342Z  WARN codex_core::hook_runtime: failed to resolve parent transcript path for subagent hook parent_thread_id=01a0b0f2-4a0a-7710-b510-9acbf5a8dc0a error=invalid thread-store request: no rollout found for thread id 01a0b0f2-4a0a-7710-b510-9acbf5a8dc0a
+2026-09-17T20:31:40.636102Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf("/Users/bezzchen/.codex/shell_snapshots/01a0b0f2-4a0a-7710-b510-9acbf5a8dc0a.1789675063819694000.sh"): Os { code: 2, kind: NotFound, message: "No such file or directory" }

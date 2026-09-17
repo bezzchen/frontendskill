@@ -1,0 +1,49 @@
+{
+  "mode": "natural-selection",
+  "model_alias": "gpt-6-astra",
+  "model_snapshot": null,
+  "effort": "high",
+  "candidate_commit": "12f509e61d8aa15de2bfcc54195a7def07bda0a8",
+  "harness_sha256": "b608d331a2ebaf2d1ff245ce42049d515f8a47efb554b2be567e39a8de389781",
+  "command": [
+    "codex",
+    "exec",
+    "--ignore-user-config",
+    "--ephemeral",
+    "--skip-git-repo-check",
+    "--approve-for-me",
+    "-m",
+    "gpt-6-astra",
+    "-c",
+    "model_reasoning_effort=\"high\"",
+    "-C",
+    "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D2-settings-and-review/natural-selection/workspace",
+    "--json",
+    "-o",
+    "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D2-settings-and-review/natural-selection/final.md",
+    "-"
+  ],
+  "wall_cap_seconds": 1200,
+  "token_cap": null,
+  "source_path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D2-settings-and-review/natural-selection/workspace/.sources/frontend-design/SKILL.md",
+  "source_sha256": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3",
+  "host_config_ignored": true,
+  "global_skills_and_hooks_still_present": true,
+  "isolation": "fresh CLI context; project-only task instruction, not an OS read barrier",
+  "whole_workflow_tokens": null,
+  "started_at": "2026-09-17T19:38:20.702453+00:00",
+  "terminal_status": "completed",
+  "exit_code": 0,
+  "elapsed_seconds": 387.51,
+  "finished_at": "2026-09-17T19:44:48.218513+00:00",
+  "parent_usage_events": [
+    {
+      "input_tokens": 565456,
+      "cached_input_tokens": 519936,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 10672,
+      "reasoning_output_tokens": 705
+    }
+  ],
+  "whole_workflow_tokens_reason": "Parent usage may exclude delegated agents; do not infer total without accounting audit."
+}

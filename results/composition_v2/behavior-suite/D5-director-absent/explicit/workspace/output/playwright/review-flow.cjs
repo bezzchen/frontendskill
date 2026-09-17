@@ -1,0 +1,25 @@
+const { chromium } = require('/Users/bezzchen/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const fs = require('node:fs');
+(async () => {
+ const browser = await chromium.launch({executablePath:'/Users/bezzchen/Library/Caches/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-mac-arm64/chrome-headless-shell'});
+ const page = await browser.newPage({viewport:{width:1440,height:900}});
+ const events={errors:[],requests:[],checks:[]};
+ page.on('pageerror',e=>events.errors.push(e.message));
+ page.on('request',r=>events.requests.push({url:r.url(),method:r.method()}));
+ const note=async(label)=>events.checks.push({label,text:await page.locator('body').innerText(),focus:await page.evaluate(()=>({tag:document.activeElement.tagName,text:document.activeElement.textContent,id:document.activeElement.id,value:document.activeElement.value})),overflow:await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)});
+ await page.goto('http://127.0.0.1:5173');
+ await page.getByRole('button',{name:'Confirm shift'}).click();
+ await note('empty submit');
+ await page.screenshot({path:'output/playwright/review-desktop-errors.png',fullPage:true});
+ await page.getByRole('radio').first().check();
+ await page.getByLabel('Contact name').fill('   ');
+ await page.getByRole('button',{name:'Confirm shift'}).click();
+ await note('whitespace submit');
+ await page.getByLabel('Contact name').fill('  Taylor Sample  ');
+ await page.getByRole('button',{name:'Confirm shift'}).click();
+ await note('desktop confirmation');
+ await page.screenshot({path:'output/playwright/review-desktop-confirmed.png',fullPage:true});
+ console.log(JSON.stringify(events,null,2));
+ fs.writeFileSync('output/playwright/review-log.json',JSON.stringify(events,null,2));
+ await browser.close();
+})().catch(e=>{console.error(e);process.exit(1)});

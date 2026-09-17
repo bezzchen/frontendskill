@@ -1,0 +1,14 @@
+{
+  "result": "pass",
+  "checks": [
+    "Initial capacities and full shift disabled",
+    "Missing shift, empty name and whitespace name validation; first invalid control focused",
+    "Confirmation includes selected shift/date/time and trimmed name; heading focused",
+    "Restart clears selection/name; local capacity decreases and exhausted shift disables",
+    "Keyboard-only arrow/Tab/Enter flow confirms alternate shift",
+    "No horizontal overflow at 1440, 768, 375 and 320 pixels",
+    "No browser page errors or external requests"
+  ],
+  "issues": [],
+  "external": []
+}

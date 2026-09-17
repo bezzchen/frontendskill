@@ -1,0 +1,24 @@
+{
+  "url": "http://127.0.0.1:8861",
+  "width": 1440,
+  "height": 900,
+  "screenshot": "review/desktop.png",
+  "actions": [
+    {
+      "type": "press",
+      "value": "Tab"
+    },
+    {
+      "type": "press",
+      "value": "Tab"
+    },
+    {
+      "type": "press",
+      "value": "Space"
+    },
+    {
+      "type": "press",
+      "value": "Tab"
+    }
+  ]
+}

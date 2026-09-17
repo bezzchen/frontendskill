@@ -1,0 +1,29 @@
+{
+  "results": [
+    {
+      "name": "Each hidden instrument pauses independently; last consumer stops scheduler",
+      "status": "FAIL",
+      "error": "metronome: delta 11; expected paused"
+    },
+    {
+      "name": "Real scroll pauses offscreen owners and resumes on return",
+      "status": "FAIL",
+      "error": "metronome: delta 11; expected paused"
+    },
+    {
+      "name": "Unmount releases callbacks; repeated and hidden remounts preserve settings",
+      "status": "FAIL",
+      "error": "metronome: delta 11; expected paused"
+    },
+    {
+      "name": "Reduced motion renders static instruments and keeps controls usable",
+      "status": "FAIL",
+      "error": "metronome: delta 11; expected paused"
+    },
+    {
+      "name": "Narrow layout retains instruments and controls",
+      "status": "PASS"
+    }
+  ],
+  "errors": []
+}

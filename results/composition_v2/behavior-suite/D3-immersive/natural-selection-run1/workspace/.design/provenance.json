@@ -1,0 +1,24 @@
+{
+  "director": "anthropic-scoped-adaptation",
+  "mode": "scoped art direction",
+  "host": "Codex",
+  "source_resolution": "prepared local source specified by AGENTS.md",
+  "source_revision_expected": "34040c9c568585f6929bedeaad110ad08f079624",
+  "source_revision_actual": null,
+  "identity_status": "pinned-content-match",
+  "loaded_files": [
+    {
+      "path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D3-immersive/natural-selection-run1/workspace/.sources/frontend-design/SKILL.md",
+      "sha256": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3",
+      "role": "director-source",
+      "load_status": "read"
+    },
+    {
+      "path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D3-immersive/natural-selection-run1/workspace/.agents/skills/creative-frontend-architect/references/directors/anthropic.md",
+      "sha256": "750881b938bf2abc1bbb7893db504147aab2692987fa0333d3905b76fb646b7a",
+      "role": "director-adapter",
+      "load_status": "read"
+    }
+  ],
+  "director_adapter_revision": "750881b938bf2abc1bbb7893db504147aab2692987fa0333d3905b76fb646b7a"
+}

@@ -1,0 +1,92 @@
+{
+  "schema_version": "2.0-experimental",
+  "path_base": "skill-directory",
+  "source_paths_base": "upstream-repository",
+  "integrations": [
+    {
+      "id": "anthropic-frontend-design",
+      "role": "director",
+      "source_url": "https://github.com/anthropics/skills",
+      "source_revision": "34040c9c568585f6929bedeaad110ad08f079624",
+      "source_paths": [
+        "skills/frontend-design/SKILL.md",
+        "skills/frontend-design/LICENSE.txt"
+      ],
+      "source_hashes": {
+        "skills/frontend-design/SKILL.md": {
+          "algorithm": "sha256",
+          "value": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3"
+        }
+      },
+      "adapter_path": "references/directors/anthropic.md",
+      "prerequisites": [
+        "Explicitly prepared local source or exact file advertised by the installed skill roster",
+        "Host can read source content and compute its actual SHA-256",
+        "Source bytes match the pinned hash",
+        "Host can use source material through the scoped adaptation without activating its entire workflow"
+      ],
+      "runtime_resolution": {
+        "explicit_file_environment_variable": "CFA_ANTHROPIC_SOURCE",
+        "otherwise": "exact local frontend-design/SKILL.md file from host skill roster",
+        "auto_install": false,
+        "hash_mismatch": "builtin-fallback",
+        "machine_specific_paths": "run metadata only"
+      },
+      "decision_scope": [
+        "visual concept",
+        "content hierarchy",
+        "typography",
+        "palette",
+        "spatial composition",
+        "interaction intent"
+      ],
+      "adaptation_mode": "scoped-adaptation",
+      "runtime_director_label": "anthropic-scoped-adaptation",
+      "fallback": {
+        "id": "builtin-fallback",
+        "reference_path": "references/design-contract.md",
+        "behavior": "Use brief and established design system for open decisions; continue without an upstream source claim"
+      },
+      "tested_source_revision": "34040c9c568585f6929bedeaad110ad08f079624",
+      "tested_hosts": [
+        {
+          "host": "Codex CLI",
+          "version": "0.153.4",
+          "model": "gpt-6-astra",
+          "reasoning_effort": "high",
+          "evidence_id": "SMOKE-HARBOR-2026-09-17",
+          "scope": "One explicit prepared-source HTML prototype; source read/hash/contract/build observed. Not a full upstream workflow or efficacy result.",
+          "limitations": [
+            "General process skills were present.",
+            "Other hosts, source versions and full activation suite untested."
+          ]
+        }
+      ],
+      "compatibility_status": "smoke-tested",
+      "attribution": {
+        "author": "Anthropic",
+        "work": "frontend-design",
+        "license": "Apache-2.0",
+        "license_path": "references/licenses/anthropic-frontend-design-LICENSE.txt",
+        "changes": "Scoped art direction adaptation; discovery and confirmation follow existing user decisions; architecture, implementation and rendered review use the host workflow",
+        "endorsement": "No upstream endorsement or full upstream workflow compatibility claimed"
+      }
+    }
+  ],
+  "methodology_references": [
+    {
+      "id": "oneredoak-design-review",
+      "role": "rendered-review-methodology",
+      "source_url": "https://github.com/OneRedOak/claude-code-workflows",
+      "source_revision": "6a653445125da828f31af473fcdd3cf29f99be82",
+      "source_paths": [
+        "design-review/design-review-agent.md"
+      ],
+      "adapter_path": "references/rendered-review.md",
+      "runtime_loading": "reference-only; upstream agent is not loaded or installed",
+      "compatibility_status": "provenance-only",
+      "tested_hosts": [],
+      "attribution": "OneRedOak live rendered-review ordering informed the host-neutral review reference; this is not a second director or supported upstream agent integration"
+    }
+  ]
+}

@@ -1,0 +1,169 @@
+.shell {
+  max-width:1440px;
+  margin:auto;
+  padding:0 64px;
+}
+
+.header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:28px;
+  padding:26px 0;
+  border-bottom:1px solid var(--line);
+}
+
+.brand {
+  display:flex;
+  align-items:center;
+  gap:13px;
+  text-decoration:none;
+  color:var(--brand);
+}
+
+.brand svg {
+  width:43px;
+  height:43px;
+}
+
+.brand>span {
+  font-size:25px;
+  font-weight:750;
+  letter-spacing:-1px;
+  line-height:1.1;
+}
+
+.brand small {
+  display:block;
+  font-size:12px;
+  font-weight:400;
+  letter-spacing:.7px;
+  margin-top:7px;
+}
+
+.nav {
+  display:flex;
+  gap:30px;
+  align-items:center;
+  font-size:14px;
+}
+
+.nav a {
+  text-decoration:none;
+  padding:10px 0;
+  position:relative;
+}
+
+.nav a[aria-current=page] {
+  font-weight:700;
+}
+
+.nav a[aria-current=page]:after {
+  content:'';
+  height:2px;
+  background:var(--brand);
+  position:absolute;
+  bottom:2px;
+  left:0;
+  right:0;
+}
+
+.nav a:hover {
+  color:var(--brand);
+  text-decoration:underline;
+  text-underline-offset:6px;
+}
+
+.footer {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  padding:30px 0;
+  border-top:1px solid var(--line);
+  font-size:12px;
+}
+
+.footer a {
+  text-decoration:none;
+  font-weight:700;
+}
+
+.footer a span {
+  font-weight:400;
+  margin-left:10px;
+}
+
+.footer p {
+  margin:0;
+}
+
+.prototype {
+  color:var(--ink);
+  opacity:.72;
+}
+
+.skip {
+  position:fixed;
+  top:10px;
+  left:10px;
+  background:var(--brand);
+  color:var(--paper);
+  padding:12px 20px;
+  z-index:10;
+  transform:translateY(-150%);
+}
+
+.skip:focus {
+  transform:translateY(0);
+}
+
+@media(min-width:1441px) {
+  .shell {
+    max-width:1440px;
+  }
+}
+
+@media(max-width:900px) {
+  .shell {
+    padding:0 32px;
+  }
+  .footer {
+    flex-wrap:wrap;
+  }
+  .prototype {
+    width:100%;
+  }
+}
+
+@media(max-width:600px) {
+  .shell {
+    padding:0 22px;
+  }
+  .header {
+    align-items:flex-start;
+    flex-direction:column;
+    gap:18px;
+    padding:22px 0 18px;
+  }
+  .brand>span {
+    font-size:23px;
+  }
+  .brand svg {
+    width:36px;
+    height:36px;
+  }
+  .nav {
+    gap:24px;
+    font-size:13px;
+  }
+  .footer {
+    align-items:flex-start;
+    flex-direction:column;
+    gap:14px;
+    padding:26px 0;
+  }
+  .prototype {
+    width:auto;
+  }
+}

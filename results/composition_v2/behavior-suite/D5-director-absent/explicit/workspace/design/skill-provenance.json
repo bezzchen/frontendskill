@@ -1,0 +1,91 @@
+{
+  "director": "builtin-fallback",
+  "host": "Codex",
+  "source_resolution_method": "explicit CFA_ANTHROPIC_SOURCE path",
+  "source_revision_expected": "34040c9c568585f6929bedeaad110ad08f079624",
+  "source_revision_actual": null,
+  "resolution_attempts": [
+    {
+      "path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D5-director-absent/explicit/workspace/.sources/absent-frontend-design/SKILL.md",
+      "status": "unavailable",
+      "sha256": null
+    }
+  ],
+  "fallbacks": [
+    "Explicit director source absent; used builtin-fallback. No competing design director loaded."
+  ],
+  "loaded_files": [
+    {
+      "path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D5-director-absent/explicit/workspace/.agents/skills/creative-frontend-architect/SKILL.md",
+      "sha256": "abeb51e1c1a769366ea7ea134b85b0d2acfa00aeaa16d3ac565adc5dd72883e5",
+      "role": "workflow-reference",
+      "load_status": "read"
+    },
+    {
+      "path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D5-director-absent/explicit/workspace/.agents/skills/creative-frontend-architect/references/design-contract.md",
+      "sha256": "feb07483fa3a178279ecd50cf503887601f37c6799cca560eb48f67d5b9551ae",
+      "role": "workflow-reference",
+      "load_status": "read"
+    },
+    {
+      "path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D5-director-absent/explicit/workspace/.agents/skills/creative-frontend-architect/references/directors/anthropic.md",
+      "sha256": "750881b938bf2abc1bbb7893db504147aab2692987fa0333d3905b76fb646b7a",
+      "role": "director-adapter",
+      "load_status": "read"
+    },
+    {
+      "path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D5-director-absent/explicit/workspace/.agents/skills/creative-frontend-architect/references/architecture.md",
+      "sha256": "012aabe7dcc34cead0f6caaeb42320666ec08c7e097723798d6bbce5d22504ce",
+      "role": "workflow-reference",
+      "load_status": "read"
+    },
+    {
+      "path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D5-director-absent/explicit/workspace/.agents/skills/creative-frontend-architect/references/rendered-review.md",
+      "sha256": "463b94a54dec590a412dc9dc98deb7b2f3ecac6ce20639c1940c8113ec9b1194",
+      "role": "workflow-reference",
+      "load_status": "read"
+    },
+    {
+      "path": "/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D5-director-absent/explicit/workspace/.agents/skills/creative-frontend-architect/integrations.lock.json",
+      "sha256": "a319d9a4a23c193286a42bd93877ddd3ee6ebd825c211837e2266ad345ab2268",
+      "role": "workflow-reference",
+      "load_status": "read"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/using-superpowers/SKILL.md",
+      "sha256": "55379fe7c1c473a02c61961c822996bff30e1320d6921d9062509bc508482c05",
+      "role": "workflow-reference",
+      "load_status": "read"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/brainstorming/SKILL.md",
+      "sha256": "e14914605f640e0841758e45d0ab2a53243b59b921f929e47921c99668f2e61d",
+      "role": "workflow-reference",
+      "load_status": "read"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/writing-plans/SKILL.md",
+      "sha256": "272e1af349f5062c28dc282b3e21b220d58d683a7314a10c455b7432ec91d845",
+      "role": "workflow-reference",
+      "load_status": "read"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/playwright/SKILL.md",
+      "sha256": "0ffaabcc8e0990627c4725f18bf1c7955534a796c1c199e872909de2013ce6a8",
+      "role": "workflow-reference",
+      "load_status": "read"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md",
+      "sha256": "ea52d15aabaf72bc6b558efe2c126f161b53961090ddcd712000273bfe8c7b6c",
+      "role": "workflow-reference",
+      "load_status": "read"
+    },
+    {
+      "path": "/Users/bezzchen/.codex/skills/systematic-debugging/SKILL.md",
+      "sha256": "3b20719eca4f0461cb51a195221320d775dcf03b6859271066a03a5132a6ce7a",
+      "role": "workflow-reference",
+      "load_status": "read"
+    }
+  ]
+}

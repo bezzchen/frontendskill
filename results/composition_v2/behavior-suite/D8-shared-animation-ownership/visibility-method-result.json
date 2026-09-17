@@ -1,0 +1,33 @@
+{
+  "initial": {
+    "hidden": false,
+    "state": "visible"
+  },
+  "otherTab": {
+    "hidden": true,
+    "state": "hidden",
+    "events": [
+      {
+        "hidden": true,
+        "state": "hidden",
+        "trusted": true
+      }
+    ]
+  },
+  "restored": {
+    "hidden": false,
+    "state": "visible",
+    "events": [
+      {
+        "hidden": true,
+        "state": "hidden",
+        "trusted": true
+      },
+      {
+        "hidden": false,
+        "state": "visible",
+        "trusted": true
+      }
+    ]
+  }
+}

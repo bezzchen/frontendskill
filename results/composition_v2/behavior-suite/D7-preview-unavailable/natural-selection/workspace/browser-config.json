@@ -1,0 +1,14 @@
+{
+  "url": "http://127.0.0.1:8866",
+  "width": 390,
+  "height": 844,
+  "actions": [
+    { "type": "wait", "ms": 300 },
+    { "type": "press", "value": "Tab" },
+    { "type": "press", "value": "ArrowDown" },
+    { "type": "press", "value": "Tab" },
+    { "type": "fill", "selector": "#return-date", "value": "2099-10-05" },
+    { "type": "press", "value": "Enter" }
+  ],
+  "screenshot": "checkout-preview.png"
+}

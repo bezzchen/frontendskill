@@ -1,0 +1,1 @@
+Implement the supplied community-workshop booking design using the existing React/CSS Modules project. The supplied type scale, ochre palette, squared controls and booking layout are approved; keep them and the installed stack. Finish slot selection, validation and the confirmation state. You can decide remaining implementation details and proceed.

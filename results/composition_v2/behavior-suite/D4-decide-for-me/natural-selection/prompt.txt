@@ -1,0 +1,1 @@
+Build the public membership page and the member notification preferences for our repair co-op. Use the established indigo/cream tokens and existing Button and Field components across both. The membership page should have character; preferences should be quiet and practical. Decide the remaining visual and technical details for me and implement both; no concept approval is needed.

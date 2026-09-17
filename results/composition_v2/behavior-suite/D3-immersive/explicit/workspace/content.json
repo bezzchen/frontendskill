@@ -1,0 +1,9 @@
+{
+  "title": "The Moonward Observatory",
+  "moon": "Iona",
+  "acts": [
+    {"id": "arrival", "title": "Arrival", "text": "Iona appears above the eastern ridge. The faint trail marks where this wandering moon has crossed our field of view."},
+    {"id": "alignment", "title": "Alignment", "text": "At the center of its passage, Iona meets the station's reference line. Shift your view to compare the moon and the fixed guide stars."},
+    {"id": "departure", "title": "Departure", "text": "The moon leaves a fading arc toward the western dark. Its passage is brief, but the reference stars remain for the next observer."}
+  ]
+}

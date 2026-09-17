@@ -1,0 +1,33 @@
+{
+  "case": "D4-decide-for-me",
+  "prepared_at": "2026-09-17T19:05:30.368050+00:00",
+  "fixture_sha256": "ced8e42a63c1d4ac2d6e9f25bd499fce12b70a50523eea583d7c7953fd094576",
+  "hash_semantics": "SHA256 of canonical sorted relative-file SHA256 map, excluding node_modules/dist",
+  "files": {
+    ".gitignore": "790e3169bc19b046fe55ba1da6d13b976c28363c8c00462a2195fe5faf260910",
+    "AGENTS.md": "c867d38a142e0bd7ddcdcbe3d7267c62ba31de219f1bbff3f2ee97f1a503c504",
+    "design/project-decisions.md": "fbf6bf07cda40edcf1ec779c6c6f5c634000e921565a22534695b1c672c0ef3a",
+    "index.html": "3af85fb7754e15825605611d3ccbf786a198d7994ba7db02a6e725ad178d3827",
+    "package-lock.json": "747659e8605ab80a6209481a147675b2b3ea476cb93a321bfbf526abe3696792",
+    "package.json": "05aefe928e43abf83e8038d65b41f869a5931f03230bb68690ce4c908c8ac733",
+    "src/App.jsx": "f5e9e033614e5c5e177eff9a4bcfd2f76f20adba382311e8ac7e72e119515ee1",
+    "src/App.module.css": "3b5416f11ee90bdf8c4114655be6add3b4db601a704404e64b2ba5d30f8127d8",
+    "src/components/Button.jsx": "36257724285a4e6615c05b783ca1c5fe93d12736e2fe193b946e875a1f7405e9",
+    "src/components/Field.jsx": "9ad590c9625d14b63114c1e98cc56baf790b08c1571196b98b5f05a974481465",
+    "src/components/Shared.module.css": "4cf7a5b56a6e147628194f169755e1047c646880bfa759d7cc224c0932bdc1d9",
+    "src/content.js": "a3cb49bd0978f0cb465e141174a345f8aa7dc1a5e7d5c108de722cab1cbf2ad0",
+    "src/main.jsx": "45e1519223b4a9e2d865ec289879b995a7a3cd843d1636a56fa3113731685fe9",
+    "src/tokens.css": "ab01fd251a9e21cefaf194738a8f7c4e5da7f18eb41488a5f7c8fa6c2c3a2250"
+  },
+  "candidate_commit": "12f509e61d8aa15de2bfcc54195a7def07bda0a8",
+  "dependencies": {
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "vite": "7.1.5"
+  },
+  "run_modes": [
+    "explicit",
+    "natural-selection"
+  ],
+  "note": "Fixtures frozen before fresh builder dispatch; source contains presentational scaffolding and task data, no completed requested interactions."
+}

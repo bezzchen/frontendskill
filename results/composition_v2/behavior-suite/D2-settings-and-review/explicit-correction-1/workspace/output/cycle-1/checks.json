@@ -1,0 +1,295 @@
+{
+  "checks": [
+    {
+      "width": 1440,
+      "primary": "pass",
+      "validation": "empty/whitespace/61 rejected; 60 and trimmed 1 accepted",
+      "geometry": {
+        "width": 1440,
+        "documentWidth": 1440,
+        "headingBottom": 137.890625,
+        "introTop": 157.890625,
+        "gap": 20,
+        "buttonWidth": 141.203125,
+        "actionWidth": 792,
+        "hit": "save-settings",
+        "checkboxHeight": 44
+      },
+      "timing": {
+        "calls": [
+          {
+            "settings": {
+              "displayName": "River Clay Studio",
+              "kilnAlerts": false
+            },
+            "start": 124.19999998807907,
+            "end": 725.2999999821186
+          }
+        ],
+        "status": [
+          {
+            "text": "You have unsaved changes.",
+            "time": 60.29999998211861
+          },
+          {
+            "text": "You have unsaved changes.",
+            "time": 91
+          },
+          {
+            "text": "Saving your settings…",
+            "time": 124.19999998807907
+          },
+          {
+            "text": "Settings saved. Your workspace is up to date.",
+            "time": 725.8999999761581
+          }
+        ]
+      }
+    },
+    {
+      "width": 1440,
+      "errorRetry": "pass; rejection retains edits, retry resolves after service mode switch",
+      "keyboard": "Tab, reverse Tab, Space toggle/submit, Enter submit, restored focus",
+      "focus": [
+        {
+          "id": "display-name",
+          "visible": true,
+          "outline": "rgb(184, 85, 0) solid 3px",
+          "offset": "4px"
+        },
+        {
+          "id": "kiln-alerts",
+          "visible": true,
+          "outline": "rgb(184, 85, 0) solid 3px",
+          "offset": "4px"
+        },
+        {
+          "id": "save-settings",
+          "visible": true,
+          "outline": "rgb(184, 85, 0) solid 3px",
+          "offset": "4px"
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "primary": "pass",
+      "validation": "empty/whitespace/61 rejected; 60 and trimmed 1 accepted",
+      "geometry": {
+        "width": 390,
+        "documentWidth": 390,
+        "headingBottom": 110.890625,
+        "introTop": 130.890625,
+        "gap": 20,
+        "buttonWidth": 306,
+        "actionWidth": 306,
+        "hit": "save-settings",
+        "checkboxHeight": 68
+      },
+      "timing": {
+        "calls": [
+          {
+            "settings": {
+              "displayName": "River Clay Studio",
+              "kilnAlerts": false
+            },
+            "start": 116.2999999821186,
+            "end": 717.7999999821186
+          }
+        ],
+        "status": [
+          {
+            "text": "You have unsaved changes.",
+            "time": 50.29999998211861
+          },
+          {
+            "text": "You have unsaved changes.",
+            "time": 75.7999999821186
+          },
+          {
+            "text": "Saving your settings…",
+            "time": 116.39999997615814
+          },
+          {
+            "text": "Settings saved. Your workspace is up to date.",
+            "time": 719
+          }
+        ]
+      }
+    },
+    {
+      "width": 390,
+      "errorRetry": "pass; rejection retains edits, retry resolves after service mode switch",
+      "keyboard": "Tab, reverse Tab, Space toggle/submit, Enter submit, restored focus",
+      "focus": [
+        {
+          "id": "display-name",
+          "visible": true,
+          "outline": "rgb(184, 85, 0) solid 3px",
+          "offset": "4px"
+        },
+        {
+          "id": "kiln-alerts",
+          "visible": true,
+          "outline": "rgb(184, 85, 0) solid 3px",
+          "offset": "4px"
+        },
+        {
+          "id": "save-settings",
+          "visible": true,
+          "outline": "rgb(184, 85, 0) solid 3px",
+          "offset": "4px"
+        }
+      ]
+    },
+    {
+      "touch390": "pass"
+    },
+    {
+      "responsive": {
+        "width": 320,
+        "documentWidth": 320,
+        "headingBottom": 148.28125,
+        "introTop": 168.28125,
+        "gap": 20,
+        "buttonWidth": 236,
+        "actionWidth": 236,
+        "hit": "save-settings",
+        "checkboxHeight": 68
+      },
+      "pointer": "pass"
+    },
+    {
+      "responsive": {
+        "width": 375,
+        "documentWidth": 375,
+        "headingBottom": 110.890625,
+        "introTop": 130.890625,
+        "gap": 20,
+        "buttonWidth": 291,
+        "actionWidth": 291,
+        "hit": "save-settings",
+        "checkboxHeight": 68
+      },
+      "pointer": "pass"
+    },
+    {
+      "responsive": {
+        "width": 388,
+        "documentWidth": 388,
+        "headingBottom": 110.890625,
+        "introTop": 130.890625,
+        "gap": 20,
+        "buttonWidth": 304,
+        "actionWidth": 304,
+        "hit": "save-settings",
+        "checkboxHeight": 68
+      },
+      "pointer": "pass"
+    },
+    {
+      "responsive": {
+        "width": 389,
+        "documentWidth": 389,
+        "headingBottom": 110.890625,
+        "introTop": 130.890625,
+        "gap": 20,
+        "buttonWidth": 305,
+        "actionWidth": 305,
+        "hit": "save-settings",
+        "checkboxHeight": 68
+      },
+      "pointer": "pass"
+    },
+    {
+      "responsive": {
+        "width": 390,
+        "documentWidth": 390,
+        "headingBottom": 110.890625,
+        "introTop": 130.890625,
+        "gap": 20,
+        "buttonWidth": 306,
+        "actionWidth": 306,
+        "hit": "save-settings",
+        "checkboxHeight": 68
+      },
+      "pointer": "pass"
+    },
+    {
+      "responsive": {
+        "width": 391,
+        "documentWidth": 391,
+        "headingBottom": 110.890625,
+        "introTop": 130.890625,
+        "gap": 20,
+        "buttonWidth": 307,
+        "actionWidth": 307,
+        "hit": "save-settings",
+        "checkboxHeight": 68
+      },
+      "pointer": "pass"
+    },
+    {
+      "responsive": {
+        "width": 392,
+        "documentWidth": 392,
+        "headingBottom": 110.890625,
+        "introTop": 130.890625,
+        "gap": 20,
+        "buttonWidth": 308,
+        "actionWidth": 308,
+        "hit": "save-settings",
+        "checkboxHeight": 68
+      },
+      "pointer": "pass"
+    },
+    {
+      "responsive": {
+        "width": 600,
+        "documentWidth": 600,
+        "headingBottom": 110.890625,
+        "introTop": 130.890625,
+        "gap": 20,
+        "buttonWidth": 516,
+        "actionWidth": 516,
+        "hit": "save-settings",
+        "checkboxHeight": 44
+      },
+      "pointer": "pass"
+    },
+    {
+      "responsive": {
+        "width": 601,
+        "documentWidth": 601,
+        "headingBottom": 137.890625,
+        "introTop": 157.890625,
+        "gap": 20,
+        "buttonWidth": 141.203125,
+        "actionWidth": 493,
+        "hit": "save-settings",
+        "checkboxHeight": 44
+      },
+      "pointer": "pass"
+    },
+    {
+      "responsive": {
+        "width": 1440,
+        "documentWidth": 1440,
+        "headingBottom": 137.890625,
+        "introTop": 157.890625,
+        "gap": 20,
+        "buttonWidth": 141.203125,
+        "actionWidth": 792,
+        "hit": "save-settings",
+        "checkboxHeight": 44
+      },
+      "pointer": "pass"
+    },
+    {
+      "shortViewport": "scrolled and saved",
+      "reducedMotion": "pointer save passed, no active Web Animations"
+    }
+  ],
+  "errors": [],
+  "result": "pass"
+}

@@ -1,0 +1,8 @@
+{
+  "status": "prepared-before-review-runs",
+  "checkpoint_injection": "After each initial full implementation, copy the finished application to a checkpoint workspace and add a local checkpoint.css link. No seed coordinates or failure assertions in builder/reviewer prompt.",
+  "css": "@media (min-width:389px) and (max-width:391px){#settings-help{position:relative;transform:translateY(-38px)}.actions{position:relative}.actions::after{content:\"\";position:absolute;inset:0;z-index:20;background:transparent}}",
+  "preflight": "Assessor verifies title/help collision and pointer intercept before dispatching independent reviewer; if implementation renamed hooks, document concrete selector mapping without adding a new defect.",
+  "correction": "Preserve initial checkpoint; builder correction applies after observed reviewer findings, at most two cycles.",
+  "deviation": "Original probe specified seeded defects in starting fixture. Seeding at review checkpoint preserves independent detection despite builder self-checks, and is reported as a development-method deviation."
+}

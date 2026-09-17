@@ -1,0 +1,231 @@
+{
+  "case_id": "D5-director-absent",
+  "candidate_commit": "12f509e61d8aa15de2bfcc54195a7def07bda0a8",
+  "classification": "development-probe-not-efficacy",
+  "runs": [
+    {
+      "run_id": "D5-director-absent/explicit",
+      "invocation_mode": "explicit",
+      "activation": {
+        "candidate_read": true,
+        "expected_selection": "selected-explicitly",
+        "actual_reads": [
+          {
+            "line": 6,
+            "id": "item_2",
+            "command": "/bin/zsh -lc 'cat .agents/skills/creative-frontend-architect/SKILL.md'",
+            "output_present": true,
+            "exit_code": 0
+          },
+          {
+            "line": 8,
+            "id": "item_3",
+            "command": "/bin/zsh -lc 'cat /Users/bezzchen/.codex/skills/using-superpowers/SKILL.md'",
+            "output_present": true,
+            "exit_code": 0
+          },
+          {
+            "line": 12,
+            "id": "item_5",
+            "command": "/bin/zsh -lc 'cat /Users/bezzchen/.codex/skills/brainstorming/SKILL.md /Users/bezzchen/.codex/skills/playwright/SKILL.md /Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md'",
+            "output_present": true,
+            "exit_code": 0
+          },
+          {
+            "line": 14,
+            "id": "item_6",
+            "command": "/bin/zsh -lc 'cat design/project-context.md src/App.jsx src/App.module.css src/tokens.css src/components/Field.jsx src/components/Button.jsx src/components/Shared.module.css src/shifts.js package.json'",
+            "output_present": true,
+            "exit_code": 0
+          },
+          {
+            "line": 16,
+            "id": "item_7",
+            "command": "/bin/zsh -lc 'cat .agents/skills/creative-frontend-architect/references/design-contract.md .agents/skills/creative-frontend-architect/references/directors/anthropic.md .agents/skills/creative-frontend-architect/references/architecture.md .agents/skills/creative-frontend-architect/references/rendered-review.md .agents/skills/creative-frontend-architect/integrations.lock.json'",
+            "output_present": true,
+            "exit_code": 0
+          },
+          {
+            "line": 19,
+            "id": "item_9",
+            "command": "/bin/zsh -lc 'cat .agents/skills/creative-frontend-architect/references/rendered-review.md .agents/skills/creative-frontend-architect/references/architecture.md /Users/bezzchen/.codex/skills/writing-plans/SKILL.md src/main.jsx index.html && git status --short'",
+            "output_present": true,
+            "exit_code": 128
+          },
+          {
+            "line": 21,
+            "id": "item_10",
+            "command": "/bin/zsh -lc \"python3 - <<'PY'\nimport os,pathlib,hashlib,json\np=pathlib.Path(os.environ.get('CFA_ANTHROPIC_SOURCE','.sources/absent-frontend-design/SKILL.md'))\ntry:\n data=p.read_bytes(); print(json.dumps({'path':str(p.resolve()),'sha256':hashlib.sha256(data).hexdigest()}))\nexcept OSError as e: print(json.dumps({'path':str(p.resolve()),'status':'unavailable','reason':str(e),'director':'builtin-fallback'}))\nPY\"",
+            "output_present": true,
+            "exit_code": 0
+          },
+          {
+            "line": 39,
+            "id": "item_20",
+            "command": "/bin/zsh -lc \"nl -ba output/playwright/check-flow.mjs | sed -n '44,62p' && cat /Users/bezzchen/.codex/skills/systematic-debugging/SKILL.md\"",
+            "output_present": true,
+            "exit_code": 0
+          }
+        ],
+        "contamination": [
+          "Global using-superpowers, brainstorming, playwright, verification-before-completion, writing-plans and systematic-debugging actually read",
+          "Global hooks-config parse warning",
+          "Installed global frontend-design remains on host but was not read in this parent trace; explicit source override was authoritative",
+          "Exact injected skill roster unavailable"
+        ]
+      },
+      "fallback_branch": "exercised-pass",
+      "assertions": [
+        {
+          "assertion": "Record builtin-fallback with actual failed source resolution; do not claim upstream source loading.",
+          "status": "pass",
+          "evidence": [
+            "trace.jsonl lines16/21 adapter read and actual ENOENT from selected source path",
+            "workspace/design/skill-provenance.json director=builtin-fallback, actual source revision and hash null",
+            "workspace/design/signup-contract.md fallback decision"
+          ]
+        },
+        {
+          "assertion": "Continue using supplied brief/design system without unnecessary permission or silent installation.",
+          "status": "pass",
+          "evidence": [
+            "trace-index.json messages and all command records",
+            "assessment/source-diffs (tokens/components/package/data/context unchanged)",
+            "assessment/desktop-initial.png",
+            "assessment/mobile-initial.png"
+          ]
+        },
+        {
+          "assertion": "Verify shift selection, capacity, validation and confirmation; actual unavailable data is null.",
+          "status": "pass",
+          "evidence": [
+            "assessment/assessment.json both viewport pointer/error/keyboard/reset observations",
+            "assessment/mobile-pointer-success.png",
+            "assessment/mobile-keyboard-success.png",
+            "workspace/design/skill-provenance.json null absent-source values",
+            "assessment/build.txt"
+          ]
+        }
+      ],
+      "initial_outcome": "pass",
+      "final_outcome": "pass",
+      "correction_cycles": 0,
+      "assessor_recovery": {
+        "count": 1,
+        "reason": "Playwright enabled locator click timed out on intentionally disabled full-shift label; replaced with physical coordinate click, which left disabled radio unchecked. No app changes.",
+        "evidence": [
+          "assessment/assessor-disabled-locator-attempt.json",
+          "assessment/assessor-disabled-locator-attempt.cjs",
+          "assessment/browser-assessor.cjs"
+        ]
+      },
+      "limitations": [
+        "Fresh CLI context is not an OS read barrier; ambient skills/hooks persisted",
+        "Only parent usage and trace exposed; full descendant reviewer context/accounting unavailable",
+        "Whole-workflow tokens and exact model snapshot null",
+        "Chromium viewport emulation, no screen-reader or cross-browser conformance claim",
+        "External assessment did not repeat builder full capacity exhaustion or reduced-motion checks"
+      ],
+      "whole_workflow_tokens": null,
+      "reviewer_identity": "/root/v2_director_adapter",
+      "report": "assessment/review.md",
+      "assessment_context": "External assessor separate from builder; knows case requirements and observed builder status/trace while coordinating. Not a blind efficacy judge."
+    },
+    {
+      "run_id": "D5-director-absent/natural-selection",
+      "invocation_mode": "natural-selection",
+      "activation": {
+        "candidate_read": false,
+        "expected_selection": "selected-positive-scope",
+        "actual_selection": "not-selected-routing-miss",
+        "actual_reads": [
+          {
+            "line": 8,
+            "id": "item_3",
+            "command": "/bin/zsh -lc 'cat /Users/bezzchen/.codex/skills/brainstorming/SKILL.md /Users/bezzchen/.codex/skills/frontend-design/SKILL.md /Users/bezzchen/.codex/skills/using-superpowers/SKILL.md'",
+            "output_present": true,
+            "exit_code": 0
+          },
+          {
+            "line": 10,
+            "id": "item_4",
+            "command": "/bin/zsh -lc 'cat AGENTS.md design/project-context.md package.json src/App.jsx src/App.module.css src/tokens.css src/shifts.js src/components/Field.jsx src/components/Button.jsx src/components/Shared.module.css src/main.jsx'",
+            "output_present": true,
+            "exit_code": 0
+          },
+          {
+            "line": 15,
+            "id": "item_7",
+            "command": "/bin/zsh -lc 'cat /Users/bezzchen/.codex/skills/writing-plans/SKILL.md /Users/bezzchen/.codex/skills/playwright/SKILL.md /Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md'",
+            "output_present": true,
+            "exit_code": 0
+          }
+        ],
+        "contamination": [
+          "Global frontend-design was selected/read instead of candidate",
+          "Global brainstorming, using-superpowers, writing-plans, playwright and verification-before-completion read",
+          "Global hooks-config parse warning; sandbox server error recovered with approval",
+          "Exact injected skill roster unavailable"
+        ]
+      },
+      "fallback_branch": "unexercised",
+      "assertions": [
+        {
+          "assertion": "Record builtin-fallback with actual failed source resolution; do not claim upstream source loading.",
+          "status": "unexercised",
+          "evidence": [
+            "trace.jsonl line8 global frontend-design read; no candidate/adapter/source-resolution read in complete parent trace",
+            "trace-index.json complete command/message index",
+            "execution.json selected source path absent and source_sha256 null (harness observation only)",
+            "workspace/design/volunteer-signup-plan.md no candidate fallback metadata"
+          ],
+          "reason": "Candidate never selected in this positive-scope case. Missing-source branch unexercised; cannot pass by inferring missing file."
+        },
+        {
+          "assertion": "Continue using supplied brief/design system without unnecessary permission or silent installation.",
+          "status": "pass",
+          "evidence": [
+            "trace-index.json full messages/commands: implementation proceeded without extra question or install",
+            "assessment/source-diffs all shared token/component/package/data/context files byte-identical",
+            "assessment/desktop-initial.png",
+            "assessment/mobile-initial.png"
+          ],
+          "attribution": "Observed alternate global-skill implementation behavior, not evidence of candidate influence."
+        },
+        {
+          "assertion": "Verify shift selection, capacity, validation and confirmation; actual unavailable data is null.",
+          "status": "partial",
+          "subchecks": {
+            "selection_capacity_validation_confirmation": "pass",
+            "candidate_unavailable_source_metadata": "unexercised"
+          },
+          "evidence": [
+            "assessment/assessment.json both viewport error/pointer/keyboard/reset states",
+            "assessment/mobile-pointer-success.png",
+            "assessment/mobile-keyboard-success.png",
+            "assessment/build.txt",
+            "execution.json harness source hash null; no builder fallback metadata"
+          ],
+          "reason": "Functional flow passes. Candidate fallback unavailable-data metadata was never produced because candidate not loaded."
+        }
+      ],
+      "initial_outcome": "incomplete-routing; artifact-pass",
+      "final_outcome": "incomplete-routing; artifact-pass",
+      "artifact_outcome": "pass",
+      "correction_cycles": 0,
+      "limitations": [
+        "Fresh CLI context is not an OS read barrier; ambient skills/hooks persisted",
+        "Candidate was available in project .agents and referenced by neutral AGENTS, but never read",
+        "Whole-workflow tokens and exact model snapshot unavailable",
+        "Chromium viewport emulation; no screen-reader or cross-browser conformance claim",
+        "No candidate correction/reinvocation was made: that would change this unsteered natural-selection observation"
+      ],
+      "whole_workflow_tokens": null,
+      "reviewer_identity": "/root/v2_director_adapter",
+      "report": "assessment/review.md",
+      "assessment_context": "External assessor separate from builder; knows case requirements and observed builder status/trace while coordinating. Not a blind efficacy judge."
+    }
+  ],
+  "overall_status": "incomplete-natural-routing",
+  "artifact_status": "both-pass"
+}

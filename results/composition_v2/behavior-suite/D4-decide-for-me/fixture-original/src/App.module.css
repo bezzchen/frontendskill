@@ -1,0 +1,1 @@
+.shell{max-width:1120px;margin:auto;padding:24px}.header{display:flex;justify-content:space-between;gap:24px;border-bottom:1px solid var(--line);padding-bottom:20px}.nav{display:flex;gap:20px}.content{padding:48px 0}.content h1{font-size:40px;line-height:1.1}@media(max-width:600px){.header{display:block}.nav{margin-top:16px;flex-wrap:wrap}.content h1{font-size:34px}}

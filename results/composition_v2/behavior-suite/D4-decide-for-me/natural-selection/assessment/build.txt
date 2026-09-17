@@ -1,0 +1,13 @@
+
+> community-interface@1.0.0 build
+> vite build
+
+vite v7.1.5 building for production...
+transforming...
+✓ 35 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.92 kB │ gzip:  0.55 kB
+dist/assets/index-Dlejeez6.css   13.47 kB │ gzip:  3.34 kB
+dist/assets/index-B_suMayt.js   204.82 kB │ gzip: 64.96 kB
+✓ built in 416ms

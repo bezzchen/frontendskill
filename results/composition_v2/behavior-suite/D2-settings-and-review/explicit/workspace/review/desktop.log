@@ -1,0 +1,67 @@
+{
+  "url": "http://127.0.0.1:8861/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nYour workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings\n\nYou have unsaved changes.",
+  "controls": [
+    {
+      "id": "display-name",
+      "tag": "INPUT",
+      "type": "text",
+      "text": "",
+      "value": "River Studio",
+      "checked": false
+    },
+    {
+      "id": "kiln-alerts",
+      "tag": "INPUT",
+      "type": "checkbox",
+      "text": "",
+      "value": "on",
+      "checked": false
+    },
+    {
+      "id": "save-settings",
+      "tag": "BUTTON",
+      "type": "submit",
+      "text": "Save settings",
+      "value": ""
+    }
+  ],
+  "focus": {
+    "tag": "BUTTON",
+    "id": "save-settings"
+  },
+  "events": [
+    {
+      "type": "action",
+      "action": {
+        "type": "press",
+        "value": "Tab"
+      }
+    },
+    {
+      "type": "action",
+      "action": {
+        "type": "press",
+        "value": "Tab"
+      }
+    },
+    {
+      "type": "action",
+      "action": {
+        "type": "press",
+        "value": "Space"
+      }
+    },
+    {
+      "type": "action",
+      "action": {
+        "type": "press",
+        "value": "Tab"
+      }
+    }
+  ]
+}

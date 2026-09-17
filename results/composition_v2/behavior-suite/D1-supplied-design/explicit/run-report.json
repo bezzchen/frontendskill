@@ -1,0 +1,81 @@
+{
+  "run_id": "D1-supplied-design/explicit",
+  "invocation_mode": "explicit",
+  "activation": {
+    "candidate_read": true,
+    "expected_selection": "selected-explicitly",
+    "actual_reads": [
+      {
+        "line": 8,
+        "id": "item_3",
+        "command": "/bin/zsh -lc 'cat .agents/skills/creative-frontend-architect/SKILL.md && cat /Users/bezzchen/.codex/skills/brainstorming/SKILL.md && cat /Users/bezzchen/.codex/skills/using-superpowers/SKILL.md'",
+        "output_present": true,
+        "exit_code": 0
+      },
+      {
+        "line": 10,
+        "id": "item_4",
+        "command": "/bin/zsh -lc 'cat design/accepted-contract.md src/App.jsx src/App.module.css src/tokens.css src/slots.js package.json .agents/skills/creative-frontend-architect/references/rendered-review.md .agents/skills/creative-frontend-architect/references/design-contract.md'",
+        "output_present": true,
+        "exit_code": 0
+      },
+      {
+        "line": 13,
+        "id": "item_6",
+        "command": "/bin/zsh -lc 'cat /Users/bezzchen/.codex/skills/playwright/SKILL.md /Users/bezzchen/.codex/skills/verification-before-completion/SKILL.md /Users/bezzchen/.codex/skills/test-driven-development/SKILL.md'",
+        "output_present": true,
+        "exit_code": 0
+      }
+    ],
+    "contamination": [
+      "global brainstorming, using-superpowers, test-driven-development, playwright, verification-before-completion bodies read",
+      "global hooks config parse error; continued",
+      "exact host-injected skill roster not observable; filesystem inventory is not equivalent"
+    ]
+  },
+  "assertions": [
+    {
+      "assertion": "Reuse accepted concept and tokens; no repeated discovery or approval request.",
+      "status": "pass",
+      "evidence": [
+        "trace.jsonl lines8,10,11,16",
+        "artifact-initial-manifest.json compared with ../fixture-frozen.json",
+        "assessment/desktop-initial.png",
+        "assessment/mobile-initial.png"
+      ]
+    },
+    {
+      "assertion": "Resolve only open architecture decisions; no competing director or stack replacement.",
+      "status": "pass",
+      "evidence": [
+        "trace-index.json actual read commands",
+        "unchanged src/tokens.css, design/accepted-contract.md and package.json hashes",
+        "workspace/work-log.md as corroboration only"
+      ]
+    },
+    {
+      "assertion": "Book slot, reject missing name, show confirmation at desktop/mobile and preserve squared controls.",
+      "status": "pass",
+      "evidence": [
+        "assessment/assessment.json",
+        "assessment/mobile-whitespace-error.png",
+        "assessment/mobile-keyboard-focus.png",
+        "assessment/mobile-keyboard-confirmation.png",
+        "assessment/build.txt"
+      ]
+    }
+  ],
+  "initial_outcome": "pass",
+  "final_outcome": "pass",
+  "correction_cycles": 0,
+  "limitations": [
+    "Ambient host skills influenced execution; not a clean isolated-skill efficacy condition",
+    "Only parent usage available; whole-workflow tokens null",
+    "Descendant reviewer claim preserved but raw child identity/context/accounting unavailable in parent trace",
+    "Chromium desktop/mobile emulation; no screen reader or physical touch device"
+  ],
+  "whole_workflow_tokens": null,
+  "reviewer_identity": "/root/v2_director_adapter",
+  "report": "assessment/review.md",
+  "assessment_context": "External assessor separate from builder; knows case requirements and observed builder status/trace while coordinating. Not a blind efficacy judge."
+}

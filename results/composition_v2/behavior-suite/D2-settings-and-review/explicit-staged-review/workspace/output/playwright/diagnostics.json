@@ -1,0 +1,1726 @@
+[
+  {
+    "width": 1440,
+    "geometry": {
+      "elements": [
+        {
+          "selector": "h1",
+          "text": "Workspace settings",
+          "rect": {
+            "x": 294,
+            "y": 89.5,
+            "width": 852,
+            "height": 48.390625,
+            "top": 89.5,
+            "right": 1146,
+            "bottom": 137.890625,
+            "left": 294
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "12px",
+            "marginBottom": "20px",
+            "lineHeight": "48.4px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": ".actions",
+          "text": "Save settings",
+          "rect": {
+            "x": 324,
+            "y": 488.890625,
+            "width": 792,
+            "height": 48,
+            "top": 488.890625,
+            "right": 1116,
+            "bottom": 536.890625,
+            "left": 324
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "#save-settings",
+          "text": "Save settings",
+          "rect": {
+            "x": 324,
+            "y": 488.890625,
+            "width": 141.203125,
+            "height": 48,
+            "top": 488.890625,
+            "right": 465.203125,
+            "bottom": 536.890625,
+            "left": 324
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "10px 20px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "label[for=\"kiln-alerts\"]",
+          "text": "Email me when my kiln firing is ready",
+          "rect": {
+            "x": 324,
+            "y": 395.890625,
+            "width": 792,
+            "height": 44,
+            "top": 395.890625,
+            "right": 1116,
+            "bottom": 439.890625,
+            "left": 324
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "10px 0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "fieldset",
+          "text": "Your workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings",
+          "rect": {
+            "x": 324,
+            "y": 239.890625,
+            "width": 792,
+            "height": 297,
+            "top": 239.890625,
+            "right": 1116,
+            "bottom": 536.890625,
+            "left": 324
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "form",
+          "text": "Your workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings",
+          "rect": {
+            "x": 324,
+            "y": 239.890625,
+            "width": 792,
+            "height": 335,
+            "top": 239.890625,
+            "right": 1116,
+            "bottom": 574.890625,
+            "left": 324
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        }
+      ],
+      "hitTargets": [
+        {
+          "ratio": 0.05,
+          "tag": "BUTTON",
+          "id": "save-settings",
+          "class": ""
+        },
+        {
+          "ratio": 0.5,
+          "tag": "BUTTON",
+          "id": "save-settings",
+          "class": ""
+        },
+        {
+          "ratio": 0.95,
+          "tag": "BUTTON",
+          "id": "save-settings",
+          "class": ""
+        }
+      ],
+      "services": {
+        "windowType": "object",
+        "lexicalType": "object"
+      },
+      "descriptions": [
+        {
+          "id": "settings-form",
+          "targets": [
+            {
+              "id": "settings-help",
+              "exists": true,
+              "text": "Make this space feel like yours. Choose how we keep you in the loop."
+            }
+          ]
+        },
+        {
+          "id": "display-name",
+          "targets": [
+            {
+              "id": "name-help",
+              "exists": true,
+              "text": "Your name in the studio. Use 1–60 characters."
+            },
+            {
+              "id": "name-error",
+              "exists": true,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "id": "kiln-alerts",
+          "targets": [
+            {
+              "id": "kiln-help",
+              "exists": true,
+              "text": "One message when your work is ready to collect."
+            }
+          ]
+        }
+      ]
+    },
+    "pointerStatus": "Settings saved. Your workspace is up to date."
+  },
+  {
+    "width": 601,
+    "geometry": {
+      "elements": [
+        {
+          "selector": "h1",
+          "text": "Workspace settings",
+          "rect": {
+            "x": 24,
+            "y": 89.5,
+            "width": 553,
+            "height": 48.390625,
+            "top": 89.5,
+            "right": 577,
+            "bottom": 137.890625,
+            "left": 24
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "12px",
+            "marginBottom": "20px",
+            "lineHeight": "48.4px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": ".actions",
+          "text": "Save settings",
+          "rect": {
+            "x": 54,
+            "y": 488.890625,
+            "width": 493,
+            "height": 48,
+            "top": 488.890625,
+            "right": 547,
+            "bottom": 536.890625,
+            "left": 54
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "#save-settings",
+          "text": "Save settings",
+          "rect": {
+            "x": 54,
+            "y": 488.890625,
+            "width": 141.203125,
+            "height": 48,
+            "top": 488.890625,
+            "right": 195.203125,
+            "bottom": 536.890625,
+            "left": 54
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "10px 20px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "label[for=\"kiln-alerts\"]",
+          "text": "Email me when my kiln firing is ready",
+          "rect": {
+            "x": 54,
+            "y": 395.890625,
+            "width": 493,
+            "height": 44,
+            "top": 395.890625,
+            "right": 547,
+            "bottom": 439.890625,
+            "left": 54
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "10px 0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "fieldset",
+          "text": "Your workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings",
+          "rect": {
+            "x": 54,
+            "y": 239.890625,
+            "width": 493,
+            "height": 297,
+            "top": 239.890625,
+            "right": 547,
+            "bottom": 536.890625,
+            "left": 54
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "form",
+          "text": "Your workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings",
+          "rect": {
+            "x": 54,
+            "y": 239.890625,
+            "width": 493,
+            "height": 335,
+            "top": 239.890625,
+            "right": 547,
+            "bottom": 574.890625,
+            "left": 54
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        }
+      ],
+      "hitTargets": [
+        {
+          "ratio": 0.05,
+          "tag": "BUTTON",
+          "id": "save-settings",
+          "class": ""
+        },
+        {
+          "ratio": 0.5,
+          "tag": "BUTTON",
+          "id": "save-settings",
+          "class": ""
+        },
+        {
+          "ratio": 0.95,
+          "tag": "BUTTON",
+          "id": "save-settings",
+          "class": ""
+        }
+      ],
+      "services": {
+        "windowType": "object",
+        "lexicalType": "object"
+      },
+      "descriptions": [
+        {
+          "id": "settings-form",
+          "targets": [
+            {
+              "id": "settings-help",
+              "exists": true,
+              "text": "Make this space feel like yours. Choose how we keep you in the loop."
+            }
+          ]
+        },
+        {
+          "id": "display-name",
+          "targets": [
+            {
+              "id": "name-help",
+              "exists": true,
+              "text": "Your name in the studio. Use 1–60 characters."
+            },
+            {
+              "id": "name-error",
+              "exists": true,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "id": "kiln-alerts",
+          "targets": [
+            {
+              "id": "kiln-help",
+              "exists": true,
+              "text": "One message when your work is ready to collect."
+            }
+          ]
+        }
+      ]
+    },
+    "pointerStatus": "Settings saved. Your workspace is up to date."
+  },
+  {
+    "width": 600,
+    "geometry": {
+      "elements": [
+        {
+          "selector": "h1",
+          "text": "Workspace settings",
+          "rect": {
+            "x": 20,
+            "y": 73.5,
+            "width": 560,
+            "height": 37.390625,
+            "top": 73.5,
+            "right": 580,
+            "bottom": 110.890625,
+            "left": 20
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "12px",
+            "marginBottom": "20px",
+            "lineHeight": "37.4px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": ".actions",
+          "text": "Save settings",
+          "rect": {
+            "x": 42,
+            "y": 453.890625,
+            "width": 516,
+            "height": 48,
+            "top": 453.890625,
+            "right": 558,
+            "bottom": 501.890625,
+            "left": 42
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "#save-settings",
+          "text": "Save settings",
+          "rect": {
+            "x": 42,
+            "y": 453.890625,
+            "width": 516,
+            "height": 48,
+            "top": 453.890625,
+            "right": 558,
+            "bottom": 501.890625,
+            "left": 42
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "10px 20px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "label[for=\"kiln-alerts\"]",
+          "text": "Email me when my kiln firing is ready",
+          "rect": {
+            "x": 42,
+            "y": 360.890625,
+            "width": 516,
+            "height": 44,
+            "top": 360.890625,
+            "right": 558,
+            "bottom": 404.890625,
+            "left": 42
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "10px 0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "fieldset",
+          "text": "Your workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings",
+          "rect": {
+            "x": 42,
+            "y": 204.890625,
+            "width": 516,
+            "height": 297,
+            "top": 204.890625,
+            "right": 558,
+            "bottom": 501.890625,
+            "left": 42
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "form",
+          "text": "Your workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings",
+          "rect": {
+            "x": 42,
+            "y": 204.890625,
+            "width": 516,
+            "height": 335,
+            "top": 204.890625,
+            "right": 558,
+            "bottom": 539.890625,
+            "left": 42
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        }
+      ],
+      "hitTargets": [
+        {
+          "ratio": 0.05,
+          "tag": "BUTTON",
+          "id": "save-settings",
+          "class": ""
+        },
+        {
+          "ratio": 0.5,
+          "tag": "BUTTON",
+          "id": "save-settings",
+          "class": ""
+        },
+        {
+          "ratio": 0.95,
+          "tag": "BUTTON",
+          "id": "save-settings",
+          "class": ""
+        }
+      ],
+      "services": {
+        "windowType": "object",
+        "lexicalType": "object"
+      },
+      "descriptions": [
+        {
+          "id": "settings-form",
+          "targets": [
+            {
+              "id": "settings-help",
+              "exists": true,
+              "text": "Make this space feel like yours. Choose how we keep you in the loop."
+            }
+          ]
+        },
+        {
+          "id": "display-name",
+          "targets": [
+            {
+              "id": "name-help",
+              "exists": true,
+              "text": "Your name in the studio. Use 1–60 characters."
+            },
+            {
+              "id": "name-error",
+              "exists": true,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "id": "kiln-alerts",
+          "targets": [
+            {
+              "id": "kiln-help",
+              "exists": true,
+              "text": "One message when your work is ready to collect."
+            }
+          ]
+        }
+      ]
+    },
+    "pointerStatus": "Settings saved. Your workspace is up to date."
+  },
+  {
+    "width": 390,
+    "geometry": {
+      "elements": [
+        {
+          "selector": "h1",
+          "text": "Workspace settings",
+          "rect": {
+            "x": 20,
+            "y": 73.5,
+            "width": 350,
+            "height": 37.390625,
+            "top": 73.5,
+            "right": 370,
+            "bottom": 110.890625,
+            "left": 20
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "12px",
+            "marginBottom": "20px",
+            "lineHeight": "37.4px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": ".actions",
+          "text": "Save settings",
+          "rect": {
+            "x": 42,
+            "y": 522.890625,
+            "width": 306,
+            "height": 48,
+            "top": 522.890625,
+            "right": 348,
+            "bottom": 570.890625,
+            "left": 42
+          },
+          "styles": {
+            "position": "relative",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "\"\"",
+            "position": "absolute",
+            "inset": "0px"
+          }
+        },
+        {
+          "selector": "#save-settings",
+          "text": "Save settings",
+          "rect": {
+            "x": 42,
+            "y": 522.890625,
+            "width": 306,
+            "height": 48,
+            "top": 522.890625,
+            "right": 348,
+            "bottom": 570.890625,
+            "left": 42
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "10px 20px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "label[for=\"kiln-alerts\"]",
+          "text": "Email me when my kiln firing is ready",
+          "rect": {
+            "x": 42,
+            "y": 384.890625,
+            "width": 306,
+            "height": 68,
+            "top": 384.890625,
+            "right": 348,
+            "bottom": 452.890625,
+            "left": 42
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "10px 0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "fieldset",
+          "text": "Your workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings",
+          "rect": {
+            "x": 42,
+            "y": 228.890625,
+            "width": 306,
+            "height": 342,
+            "top": 228.890625,
+            "right": 348,
+            "bottom": 570.890625,
+            "left": 42
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "form",
+          "text": "Your workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings",
+          "rect": {
+            "x": 42,
+            "y": 228.890625,
+            "width": 306,
+            "height": 380,
+            "top": 228.890625,
+            "right": 348,
+            "bottom": 608.890625,
+            "left": 42
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        }
+      ],
+      "hitTargets": [
+        {
+          "ratio": 0.05,
+          "tag": "DIV",
+          "id": "",
+          "class": "actions"
+        },
+        {
+          "ratio": 0.5,
+          "tag": "DIV",
+          "id": "",
+          "class": "actions"
+        },
+        {
+          "ratio": 0.95,
+          "tag": "DIV",
+          "id": "",
+          "class": "actions"
+        }
+      ],
+      "services": {
+        "windowType": "object",
+        "lexicalType": "object"
+      },
+      "descriptions": [
+        {
+          "id": "settings-form",
+          "targets": [
+            {
+              "id": "settings-help",
+              "exists": true,
+              "text": "Make this space feel like yours. Choose how we keep you in the loop."
+            }
+          ]
+        },
+        {
+          "id": "display-name",
+          "targets": [
+            {
+              "id": "name-help",
+              "exists": true,
+              "text": "Your name in the studio. Use 1–60 characters."
+            },
+            {
+              "id": "name-error",
+              "exists": true,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "id": "kiln-alerts",
+          "targets": [
+            {
+              "id": "kiln-help",
+              "exists": true,
+              "text": "One message when your work is ready to collect."
+            }
+          ]
+        }
+      ]
+    },
+    "pointerStatus": ""
+  },
+  {
+    "width": 375,
+    "geometry": {
+      "elements": [
+        {
+          "selector": "h1",
+          "text": "Workspace settings",
+          "rect": {
+            "x": 20,
+            "y": 73.5,
+            "width": 335,
+            "height": 37.390625,
+            "top": 73.5,
+            "right": 355,
+            "bottom": 110.890625,
+            "left": 20
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "12px",
+            "marginBottom": "20px",
+            "lineHeight": "37.4px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": ".actions",
+          "text": "Save settings",
+          "rect": {
+            "x": 42,
+            "y": 543.890625,
+            "width": 291,
+            "height": 48,
+            "top": 543.890625,
+            "right": 333,
+            "bottom": 591.890625,
+            "left": 42
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "#save-settings",
+          "text": "Save settings",
+          "rect": {
+            "x": 42,
+            "y": 543.890625,
+            "width": 291,
+            "height": 48,
+            "top": 543.890625,
+            "right": 333,
+            "bottom": 591.890625,
+            "left": 42
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "10px 20px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "label[for=\"kiln-alerts\"]",
+          "text": "Email me when my kiln firing is ready",
+          "rect": {
+            "x": 42,
+            "y": 405.890625,
+            "width": 291,
+            "height": 68,
+            "top": 405.890625,
+            "right": 333,
+            "bottom": 473.890625,
+            "left": 42
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "10px 0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "fieldset",
+          "text": "Your workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings",
+          "rect": {
+            "x": 42,
+            "y": 228.890625,
+            "width": 291,
+            "height": 363,
+            "top": 228.890625,
+            "right": 333,
+            "bottom": 591.890625,
+            "left": 42
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "form",
+          "text": "Your workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings",
+          "rect": {
+            "x": 42,
+            "y": 228.890625,
+            "width": 291,
+            "height": 401,
+            "top": 228.890625,
+            "right": 333,
+            "bottom": 629.890625,
+            "left": 42
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        }
+      ],
+      "hitTargets": [
+        {
+          "ratio": 0.05,
+          "tag": "BUTTON",
+          "id": "save-settings",
+          "class": ""
+        },
+        {
+          "ratio": 0.5,
+          "tag": "BUTTON",
+          "id": "save-settings",
+          "class": ""
+        },
+        {
+          "ratio": 0.95,
+          "tag": "BUTTON",
+          "id": "save-settings",
+          "class": ""
+        }
+      ],
+      "services": {
+        "windowType": "object",
+        "lexicalType": "object"
+      },
+      "descriptions": [
+        {
+          "id": "settings-form",
+          "targets": [
+            {
+              "id": "settings-help",
+              "exists": true,
+              "text": "Make this space feel like yours. Choose how we keep you in the loop."
+            }
+          ]
+        },
+        {
+          "id": "display-name",
+          "targets": [
+            {
+              "id": "name-help",
+              "exists": true,
+              "text": "Your name in the studio. Use 1–60 characters."
+            },
+            {
+              "id": "name-error",
+              "exists": true,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "id": "kiln-alerts",
+          "targets": [
+            {
+              "id": "kiln-help",
+              "exists": true,
+              "text": "One message when your work is ready to collect."
+            }
+          ]
+        }
+      ]
+    },
+    "pointerStatus": "Settings saved. Your workspace is up to date."
+  },
+  {
+    "width": 320,
+    "geometry": {
+      "elements": [
+        {
+          "selector": "h1",
+          "text": "Workspace settings",
+          "rect": {
+            "x": 20,
+            "y": 73.5,
+            "width": 280,
+            "height": 74.78125,
+            "top": 73.5,
+            "right": 300,
+            "bottom": 148.28125,
+            "left": 20
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "12px",
+            "marginBottom": "20px",
+            "lineHeight": "37.4px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": ".actions",
+          "text": "Save settings",
+          "rect": {
+            "x": 42,
+            "y": 581.28125,
+            "width": 236,
+            "height": 48,
+            "top": 581.28125,
+            "right": 278,
+            "bottom": 629.28125,
+            "left": 42
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "#save-settings",
+          "text": "Save settings",
+          "rect": {
+            "x": 42,
+            "y": 581.28125,
+            "width": 236,
+            "height": 48,
+            "top": 581.28125,
+            "right": 278,
+            "bottom": 629.28125,
+            "left": 42
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "10px 20px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "label[for=\"kiln-alerts\"]",
+          "text": "Email me when my kiln firing is ready",
+          "rect": {
+            "x": 42,
+            "y": 443.28125,
+            "width": 236,
+            "height": 68,
+            "top": 443.28125,
+            "right": 278,
+            "bottom": 511.28125,
+            "left": 42
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "10px 0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "fieldset",
+          "text": "Your workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings",
+          "rect": {
+            "x": 42,
+            "y": 266.28125,
+            "width": 236,
+            "height": 363,
+            "top": 266.28125,
+            "right": 278,
+            "bottom": 629.28125,
+            "left": 42
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        },
+        {
+          "selector": "form",
+          "text": "Your workspace preferences\nDisplay name\n\nYour name in the studio. Use 1–60 characters.\n\nEmail me when my kiln firing is ready\n\nOne message when your work is ready to collect.\n\nSave settings",
+          "rect": {
+            "x": 42,
+            "y": 266.28125,
+            "width": 236,
+            "height": 401,
+            "top": 266.28125,
+            "right": 278,
+            "bottom": 667.28125,
+            "left": 42
+          },
+          "styles": {
+            "position": "static",
+            "marginTop": "0px",
+            "marginBottom": "0px",
+            "lineHeight": "24px",
+            "pointerEvents": "auto",
+            "padding": "0px"
+          },
+          "before": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          },
+          "after": {
+            "content": "none",
+            "position": "static",
+            "inset": "auto"
+          }
+        }
+      ],
+      "hitTargets": [
+        {
+          "ratio": 0.05,
+          "tag": "BUTTON",
+          "id": "save-settings",
+          "class": ""
+        },
+        {
+          "ratio": 0.5,
+          "tag": "BUTTON",
+          "id": "save-settings",
+          "class": ""
+        },
+        {
+          "ratio": 0.95,
+          "tag": "BUTTON",
+          "id": "save-settings",
+          "class": ""
+        }
+      ],
+      "services": {
+        "windowType": "object",
+        "lexicalType": "object"
+      },
+      "descriptions": [
+        {
+          "id": "settings-form",
+          "targets": [
+            {
+              "id": "settings-help",
+              "exists": true,
+              "text": "Make this space feel like yours. Choose how we keep you in the loop."
+            }
+          ]
+        },
+        {
+          "id": "display-name",
+          "targets": [
+            {
+              "id": "name-help",
+              "exists": true,
+              "text": "Your name in the studio. Use 1–60 characters."
+            },
+            {
+              "id": "name-error",
+              "exists": true,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "id": "kiln-alerts",
+          "targets": [
+            {
+              "id": "kiln-help",
+              "exists": true,
+              "text": "One message when your work is ready to collect."
+            }
+          ]
+        }
+      ]
+    },
+    "pointerStatus": "Settings saved. Your workspace is up to date."
+  },
+  {
+    "width": 1440,
+    "test": "pending-lock-and-timing",
+    "pending": {
+      "status": "Saving your settings…",
+      "fieldset": [
+        {
+          "disabled": true,
+          "busy": "true"
+        }
+      ],
+      "controls": [
+        {
+          "id": "display-name",
+          "disabled": true
+        },
+        {
+          "id": "kiln-alerts",
+          "disabled": true
+        },
+        {
+          "id": "save-settings",
+          "disabled": true
+        }
+      ]
+    },
+    "completion": {
+      "timeline": [
+        {
+          "ms": 3,
+          "status": "Saving your settings…",
+          "disabled": [
+            {
+              "id": "display-name",
+              "disabled": true
+            },
+            {
+              "id": "kiln-alerts",
+              "disabled": true
+            },
+            {
+              "id": "save-settings",
+              "disabled": true
+            }
+          ]
+        },
+        {
+          "ms": 605,
+          "status": "Settings saved. Your workspace is up to date.",
+          "disabled": [
+            {
+              "id": "display-name",
+              "disabled": false
+            },
+            {
+              "id": "kiln-alerts",
+              "disabled": false
+            },
+            {
+              "id": "save-settings",
+              "disabled": false
+            }
+          ]
+        }
+      ],
+      "value": "Pending Test",
+      "checked": true,
+      "status": "Settings saved. Your workspace is up to date.",
+      "focus": "save-settings"
+    }
+  },
+  {
+    "width": 1440,
+    "test": "keyboard-error-retry-empty",
+    "first": "We couldn’t save your settings. Your changes are still here. Please try again.",
+    "retry": "We couldn’t save your settings. Your changes are still here. Please try again.",
+    "empty": "Check your display name before saving.",
+    "focus": "display-name"
+  },
+  {
+    "width": 390,
+    "test": "pending-lock-and-timing",
+    "pending": {
+      "status": "Saving your settings…",
+      "fieldset": [
+        {
+          "disabled": true,
+          "busy": "true"
+        }
+      ],
+      "controls": [
+        {
+          "id": "display-name",
+          "disabled": true
+        },
+        {
+          "id": "kiln-alerts",
+          "disabled": true
+        },
+        {
+          "id": "save-settings",
+          "disabled": true
+        }
+      ]
+    },
+    "completion": {
+      "timeline": [
+        {
+          "ms": 3,
+          "status": "Saving your settings…",
+          "disabled": [
+            {
+              "id": "display-name",
+              "disabled": true
+            },
+            {
+              "id": "kiln-alerts",
+              "disabled": true
+            },
+            {
+              "id": "save-settings",
+              "disabled": true
+            }
+          ]
+        },
+        {
+          "ms": 605,
+          "status": "Settings saved. Your workspace is up to date.",
+          "disabled": [
+            {
+              "id": "display-name",
+              "disabled": false
+            },
+            {
+              "id": "kiln-alerts",
+              "disabled": false
+            },
+            {
+              "id": "save-settings",
+              "disabled": false
+            }
+          ]
+        }
+      ],
+      "value": "Pending Test",
+      "checked": true,
+      "status": "Settings saved. Your workspace is up to date.",
+      "focus": "save-settings"
+    }
+  },
+  {
+    "width": 390,
+    "test": "keyboard-error-retry-empty",
+    "first": "We couldn’t save your settings. Your changes are still here. Please try again.",
+    "retry": "We couldn’t save your settings. Your changes are still here. Please try again.",
+    "empty": "Check your display name before saving.",
+    "focus": "display-name"
+  }
+]

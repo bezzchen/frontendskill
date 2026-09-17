@@ -1,0 +1,35 @@
+{
+  "results": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "membershipStatus": "✓\nYou’re on the demo list, Review Member.\n\nYour details are saved in this browser. No payment was taken and nothing was sent.\n\nChoose your notification preferences",
+      "preferenceStatus": "Preferences saved in this browser.",
+      "validation": "pass",
+      "keyboard": "Tab, Shift+Tab, Space, Enter; focus and completion pass",
+      "reloadPersistence": "pass",
+      "allOff": "pass",
+      "overflow": "none",
+      "reducedMotion": "pass",
+      "activeAnimations": 0
+    },
+    {
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "membershipStatus": "✓\nYou’re on the demo list, Review Member.\n\nYour details are saved in this browser. No payment was taken and nothing was sent.\n\nChoose your notification preferences",
+      "preferenceStatus": "Preferences saved in this browser.",
+      "validation": "pass",
+      "keyboard": "Tab, Shift+Tab, Space, Enter; focus and completion pass",
+      "reloadPersistence": "pass",
+      "allOff": "pass",
+      "overflow": "none",
+      "reducedMotion": "pass",
+      "activeAnimations": 0
+    }
+  ],
+  "consoleErrors": []
+}

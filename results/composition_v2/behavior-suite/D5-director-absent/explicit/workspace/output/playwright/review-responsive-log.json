@@ -1,0 +1,52 @@
+[
+  {
+    "state": "first Tab",
+    "focus": {
+      "tag": "INPUT",
+      "id": "shift-morning",
+      "text": "",
+      "value": "morning"
+    }
+  },
+  {
+    "state": "confirm keyboard focus",
+    "focus": {
+      "tag": "BUTTON",
+      "id": "",
+      "text": "Confirm shift ↗",
+      "value": ""
+    }
+  },
+  {
+    "state": "keyboard completion",
+    "focus": {
+      "tag": "H2",
+      "id": "confirmation-heading",
+      "text": "Shift confirmed."
+    }
+  },
+  {
+    "state": "keyboard reset",
+    "focus": {
+      "tag": "H2",
+      "id": "choose-heading",
+      "text": "Choose your shift"
+    }
+  },
+  {
+    "state": "morning depleted after 4 signups",
+    "text": "m.\nMoss Lane Garden\nNeighbors growing together\n\nGROW WITH YOUR NEIGHBORS\n\nMake room for\nsomething good.\n\nA few hours in the garden can make a real difference. Find a shift that fits your day and lend a hand.\n\n01\nChoose your shift\n2 hours each\nAvailable volunteer shifts (required)\nMorning planting\nFull\nSaturday 24 October · 09:00–11:00\nHelp new plants put down roots.\n0 available / 12 total\nPath and bed care\n5 places left\nSaturday 24 October · 13:00–15:00\nGive our shared growing spaces a little care.\n5 available / 10 total\nCompost crew\nFull\nSunday 25 October · 10:00–12:00\nTurn garden leftovers into something good.\n0 available / 8 total\n\nOne sign-up reserves one place. Every pair of hands helps.\n\n02\nMake it yours\n\nLet us know who’s lending a hand.\n\nContact name\n\nYOUR CHOSEN SHIFT\n\nChoose an available shift to see\nyour details here.\n\nConfirm shift\n↗\n\nDemo only. No real booking will be made.\nYour details stay on this page.\n\nMoss Lane Garden\nA shared patch. A shared purpose."
+  },
+  {
+    "state": "reduced motion confirmation",
+    "focus": {
+      "tag": "H2",
+      "id": "confirmation-heading",
+      "text": "Shift confirmed."
+    }
+  },
+  {
+    "state": "reload clears local data",
+    "pass": true
+  }
+]

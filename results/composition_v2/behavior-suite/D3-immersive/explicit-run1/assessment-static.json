@@ -1,0 +1,36 @@
+{
+  "assertions": [
+    {
+      "assertion": "Explicitly consider S register and a central authored interactive system instead of only decorative sections.",
+      "status": "pass",
+      "evidence": [
+        "workspace/.design/contract.md",
+        "workspace/scene.js",
+        "assessment-initial/desktop-arrival.png",
+        "assessment-initial/desktop-departure.png"
+      ],
+      "finding": "Contract explicitly selects S immersive realtime, Canvas2D procedural sphere/parallax, with passage and bearing changing central moon distance/position and reference lock. Source and actual all-act controls agree."
+    },
+    {
+      "assertion": "Record renderer ownership, mobile/reduced-motion design and meaningful input causality.",
+      "status": "pass",
+      "evidence": [
+        "workspace/.design/contract.md",
+        "workspace/app.js",
+        "workspace/scene.js",
+        "assessment-initial/observations.json"
+      ],
+      "finding": "scene.js exclusively owns Canvas/interpolation/single RAF; app.js owns state and accessible native controls. Contract records stacked mobile, system-motion response, visible/hidden/offscreen/pagehide lifecycle. Actual paused-canvas bearing/passage changes, native hidden/restore, offscreen and reduced-motion checks pass."
+    }
+  ],
+  "visual_review": {
+    "inspected": [
+      "assessment-initial/desktop-initial.png",
+      "assessment-initial/desktop-alignment.png",
+      "assessment-initial/desktop-departure.png",
+      "assessment-initial/mobile-reduced-alignment.png",
+      "assessment-initial/mobile-controls-keyboard.png"
+    ],
+    "finding": "Central sphere dominates authored observatory scene and visibly changes scale across passage. Mobile retains act explanation, focused native sliders and controls without horizontal overflow. No efficacy/subjective superiority score."
+  }
+}

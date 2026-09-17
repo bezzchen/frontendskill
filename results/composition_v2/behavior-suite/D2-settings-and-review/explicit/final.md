@@ -1,0 +1,3 @@
+Implemented name validation, kiln-alert saving, and clear saving/success/error feedback with retry. Preserved studio colors and square controls, with larger phone tap targets.
+
+Syntax, integration, and desktop/mobile browser checks passed. Details and testing limits are in [work-log.md](/Users/bezzchen/Documents/Codex/2026-09-16/take-x20/work/v2-behavior/D2-settings-and-review/explicit/workspace/work-log.md).

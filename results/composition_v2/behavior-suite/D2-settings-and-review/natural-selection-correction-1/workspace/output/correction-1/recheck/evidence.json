@@ -1,0 +1,1198 @@
+{
+  "review_mode": "independent",
+  "reviewer": "/root/rendered_recheck",
+  "cycle": 1,
+  "events": [],
+  "checks": [
+    {
+      "name": "desktop-pointer: save resolves",
+      "passed": true,
+      "detail": {
+        "elapsedMs": 652
+      }
+    },
+    {
+      "name": "desktop pointer save success",
+      "passed": true,
+      "detail": {}
+    },
+    {
+      "name": "empty validation",
+      "passed": true,
+      "detail": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nEnter a display name for your studio.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings"
+    },
+    {
+      "name": "whitespace validation",
+      "passed": true,
+      "detail": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nEnter a display name for your studio.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings"
+    },
+    {
+      "name": "61st character prevented by input length limit",
+      "passed": true
+    },
+    {
+      "name": "length-60: save resolves",
+      "passed": true,
+      "detail": {
+        "elapsedMs": 653
+      }
+    },
+    {
+      "name": "60 character boundary accepted",
+      "passed": true
+    },
+    {
+      "name": "desktop-error: save resolves",
+      "passed": true,
+      "detail": {
+        "elapsedMs": 655
+      }
+    },
+    {
+      "name": "failure retains entered preferences",
+      "passed": true
+    },
+    {
+      "name": "desktop-retry: save resolves",
+      "passed": true,
+      "detail": {
+        "elapsedMs": 643
+      }
+    },
+    {
+      "name": "pointer retry succeeds",
+      "passed": true
+    },
+    {
+      "name": "keyboard-space: save resolves",
+      "passed": true,
+      "detail": {
+        "elapsedMs": 624
+      }
+    },
+    {
+      "name": "keyboard-enter: save resolves",
+      "passed": true,
+      "detail": {
+        "elapsedMs": 616
+      }
+    },
+    {
+      "name": "keyboard Tab/Shift+Tab and Space/Enter task completion",
+      "passed": true
+    },
+    {
+      "name": "390px header geometry and no horizontal overflow",
+      "passed": true,
+      "detail": {
+        "box": {
+          "x": 20,
+          "y": 59.5,
+          "width": 350,
+          "height": 37.390625,
+          "top": 59.5,
+          "right": 370,
+          "bottom": 96.890625,
+          "left": 20
+        },
+        "font": "34px",
+        "lineHeight": "37.4px"
+      }
+    },
+    {
+      "name": "phone-touch: save resolves",
+      "passed": true,
+      "detail": {
+        "elapsedMs": 669
+      }
+    },
+    {
+      "name": "emulated touch save success",
+      "passed": true
+    },
+    {
+      "name": "phone-error: save resolves",
+      "passed": true,
+      "detail": {
+        "elapsedMs": 671
+      }
+    },
+    {
+      "name": "phone-retry: save resolves",
+      "passed": true,
+      "detail": {
+        "elapsedMs": 669
+      }
+    },
+    {
+      "name": "phone retry keeps values and succeeds",
+      "passed": true
+    },
+    {
+      "name": "phone-short: save resolves",
+      "passed": true,
+      "detail": {
+        "elapsedMs": 670
+      }
+    },
+    {
+      "name": "390x600 scrolling and save",
+      "passed": true,
+      "detail": {
+        "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings",
+        "focus": "",
+        "inputs": [
+          {
+            "id": "display-name",
+            "value": "River Studio",
+            "checked": false,
+            "disabled": false,
+            "invalid": null,
+            "text": ""
+          },
+          {
+            "id": "kiln-alerts",
+            "value": "on",
+            "checked": true,
+            "disabled": false,
+            "invalid": null,
+            "text": ""
+          },
+          {
+            "id": "save-settings",
+            "value": "",
+            "disabled": false,
+            "invalid": null,
+            "text": "Save settings"
+          }
+        ],
+        "width": 390,
+        "scrollWidth": 390,
+        "scrollHeight": 786,
+        "scrollY": 186,
+        "storage": {}
+      }
+    },
+    {
+      "name": "no console errors or page errors",
+      "passed": true
+    }
+  ],
+  "states": [
+    {
+      "label": "desktop-pointer-pending",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Juniper Clay Studio",
+          "checked": false,
+          "disabled": true,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": true,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Saving…"
+        }
+      ],
+      "width": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "desktop-pointer-complete",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved.",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Juniper Clay Studio",
+          "checked": false,
+          "disabled": false,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Save settings"
+        }
+      ],
+      "width": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "empty",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nEnter a display name for your studio.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings",
+      "focus": "display-name",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "",
+          "checked": false,
+          "disabled": false,
+          "invalid": "true",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Save settings"
+        }
+      ],
+      "width": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "whitespace",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nEnter a display name for your studio.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings",
+      "focus": "display-name",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "   ",
+          "checked": false,
+          "disabled": false,
+          "invalid": "true",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Save settings"
+        }
+      ],
+      "width": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "length-60-pending",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "checked": false,
+          "disabled": true,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": true,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Saving…"
+        }
+      ],
+      "width": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "length-60-complete",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved.",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "checked": false,
+          "disabled": false,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Save settings"
+        }
+      ],
+      "width": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "desktop-error-pending",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Porcelain Garden",
+          "checked": false,
+          "disabled": true,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": true,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Saving…"
+        }
+      ],
+      "width": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "desktop-error-complete",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Try saving again.",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Porcelain Garden",
+          "checked": false,
+          "disabled": false,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Save settings"
+        }
+      ],
+      "width": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "desktop-retry-pending",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Porcelain Garden",
+          "checked": false,
+          "disabled": true,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": true,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Saving…"
+        }
+      ],
+      "width": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "desktop-retry-complete",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved.",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Porcelain Garden",
+          "checked": false,
+          "disabled": false,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Save settings"
+        }
+      ],
+      "width": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "keyboard-name",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings",
+      "focus": "display-name",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "River Studio",
+          "checked": false,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": true,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Save settings"
+        }
+      ],
+      "width": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "keyboard-checkbox",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nYou have unsaved changes.",
+      "focus": "kiln-alerts",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Keyboard Clay",
+          "checked": false,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": true,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Save settings"
+        }
+      ],
+      "width": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "keyboard-save",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nYou have unsaved changes.",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Keyboard Clay",
+          "checked": false,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Save settings"
+        }
+      ],
+      "width": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "keyboard-reverse",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nYou have unsaved changes.",
+      "focus": "kiln-alerts",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Keyboard Clay",
+          "checked": false,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Save settings"
+        }
+      ],
+      "width": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "keyboard-space-pending",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Keyboard Clay",
+          "checked": false,
+          "disabled": true,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": true,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Saving…"
+        }
+      ],
+      "width": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "keyboard-space-complete",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved.",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Keyboard Clay",
+          "checked": false,
+          "disabled": false,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Save settings"
+        }
+      ],
+      "width": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "keyboard-enter-name",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved.",
+      "focus": "display-name",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Keyboard Clay",
+          "checked": false,
+          "disabled": false,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Save settings"
+        }
+      ],
+      "width": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "keyboard-enter-pending",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Enter Studio",
+          "checked": false,
+          "disabled": true,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": true,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Saving…"
+        }
+      ],
+      "width": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "keyboard-enter-complete",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved.",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Enter Studio",
+          "checked": false,
+          "disabled": false,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Save settings"
+        }
+      ],
+      "width": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "phone-initial",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings",
+      "focus": "",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "River Studio",
+          "checked": false,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": true,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Save settings"
+        }
+      ],
+      "width": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "phone-touch-pending",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Touch Clay",
+          "checked": false,
+          "disabled": true,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": true,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Saving…"
+        }
+      ],
+      "width": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "phone-touch-complete",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved.",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Touch Clay",
+          "checked": false,
+          "disabled": false,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Save settings"
+        }
+      ],
+      "width": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "phone-error-pending",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Phone Retry Studio",
+          "checked": false,
+          "disabled": true,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": true,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Saving…"
+        }
+      ],
+      "width": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "phone-error-complete",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Try saving again.",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Phone Retry Studio",
+          "checked": false,
+          "disabled": false,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Save settings"
+        }
+      ],
+      "width": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "phone-retry-pending",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Phone Retry Studio",
+          "checked": false,
+          "disabled": true,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": true,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Saving…"
+        }
+      ],
+      "width": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "phone-retry-complete",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved.",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Phone Retry Studio",
+          "checked": false,
+          "disabled": false,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": false,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Save settings"
+        }
+      ],
+      "width": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 900,
+      "scrollY": 0,
+      "storage": {}
+    },
+    {
+      "label": "phone-short-scrolled",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings",
+      "focus": "",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "River Studio",
+          "checked": false,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": true,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Save settings"
+        }
+      ],
+      "width": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 786,
+      "scrollY": 186,
+      "storage": {}
+    },
+    {
+      "label": "phone-short-pending",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSaving…\n\nSaving your settings…",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Short Viewport",
+          "checked": false,
+          "disabled": true,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": true,
+          "disabled": true,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Saving…"
+        }
+      ],
+      "width": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 786,
+      "scrollY": 186,
+      "storage": {}
+    },
+    {
+      "label": "phone-short-complete",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved.",
+      "focus": "save-settings",
+      "inputs": [
+        {
+          "id": "display-name",
+          "value": "Short Viewport",
+          "checked": false,
+          "disabled": false,
+          "invalid": "false",
+          "text": ""
+        },
+        {
+          "id": "kiln-alerts",
+          "value": "on",
+          "checked": true,
+          "disabled": false,
+          "invalid": null,
+          "text": ""
+        },
+        {
+          "id": "save-settings",
+          "value": "",
+          "disabled": false,
+          "invalid": null,
+          "text": "Save settings"
+        }
+      ],
+      "width": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 786,
+      "scrollY": 185,
+      "storage": {}
+    }
+  ]
+}

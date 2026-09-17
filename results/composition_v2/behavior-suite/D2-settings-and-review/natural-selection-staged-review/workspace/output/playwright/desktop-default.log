@@ -1,0 +1,38 @@
+{
+  "url": "http://127.0.0.1:8890/D2-settings-and-review/checkpoints/natural-selection/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings",
+  "controls": [
+    {
+      "id": "display-name",
+      "tag": "INPUT",
+      "type": "text",
+      "text": "",
+      "value": "River Studio",
+      "checked": false
+    },
+    {
+      "id": "kiln-alerts",
+      "tag": "INPUT",
+      "type": "checkbox",
+      "text": "",
+      "value": "on",
+      "checked": true
+    },
+    {
+      "id": "save-settings",
+      "tag": "BUTTON",
+      "type": "submit",
+      "text": "Save settings",
+      "value": ""
+    }
+  ],
+  "focus": {
+    "tag": "BODY",
+    "id": ""
+  },
+  "events": []
+}

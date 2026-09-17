@@ -1,0 +1,250 @@
+[
+  {
+    "name": "desktop",
+    "errors": [],
+    "overflow": {
+      "scroll": 1440,
+      "client": 1440
+    },
+    "initial": "12",
+    "chapter": [
+      {
+        "chapter": "Alignment",
+        "value": "50",
+        "heading": [
+          "The alignment.",
+          "Nothing stays.That’s why we look.",
+          "Make a little spacefor wonder."
+        ]
+      },
+      {
+        "chapter": "Departure",
+        "value": "90",
+        "heading": [
+          "The departure.",
+          "Nothing stays.That’s why we look.",
+          "Make a little spacefor wonder."
+        ]
+      },
+      {
+        "chapter": "Arrival",
+        "value": "12",
+        "heading": [
+          "The arrival.",
+          "Nothing stays.That’s why we look.",
+          "Make a little spacefor wonder."
+        ]
+      }
+    ],
+    "viewpointEnd": "30",
+    "viewpointHome": "-30",
+    "passageEnd": "100",
+    "passageKeyboard": "1",
+    "reset": {
+      "passage": "12",
+      "viewpoint": "0"
+    },
+    "guidesBefore": "true",
+    "guidesAfter": "false",
+    "dialog": {
+      "open": true,
+      "width": 520,
+      "height": 738.6875,
+      "scrollHeight": 737,
+      "clientHeight": 737,
+      "active": "guide-close"
+    },
+    "focusInDialog": false,
+    "dialogClosed": true,
+    "dialogFocusReturned": "Field guide ↗",
+    "playDisabled": false,
+    "playValue": "13",
+    "pauseHeld": true
+  },
+  {
+    "name": "phone",
+    "errors": [],
+    "overflow": {
+      "scroll": 375,
+      "client": 375
+    },
+    "initial": "12",
+    "chapter": [
+      {
+        "chapter": "Alignment",
+        "value": "50",
+        "heading": [
+          "The alignment.",
+          "Nothing stays.That’s why we look.",
+          "Make a little spacefor wonder."
+        ]
+      },
+      {
+        "chapter": "Departure",
+        "value": "90",
+        "heading": [
+          "The departure.",
+          "Nothing stays.That’s why we look.",
+          "Make a little spacefor wonder."
+        ]
+      },
+      {
+        "chapter": "Arrival",
+        "value": "12",
+        "heading": [
+          "The arrival.",
+          "Nothing stays.That’s why we look.",
+          "Make a little spacefor wonder."
+        ]
+      }
+    ],
+    "viewpointEnd": "30",
+    "viewpointHome": "-30",
+    "passageEnd": "100",
+    "passageKeyboard": "1",
+    "reset": {
+      "passage": "12",
+      "viewpoint": "0"
+    },
+    "guidesBefore": "true",
+    "guidesAfter": "false",
+    "dialog": {
+      "open": true,
+      "width": 341,
+      "height": 730.796875,
+      "scrollHeight": 811,
+      "clientHeight": 729,
+      "active": "guide-close"
+    },
+    "focusInDialog": false,
+    "dialogClosed": true,
+    "dialogFocusReturned": "Field guide ↗",
+    "playDisabled": false,
+    "playValue": "13",
+    "pauseHeld": true
+  },
+  {
+    "name": "reduced",
+    "errors": [],
+    "overflow": {
+      "scroll": 375,
+      "client": 375
+    },
+    "initial": "12",
+    "chapter": [
+      {
+        "chapter": "Alignment",
+        "value": "50",
+        "heading": [
+          "The alignment.",
+          "Nothing stays.That’s why we look.",
+          "Make a little spacefor wonder."
+        ]
+      },
+      {
+        "chapter": "Departure",
+        "value": "90",
+        "heading": [
+          "The departure.",
+          "Nothing stays.That’s why we look.",
+          "Make a little spacefor wonder."
+        ]
+      },
+      {
+        "chapter": "Arrival",
+        "value": "12",
+        "heading": [
+          "The arrival.",
+          "Nothing stays.That’s why we look.",
+          "Make a little spacefor wonder."
+        ]
+      }
+    ],
+    "viewpointEnd": "30",
+    "viewpointHome": "-30",
+    "passageEnd": "100",
+    "passageKeyboard": "1",
+    "reset": {
+      "passage": "12",
+      "viewpoint": "0"
+    },
+    "guidesBefore": "true",
+    "guidesAfter": "false",
+    "dialog": {
+      "open": true,
+      "width": 341,
+      "height": 730.796875,
+      "scrollHeight": 811,
+      "clientHeight": 729,
+      "active": "guide-close"
+    },
+    "focusInDialog": false,
+    "dialogClosed": true,
+    "dialogFocusReturned": "Field guide ↗",
+    "playDisabled": false,
+    "playValue": "50",
+    "pauseHeld": true
+  },
+  {
+    "name": "tablet",
+    "errors": [],
+    "overflow": {
+      "scroll": 820,
+      "client": 820
+    },
+    "initial": "12",
+    "chapter": [
+      {
+        "chapter": "Alignment",
+        "value": "50",
+        "heading": [
+          "The alignment.",
+          "Nothing stays.That’s why we look.",
+          "Make a little spacefor wonder."
+        ]
+      },
+      {
+        "chapter": "Departure",
+        "value": "90",
+        "heading": [
+          "The departure.",
+          "Nothing stays.That’s why we look.",
+          "Make a little spacefor wonder."
+        ]
+      },
+      {
+        "chapter": "Arrival",
+        "value": "12",
+        "heading": [
+          "The arrival.",
+          "Nothing stays.That’s why we look.",
+          "Make a little spacefor wonder."
+        ]
+      }
+    ],
+    "viewpointEnd": "30",
+    "viewpointHome": "-30",
+    "passageEnd": "100",
+    "passageKeyboard": "1",
+    "reset": {
+      "passage": "12",
+      "viewpoint": "0"
+    },
+    "guidesBefore": "true",
+    "guidesAfter": "false",
+    "dialog": {
+      "open": true,
+      "width": 520,
+      "height": 738.6875,
+      "scrollHeight": 737,
+      "clientHeight": 737,
+      "active": "guide-close"
+    },
+    "focusInDialog": false,
+    "dialogClosed": true,
+    "dialogFocusReturned": "Field guide ↗",
+    "playDisabled": false,
+    "playValue": "13",
+    "pauseHeld": true
+  }
+]

@@ -1,0 +1,68 @@
+{
+  "checks": [
+    {
+      "label": "empty",
+      "focus": "display-name",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nEnter a display name for your studio.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings",
+      "name": "",
+      "alerts": true
+    },
+    {
+      "label": "whitespace",
+      "focus": "display-name",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nEnter a display name for your studio.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings",
+      "name": "   ",
+      "alerts": true
+    },
+    {
+      "label": "pointer-error",
+      "focus": "save-settings",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nWe couldn’t save your settings. Your changes are still here. Try saving again.",
+      "name": "Phone Pointer Recovery",
+      "alerts": false
+    },
+    {
+      "label": "pointer-retry",
+      "focus": "save-settings",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved.",
+      "name": "Phone Pointer Recovery",
+      "alerts": false
+    },
+    {
+      "label": "keyboard-name-focus",
+      "focus": "display-name",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings",
+      "name": "River Studio",
+      "alerts": true
+    },
+    {
+      "label": "keyboard-checkbox-focus",
+      "focus": "kiln-alerts",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nYou have unsaved changes.",
+      "name": "Phone Keyboard Studio",
+      "alerts": true
+    },
+    {
+      "label": "keyboard-save-focus",
+      "focus": "save-settings",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nYou have unsaved changes.",
+      "name": "Phone Keyboard Studio",
+      "alerts": false
+    },
+    {
+      "label": "keyboard-space-saved",
+      "focus": "save-settings",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved.",
+      "name": "Phone Keyboard Studio",
+      "alerts": false
+    },
+    {
+      "label": "keyboard-enter-saved",
+      "focus": "save-settings",
+      "text": "CLAY HOUSE / MEMBER STUDIO\n\nWorkspace settings\n\nMake this space feel like yours. Choose how we keep you in the loop.\n\nDisplay name\n\nThe name you use around the studio. Required, up to 60 characters.\n\nKiln alerts\nEmail me when my firing is ready\nOne message when your work is ready to collect.\n\nYou can change this whenever you like.\n\nSave settings\n\nSettings saved.",
+      "name": "Phone Enter Studio",
+      "alerts": false
+    }
+  ],
+  "events": []
+}

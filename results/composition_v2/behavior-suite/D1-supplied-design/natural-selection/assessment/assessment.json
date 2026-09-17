@@ -1,0 +1,1352 @@
+{
+  "status": "observed",
+  "mode": "d1",
+  "route": "http://127.0.0.1:8842",
+  "log": [
+    {
+      "name": "desktop-initial",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available\nYour place at the table\n\nChoose a session, then tell us your name.\n\nAttendee name\nReserve a place\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "",
+          "name": "attendee",
+          "text": "",
+          "value": "",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "text": "Reserve a place",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "BODY",
+        "id": "",
+        "text": null
+      },
+      "geometry": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "buttons": [
+          {
+            "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Reserve a place",
+            "radius": "0px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "desktop-empty-error",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\n\nChoose a session to continue.\n\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available\nYour place at the table\n\nChoose a session, then tell us your name.\n\nAttendee name\n\nEnter your name to continue.\n\nReserve a place\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "",
+          "name": "attendee",
+          "text": "",
+          "value": "",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "text": "Reserve a place",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available"
+      },
+      "geometry": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "buttons": [
+          {
+            "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Reserve a place",
+            "radius": "0px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "desktop-name-error",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available · Selected\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available\nYour place at the table\n\nChoose a session, then tell us your name.\n\nAttendee name\n\nEnter your name to continue.\n\nReserve a place\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available · Selected",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "",
+          "name": "attendee",
+          "text": "",
+          "value": "",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "text": "Reserve a place",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "INPUT",
+        "id": "",
+        "text": ""
+      },
+      "geometry": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "buttons": [
+          {
+            "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available · Selected",
+            "radius": "0px"
+          },
+          {
+            "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Reserve a place",
+            "radius": "0px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "desktop-whitespace-error",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available · Selected\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available\nYour place at the table\n\nChoose a session, then tell us your name.\n\nAttendee name\n\nEnter your name to continue.\n\nReserve a place\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available · Selected",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "",
+          "name": "attendee",
+          "text": "",
+          "value": "  ",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "text": "Reserve a place",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "INPUT",
+        "id": "",
+        "text": ""
+      },
+      "geometry": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "buttons": [
+          {
+            "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available · Selected",
+            "radius": "0px"
+          },
+          {
+            "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Reserve a place",
+            "radius": "0px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "desktop-pointer-confirmation",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available · Selected\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available\nYour place is reserved\n\nThank you, Casey Morgan. Your local reservation is confirmed.\n\nSession\nPrint a tea towel\nDay\nWednesday 14 October\nTime\n18:00–19:30\nStart another reservation\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available · Selected",
+          "value": "",
+          "disabled": true
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+          "value": "",
+          "disabled": true
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+          "value": "",
+          "disabled": true
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Start another reservation",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "H2",
+        "id": "booking-title",
+        "text": "Your place is reserved"
+      },
+      "geometry": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "buttons": [
+          {
+            "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available · Selected",
+            "radius": "0px"
+          },
+          {
+            "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Start another reservation",
+            "radius": "0px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "desktop-reset",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available\nYour place at the table\n\nChoose a session, then tell us your name.\n\nAttendee name\nReserve a place\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "",
+          "name": "attendee",
+          "text": "",
+          "value": "",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "text": "Reserve a place",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available"
+      },
+      "geometry": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "buttons": [
+          {
+            "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Reserve a place",
+            "radius": "0px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "desktop-reverse-focus",
+      "active": ""
+    },
+    {
+      "name": "desktop-keyboard-focus",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available · Selected\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available\nYour place at the table\n\nChoose a session, then tell us your name.\n\nAttendee name\nReserve a place\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available · Selected",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "",
+          "name": "attendee",
+          "text": "",
+          "value": "Jordan Vale",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "text": "Reserve a place",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Reserve a place"
+      },
+      "geometry": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "buttons": [
+          {
+            "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available · Selected",
+            "radius": "0px"
+          },
+          {
+            "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Reserve a place",
+            "radius": "0px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "desktop-keyboard-confirmation",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available · Selected\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available\nYour place is reserved\n\nThank you, Jordan Vale. Your local reservation is confirmed.\n\nSession\nVisible mending\nDay\nSaturday 17 October\nTime\n10:00–11:30\nStart another reservation\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+          "value": "",
+          "disabled": true
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available · Selected",
+          "value": "",
+          "disabled": true
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+          "value": "",
+          "disabled": true
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Start another reservation",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "H2",
+        "id": "booking-title",
+        "text": "Your place is reserved"
+      },
+      "geometry": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "buttons": [
+          {
+            "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available · Selected",
+            "radius": "0px"
+          },
+          {
+            "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Start another reservation",
+            "radius": "0px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mobile-initial",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available\nYour place at the table\n\nChoose a session, then tell us your name.\n\nAttendee name\nReserve a place\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "",
+          "name": "attendee",
+          "text": "",
+          "value": "",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "text": "Reserve a place",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "BODY",
+        "id": "",
+        "text": null
+      },
+      "geometry": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "buttons": [
+          {
+            "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Reserve a place",
+            "radius": "0px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mobile-empty-error",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\n\nChoose a session to continue.\n\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available\nYour place at the table\n\nChoose a session, then tell us your name.\n\nAttendee name\n\nEnter your name to continue.\n\nReserve a place\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "",
+          "name": "attendee",
+          "text": "",
+          "value": "",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "text": "Reserve a place",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available"
+      },
+      "geometry": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "buttons": [
+          {
+            "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Reserve a place",
+            "radius": "0px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mobile-name-error",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available · Selected\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available\nYour place at the table\n\nChoose a session, then tell us your name.\n\nAttendee name\n\nEnter your name to continue.\n\nReserve a place\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available · Selected",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "",
+          "name": "attendee",
+          "text": "",
+          "value": "",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "text": "Reserve a place",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "INPUT",
+        "id": "",
+        "text": ""
+      },
+      "geometry": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "buttons": [
+          {
+            "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available · Selected",
+            "radius": "0px"
+          },
+          {
+            "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Reserve a place",
+            "radius": "0px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mobile-whitespace-error",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available · Selected\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available\nYour place at the table\n\nChoose a session, then tell us your name.\n\nAttendee name\n\nEnter your name to continue.\n\nReserve a place\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available · Selected",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "",
+          "name": "attendee",
+          "text": "",
+          "value": "  ",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "text": "Reserve a place",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "INPUT",
+        "id": "",
+        "text": ""
+      },
+      "geometry": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "buttons": [
+          {
+            "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available · Selected",
+            "radius": "0px"
+          },
+          {
+            "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Reserve a place",
+            "radius": "0px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mobile-pointer-confirmation",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available · Selected\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available\nYour place is reserved\n\nThank you, Casey Morgan. Your local reservation is confirmed.\n\nSession\nPrint a tea towel\nDay\nWednesday 14 October\nTime\n18:00–19:30\nStart another reservation\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available · Selected",
+          "value": "",
+          "disabled": true
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+          "value": "",
+          "disabled": true
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+          "value": "",
+          "disabled": true
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Start another reservation",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "H2",
+        "id": "booking-title",
+        "text": "Your place is reserved"
+      },
+      "geometry": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "buttons": [
+          {
+            "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available · Selected",
+            "radius": "0px"
+          },
+          {
+            "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Start another reservation",
+            "radius": "0px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mobile-reset",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available\nYour place at the table\n\nChoose a session, then tell us your name.\n\nAttendee name\nReserve a place\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "",
+          "name": "attendee",
+          "text": "",
+          "value": "",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "text": "Reserve a place",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available"
+      },
+      "geometry": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "buttons": [
+          {
+            "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Reserve a place",
+            "radius": "0px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mobile-reverse-focus",
+      "active": ""
+    },
+    {
+      "name": "mobile-keyboard-focus",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available · Selected\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available\nYour place at the table\n\nChoose a session, then tell us your name.\n\nAttendee name\nReserve a place\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available · Selected",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "id": "",
+          "name": "attendee",
+          "text": "",
+          "value": "Jordan Vale",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "id": "",
+          "name": "",
+          "text": "Reserve a place",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Reserve a place"
+      },
+      "geometry": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "buttons": [
+          {
+            "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available · Selected",
+            "radius": "0px"
+          },
+          {
+            "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "",
+            "radius": "0px"
+          },
+          {
+            "text": "Reserve a place",
+            "radius": "0px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mobile-keyboard-confirmation",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "body": "WILLOW ROOM\nCommunity workshops · October\nMake something. Make an afternoon of it.\n\nSmall, friendly workshops for curious hands. Pick a session and save your place. All materials are included.\n\nChoose your session\nPrint a tea towel\nWednesday 14 October · 18:00–19:30\n6 places available\nVisible mending\nSaturday 17 October · 10:00–11:30\n4 places available · Selected\nMake a pocket notebook\nSunday 18 October · 14:00–15:30\n8 places available\nYour place is reserved\n\nThank you, Jordan Vale. Your local reservation is confirmed.\n\nSession\nVisible mending\nDay\nSaturday 17 October\nTime\n10:00–11:30\nStart another reservation\n\nLocal booking demo. No payment or message is sent.\n\nWillow Room · Ground-floor studio, 8 Mill Lane. Step-free entrance.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+          "value": "",
+          "disabled": true
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available · Selected",
+          "value": "",
+          "disabled": true
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+          "value": "",
+          "disabled": true
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "id": "",
+          "name": "",
+          "text": "Start another reservation",
+          "value": "",
+          "disabled": false
+        }
+      ],
+      "focus": {
+        "tag": "H2",
+        "id": "booking-title",
+        "text": "Your place is reserved"
+      },
+      "geometry": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "buttons": [
+          {
+            "text": "Print a tea towelWednesday 14 October · 18:00–19:306 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Visible mendingSaturday 17 October · 10:00–11:304 places available · Selected",
+            "radius": "0px"
+          },
+          {
+            "text": "Make a pocket notebookSunday 18 October · 14:00–15:308 places available",
+            "radius": "0px"
+          },
+          {
+            "text": "Start another reservation",
+            "radius": "0px"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": []
+}

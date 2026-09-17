@@ -1,0 +1,31 @@
+{
+  "width": 1440,
+  "height": 900,
+  "actions": [
+    {
+      "type": "wait",
+      "ms": 250
+    },
+    {
+      "type": "screenshot",
+      "path": "verification/fold-early.png"
+    },
+    {
+      "type": "wait",
+      "ms": 450
+    },
+    {
+      "type": "screenshot",
+      "path": "verification/fold-middle.png"
+    },
+    {
+      "type": "wait",
+      "ms": 1000
+    },
+    {
+      "type": "screenshot",
+      "path": "verification/fold-finished.png"
+    }
+  ],
+  "url": "http://127.0.0.1:8796"
+}

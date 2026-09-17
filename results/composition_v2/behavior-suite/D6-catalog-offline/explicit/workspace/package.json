@@ -1,0 +1,8 @@
+{
+  "name": "fold-and-thread",
+  "private": true,
+  "scripts": {
+    "start": "python3 -m http.server --bind 127.0.0.1",
+    "check": "node --check app.js"
+  }
+}
